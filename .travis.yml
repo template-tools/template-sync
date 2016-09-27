@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+  - 6.5
+sudo: false
+branches:
+  only:
+    - master
+    - /^greenkeeper-.*$/
+cache:
+  directories:
+    - node_modules
+notifications:
+  email:
+    - markus.felten@gmx.de
+before_install:
+  - npm i -g npm@latest
+before_script:
+  - npm prune
+  - npm install -g codecov
+script:
+  - npm run cover
+  - npm run docs
+after_script:
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - codecov
+after_success:
+  - npm run semantic-release

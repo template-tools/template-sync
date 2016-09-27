@@ -1,0 +1,253 @@
+#!/usr/bin/env node
+
+/* jslint node: true, esnext: true */
+
+'use strict';
+
+const githubChangeRemoteFile = require('github-change-remote-file'),
+  commander = require('commander'),
+  yaml = require('js-yaml'),
+  keychain = require('keychain');
+
+
+let readme = false;
+let package_json = true;
+let travis_yml = false;
+
+commander
+  .option('-k, --keystore [account/service]', 'keystore')
+  .option('-s, --save', 'save keystore')
+  .option('-r, --repo [user/repo]', 'repo')
+  .parse(process.argv);
+
+const keystore = {
+  account: 'arlac77',
+  service: 'github_token'
+};
+
+if (commander.keystore) {
+  const v = commander.keystore.split(/\//);
+  keystore.account = v[0];
+  keystore.service = v[1];
+}
+
+
+let user = 'Kronos-Integration';
+let repo = 'kronos-main';
+
+if (commander.repo) {
+  const v = commander.repo.split(/\//);
+  user = v[0];
+  repo = v[1];
+}
+
+if (commander.save) {
+  keychain.setPassword({
+    account: keystore.account,
+    service: keystore.service,
+    password: 'xxx'
+  }, function (err, pass) {
+    if (err) {
+      console.error(`${err}`);
+      return;
+    }
+    console.log('password set');
+  });
+
+  return;
+}
+
+keychain.getPassword(keystore, (err, pass) => {
+  if (err) {
+    console.error(`${err}`);
+    return;
+  }
+  work(pass);
+});
+
+
+function work(token) {
+  if (readme)
+    githubChangeRemoteFile({
+      user: user,
+      repo: repo,
+      filename: 'README.md',
+      transform: readme => {
+        const badges =
+          `[![npm](https://img.shields.io/npm/v/{{name}}.svg)](https://www.npmjs.com/package/{{name}})
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/Kronos-Integration/{{name}})
+[![Build Status](https://secure.travis-ci.org/Kronos-Integration/{{name}}.png)](http://travis-ci.org/Kronos-Integration/{{name}})
+[![bithound](https://www.bithound.io/github/Kronos-Integration/{{name}}/badges/score.svg)](https://www.bithound.io/github/Kronos-Integration/{{name}})
+[![codecov.io](http://codecov.io/github/Kronos-Integration/{{name}}/coverage.svg?branch=master)](http://codecov.io/github/Kronos-Integration/{{name}}?branch=master)
+[![Code Climate](https://codeclimate.com/github/Kronos-Integration/{{name}}/badges/gpa.svg)](https://codeclimate.com/github/Kronos-Integration/{{name}})
+[![GitHub Issues](https://img.shields.io/github/issues/Kronos-Integration/{{name}}.svg?style=flat-square)](https://github.com/Kronos-Integration/{{name}}/issues)
+[![Dependency Status](https://david-dm.org/Kronos-Integration/{{name}}.svg)](https://david-dm.org/Kronos-Integration/{{name}})
+[![devDependency Status](https://david-dm.org/Kronos-Integration/{{name}}/dev-status.svg)](https://david-dm.org/Kronos-Integration/{{name}}#info=devDependencies)
+[![docs](http://inch-ci.org/github/Kronos-Integration/{{name}}.svg?branch=master)](http://inch-ci.org/github/Kronos-Integration/{{name}})
+[![downloads](http://img.shields.io/npm/dm/{{name}}.svg?style=flat-square)](https://npmjs.org/package/{{name}})
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+`;
+
+        const lines = readme.split(/\n/);
+        let fel = lines.findIndex(l => l.length === 0);
+
+        return badges.replace(/\{\{name\}\}/g, () => repo) +
+          lines.slice(fel).join('\n');
+      },
+      token: token,
+      pr: {
+        title: 'docs(readme): sync README.md from npm-package-template',
+        body: 'badges'
+      }
+    }, (err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(res.html_url);
+      }
+    });
+
+  if (package_json)
+    githubChangeRemoteFile({
+      user: user,
+      repo: repo,
+      filename: 'package.json',
+      transform: pkg => {
+        pkg = JSON.parse(pkg);
+
+        pkg.repository = {
+          type: 'git',
+          url: `https://github.com/${user}/${repo}.git`
+        };
+        pkg.bugs = {
+          url: `https://github.com/${user}/${repo}/issues`
+        };
+        pkg.homepage = `https://github.com/${user}/${repo}#readme`;
+
+        pkg.version = '0.0.0-semantic-release';
+
+        if (pkg.release && pkg.release.debug === false) {
+          delete pkg.release;
+        }
+
+        Object.assign(pkg.devDependencies, {
+          'semantic-release': '6.3.1',
+          'chai': '3.5.0',
+          'mocha': '3.1.0',
+          'jsdoc': '3.4.0',
+          'istanbul': '0.4.5',
+          'cz-conventional-changelog': '1.2.0'
+        });
+
+        Object.assign(pkg.scripts, {
+          'semantic-release': 'semantic-release pre && npm publish && semantic-release post',
+          doc: './node_modules/.bin/jsdoc lib/*.js',
+          test: './node_modules/.bin/mocha tests/*_test.js',
+          cover: './node_modules/istanbul/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports tests/*_test.js'
+        });
+
+        pkg.engines = {
+          node: '>=6.6'
+        };
+
+        pkg.license = 'BSD-2-Clause';
+
+        if (pkg.keywords === undefined) {
+          pkg.keywords = [];
+        }
+
+        if (pkg.name.match(/^kronos-interceptor.+/)) {
+          if (!pkg.keywords.find(k => k === 'kronos-interceptor')) {
+            pkg.keywords.push('kronos-interceptor');
+          }
+        }
+        if (pkg.name.match(/^kronos-step.+/) || pkg.name.match(/^kronos-adapter.+/)) {
+          if (!pkg.keywords.find(k => k === 'kronos-step')) {
+            pkg.keywords.push('kronos-step');
+          }
+        }
+        if (pkg.name.match(/^kronos-service.+/) && !pkg.name.match(/^kronos-service-manager/)) {
+          if (!pkg.keywords.find(k => k === 'kronos-service')) {
+            pkg.keywords.push('kronos-service');
+          }
+        }
+
+        if (pkg.config === undefined) {
+          pkg.config = {};
+        }
+        pkg.config.commitizen = {
+          path: './node_modules/cz-conventional-changelog'
+        };
+
+        return JSON.stringify(pkg, undefined, 2);
+      },
+      token: token,
+      pr: {
+        title: 'chore(npm): sync package.json from npm-package-template',
+        body: 'engines, version, release scripts for semantic-release, mocha, jsdoc and istanbul'
+      }
+    }, (err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(res.html_url);
+      }
+    });
+
+  if (travis_yml)
+    githubChangeRemoteFile({
+      user: user,
+      repo: repo,
+      filename: '.travis.yml',
+      transform: content => {
+        const yml = yaml.safeLoad(content);
+
+        yml.node_js = [
+          '6.6'
+        ];
+
+        if (yml.branches === undefined) {
+          yml.branches = {};
+        }
+
+        yml.branches.only = [
+          'master'
+        ];
+
+        yml.before_install = [
+          'npm i -g npm@latest'
+        ];
+
+        yml.before_script = [
+          'npm prune',
+          'npm install -g codecov'
+        ];
+
+        yml.after_script = [
+          'codecov'
+        ];
+
+        if (yml.notifications === undefined) {
+          yml.notifications = {};
+        }
+
+        yml.notifications.email = [
+          'torstenlink@gmx.de',
+          'markus.felten@gmx.de'
+        ];
+
+        return yaml.safeDump(yml);
+      },
+      token: token,
+      pr: {
+        title: 'chore(travis): sync .travis.yml from npm-package-template',
+        body: 'update before_script, after_script, before_install'
+      }
+    }, (err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(res.html_url);
+      }
+    });
+}
