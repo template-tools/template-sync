@@ -1,7 +1,7 @@
 {
   "name": "npm-template-sync",
   "version": "0.0.0-semantic-release",
-  "description": "mixin to declare logging methods named after a set of log levels",
+  "description": "Keep npm package in sync with its template",
   "main": "dist/npm-template-sync.js",
   "module": "src/npm-template-sync.js",
   "scripts": {
