@@ -4,11 +4,11 @@
 
 'use strict';
 
-const githubChangeRemoteFile = require('github-change-remote-file'),
+const githubChangeRemoteFiles = require('@boennemann/github-change-remote-files'),
   commander = require('commander'),
   yaml = require('js-yaml'),
-  keychain = require('keychain');
-
+  keychain = require('keychain'),
+  github = require('octonode');
 
 import t from './travis';
 import r from './readme';
@@ -18,6 +18,7 @@ commander
   .option('-k, --keystore [account/service]', 'keystore')
   .option('-s, --save', 'save keystore')
   .option('-r, --repo [user/repo]', 'repo')
+  .option('-t, --template [user/repo]', 'template')
   .parse(process.argv);
 
 const keystore = {
@@ -31,15 +32,6 @@ if (commander.keystore) {
   keystore.service = v[1];
 }
 
-
-let user = 'Kronos-Integration';
-let repo = 'kronos-main';
-
-if (commander.repo) {
-  const v = commander.repo.split(/\//);
-  user = v[0];
-  repo = v[1];
-}
 
 if (commander.save) {
   keychain.setPassword({
@@ -60,46 +52,64 @@ keychain.getPassword(keystore, (err, pass) => {
     console.error(`${err}`);
     return;
   }
-  work(pass);
+  work(pass, commander.template, commander.repo);
 });
 
 const files = {
-  '.travis.yml': {
-    merger: t
-  },
-  'readme.md': {
-    merger: r,
-  },
+  /*  '.travis.yml': {
+      merger: t
+    },
+    'readme.md': {
+      merger: r,
+    },*/
   'package.json': {
     merger: p
   }
 };
 
-function work(token) {
-  Object.keys(files).forEach(name => {
-    const file = files[name];
+function work(token, templateRepo = 'Kronos-Integration/npm-package-template', targetRepo = 'arlac77/loglevel-mixin') {
+  const client = github.client(token);
 
-    githubChangeRemoteFile({
+  function getFile(repo, file) {
+    const ghrepo = client.repo(repo);
+    return new Promise((fullfill, reject) => {
+      ghrepo.contents(file, (err, status, body, headers) => {
+        if (err) {
+          reject(err);
+        } else {
+          const b = new Buffer(status.content, 'base64');
+          fullfill(b.toString());
+        }
+      });
+    });
+  }
+
+  const fileNames = Object.keys(files);
+  const [user, repo] = targetRepo.split(/\//);
+
+  Promise.all(fileNames.map(name =>
+    getFile(templateRepo, name)
+    .then(template =>
+      target => files[name].merger(target, template, {
+        templateRepo, targetRepo
+      })
+    )
+  )).then(transforms => {
+    console.log(`files: ${fileNames}`);
+    console.log(`user: ${user}`);
+    console.log(`repo: ${repo}`);
+    githubChangeRemoteFiles({
       user: user,
       repo: repo,
-      filename: name,
-      transform: content => {
-        return file.merger(content, undefined, {
-          user: user,
-          repo: repo
-        });
-      },
+      filenames: fileNames,
+      transforms: transforms,
       token: token,
       pr: {
-        title: `docs(readme): sync ${name} from npm-package-template`,
-        body: 'badges'
+        title: 'Updated standard to latest version',
+        body: 'whatever'
       }
-    }, (err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log(res.html_url);
-      }
+    }, function (err, res) {
+      console.error(err);
     });
   });
 }
