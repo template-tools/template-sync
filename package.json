@@ -18,9 +18,10 @@
     "node": ">=6.7"
   },
   "dependencies": {
-    "github-change-remote-file": "^4.2.0",
+    "@boennemann/github-change-remote-files": "^1.1.2",
     "js-yaml": "^3.6.1",
-    "keychain": "^1.0.0"
+    "keychain": "^1.0.0",
+    "octonode": "^0.7.6"
   },
   "devDependencies": {
     "chai": "3.5.0",
