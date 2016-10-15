@@ -1,0 +1,170 @@
+'use strict';
+
+/* jslint node: true, esnext: true */
+
+/* jslint node: true, esnext: true */
+
+/* jslint node: true, esnext: true */
+
+var p = function (target, template, options = {}) {
+  target = JSON.parse(target);
+  template = JSON.parse(template);
+
+  Object.assign(target.devDependencies, template.devDependencies);
+  Object.assign(target.scripts, template.scripts);
+  Object.assign(target.engines, template.engines);
+
+  return JSON.stringify(target, undefined, 2);
+
+  /*
+    pkg.repository = {
+      type: 'git',
+      url: `https://github.com/${user}/${repo}.git`
+    };
+    pkg.bugs = {
+      url: `https://github.com/${user}/${repo}/issues`
+    };
+    pkg.homepage = `https://github.com/${user}/${repo}#readme`;
+
+    pkg.version = '0.0.0-semantic-release';
+
+    pkg.license = 'BSD-2-Clause';
+
+    if (pkg.keywords === undefined) {
+      pkg.keywords = [];
+    }
+
+    if (pkg.name.match(/^kronos-interceptor.+/)) {
+      if (!pkg.keywords.find(k => k === 'kronos-interceptor')) {
+        pkg.keywords.push('kronos-interceptor');
+      }
+    }
+    if (pkg.name.match(/^kronos-step.+/) || pkg.name.match(/^kronos-adapter.+/)) {
+      if (!pkg.keywords.find(k => k === 'kronos-step')) {
+        pkg.keywords.push('kronos-step');
+      }
+    }
+    if (pkg.name.match(/^kronos-service.+/) && !pkg.name.match(/^kronos-service-manager/)) {
+      if (!pkg.keywords.find(k => k === 'kronos-service')) {
+        pkg.keywords.push('kronos-service');
+      }
+    }
+
+    if (pkg.config === undefined) {
+      pkg.config = {};
+    }
+    pkg.config.commitizen = {
+      path: './node_modules/cz-conventional-changelog'
+    };
+  */
+}
+
+//#!/usr/bin/env node
+
+/* jslint node: true, esnext: true */
+
+const githubChangeRemoteFiles = require('@boennemann/github-change-remote-files');
+const commander = require('commander');
+const yaml$1 = require('js-yaml');
+const keychain = require('keychain');
+const github = require('octonode');
+
+commander
+  .option('-k, --keystore [account/service]', 'keystore')
+  .option('-s, --save', 'save keystore')
+  .option('-r, --repo [user/repo]', 'repo')
+  .option('-t, --template [user/repo]', 'template')
+  .parse(process.argv);
+
+const keystore = {
+  account: 'arlac77',
+  service: 'github_token'
+};
+
+if (commander.keystore) {
+  const v = commander.keystore.split(/\//);
+  keystore.account = v[0];
+  keystore.service = v[1];
+}
+
+
+if (commander.save) {
+  keychain.setPassword({
+    account: keystore.account,
+    service: keystore.service,
+    password: 'xxx'
+  }, function (err, pass) {
+    if (err) {
+      console.error(`${err}`);
+      return;
+    }
+    console.log('password set');
+  });
+}
+
+keychain.getPassword(keystore, (err, pass) => {
+  if (err) {
+    console.error(`${err}`);
+    return;
+  }
+  work(pass, commander.template, commander.repo);
+});
+
+const files = {
+  /*  '.travis.yml': {
+      merger: t
+    },
+    'readme.md': {
+      merger: r,
+    },*/
+  'package.json': {
+    merger: p
+  }
+};
+
+function work(token, templateRepo = 'Kronos-Integration/npm-package-template', targetRepo = 'arlac77/loglevel-mixin') {
+  const client = github.client(token);
+
+  function getFile(repo, file) {
+    const ghrepo = client.repo(repo);
+    return new Promise((fullfill, reject) => {
+      ghrepo.contents(file, (err, status, body, headers) => {
+        if (err) {
+          reject(err);
+        } else {
+          const b = new Buffer(status.content, 'base64');
+          fullfill(b.toString());
+        }
+      });
+    });
+  }
+
+  const fileNames = Object.keys(files);
+  const [user, repo] = targetRepo.split(/\//);
+
+  Promise.all(fileNames.map(name =>
+    getFile(templateRepo, name)
+    .then(template =>
+      target => files[name].merger(target, template, {
+        templateRepo, targetRepo
+      })
+    )
+  )).then(transforms => {
+    console.log(`files: ${fileNames}`);
+    console.log(`user: ${user}`);
+    console.log(`repo: ${repo}`);
+    githubChangeRemoteFiles({
+      user: user,
+      repo: repo,
+      filenames: fileNames,
+      transforms: transforms,
+      token: token,
+      pr: {
+        title: 'Updated standard to latest version',
+        body: 'whatever'
+      }
+    }, function (err, res) {
+      console.error(err);
+    });
+  });
+}
