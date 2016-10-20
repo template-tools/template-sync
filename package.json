@@ -15,7 +15,7 @@
     "url": "https://github.com/arlac77/npm-template-sync.git"
   },
   "engines": {
-    "node": ">=6.7"
+    "node": ">=6.9.1"
   },
   "dependencies": {
     "@boennemann/github-change-remote-files": "^1.1.2",
