@@ -6,7 +6,6 @@
 
 const githubChangeRemoteFiles = require('@boennemann/github-change-remote-files'),
   commander = require('commander'),
-  yaml = require('js-yaml'),
   keychain = require('keychain'),
   github = require('octonode');
 
@@ -23,7 +22,7 @@ commander
 
 const keystore = {
   account: 'arlac77',
-  service: 'github_token'
+  service: 'GitHub for Mac SSH key passphrase — github.com'
 };
 
 if (commander.keystore) {
@@ -106,10 +105,16 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
       token: token,
       pr: {
         title: 'Updated standard to latest version',
-        body: 'whatever'
+        body: 'whatever',
+        head: 'template-sync',
+        base: 'master'
       }
     }, function (err, res) {
-      console.error(err);
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(res);
+      }
     });
   });
 }

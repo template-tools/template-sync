@@ -1,7 +1,7 @@
 {
   "name": "npm-template-sync",
   "version": "0.0.0-semantic-release",
-  "description": "Keep npm package in sync with its template",
+  "description": "Keep npm package meta data in sync with its template",
   "main": "dist/lib.js",
   "scripts": {
     "cover": "npm run build && ./node_modules/istanbul/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports tests/*_test.js",
