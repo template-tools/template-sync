@@ -7,7 +7,8 @@
 const githubChangeRemoteFiles = require('@boennemann/github-change-remote-files'),
   commander = require('commander'),
   keychain = require('keychain'),
-  github = require('octonode');
+  github = require('octonode'),
+  pr = require('pull-request');
 
 import t from './travis';
 import r from './readme';
@@ -55,12 +56,12 @@ keychain.getPassword(keystore, (err, pass) => {
 });
 
 const files = {
-  /*  '.travis.yml': {
-      merger: t
-    },
-    'readme.md': {
-      merger: r,
-    },*/
+  '.travis.yml': {
+    merger: t
+  },
+  'README.md': {
+    merger: r,
+  },
   'package.json': {
     merger: p
   }
@@ -85,36 +86,55 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
 
   const fileNames = Object.keys(files);
   const [user, repo] = targetRepo.split(/\//);
+  const [tUser, tRepo] = templateRepo.split(/\//);
 
   Promise.all(fileNames.map(name =>
-    getFile(templateRepo, name)
-    .then(template =>
-      target => files[name].merger(target, template, {
-        templateRepo, targetRepo
-      })
-    )
+    Promise.all([getFile(targetRepo, name), getFile(templateRepo, name)])
+    .then(contents => files[name].merger(contents[0], contents[1], {
+      templateRepo, targetRepo
+    }))
   )).then(transforms => {
     console.log(`files: ${fileNames}`);
     console.log(`user: ${user}`);
     console.log(`repo: ${repo}`);
-    githubChangeRemoteFiles({
+
+    const source = {
       user: user,
       repo: repo,
-      filenames: fileNames,
-      transforms: transforms,
-      token: token,
-      pr: {
-        title: 'Updated standard to latest version',
-        body: 'whatever',
-        head: 'template-sync',
-        base: 'master'
+      branch: 'master'
+    };
+
+    const dest = {
+      user: user,
+      repo: repo,
+      branch: 'template-sync'
+    };
+
+    const options = {
+      auth: {
+        type: 'oauth',
+        token: token
       }
-    }, function (err, res) {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log(res);
-      }
-    });
+    };
+
+    pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
+        Promise.all(transforms.map((t, i) =>
+          pr.commit(user, repo, {
+            branch: dest.branch,
+            message: `fix: merge ${fileNames[i]} from ${templateRepo}`,
+            updates: [{
+              path: fileNames[i],
+              content: t
+            }]
+          }, options)))
+        .then(() =>
+          pr.pull(source, dest, {
+            title: source.branch,
+            body: 'Updated standard to latest version'
+          }, options))
+      )
+      .then(r =>
+        console.log(r))
+      .catch(e => console.error(e));
   });
 }

@@ -21,7 +21,8 @@
     "@boennemann/github-change-remote-files": "^1.1.2",
     "js-yaml": "^3.6.1",
     "keychain": "^1.0.0",
-    "octonode": "^0.7.6"
+    "octonode": "^0.7.6",
+    "pull-request": "^3.0.0"
   },
   "devDependencies": {
     "chai": "3.5.0",

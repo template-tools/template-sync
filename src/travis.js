@@ -1,4 +1,7 @@
 /* jslint node: true, esnext: true */
+
+const yaml = require('js-yaml');
+
 export default function (left, right, options = {}) {
 
   const yml = yaml.safeLoad(left);
