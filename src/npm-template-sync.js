@@ -4,8 +4,7 @@
 
 'use strict';
 
-const githubChangeRemoteFiles = require('@boennemann/github-change-remote-files'),
-  commander = require('commander'),
+const commander = require('commander'),
   keychain = require('keychain'),
   github = require('octonode'),
   pr = require('pull-request');
@@ -67,7 +66,8 @@ const files = {
   }
 };
 
-function work(token, templateRepo = 'Kronos-Integration/npm-package-template', targetRepo = 'arlac77/loglevel-mixin') {
+function work(token, templateRepo = 'Kronos-Integration/npm-package-template', targetRepo =
+  'arlac77/symatem-infrastructure') {
   const client = github.client(token);
 
   function getFile(repo, file) {

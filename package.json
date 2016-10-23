@@ -18,7 +18,6 @@
     "node": ">=6.9.1"
   },
   "dependencies": {
-    "@boennemann/github-change-remote-files": "^1.1.2",
     "js-yaml": "^3.6.1",
     "keychain": "^1.0.0",
     "octonode": "^0.7.6",
