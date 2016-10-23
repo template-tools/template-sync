@@ -4,6 +4,13 @@ export default function (target, template, options = {}) {
   target = JSON.parse(target);
   template = JSON.parse(template);
 
+  if (target.scripts === undefined) {
+    target.scripts = {};
+  }
+  if (target.devDependencies === undefined) {
+    target.devDependencies = {};
+  }
+
   Object.assign(target.devDependencies, template.devDependencies);
   Object.assign(target.scripts, template.scripts);
   Object.assign(target.engines, template.engines);
