@@ -18,6 +18,7 @@
     "node": ">=6.9.1"
   },
   "dependencies": {
+    "expression-expander": "^5.1.0",
     "js-yaml": "^3.6.1",
     "keychain": "^1.0.0",
     "octonode": "^0.7.6",

@@ -55,12 +55,12 @@ keychain.getPassword(keystore, (err, pass) => {
 });
 
 const files = {
-  '.travis.yml': {
+  /*'.travis.yml': {
     merger: t
   },
   'README.md': {
     merger: r,
-  },
+  },*/
   'package.json': {
     merger: p
   }

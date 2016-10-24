@@ -4,7 +4,9 @@ export default function (target, template, options = {}) {
   target = JSON.parse(target);
   template = JSON.parse(template);
 
-  ['scripts', 'devDependencies', 'engines'].forEach(p => {
+  const deepPropeties = ['scripts', 'devDependencies', 'engines'];
+
+  deepPropeties.forEach(p => {
     if (target[p] === undefined) {
       target[p] = {};
     }
@@ -14,6 +16,11 @@ export default function (target, template, options = {}) {
   Object.assign(target.scripts, template.scripts);
   Object.assign(target.engines, template.engines);
 
+  Object.keys(template).forEach(p => {
+    if (target[p] === undefined) {
+      target[p] = template[p];
+    }
+  });
 
   return JSON.stringify(target, undefined, 2);
 
@@ -28,8 +35,6 @@ export default function (target, template, options = {}) {
     pkg.homepage = `https://github.com/${user}/${repo}#readme`;
 
     pkg.version = '0.0.0-semantic-release';
-
-    pkg.license = 'BSD-2-Clause';
 
     if (pkg.keywords === undefined) {
       pkg.keywords = [];
