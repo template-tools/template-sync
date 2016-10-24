@@ -58,7 +58,7 @@ const files = {
   /*'.travis.yml': {
     merger: t
   },
-  'README.md': {
+  'README.hbs': {
     merger: r,
   },*/
   'package.json': {

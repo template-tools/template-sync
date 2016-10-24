@@ -1,5 +1,7 @@
 /* jslint node: true, esnext: true */
 
+const ee = require('expression-expander');
+
 export default function (target, template, options = {}) {
   target = JSON.parse(target);
   template = JSON.parse(template);
@@ -22,20 +24,20 @@ export default function (target, template, options = {}) {
     }
   });
 
-  return JSON.stringify(target, undefined, 2);
+  const context = ee.createContext();
+  const [user, repo] = options.targetRepo.split(/\//);
+
+  context.properties = {
+    'github.user': user,
+    'github.repo': repo,
+    'name': repo,
+    'module': target.module,
+    'main': target.main
+  };
+
+  return JSON.stringify(context.expand(target), undefined, 2);
 
   /*
-    pkg.repository = {
-      type: 'git',
-      url: `https://github.com/${user}/${repo}.git`
-    };
-    pkg.bugs = {
-      url: `https://github.com/${user}/${repo}/issues`
-    };
-    pkg.homepage = `https://github.com/${user}/${repo}#readme`;
-
-    pkg.version = '0.0.0-semantic-release';
-
     if (pkg.keywords === undefined) {
       pkg.keywords = [];
     }
@@ -55,12 +57,5 @@ export default function (target, template, options = {}) {
         pkg.keywords.push('kronos-service');
       }
     }
-
-    if (pkg.config === undefined) {
-      pkg.config = {};
-    }
-    pkg.config.commitizen = {
-      path: './node_modules/cz-conventional-changelog'
-    };
   */
 }
