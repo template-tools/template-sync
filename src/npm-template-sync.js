@@ -55,15 +55,16 @@ keychain.getPassword(keystore, (err, pass) => {
 });
 
 const files = {
-  /*'.travis.yml': {
+  '.travis.yml': {
     merger: t
   },
-  'README.hbs': {
-    merger: r,
-  },*/
+  /*
+   'README.hbs': {
+     merger: r,
+   },
   'package.json': {
     merger: p
-  }
+  }*/
 };
 
 function work(token, templateRepo = 'Kronos-Integration/npm-package-template', targetRepo =

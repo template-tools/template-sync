@@ -24,7 +24,12 @@ export default function (target, template, options = {}) {
     }
   });
 
-  const context = ee.createContext();
+  const context = ee.createContext({
+    /*
+    leftMarker: '{{',
+    rightMarker: '}}',
+    markerRegexp: '\{\{([^\}]+)\}\}'*/
+  });
   const [user, repo] = options.targetRepo.split(/\//);
 
   context.properties = {

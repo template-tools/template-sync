@@ -2,43 +2,13 @@
 
 const yaml = require('js-yaml');
 
-export default function (left, right, options = {}) {
+export default function (target, template, options = {}) {
+  const yml = yaml.safeLoad(target);
+  const tyml = yaml.safeLoad(template);
 
-  const yml = yaml.safeLoad(left);
-
-  yml.node_js = [
-    '6.6'
-  ];
-
-  if (yml.branches === undefined) {
-    yml.branches = {};
-  }
-
-  yml.branches.only = [
-    'master'
-  ];
-
-  yml.before_install = [
-    'npm i -g npm@latest'
-  ];
-
-  yml.before_script = [
-    'npm prune',
-    'npm install -g codecov'
-  ];
-
-  yml.after_script = [
-    'codecov'
-  ];
-
-  if (yml.notifications === undefined) {
-    yml.notifications = {};
-  }
-
-  yml.notifications.email = [
-    'torstenlink@gmx.de',
-    'markus.felten@gmx.de'
-  ];
+  Object.keys(tyml).forEach(name => {
+    yml[name] = tyml[name];
+  });
 
   return yaml.safeDump(yml);
 }
