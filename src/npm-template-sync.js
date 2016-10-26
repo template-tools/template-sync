@@ -61,10 +61,10 @@ const files = {
   /*
    'README.hbs': {
      merger: r,
-   },
+   },*/
   'package.json': {
     merger: p
-  }*/
+  }
 };
 
 function work(token, templateRepo = 'Kronos-Integration/npm-package-template', targetRepo =
@@ -115,23 +115,23 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
     }))
   )).then(transforms =>
     pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
-      Promise.all(transforms.map((t, i) =>
-        pr.commit(user, repo, {
-          branch: dest.branch,
-          message: `fix: merge ${fileNames[i]} from ${templateRepo}`,
-          updates: [{
+      pr.commit(user, repo, {
+        branch: dest.branch,
+        message: `fix: merge from ${templateRepo}`,
+        updates: transforms.map((t, i) => {
+          return {
             path: fileNames[i],
             content: t
-          }]
-        }, options)))
+          };
+        })
+      }, options)
       .then(() =>
         pr.pull(source, dest, {
           title: source.branch,
           body: 'Updated standard to latest version'
         }, options))
     )
-    .then(r =>
-      console.log(r))
+    .then(r => console.log(r))
     .catch(e => console.error(e))
   );
 }
