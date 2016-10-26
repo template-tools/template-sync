@@ -89,53 +89,49 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
   const [user, repo] = targetRepo.split(/\//);
   const [tUser, tRepo] = templateRepo.split(/\//);
 
+  const source = {
+    user: user,
+    repo: repo,
+    branch: 'master'
+  };
+
+  const dest = {
+    user: user,
+    repo: repo,
+    branch: 'template-sync'
+  };
+
+  const options = {
+    auth: {
+      type: 'oauth',
+      token: token
+    }
+  };
+
   Promise.all(fileNames.map(name =>
     Promise.all([getFile(targetRepo, name), getFile(templateRepo, name)])
     .then(contents => files[name].merger(contents[0], contents[1], {
       templateRepo, targetRepo
     }))
-  )).then(transforms => {
-    console.log(`files: ${fileNames}`);
-    console.log(`user: ${user}`);
-    console.log(`repo: ${repo}`);
-
-    const source = {
-      user: user,
-      repo: repo,
-      branch: 'master'
-    };
-
-    const dest = {
-      user: user,
-      repo: repo,
-      branch: 'template-sync'
-    };
-
-    const options = {
-      auth: {
-        type: 'oauth',
-        token: token
-      }
-    };
-
+  )).then(transforms =>
     pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
-        Promise.all(transforms.map((t, i) =>
-          pr.commit(user, repo, {
-            branch: dest.branch,
-            message: `fix: merge ${fileNames[i]} from ${templateRepo}`,
-            updates: [{
-              path: fileNames[i],
-              content: t
-            }]
-          }, options)))
-        .then(() =>
-          pr.pull(source, dest, {
-            title: source.branch,
-            body: 'Updated standard to latest version'
-          }, options))
-      )
-      .then(r =>
-        console.log(r))
-      .catch(e => console.error(e));
-  });
+      Promise.all(transforms.map((t, i) =>
+        pr.commit(user, repo, {
+          branch: dest.branch,
+          message: `fix: merge ${fileNames[i]} from ${templateRepo}`,
+          updates: [{
+            path: fileNames[i],
+            content: t
+          }]
+        }, options)))
+      .then(() =>
+        pr.pull(source, dest, {
+          title: source.branch,
+          body: 'Updated standard to latest version'
+        }, options))
+    )
+    .then(r =>
+      console.log(r))
+    .catch(e => console.error(e))
+  );
 }
