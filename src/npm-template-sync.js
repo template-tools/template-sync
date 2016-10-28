@@ -9,9 +9,9 @@ const commander = require('commander'),
   github = require('octonode'),
   pr = require('pull-request');
 
-import t from './travis';
-import r from './readme';
-import p from './package';
+import travis from './travis';
+import readme from './readme';
+import pkg from './package';
 
 commander
   .option('-k, --keystore [account/service]', 'keystore')
@@ -56,14 +56,13 @@ keychain.getPassword(keystore, (err, pass) => {
 
 const files = {
   '.travis.yml': {
-    merger: t
+    merger: travis
   },
-  /*
-   'README.hbs': {
-     merger: r,
-   },*/
+  'README.hbs': {
+    merger: readme,
+  },
   'package.json': {
-    merger: p
+    merger: pkg
   }
 };
 
@@ -71,12 +70,27 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
   'arlac77/symatem-infrastructure') {
   const client = github.client(token);
 
-  function getFile(repo, file) {
-    const ghrepo = client.repo(repo);
+  function getBranches(repo) {
     return new Promise((fullfill, reject) => {
-      ghrepo.contents(file, (err, status, body, headers) => {
+      client.repo(repo).branches((err, data) => {
         if (err) {
           reject(err);
+        } else {
+          fullfill(data);
+        }
+      });
+    });
+  }
+
+  function getFile(repo, file, options = {}) {
+    return new Promise((fullfill, reject) => {
+      client.repo(repo).contents(file, (err, status, body, headers) => {
+        if (err) {
+          if (options.ignoreMissingFiles) {
+            fullfill('');
+          } else {
+            reject(err);
+          }
         } else {
           const b = new Buffer(status.content, 'base64');
           fullfill(b.toString());
@@ -108,30 +122,37 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
     }
   };
 
-  Promise.all(fileNames.map(name =>
-    Promise.all([getFile(targetRepo, name), getFile(templateRepo, name)])
-    .then(contents => files[name].merger(contents[0], contents[1], {
-      templateRepo, targetRepo
-    }))
-  )).then(transforms =>
-    pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
-      pr.commit(user, repo, {
-        branch: dest.branch,
-        message: `fix: merge from ${templateRepo}`,
-        updates: transforms.map((t, i) => {
-          return {
-            path: fileNames[i],
-            content: t
-          };
-        })
-      }, options)
-      .then(() =>
-        pr.pull(source, dest, {
-          title: source.branch,
-          body: 'Updated standard to latest version'
-        }, options))
-    )
-    .then(r => console.log(r))
-    .catch(e => console.error(e))
-  );
+  getBranches(targetRepo)
+    .then(branches => {
+      const n = branches.filter(b => b.name.match(/template-sync/)).length;
+      dest.branch = `template-sync-${n + 1}`;
+      console.log(`create branch ${dest.branch}`);
+    }).then(() =>
+      Promise.all(fileNames.map(name =>
+        Promise.all([getFile(targetRepo, name, {
+          ignoreMissingFiles: true
+        }), getFile(templateRepo, name)])
+        .then(contents => files[name].merger(contents[0], contents[1], {
+          templateRepo, targetRepo
+        }))
+      )).then(transforms =>
+        pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
+          pr.commit(user, repo, {
+            branch: dest.branch,
+            message: `fix: merge from ${templateRepo}`,
+            updates: transforms.map((t, i) => {
+              return {
+                path: fileNames[i],
+                content: t
+              };
+            })
+          }, options)
+          .then(() =>
+            pr.pull(source, dest, {
+              title: `merge from ${templateRepo}`,
+              body: 'Updated standard to latest version'
+            }, options))
+        )
+      )).then(r => console.log(r))
+    .catch(e => console.error(e));
 }
