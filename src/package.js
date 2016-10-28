@@ -1,8 +1,7 @@
 /* jslint node: true, esnext: true */
 
-const ee = require('expression-expander');
 
-export default function (target, template, options = {}) {
+export default function (target, template, context, options = {}) {
   target = JSON.parse(target);
   template = JSON.parse(template);
 
@@ -24,29 +23,16 @@ export default function (target, template, options = {}) {
     }
   });
 
-  const context = ee.createContext({
-    /*
-    leftMarker: '{{',
-    rightMarker: '}}',
-    markerRegexp: '\{\{([^\}]+)\}\}'*/
-  });
-  const [user, repo] = options.targetRepo.split(/\//);
-
   context.properties = {
-    'github.user': user,
-    'github.repo': repo,
-    'name': repo,
     'module': target.module,
     'main': target.main
   };
 
+  const [user, repo] = options.targetRepo.split(/\//);
+
   return JSON.stringify(context.expand(target), undefined, 2);
 
   /*
-    if (pkg.keywords === undefined) {
-      pkg.keywords = [];
-    }
-
     if (pkg.name.match(/^kronos-interceptor.+/)) {
       if (!pkg.keywords.find(k => k === 'kronos-interceptor')) {
         pkg.keywords.push('kronos-interceptor');

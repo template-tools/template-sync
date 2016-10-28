@@ -7,7 +7,8 @@
 const commander = require('commander'),
   keychain = require('keychain'),
   github = require('octonode'),
-  pr = require('pull-request');
+  pr = require('pull-request'),
+  ee = require('expression-expander');
 
 import travis from './travis';
 import readme from './readme';
@@ -103,6 +104,18 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
   const [user, repo] = targetRepo.split(/\//);
   const [tUser, tRepo] = templateRepo.split(/\//);
 
+  const context = ee.createContext({
+    leftMarker: '{{',
+    rightMarker: '}}',
+    markerRegexp: '\{\{([^\}]+)\}\}'
+  });
+
+  context.properties = {
+    'github.user': user,
+    'github.repo': repo,
+    'name': repo
+  };
+
   const source = {
     user: user,
     repo: repo,
@@ -132,7 +145,7 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
         Promise.all([getFile(targetRepo, name, {
           ignoreMissingFiles: true
         }), getFile(templateRepo, name)])
-        .then(contents => files[name].merger(contents[0], contents[1], {
+        .then(contents => files[name].merger(contents[0], contents[1], context, {
           templateRepo, targetRepo
         }))
       )).then(transforms =>

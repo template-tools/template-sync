@@ -2,9 +2,9 @@
 
 const yaml = require('js-yaml');
 
-export default function (target, template, options = {}) {
+export default function (target, template, context, options = {}) {
   const yml = yaml.safeLoad(target) || {};
-  const tyml = yaml.safeLoad(template);
+  const tyml = yaml.safeLoad(context.expand(template));
 
   Object.keys(tyml).forEach(name => {
     yml[name] = tyml[name];
