@@ -13,6 +13,7 @@ const commander = require('commander'),
 import travis from './travis';
 import readme from './readme';
 import pkg from './package';
+import replace from './replace';
 
 commander
   .option('-k, --keystore [account/service]', 'keystore')
@@ -64,6 +65,15 @@ const files = {
   },
   'package.json': {
     merger: pkg
+  },
+  '.gitignore': {
+    merger: replace
+  },
+  '.npmignore': {
+    merger: replace
+  },
+  'LICENSE': {
+    merger: replace
   }
 };
 
@@ -105,6 +115,7 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
   const [tUser, tRepo] = templateRepo.split(/\//);
 
   const context = ee.createContext({
+    keepUndefinedValues: true,
     leftMarker: '{{',
     rightMarker: '}}',
     markerRegexp: '\{\{([^\}]+)\}\}'
