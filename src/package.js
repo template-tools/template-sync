@@ -5,6 +5,9 @@ export default function (target, template, context, options = {}) {
   target = JSON.parse(target);
   template = JSON.parse(template);
 
+  context.properties.module = target.module;
+  context.properties.main = target.main;
+
   const deepPropeties = ['scripts', 'devDependencies', 'engines'];
 
   deepPropeties.forEach(p => {
@@ -22,11 +25,6 @@ export default function (target, template, context, options = {}) {
       target[p] = template[p];
     }
   });
-
-  context.properties = {
-    'module': target.module,
-    'main': target.main
-  };
 
   const [user, repo] = options.targetRepo.split(/\//);
 
