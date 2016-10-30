@@ -124,7 +124,9 @@ function work(token, templateRepo = 'Kronos-Integration/npm-package-template', t
   context.properties = {
     'github.user': user,
     'github.repo': repo,
-    'name': repo
+    'name': repo,
+    'date.year': '2016',
+    'license.owner': 'arlac77'
   };
 
   const source = {
