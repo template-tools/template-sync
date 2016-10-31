@@ -77,7 +77,7 @@ const files = {
   }
 };
 
-function work(token, templateRepo = 'Kronos-Integration/npm-package-template', targetRepo =
+function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetRepo =
   'arlac77/symatem-infrastructure') {
   const client = github.client(token);
 
