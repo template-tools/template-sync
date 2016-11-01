@@ -126,7 +126,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
     'github.repo': repo,
     'name': repo,
     'date.year': '2016',
-    'license.owner': 'arlac77'
+    'license.owner': user
   };
 
   const source = {
