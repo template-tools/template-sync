@@ -150,8 +150,17 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
 
   getBranches(targetRepo)
     .then(branches => {
-      const n = branches.filter(b => b.name.match(/template-sync/)).length;
-      dest.branch = `template-sync-${n + 1}`;
+      const maxBranchId = branches.reduce((prev,current) => {
+        const m = current.name.match(/template-sync-(\d+)/);
+        if(m) {
+          const r = parseInt(m[1]);
+          if(r > prev) { return r; }
+        }
+ 
+        return prev;
+      }, 0);
+
+      dest.branch = `template-sync-${maxBranchId + 1}`;
       console.log(`create branch ${dest.branch}`);
     }).then(() =>
       Promise.all(fileNames.map(name =>
