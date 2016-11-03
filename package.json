@@ -3,6 +3,7 @@
   "version": "0.0.0-semantic-release",
   "description": "Keep npm package meta data in sync with its template",
   "main": "dist/lib.js",
+  "module": "src/lib.js",
   "scripts": {
     "cover": "npm run build && ./node_modules/istanbul/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports tests/*_test.js",
     "docs": "jsdoc2md -l off -t README.hbs -f src/*.js > README.md",
@@ -18,7 +19,7 @@
     "node": ">=6.9.1"
   },
   "dependencies": {
-    "expression-expander": "^5.2.0",
+    "expression-expander": "^5.2.1",
     "js-yaml": "^3.6.1",
     "keychain": "^1.0.0",
     "octonode": "^0.7.6",
