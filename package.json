@@ -5,8 +5,8 @@
   "main": "dist/lib.js",
   "module": "src/lib.js",
   "scripts": {
-    "cover": "npm run build && ./node_modules/istanbul/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports tests/*_test.js",
-    "docs": "jsdoc2md -l off -t README.hbs -f src/*.js > README.md",
+    "cover": "npm run build && ./node_modules/istanbul/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports tests",
+    "docs": "jsdoc2md -l off -t README.hbs -f {{module}} > README.md",
     "build": "./node_modules/rollup/bin/rollup --format=cjs --output=bin/npm-template-sync -c -- src/npm-template-sync.js",
     "test": "npm run build && mocha tests/*_test.js && markdown-doctest",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
@@ -26,18 +26,18 @@
     "pull-request": "^3.0.0"
   },
   "devDependencies": {
-    "chai": "3.5.0",
+    "chai": "^3.5.0",
     "coveralls": "2.11.14",
     "cracks": "3.1.2",
-    "cz-conventional-changelog": "1.2.0",
-    "istanbul": "0.4.5",
+    "cz-conventional-changelog": "^1.2.0",
+    "istanbul": "^0.4.5",
     "jsdoc-to-markdown": "^2.0.1",
-    "markdown-doctest": "^0.8.1",
-    "mocha": "3.1.2",
+    "markdown-doctest": "^0.9.0",
+    "mocha": "^3.1.2",
     "rollup": "^0.36.3",
     "rollup-plugin-commonjs": "^5.0.5",
     "rollup-plugin-node-resolve": "^2.0.0",
-    "semantic-release": "6.3.1"
+    "semantic-release": "^6.3.1"
   },
   "release": {
     "verifyRelease": "cracks"
@@ -56,5 +56,12 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "module": "{{module}}",
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ]
 }
