@@ -13,6 +13,7 @@ const commander = require('commander'),
 import travis from './travis';
 import readme from './readme';
 import pkg from './package';
+import license from './license';
 import replace from './replace';
 
 commander
@@ -73,7 +74,7 @@ const files = {
     merger: replace
   },
   'LICENSE': {
-    merger: replace
+    merger: license
   }
 };
 
@@ -150,13 +151,15 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
 
   getBranches(targetRepo)
     .then(branches => {
-      const maxBranchId = branches.reduce((prev,current) => {
+      const maxBranchId = branches.reduce((prev, current) => {
         const m = current.name.match(/template-sync-(\d+)/);
-        if(m) {
+        if (m) {
           const r = parseInt(m[1]);
-          if(r > prev) { return r; }
+          if (r > prev) {
+            return r;
+          }
         }
- 
+
         return prev;
       }, 0);
 
