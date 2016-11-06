@@ -3,12 +3,20 @@
 
 'use strict';
 
-const chai = require('chai'),
-  assert = chai.assert,
-  expect = chai.expect,
-  should = chai.should(),
-  license = require('../src/license');
+import {
+  expect, assert
+}
+from 'chai';
+import {
+  license
+}
+from '../tmp/bundle.test.js';
 
 describe('modify year', () => {
-  it('should fail', () => 1);
+  const out = license.merger('Copyright (c) 1999 by xyz', 'Copyright (c) {{date.year}} by {{owner}}', {
+    'date.year': 2016,
+    owener: 'owner'
+  });
+
+  it('year range', () => assert.match(out, 'Copyright (c) 1999-2016 by xyz'));
 });
