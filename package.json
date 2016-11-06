@@ -8,7 +8,7 @@
     "cover": "npm run build && ./node_modules/istanbul/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports tests/*_test.js",
     "docs": "jsdoc2md -l off -t README.hbs -f src/npm-template-sync.js > README.md",
     "build": "./node_modules/rollup/bin/rollup --output=bin/npm-template-sync -c -- src/npm-template-sync.js",
-    "test": "rollup -c rollup.config.test.js && mocha build/bundle.test.js && markdown-doctest",
+    "test": "rollup -c rollup.config.test.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js && markdown-doctest",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
