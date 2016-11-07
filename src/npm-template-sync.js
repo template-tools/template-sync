@@ -61,7 +61,7 @@ const files = {
   '.travis.yml': {
     merger: travis
   },
-  'README.hbs': {
+  'doc/README.hbs': {
     merger: readme,
   },
   'package.json': {
