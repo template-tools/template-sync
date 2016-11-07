@@ -2,7 +2,7 @@
 
 
 export default function (target, template, context, options = {}) {
-  const m = target.match(/opyright\s*\(c\)\s*(\d+)([,\-]\d+)*(,\s*(.*))?/);
+  const m = target.match(/opyright\s*\(c\)\s*(\d+)([,\-]\d+)*(\s*(,|by)\s*(.*))?/);
 
   if (m) {
     const years = {};
@@ -15,7 +15,7 @@ export default function (target, template, context, options = {}) {
     }
 
     if (m[4] !== undefined) {
-      context.properties['license.owner'] = m[4];
+      context.properties['license.owner'] = m[5];
     }
 
     context.properties['date.year'] = Object.keys(years).join(',');
