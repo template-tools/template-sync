@@ -11,7 +11,11 @@ export default function (target, template, context, options = {}) {
     years[m[1]] = m[1];
 
     if (m[2] !== undefined) {
-      m[2].split(/\s*[,\-]\s*/).forEach(y => years[y] = y);
+      m[2].split(/\s*[,\-]\s*/).forEach(y => {
+        if (y.length > 0) { 
+          years[y] = y;
+        }
+      });
     }
 
     if (m[4] !== undefined) {
