@@ -8,17 +8,15 @@ export default function (target, template, context, options = {}) {
     const years = {};
 
     years[context.properties['date.year']] = context.properties['date.year'];
-	years[m[1]] = m[1];
+    years[m[1]] = m[1];
 
     if (m[2] !== undefined) {
-      m[2].split(/[,\-]/).forEach(y => years[y] = y));
+      m[2].split(/\s*[,\-]\s*/).forEach(y => years[y] = y);
     }
 
-	if(m[4] !== undefined) {
-		context.properties['license.owner'] = m[4]; 
-	}
-	
-    console.log(years);
+    if (m[4] !== undefined) {
+      context.properties['license.owner'] = m[4];
+    }
 
     context.properties['date.year'] = Object.keys(years).join(',');
   }
