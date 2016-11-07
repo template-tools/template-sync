@@ -2,19 +2,25 @@
 
 
 export default function (target, template, context, options = {}) {
-  const m = target.match(/opyright\s*\(c\)\s*(\d+)([,\-]\d+)*/);
-  if (m) {
-    const yearSet = new Set([parseInt(context.properties['date.year']), parseInt(m[1]), 1234]);
+  const m = target.match(/opyright\s*\(c\)\s*(\d+)([,\-]\d+)*(,\s*(.*))?/);
 
-    if (m[2]) {
-      m[2].split(/[,\-]/).forEach(y => yearSet.add(parseInt(y)));
+  if (m) {
+    const years = {};
+
+    years[context.properties['date.year']] = context.properties['date.year'];
+	years[m[1]] = m[1];
+
+    if (m[2] !== undefined) {
+      m[2].split(/[,\-]/).forEach(y => years[y] = y));
     }
 
-    const years = Array.from(yearSet.entries);
-
+	if(m[4] !== undefined) {
+		context.properties['license.owner'] = m[4]; 
+	}
+	
     console.log(years);
 
-    //context.properties['date.year'] = years.join(',');
+    context.properties['date.year'] = Object.keys(years).join(',');
   }
 
   return context.expand(template);
