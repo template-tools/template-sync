@@ -26,6 +26,18 @@ export default function (target, template, context, options = {}) {
     }
   });
 
+  if (target.contributors !== undefined && target.author !== undefined) {
+    const m = target.author.match(/(^[^<]+)<([^>]+)>/);
+    if (m !== undefined) {
+      const name = String(m[1]).replace(/^\s+|\s+$/g, '');
+      const email = m[2];
+
+      if (target.contributors.find(c => c.name === name && c.email === email)) {
+        delete target.author;
+      }
+    }
+  }
+
   const [user, repo] = options.targetRepo.split(/\//);
 
   return JSON.stringify(context.expand(target), undefined, 2);
