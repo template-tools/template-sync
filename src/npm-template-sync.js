@@ -177,7 +177,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
         pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
           pr.commit(user, repo, {
             branch: dest.branch,
-            message: `fix: merge from ${templateRepo}`,
+            message: `fix: merge package template from ${templateRepo}`,
             updates: transforms.map((t, i) => {
               return {
                 path: fileNames[i],
@@ -187,7 +187,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
           }, options)
           .then(() =>
             pr.pull(source, dest, {
-              title: `merge from ${templateRepo}`,
+              title: `merge package template from ${templateRepo}`,
               body: 'Updated standard to latest version'
             }, options))
         )
