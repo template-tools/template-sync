@@ -1,5 +1,13 @@
 /* jslint node: true, esnext: true */
 
+function addKeyword(pkg,regex,keyword)
+{
+    if (pkg.name.match(regex)) {
+      if (!pkg.keywords.find(k => k === keyword)) {
+        pkg.keywords.push(keyword);
+      }
+    }
+}
 
 export default function (target, template, context, options = {}) {
   target = JSON.parse(target);
@@ -40,23 +48,11 @@ export default function (target, template, context, options = {}) {
 
   const [user, repo] = options.targetRepo.split(/\//);
 
+  // TODO move data into template
+  addKeyword(target,/^kronos-interceptor.+/,'kronos-interceptor');
+  addKeyword(target,/^kronos-service.+/,'kronos-service');
+  addKeyword(target,/^kronos-step.+/,'kronos-step');
+  addKeyword(target,/^kronos-adapter.+/,'kronos-step');
+  
   return JSON.stringify(context.expand(target), undefined, 2);
-
-  /*
-    if (pkg.name.match(/^kronos-interceptor.+/)) {
-      if (!pkg.keywords.find(k => k === 'kronos-interceptor')) {
-        pkg.keywords.push('kronos-interceptor');
-      }
-    }
-    if (pkg.name.match(/^kronos-step.+/) || pkg.name.match(/^kronos-adapter.+/)) {
-      if (!pkg.keywords.find(k => k === 'kronos-step')) {
-        pkg.keywords.push('kronos-step');
-      }
-    }
-    if (pkg.name.match(/^kronos-service.+/) && !pkg.name.match(/^kronos-service-manager/)) {
-      if (!pkg.keywords.find(k => k === 'kronos-service')) {
-        pkg.keywords.push('kronos-service');
-      }
-    }
-  */
 }
