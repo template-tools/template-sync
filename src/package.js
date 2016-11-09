@@ -1,12 +1,11 @@
 /* jslint node: true, esnext: true */
 
-function addKeyword(pkg,regex,keyword)
-{
-    if (pkg.name.match(regex)) {
-      if (!pkg.keywords.find(k => k === keyword)) {
-        pkg.keywords.push(keyword);
-      }
+function addKeyword(pkg, regex, keyword) {
+  if (pkg.name.match(regex)) {
+    if (!pkg.keywords.find(k => k === keyword)) {
+      pkg.keywords.push(keyword);
     }
+  }
 }
 
 export default function (target, template, context, options = {}) {
@@ -34,6 +33,10 @@ export default function (target, template, context, options = {}) {
     }
   });
 
+  if (target.module === '{{module}}') {
+    delete target.module;
+  }
+
   if (target.contributors !== undefined && target.author !== undefined) {
     const m = target.author.match(/(^[^<]+)<([^>]+)>/);
     if (m !== undefined) {
@@ -49,10 +52,10 @@ export default function (target, template, context, options = {}) {
   const [user, repo] = options.targetRepo.split(/\//);
 
   // TODO move data into template
-  addKeyword(target,/^kronos-interceptor.+/,'kronos-interceptor');
-  addKeyword(target,/^kronos-service.+/,'kronos-service');
-  addKeyword(target,/^kronos-step.+/,'kronos-step');
-  addKeyword(target,/^kronos-adapter.+/,'kronos-step');
-  
+  addKeyword(target, /^kronos-interceptor.+/, 'kronos-interceptor');
+  addKeyword(target, /^kronos-service.+/, 'kronos-service');
+  addKeyword(target, /^kronos-step.+/, 'kronos-step');
+  addKeyword(target, /^kronos-adapter.+/, 'kronos-step');
+
   return JSON.stringify(context.expand(target), undefined, 2);
 }
