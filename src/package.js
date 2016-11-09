@@ -51,11 +51,18 @@ export default function (target, template, context, options = {}) {
 
   const [user, repo] = options.targetRepo.split(/\//);
 
-  // TODO move data into template
+  if (template.config && template.config.keywords) {
+    Object.keys(template.config.keywords).forEach(r =>
+      addKeyword(target, new RegExp(r), template.config.keywords[r])
+    );
+  }
+
+  /* TODO move data into template
   addKeyword(target, /^kronos-interceptor.+/, 'kronos-interceptor');
   addKeyword(target, /^kronos-service.+/, 'kronos-service');
   addKeyword(target, /^kronos-step.+/, 'kronos-step');
   addKeyword(target, /^kronos-adapter.+/, 'kronos-step');
+  */
 
   return JSON.stringify(context.expand(target), undefined, 2);
 }
