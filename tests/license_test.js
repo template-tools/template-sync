@@ -3,22 +3,28 @@
 
 'use strict';
 
-import {
-  expect, assert
-}
-from 'chai';
-import {
-  license
-}
-from '../tmp/bundle.test.js';
+const assert = require('chai').assert,
+  ee = require('expression-expander');
+
+import license from '../src/license';
 
 describe('modify year', function () {
-  const out = license.merger('Copyright (c) 1999 by xyz', 'Copyright (c) {{date.year}} by {{owner}}', {
-    'date.year': 2016,
-    owener: 'owner'
+
+  const context = ee.createContext({
+    keepUndefinedValues: true,
+    leftMarker: '{{',
+    rightMarker: '}}',
+    markerRegexp: '\{\{([^\}]+)\}\}'
   });
 
+  context.properties = {
+    'date.year': 2016,
+    owner: 'xyz'
+  };
+
+  const out = license('Copyright (c) 1999 by xyz', 'Copyright (c) {{date.year}} by {{owner}}', context, {});
+
   it('year range', function () {
-    assert.match(out, 'Copyright (c) 1999-2016 by xyz');
+    assert.equal(out, 'Copyright (c) 1999,2016 by xyz');
   });
 });
