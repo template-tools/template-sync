@@ -6,11 +6,11 @@ import commonjs from 'rollup-plugin-commonjs';
 import istanbul from 'rollup-plugin-istanbul';
 
 export default {
-  entry: 'src/license.js',
+  entry: 'tests/license_test.js',
   format: 'cjs',
   dest: 'build/bundle.test.js',
   plugins: [istanbul({
-    exclude: ['tests/*.js', 'node_modules/**/*']
+    exclude: ['node_modules/**/*']
   }), nodeResolve({
     jsnext: true
   }), commonjs()]
