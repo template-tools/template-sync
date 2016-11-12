@@ -7,6 +7,6 @@ export default function (target, template, context, options = {}) {
   const lines = target.split(/\n/);
   const fel = lines.findIndex(l => l.length === 0);
 
-  return badges.join('\n') +
+  return badges.join('\n') + '\n' +
     lines.slice(fel).join('\n');
 }
