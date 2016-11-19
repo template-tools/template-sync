@@ -28,8 +28,10 @@ export default function (target, template, context, options = {}) {
   Object.assign(target.engines, template.engines);
 
   Object.keys(template).forEach(p => {
-    if (target[p] === undefined) {
-      target[p] = template[p];
+    if (p !== 'template') {
+      if (target[p] === undefined) {
+        target[p] = template[p];
+      }
     }
   });
 

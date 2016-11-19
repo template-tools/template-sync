@@ -7,8 +7,12 @@
 const commander = require('commander'),
   keychain = require('keychain'),
   github = require('octonode'),
-  pr = require('pull-request'),
-  ee = require('expression-expander');
+  pr = require('pull-request');
+
+import {
+  createContext
+}
+from 'expression-expander';
 
 import travis from './travis';
 import readme from './readme';
@@ -73,6 +77,9 @@ const files = {
   '.npmignore': {
     merger: replace
   },
+  'rollup.config.js': {
+    merger: replace
+  },
   'LICENSE': {
     merger: license
   }
@@ -115,7 +122,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
   const [user, repo] = targetRepo.split(/\//);
   const [tUser, tRepo] = templateRepo.split(/\//);
 
-  const context = ee.createContext({
+  const context = createContext({
     keepUndefinedValues: true,
     leftMarker: '{{',
     rightMarker: '}}',
