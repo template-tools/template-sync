@@ -102,7 +102,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
   }
 
   function getFile(repo, file, options = {}) {
-    return new Promise((fullfill, reject) => {
+    return new Promise((fullfill, reject) =>
       client.repo(repo).contents(file, (err, status, body, headers) => {
         if (err) {
           if (options.ignoreMissingFiles) {
@@ -114,8 +114,8 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
           const b = new Buffer(status.content, 'base64');
           fullfill(b.toString());
         }
-      });
-    });
+      })
+    );
   }
 
   const fileNames = Object.keys(files);
@@ -170,8 +170,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
         return prev;
       }, 0);
 
-      dest.branch = `template-sync-${maxBranchId + 1}`;
-      console.log(`create branch ${dest.branch}`);
+      dest.branch += `-${maxBranchId + 1}`;
     }).then(() =>
       Promise.all(fileNames.map(name =>
         Promise.all([getFile(targetRepo, name, {
