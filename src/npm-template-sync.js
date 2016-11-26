@@ -21,6 +21,7 @@ import readme from './readme';
 import pkg from './package';
 import license from './license';
 import replace from './replace';
+import replace_if_empty from './replace_if_empty';
 
 commander
   .option('-k, --keystore [account/service]', 'keystore')
@@ -80,7 +81,7 @@ const files = {
     merger: replace
   },
   'rollup.config.js': {
-    merger: replace
+    merger: replace_if_empty
   },
   'LICENSE': {
     merger: license
@@ -199,7 +200,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
               body: 'Updated standard to latest version'
             }, options))
         )
-      )).then(r => console.log(r.body))
+      )).then(r => console.log(r.body.html_url))
     .catch(e => {
       console.error(e);
       //console.log(e.body.errors);
