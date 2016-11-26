@@ -218,10 +218,5 @@ function pull(from, to, msg, options, callback) {
     query.body = msg.body || '';
   }
 
-  const url = `/repos/${to.user}/${to.repo}/pulls`;
-  console.log(url);
-  console.log(query);
-  console.log(options);
-
-  return githubBasic.json('post', url, query, options).nodeify(callback);
+  return githubBasic.json('post', `/repos/${to.user}/${to.repo}/pulls`, query, options).nodeify(callback);
 }
