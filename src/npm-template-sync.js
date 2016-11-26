@@ -7,6 +7,8 @@
 const commander = require('commander'),
   keychain = require('keychain'),
   github = require('octonode'),
+  githubBasic = require('github-basic'),
+
   pr = require('pull-request');
 
 import {
@@ -183,7 +185,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
         pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
           pr.commit(user, repo, {
             branch: dest.branch,
-            message: `fix: merge package template from ${templateRepo}`,
+            message: `fix(package): merge package template from ${templateRepo}`,
             updates: transforms.map((t, i) => {
               return {
                 path: fileNames[i],
@@ -192,11 +194,34 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
             })
           }, options)
           .then(() =>
-            pr.pull(source, dest, {
+            pull(source, dest, {
               title: `merge package template from ${templateRepo}`,
               body: 'Updated standard to latest version'
             }, options))
         )
-      )).then(r => console.log(r))
-    .catch(e => console.error(e));
+      )).then(r => console.log(r.body))
+    .catch(e => {
+      console.error(e);
+      //console.log(e.body.errors);
+    });
+}
+
+function pull(from, to, msg, options, callback) {
+  var query = {
+    base: from.branch,
+    head: to.branch
+  };
+  if (typeof msg.issue === 'number') {
+    query.issue = msg.issue.toString();
+  } else {
+    query.title = msg.title;
+    query.body = msg.body || '';
+  }
+
+  const url = `/repos/${to.user}/${to.repo}/pulls`;
+  console.log(url);
+  console.log(query);
+  console.log(options);
+
+  return githubBasic.json('post', url, query, options).nodeify(callback);
 }
