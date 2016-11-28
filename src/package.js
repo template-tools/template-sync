@@ -13,7 +13,7 @@ export default function (target, template, context, options = {}) {
   template = JSON.parse(template);
 
   context.properties.module = target.module;
-  context.properties.main = target.main;
+  context.properties.main = target.main || 'indes.js';
 
   const deepPropeties = ['scripts', 'devDependencies', 'engines'];
 

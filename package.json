@@ -19,6 +19,7 @@
     "node": ">=6.9.1"
   },
   "dependencies": {
+    "deep-extend": "^0.4.1",
     "expression-expander": "^5.2.3",
     "js-yaml": "^3.6.1",
     "keychain": "^1.0.0",
@@ -57,8 +58,10 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [{
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }]
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ]
 }
