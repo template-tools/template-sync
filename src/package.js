@@ -21,11 +21,8 @@ export default function (target, template, context, options = {}) {
     if (target[p] === undefined) {
       target[p] = {};
     }
+    Object.assign(target[p], template[p]);
   });
-
-  Object.assign(target.devDependencies, template.devDependencies);
-  Object.assign(target.scripts, template.scripts);
-  Object.assign(target.engines, template.engines);
 
   Object.keys(template).forEach(p => {
     if (p !== 'template') {
