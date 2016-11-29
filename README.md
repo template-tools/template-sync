@@ -11,3 +11,26 @@
 [![docs](http://inch-ci.org/github/arlac77/npm-template-sync.svg?branch=master)](http://inch-ci.org/github/arlac77/npm-template-sync)
 [![downloads](http://img.shields.io/npm/dm/npm-template-sync.svg?style=flat-square)](https://npmjs.org/package/npm-template-sync)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
+npm-template-sync
+-------------------
+Keep npm package meta data in sync with its template
+
+
+```shell
+npm-template-sync --repo myGithubUser/myRepo --template aTemplateGithubUser/aRepo  
+```
+
+# install
+
+With [npm](http://npmjs.org) do:
+
+```shell
+npm install npm-template-sync
+npm run build
+# ./bin/npm-template-sync
+```
+
+# license
+
+BSD-2-Clause
