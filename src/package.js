@@ -17,6 +17,16 @@ export default function (target, template, context, options = {}) {
 
   const deepPropeties = ['scripts', 'devDependencies', 'engines'];
 
+
+  let extraBuild;
+
+  if (target.scripts && target.scripts.build) {
+    const m = target.scripts.build.match(/\&\&\s*(.+)/);
+    if (m) {
+      extraBuild = m[1];
+    }
+  }
+
   deepPropeties.forEach(p => {
     if (target[p] === undefined) {
       target[p] = {};
@@ -31,6 +41,10 @@ export default function (target, template, context, options = {}) {
       }
     }
   });
+
+  if (extraBuild) {
+    target.scripts.build += ` && ${extraBuild}`;
+  }
 
   if (target.module === '{{module}}') {
     delete target.module;
