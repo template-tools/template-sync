@@ -5,10 +5,10 @@
   "main": "dist/npm-template-sync.js",
   "module": "src/npm-template-sync.js",
   "scripts": {
-    "cover": "npm run build && ./node_modules/istanbul/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports tests/*_test.js",
-    "docs": "jsdoc2md -l off -t doc/README.hbs -f src/npm-template-sync.js > README.md",
-    "build": "./node_modules/rollup/bin/rollup --output=bin/npm-template-sync -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
-    "test": "rollup -c tests/rollup.config.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js && markdown-doctest",
+    "cover": "npm run build && node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -u exports tests/*_test.js",
+    "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js > README.md",
+    "build": "node_modules/rollup/bin/rollup --output=dist/npm-template-sync.js -c -- src/npm-template-sync.js &&  chmod +x bin/npm-template-sync",
+    "test": "npm run build && node_modules/.bin/mocha tests/*_test.js && markdown-doctest",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
@@ -32,13 +32,13 @@
     "cz-conventional-changelog": "^1.2.0",
     "istanbul": "^0.4.5",
     "jsdoc-to-markdown": "^2.0.1",
-    "markdown-doctest": "^0.9.0",
-    "mocha": "^3.1.2",
-    "rollup": "^0.36.3",
+    "markdown-doctest": "^0.9.1",
+    "mocha": "^3.2.0",
+    "rollup": "^0.36.4",
     "rollup-plugin-commonjs": "^5.0.5",
     "rollup-plugin-istanbul": "^1.1.0",
     "rollup-plugin-node-resolve": "^2.0.0",
-    "semantic-release": "^6.3.1"
+    "semantic-release": "^6.3.3"
   },
   "release": {
     "verifyRelease": "cracks"
@@ -47,7 +47,6 @@
     "npm",
     "template"
   ],
-  "author": "Markus Felten <markus.felten@gmx.de>",
   "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/arlac77/npm-template-sync/issues"
