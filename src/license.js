@@ -25,5 +25,9 @@ export default function (target, template, context, options = {}) {
     context.properties['date.year'] = Object.keys(years).join(',');
   }
 
+  if (target !== '') {
+    return target.replace(/opyright\s*\(c\)\s*(\d+)([,\-]\d+)/, `opyright (c) ${context.properties['date.year']}`);
+  }
+
   return context.expand(template);
 }
