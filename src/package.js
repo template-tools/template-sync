@@ -17,11 +17,14 @@ export default function (target, template, context, options = {}) {
 
   const deepPropeties = ['scripts', 'devDependencies', 'engines'];
 
-
-  let extraBuild;
+  let extraBuild, buildOutput;
 
   if (target.scripts && target.scripts.build) {
-    const m = target.scripts.build.match(/\&\&\s*(.+)/);
+    let m = target.scripts.build.match(/--output=([^\s]+)/);
+    if (m) {
+      buildOutput = m[1];
+    }
+    m = target.scripts.build.match(/\&\&\s*(.+)/);
     if (m) {
       extraBuild = m[1];
     }
@@ -41,6 +44,10 @@ export default function (target, template, context, options = {}) {
       }
     }
   });
+
+  if (buildOutput) {
+    target.scripts.build = target.scripts.build.replace(/--output=([^\s]+)/, `--output=${buildOutput}`);
+  }
 
   if (extraBuild) {
     target.scripts.build += ` && ${extraBuild}`;
