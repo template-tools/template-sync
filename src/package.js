@@ -16,7 +16,7 @@ export default function (target, template, context, options = {}) {
     context.properties.module = target.module;
   }
 
-  context.properties.main = target.main && !target.main.match(/\{\{main\}\}/) ? target.main : 'index.js';
+  context.properties.main = target.main && !target.main.match(/\{\{main\}\}/) ? target.main : 'dist/index.js';
 
   const deepPropeties = ['scripts', 'devDependencies', 'engines'];
 
