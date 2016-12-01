@@ -12,8 +12,11 @@ export default function (target, template, context, options = {}) {
   target = JSON.parse(target);
   template = JSON.parse(template);
 
-  context.properties.module = target.module;
-  context.properties.main = target.main || 'indes.js';
+  if (target.module && !target.module.match(/\{\{module\}\}/)) {
+    context.properties.module = target.module;
+  }
+
+  context.properties.main = target.main && !target.main.match(/\{\{main\}\}/) ? target.main : 'index.js';
 
   const deepPropeties = ['scripts', 'devDependencies', 'engines'];
 
