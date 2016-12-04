@@ -3,28 +3,26 @@
 
 'use strict';
 
-const assert = require('chai').assert,
-  ee = require('expression-expander');
+const assert = require('chai').assert;
 
-import license from '../src/license';
+import Context from '../src/Context';
+import License from '../src/License';
 
-describe('modify year', function () {
+describe('modify year', () => {
 
-  const context = ee.createContext({
-    keepUndefinedValues: true,
-    leftMarker: '{{',
-    rightMarker: '}}',
-    markerRegexp: '\{\{([^\}]+)\}\}'
-  });
-
-  context.properties = {
+  const context = new Context(undefined, '', '', {
     'date.year': 2016,
     owner: 'xyz'
-  };
+  }, {
+    'aFile': {
+      template: 'Copyright (c) {{date.year}} by {{owner}}',
+      content: 'Copyright (c) 1999 by xyz'
+    }
+  });
 
-  const out = license('Copyright (c) 1999 by xyz', 'Copyright (c) {{date.year}} by {{owner}}', context, {});
+  const license = new License(context, 'aFile');
 
-  it('year range', function () {
-    assert.equal(out, 'Copyright (c) 1999,2016 by xyz');
+  it('year range', () => {
+    assert.equal(license.mergedContent, 'Copyright (c) 1999,2016 by xyz');
   });
 });

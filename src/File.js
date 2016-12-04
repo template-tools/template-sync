@@ -2,8 +2,6 @@
 
 'use strict';
 
-
-
 export default class File {
   constructor(context, path) {
 
@@ -46,5 +44,4 @@ export default class File {
       })
     );
   }
-
 }

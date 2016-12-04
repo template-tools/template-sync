@@ -8,11 +8,7 @@ const commander = require('commander'),
   githubBasic = require('github-basic'),
   pr = require('pull-request');
 
-import {
-  createContext
-}
-from 'expression-expander';
-
+import Context from './Context';
 import Travis from './Travis';
 import Readme from './Readme';
 import Package from './Package';
@@ -60,48 +56,6 @@ keychain.getPassword(keystore, (err, pass) => {
   work(pass, commander.template, commander.repo);
 });
 
-
-
-class Context {
-  constructor(client, targetRepo, templateRepo, properties) {
-    this.ctx = createContext({
-      keepUndefinedValues: true,
-      leftMarker: '{{',
-      rightMarker: '}}',
-      markerRegexp: '\{\{([^\}]+)\}\}'
-    });
-
-    this.ctx.properties = properties;
-
-    Object.defineProperty(this, 'properties', {
-      value: properties
-    });
-
-    Object.defineProperty(this, 'files', {
-      value: new Map()
-    });
-
-    Object.defineProperty(this, 'client', {
-      value: client
-    });
-
-    Object.defineProperty(this, 'targetRepo', {
-      value: targetRepo
-    });
-
-    Object.defineProperty(this, 'templateRepo', {
-      value: templateRepo
-    });
-  }
-
-  expand(...args) {
-    return this.ctx.expand(...args);
-  }
-
-  addFile(file) {
-    this.files.set(file.path, file);
-  }
-}
 
 function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetRepo =
   'arlac77/symatem-infrastructure') {
