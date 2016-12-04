@@ -1,5 +1,3 @@
-//#!/usr/bin/env node
-
 /* jslint node: true, esnext: true */
 
 'use strict';
@@ -8,7 +6,6 @@ const commander = require('commander'),
   keychain = require('keychain'),
   github = require('octonode'),
   githubBasic = require('github-basic'),
-
   pr = require('pull-request');
 
 import {
@@ -16,12 +13,12 @@ import {
 }
 from 'expression-expander';
 
-import travis from './travis';
-import readme from './readme';
-import pkg from './package';
-import license from './license';
-import replace from './replace';
-import replace_if_empty from './replace_if_empty';
+import Travis from './Travis';
+import Readme from './Readme';
+import Package from './Package';
+import License from './License';
+import Replace from './Replace';
+import ReplaceIfEmpty from './ReplaceIfEmpty';
 
 commander
   .option('-k, --keystore [account/service]', 'keystore')
@@ -40,7 +37,6 @@ if (commander.keystore) {
   keystore.account = v[0];
   keystore.service = v[1];
 }
-
 
 if (commander.save) {
   keychain.setPassword({
@@ -64,33 +60,55 @@ keychain.getPassword(keystore, (err, pass) => {
   work(pass, commander.template, commander.repo);
 });
 
-const files = {
-  '.travis.yml': {
-    merger: travis
-  },
-  'doc/README.hbs': {
-    merger: readme,
-  },
-  'package.json': {
-    merger: pkg
-  },
-  '.gitignore': {
-    merger: replace
-  },
-  '.npmignore': {
-    merger: replace
-  },
-  'rollup.config.js': {
-    merger: replace_if_empty
-  },
-  'LICENSE': {
-    merger: license
+
+
+class Context {
+  constructor(client, targetRepo, templateRepo, properties) {
+    this.ctx = createContext({
+      keepUndefinedValues: true,
+      leftMarker: '{{',
+      rightMarker: '}}',
+      markerRegexp: '\{\{([^\}]+)\}\}'
+    });
+
+    this.ctx.properties = properties;
+
+    Object.defineProperty(this, 'properties', {
+      value: properties
+    });
+
+    Object.defineProperty(this, 'files', {
+      value: new Map()
+    });
+
+    Object.defineProperty(this, 'client', {
+      value: client
+    });
+
+    Object.defineProperty(this, 'targetRepo', {
+      value: targetRepo
+    });
+
+    Object.defineProperty(this, 'templateRepo', {
+      value: templateRepo
+    });
   }
-};
+
+  expand(...args) {
+    return this.ctx.expand(...args);
+  }
+
+  addFile(file) {
+    this.files.set(file.path, file);
+  }
+}
 
 function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetRepo =
   'arlac77/symatem-infrastructure') {
   const client = github.client(token);
+
+  const [user, repo] = targetRepo.split(/\//);
+  const [tUser, tRepo] = templateRepo.split(/\//);
 
   function getBranches(repo) {
     return new Promise((fullfill, reject) => {
@@ -103,42 +121,6 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
       });
     });
   }
-
-  function getFile(repo, file, options = {}) {
-    return new Promise((fullfill, reject) =>
-      client.repo(repo).contents(file, (err, status, body, headers) => {
-        if (err) {
-          if (options.ignoreMissingFiles) {
-            fullfill('');
-          } else {
-            reject(err);
-          }
-        } else {
-          const b = new Buffer(status.content, 'base64');
-          fullfill(b.toString());
-        }
-      })
-    );
-  }
-
-  const fileNames = Object.keys(files);
-  const [user, repo] = targetRepo.split(/\//);
-  const [tUser, tRepo] = templateRepo.split(/\//);
-
-  const context = createContext({
-    keepUndefinedValues: true,
-    leftMarker: '{{',
-    rightMarker: '}}',
-    markerRegexp: '\{\{([^\}]+)\}\}'
-  });
-
-  context.properties = {
-    'github.user': user,
-    'github.repo': repo,
-    'name': repo,
-    'date.year': '2016',
-    'license.owner': user
-  };
 
   const source = {
     user: user,
@@ -174,37 +156,48 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
       }, 0);
 
       dest.branch += `-${maxBranchId + 1}`;
-    }).then(() =>
-      Promise.all(fileNames.map(name =>
-        Promise.all([getFile(targetRepo, name, {
-          ignoreMissingFiles: true
-        }), getFile(templateRepo, name)])
-        .then(contents => files[name].merger(contents[0], contents[1], context, {
-          templateRepo, targetRepo
-        }))
-      )).then(transforms =>
-        pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
-          pr.commit(user, repo, {
-            branch: dest.branch,
-            message: `fix(package): merge package template from ${templateRepo}`,
-            updates: transforms.map((t, i) => {
-              return {
-                path: fileNames[i],
-                content: t
-              };
-            })
-          }, options)
-          .then(() =>
-            pull(source, dest, {
-              title: `merge package template from ${templateRepo}`,
-              body: 'Updated standard to latest version'
-            }, options))
-        )
-      )).then(r => console.log(r.body.html_url))
-    .catch(e => {
-      console.error(e);
-      //console.log(e.body.errors);
-    });
+    }).then(() => {
+      const context = new Context(client, targetRepo, templateRepo, {
+        'github.user': user,
+        'github.repo': repo,
+        'name': repo,
+        'date.year': '2016',
+        'license.owner': user
+      });
+
+      const files = [
+        new ReplaceIfEmpty(context, 'rollup.config.js'),
+        new Package(context, 'package.json'),
+        new Readme(context, 'doc/README.hbs'),
+        new Travis(context, '.travis.yml'),
+        new Replace(context, '.gitignore'),
+        new Replace(context, '.npmignore'),
+        new License(context, 'LICENSE')
+      ];
+
+      return Promise.all(files.map(f => f.mergedContent)).then(
+        contents =>
+        contents.map((c, i) => {
+          return {
+            path: files[i].path,
+            content: c
+          };
+        })
+      );
+    }).then(files =>
+      pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
+        pr.commit(user, repo, {
+          branch: dest.branch,
+          message: `fix(package): merge package template from ${templateRepo}`,
+          updates: files
+        }, options).then(
+          () =>
+          pull(source, dest, {
+            title: `merge package template from ${templateRepo}`,
+            body: 'Updated standard to latest version'
+          }, options)).then(r => console.log(r.body.html_url))
+      )
+    );
 }
 
 function pull(from, to, msg, options, callback) {
