@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "deep-extend": "^0.4.1",
-    "expression-expander": "^5.2.7",
+    "expression-expander": "^5.2.9",
     "js-yaml": "^3.6.1",
     "keychain": "^1.0.0",
     "octonode": "^0.7.7",
