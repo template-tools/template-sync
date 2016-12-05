@@ -17,16 +17,26 @@ export default class Package extends File {
 
       const deepPropeties = ['scripts', 'devDependencies', 'engines'];
 
-      let extraBuild, buildOutput;
+      let extraBuild, buildOutput, specialTest;
 
-      if (target.scripts && target.scripts.build) {
-        let m = target.scripts.build.match(/--output=([^\s]+)/);
-        if (m) {
-          buildOutput = m[1];
+      if (target.scripts) {
+        if (target.scripts.test) {
+          if (target.scripts.test.match(/rollup/)) {
+            // TODO how to detect special rollup test config ?
+            specialTest = target.scripts.test;
+          }
         }
-        m = target.scripts.build.match(/\&\&\s*(.+)/);
-        if (m) {
-          extraBuild = m[1];
+
+        if (target.scripts.build) {
+          let m = target.scripts.build.match(/--output=([^\s]+)/);
+          if (m) {
+            buildOutput = m[1];
+          }
+
+          m = target.scripts.build.match(/\&\&\s*(.+)/);
+          if (m) {
+            extraBuild = m[1];
+          }
         }
       }
 
@@ -45,11 +55,15 @@ export default class Package extends File {
         }
       });
 
-      if (buildOutput) {
+      if (buildOutput !== undefined) {
         target.scripts.build = target.scripts.build.replace(/--output=([^\s]+)/, `--output=${buildOutput}`);
       }
 
-      if (extraBuild) {
+      if (specialTest !== undefined) {
+        target.scripts.test = specialTest;
+      }
+
+      if (extraBuild !== undefined) {
         target.scripts.build += ` && ${extraBuild}`;
       }
 
