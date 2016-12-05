@@ -57,8 +57,10 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [{
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }]
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ]
 }
