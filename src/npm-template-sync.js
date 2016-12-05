@@ -151,7 +151,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
             body: 'Updated standard to latest version'
           }, options)).then(r => console.log(r.body.html_url))
       )
-    );
+    ).catch(e => console.error(e));
 }
 
 function pull(from, to, msg, options, callback) {
