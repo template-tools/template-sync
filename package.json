@@ -34,7 +34,7 @@
     "jsdoc-to-markdown": "^2.0.1",
     "markdown-doctest": "^0.9.1",
     "mocha": "^3.2.0",
-    "rollup": "^0.36.4",
+    "rollup": "^0.37.0",
     "rollup-plugin-commonjs": "^5.0.5",
     "rollup-plugin-istanbul": "^1.1.0",
     "rollup-plugin-node-resolve": "^2.0.0",
