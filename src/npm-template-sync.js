@@ -2,8 +2,9 @@
 
 'use strict';
 
-const commander = require('commander'),
+const program = require('commander'),
   keychain = require('keychain'),
+  prompt = require('prompt'),
   github = require('octonode'),
   githubBasic = require('github-basic'),
   pr = require('pull-request');
@@ -16,35 +17,51 @@ import License from './License';
 import Replace from './Replace';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
 
-commander
-  .option('-k, --keystore [account/service]', 'keystore')
+program
+  .description('Keep npm package meta data in sync with its template')
+  .option('-k, --keystore <account/service>', 'keystore')
   .option('-s, --save', 'save keystore')
-  .option('-r, --repo [user/repo]', 'repo')
-  .option('-t, --template [user/repo]', 'template')
+  .option('-t, --template <user/repo>', 'template repository')
   .parse(process.argv);
+
+
+console.log(program.args);
 
 const keystore = {
   account: 'arlac77',
   service: 'GitHub for Mac SSH key passphrase — github.com'
 };
 
-if (commander.keystore) {
-  const v = commander.keystore.split(/\//);
-  keystore.account = v[0];
-  keystore.service = v[1];
+if (program.keystore) {
+  [keystore.account, keystore.service] = program.keystore.split(/\//);
 }
 
-if (commander.save) {
-  keychain.setPassword({
-    account: keystore.account,
-    service: keystore.service,
-    password: 'xxx'
-  }, function (err, pass) {
+if (program.save) {
+  prompt.start();
+  const schema = {
+    properties: {
+      password: {
+        required: true,
+        hidden: true
+      }
+    }
+  };
+  prompt.get(schema, (err, result) => {
     if (err) {
       console.error(`${err}`);
       return;
     }
-    console.log('password set');
+    keychain.setPassword({
+      account: keystore.account,
+      service: keystore.service,
+      password: result.password
+    }, (err, pass) => {
+      if (err) {
+        console.error(`${err}`);
+        return;
+      }
+      console.log('password set');
+    });
   });
 }
 
@@ -53,7 +70,9 @@ keychain.getPassword(keystore, (err, pass) => {
     console.error(`${err}`);
     return;
   }
-  work(pass, commander.template, commander.repo);
+  program.args.forEach(repo =>
+    work(pass, program.template, repo)
+  );
 });
 
 
