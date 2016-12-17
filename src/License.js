@@ -6,7 +6,6 @@ export default class License extends File {
     return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
       const [original, template] = contents;
       const m = original.match(/opyright\s*\(c\)\s*(\d+)([,\-]\d+)*(\s*(,|by)\s*(.*))?/);
-
       const properties = this.context.properties;
 
       if (m) {
@@ -31,7 +30,7 @@ export default class License extends File {
       }
 
       if (original !== '') {
-        return original.replace(/opyright\s*\(c\)\s*(\d+)([,\-]\d+)/,
+        return original.replace(/opyright\s*\(c\)\s*(\d+)([,\-]\d+)?/,
           `opyright (c) ${properties['date.year']}`);
       }
 
