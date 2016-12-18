@@ -22,7 +22,7 @@ class Client {
       contents(path, cb) {
         cb(undefined, {
           content: new Buffer(c.files[path][repo]).toString('base64')
-        }, 'xxx', {});
+        }, '', {});
       }
     };
   }

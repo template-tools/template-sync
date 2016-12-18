@@ -48,7 +48,7 @@ if (program.save) {
   };
   prompt.get(schema, (err, result) => {
     if (err) {
-      console.error(`${err}`);
+      console.error(err);
       return;
     }
     keychain.setPassword({
@@ -67,7 +67,7 @@ if (program.save) {
 
 keychain.getPassword(keystore, (err, pass) => {
   if (err) {
-    console.error(`${err}`);
+    console.error(err);
     return;
   }
   program.args.forEach(repo =>
