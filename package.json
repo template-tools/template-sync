@@ -5,9 +5,12 @@
   "main": "dist/npm-template-sync.js",
   "module": "src/npm-template-sync.js",
   "scripts": {
+    "dev": "next",
+    "start": "next start",
+    "build": "next build",
     "cover": "rollup -c tests/rollup.config.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js > README.md",
-    "build": "node_modules/rollup/bin/rollup --output=bin/npm-template-sync -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
+    "buildx": "node_modules/rollup/bin/rollup --output=bin/npm-template-sync -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
     "test": "rollup -c tests/rollup.config.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js && markdown-doctest",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -23,6 +26,7 @@
     "expression-expander": "^5.2.9",
     "js-yaml": "^3.7.0",
     "keychain": "^1.0.0",
+    "next": "^1.2.3",
     "octonode": "^0.7.7",
     "prompt": "^1.0.0",
     "pull-request": "^3.0.0"
