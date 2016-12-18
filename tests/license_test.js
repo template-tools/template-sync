@@ -35,7 +35,7 @@ describe('modify year', () => {
       targetRepo: 'Copyright (c) 1999 by xyz'
     }
   }), 'targetRepo', 'templateRepo', {
-    'date.year': 2016,
+    'date.year': 2099,
     owner: 'xyz'
   });
 
@@ -43,5 +43,5 @@ describe('modify year', () => {
 
   it('year range', () =>
     license.mergedContent.then(c =>
-      assert.equal(c, 'Copyright (c) 1999,2016 by xyz')));
+      assert.equal(c, 'Copyright (c) 1999,2099 by xyz')));
 });

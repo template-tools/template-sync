@@ -70,14 +70,11 @@ keychain.getPassword(keystore, (err, pass) => {
     console.error(err);
     return;
   }
-  program.args.forEach(repo =>
-    work(pass, program.template, repo)
-  );
+  program.args.forEach(repo => work(pass, repo, program.template));
 });
 
 
-function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetRepo =
-  'arlac77/symatem-infrastructure') {
+function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-template') {
   const client = github.client(token);
 
   const [user, repo] = targetRepo.split(/\//);
@@ -134,7 +131,7 @@ function work(token, templateRepo = 'Kronos-Tools/npm-package-template', targetR
         'github.user': user,
         'github.repo': repo,
         'name': repo,
-        'date.year': '2016',
+        'date.year': new Date().getFullYear(),
         'license.owner': user
       });
 
