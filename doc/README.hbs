@@ -16,11 +16,11 @@
 
 npm-template-sync
 -------------------
-Keep npm package meta data in sync with its template
+Keep npm package in sync with its template
 
 
 ```shell
-npm-template-sync --repo myGithubUser/myRepo --template aTemplateGithubUser/aRepo  
+npm-template-sync --template aTemplateGithubUser/aRepo  myGithubUser/myRepo
 ```
 
 # install

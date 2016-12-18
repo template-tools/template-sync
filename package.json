@@ -1,7 +1,7 @@
 {
   "name": "npm-template-sync",
   "version": "0.0.0-semantic-release",
-  "description": "Keep npm package meta data in sync with its template",
+  "description": "Keep npm package in sync with its template",
   "main": "dist/npm-template-sync.js",
   "module": "src/npm-template-sync.js",
   "scripts": {
@@ -58,10 +58,8 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ]
+  "contributors": [{
+    "name": "Markus Felten",
+    "email": "markus.felten@gmx.de"
+  }]
 }

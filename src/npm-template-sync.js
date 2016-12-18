@@ -18,7 +18,7 @@ import Replace from './Replace';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
 
 program
-  .description('Keep npm package meta data in sync with its template')
+  .description('Keep npm package in sync with its template')
   .option('-k, --keystore <account/service>', 'keystore')
   .option('-s, --save', 'save keystore')
   .option('-t, --template <user/repo>', 'template repository')
