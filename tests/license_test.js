@@ -8,25 +8,7 @@ const assert = require('chai').assert;
 import Context from '../src/Context';
 import License from '../src/License';
 
-
-class Client {
-  constructor(files) {
-    Object.defineProperty(this, 'files', {
-      value: files
-    });
-  }
-
-  repo(repo) {
-    const c = this;
-    return {
-      contents(path, cb) {
-        cb(undefined, {
-          content: new Buffer(c.files[path][repo]).toString('base64')
-        }, '', {});
-      }
-    };
-  }
-}
+import Client from './Client';
 
 describe('modify year', () => {
   const context = new Context(new Client({
