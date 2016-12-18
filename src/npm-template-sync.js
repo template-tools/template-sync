@@ -57,7 +57,7 @@ if (program.save) {
       password: result.password
     }, (err, pass) => {
       if (err) {
-        console.error(`${err}`);
+        console.error(err);
         return;
       }
       console.log('password set');
