@@ -24,9 +24,6 @@ program
   .option('-t, --template <user/repo>', 'template repository')
   .parse(process.argv);
 
-
-console.log(program.args);
-
 const keystore = {
   account: 'arlac77',
   service: 'GitHub for Mac SSH key passphrase — github.com'
