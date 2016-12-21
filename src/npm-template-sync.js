@@ -73,7 +73,6 @@ keychain.getPassword(keystore, (err, pass) => {
 
 function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-template') {
   const client = github.client(token);
-
   const [user, repo] = targetRepo.split(/\//);
   const [tUser, tRepo] = templateRepo.split(/\//);
 
@@ -167,17 +166,11 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
     ).catch(e => console.error(e));
 }
 
-function pull(from, to, msg, options, callback) {
-  var query = {
+function pull(from, to, msg, options) {
+  return githubBasic.json('post', `/repos/${to.user}/${to.repo}/pulls`, {
+    title: msg.title,
+    body: msg.body,
     base: from.branch,
     head: to.branch
-  };
-  if (typeof msg.issue === 'number') {
-    query.issue = msg.issue.toString();
-  } else {
-    query.title = msg.title;
-    query.body = msg.body || '';
-  }
-
-  return githubBasic.json('post', `/repos/${to.user}/${to.repo}/pulls`, query, options).nodeify(callback);
+  }, options).nodeify();
 }
