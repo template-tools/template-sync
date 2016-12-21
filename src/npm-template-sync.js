@@ -73,7 +73,7 @@ keychain.getPassword(keystore, (err, pass) => {
 
 function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-template') {
   const client = github.client(token);
-  const [user, repo] = targetRepo.split(/\//);
+  const [user, repo, branch] = targetRepo.split(/[\/#]/);
   const [tUser, tRepo] = templateRepo.split(/\//);
 
   function getBranches(repo) {
@@ -91,7 +91,7 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
   const source = {
     user: user,
     repo: repo,
-    branch: 'master'
+    branch: branch || 'master'
   };
 
   const dest = {
@@ -107,7 +107,7 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
     }
   };
 
-  getBranches(targetRepo)
+  getBranches(targetRepo.replace(/#.*/, ''))
     .then(branches => {
       const maxBranchId = branches.reduce((prev, current) => {
         const m = current.name.match(/template-sync-(\d+)/);
