@@ -83,18 +83,11 @@ export default class Package extends File {
         }
       }
 
-      if (template.config && template.config.keywords) {
-        Object.keys(template.config.keywords).forEach(r =>
-          addKeyword(target, new RegExp(r), template.config.keywords[r])
+      if (template.template && template.template.keywords) {
+        Object.keys(template.template.keywords).forEach(r =>
+          addKeyword(target, new RegExp(r), template.template.keywords[r])
         );
       }
-
-      /* TODO move data into template
-      addKeyword(target, /^kronos-interceptor.+/, 'kronos-interceptor');
-      addKeyword(target, /^kronos-service.+/, 'kronos-service');
-      addKeyword(target, /^kronos-step.+/, 'kronos-step');
-      addKeyword(target, /^kronos-adapter.+/, 'kronos-step');
-      */
 
       const rcj = this.context.files.get('rollup.config.js');
 
