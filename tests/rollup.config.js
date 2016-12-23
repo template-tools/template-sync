@@ -11,7 +11,7 @@ export default {
   format: 'cjs',
   dest: 'build/bundle.test.js',
   plugins: [istanbul({
-    exclude: ['node_modules/**/*']
+    exclude: ['tests/*.js', 'node_modules/**/*']
   }), nodeResolve({
     jsnext: true
   }), commonjs(), multiEntry()]
