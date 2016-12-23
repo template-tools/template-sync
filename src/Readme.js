@@ -11,9 +11,9 @@ export default class Readme extends File {
       .then(contents => {
         const [original, template, pkg] = contents;
         const p = JSON.parse(pkg);
-        const badges = p.template.badges.map(b =>
+        const badges = p.template && p.template.badges ? p.template.badges.map(b =>
           this.context.expand(`[![${b.name}](${b.icon})](${b.url})`)
-        );
+        ) : [];
 
         const tLines = this.context.expand(template).split(/\n/);
         const lines = original.split(/\n/);

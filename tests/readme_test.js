@@ -6,24 +6,33 @@
 const assert = require('chai').assert;
 
 import Context from '../src/Context';
-import Replace from '../src/Replace';
+import Readme from '../src/Readme';
+import Package from '../src/Package';
 
 import Client from './Client';
 
-describe('replace', () => {
+describe('readme', () => {
   const context = new Context(new Client({
     'aFile': {
       templateRepo: `Line 1x
         Line 2x`,
       targetRepo: `Line 1
-        Line 2`
+
+Line 2`
+    },
+    'package.json': {
+      templateRepo: JSON.stringify({}),
+      targetRepo: '{}'
     }
   }), 'targetRepo', 'templateRepo', {});
 
-  const replace = new Replace(context, 'aFile');
+  context.addFile(new Package(context, 'package.json'));
+
+  const readme = new Readme(context, 'aFile');
 
   it('lines', () =>
-    replace.mergedContent.then(c =>
-      assert.equal(c, `Line 1x
-        Line 2x`)));
+    readme.mergedContent.then(c =>
+      assert.equal(c, `
+
+Line 2`)));
 });
