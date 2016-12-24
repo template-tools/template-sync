@@ -24,6 +24,9 @@ program
   .option('-t, --template <user/repo>', 'template repository')
   .parse(process.argv);
 
+process.on('uncaughtException', err => console.error(err));
+process.on('unhandledRejection', reason => console.error(reason));
+
 const keystore = {
   account: 'arlac77',
   service: 'GitHub for Mac SSH key passphrase — github.com'
