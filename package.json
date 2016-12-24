@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "deep-extend": "^0.4.1",
-    "expression-expander": "^5.2.9",
+    "expression-expander": "^5.2.10",
     "js-yaml": "^3.7.0",
     "keychain": "^1.0.0",
     "next": "^1.2.3",
