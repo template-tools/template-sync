@@ -4,7 +4,9 @@ import File from './File';
 export default class Readme extends File {
   get mergedContent() {
     return Promise.all([
-        this.originalContent(),
+        this.originalContent({
+          ignoreMissing: true
+        }),
         this.templateContent(),
         this.context.files.get('package.json').templateContent()
       ])
