@@ -16,6 +16,7 @@ import Package from './Package';
 import License from './License';
 import Replace from './Replace';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
+import MergeLineSet from './MergeLineSet';
 
 program
   .description('Keep npm package in sync with its template')
@@ -139,8 +140,8 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
         new Package(context, 'package.json'),
         new Readme(context, 'doc/README.hbs'),
         new Travis(context, '.travis.yml'),
-        new Replace(context, '.gitignore'),
-        new Replace(context, '.npmignore'),
+        new MergeLineSet(context, '.gitignore'),
+        new MergeLineSet(context, '.npmignore'),
         new License(context, 'LICENSE')
       ];
 
