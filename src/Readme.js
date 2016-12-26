@@ -18,16 +18,15 @@ export default class Readme extends File {
         ) : [];
 
         let body = original.split(/\n/);
-        
-        if(body.length === 0) {
+
+        if (body.length === 0) {
           body = this.context.expand(template).split(/\n/);
-        }
-        else {
+        } else {
           const fel = body.findIndex(l => l.length === 0);
-		  body = body.slice(fel);
+          body = body.slice(fel);
         }
 
-        return [ ...badges, ...body].join('\n');
+        return [...badges, '', ...body].join('\n');
       });
   }
 }
