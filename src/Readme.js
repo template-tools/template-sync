@@ -17,12 +17,17 @@ export default class Readme extends File {
           this.context.expand(`[![${b.name}](${b.icon})](${b.url})`)
         ) : [];
 
-        const tLines = this.context.expand(template).split(/\n/);
-        const lines = original.split(/\n/);
-        const fel = lines.findIndex(l => l.length === 0);
+        let body = original.split(/\n/);
+        
+        if(body.length === 0) {
+          body = this.context.expand(template).split(/\n/);
+        }
+        else {
+          const fel = body.findIndex(l => l.length === 0);
+		  body = body.slice(fel);
+        }
 
-        return badges.join('\n') + '\n' +
-          lines.slice(fel).join('\n');
+        return [ ...badges, ...body].join('\n');
       });
   }
 }
