@@ -40,7 +40,7 @@
     "markdown-doctest": "^0.9.1",
     "mocha": "^3.2.0",
     "rollup": "^0.38.2",
-    "rollup-plugin-commonjs": "^6.0.0",
+    "rollup-plugin-commonjs": "^6.0.1",
     "rollup-plugin-istanbul": "^1.1.0",
     "rollup-plugin-multi-entry": "^2.0.1",
     "rollup-plugin-node-resolve": "^2.0.0",
