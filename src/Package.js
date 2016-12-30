@@ -47,13 +47,12 @@ export default class Package extends File {
         Object.assign(target[p], template[p]);
       });
 
-      [target.devDependencies, target.dependencies].forEach(
-        ds => Object.keys(ds).forEach(d => {
-          if (ds[d] === '-') {
-            delete ds[d];
-          }
-        })
-      );
+      Object.keys(target.devDependencies).forEach(d => {
+        console.log(`${d} ${target.devDependencies[d]} ${template.devDependencies[d]}`);
+        if (template.devDependencies[d] === '-') {
+          delete ds[d];
+        }
+      });
 
       Object.keys(template).forEach(p => {
         if (p !== 'template') {
