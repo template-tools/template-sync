@@ -22,8 +22,8 @@ export default class Readme extends File {
         if (body.length === 0) {
           body = this.context.expand(template).split(/\n/);
         } else {
-          const fel = body.findIndex(l => l.length === 0);
-          body = body.slice(fel);
+          body = body.slice(body.findIndex(l => l.length === 0));
+          body = body.slice(body.findIndex(l => l.length > 0));
         }
 
         return [...badges, '', ...body].join('\n');

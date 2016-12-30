@@ -8,7 +8,6 @@ const assert = require('chai').assert;
 import Context from '../src/Context';
 import Readme from '../src/Readme';
 import Package from '../src/Package';
-
 import Client from './Client';
 
 describe('readme', () => {
