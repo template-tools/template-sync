@@ -12,6 +12,9 @@
     "test": "rollup -c tests/rollup.config.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js && markdown-doctest",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
+  "bin": {
+    "npm-template-sync": "bin/npm-template-sync"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/arlac77/npm-template-sync.git"
@@ -63,10 +66,8 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ]
+  "contributors": [{
+    "name": "Markus Felten",
+    "email": "markus.felten@gmx.de"
+  }]
 }
