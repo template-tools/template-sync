@@ -32,6 +32,5 @@ Line 2`
   it('lines', () =>
     readme.mergedContent.then(c =>
       assert.equal(c, `
-
 Line 2`)));
 });

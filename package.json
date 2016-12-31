@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "deep-extend": "^0.4.1",
-    "expression-expander": "^5.3.0",
+    "expression-expander": "^5.3.1",
     "github-webhook-handler": "^0.6.0",
     "js-yaml": "^3.7.0",
     "keychain": "^1.2.0",
