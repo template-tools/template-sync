@@ -2,6 +2,7 @@
 
 const micro = require('micro'),
   createHandler = require('github-webhook-handler');
+require('now-logs')('dfgkjd&dfh');
 
 const handler = createHandler({
   path: '/webhook',

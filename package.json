@@ -26,6 +26,7 @@
     "js-yaml": "^3.7.0",
     "keychain": "^1.2.0",
     "micro": "latest",
+    "now-logs": "0.0.6",
     "octonode": "^0.7.7",
     "prompt": "^1.0.0",
     "pull-request": "^3.0.0"
@@ -62,8 +63,10 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [{
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }]
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ]
 }
