@@ -10,3 +10,4 @@ out
 .nyc_output
 .test
 .tmp
+.next
