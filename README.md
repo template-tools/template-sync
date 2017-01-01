@@ -29,6 +29,9 @@ merges contents from template repo into destination repo handling some special c
 - line set files like .npmignore and .gitignore - by merging both sets together
 - package.json - merging dev depenencies and
 
+
+Browse available [template modules](https://www.npmjs.com/browse/keyword/npm-package-template)
+
 # install
 
 With [npm](http://npmjs.org) do:
