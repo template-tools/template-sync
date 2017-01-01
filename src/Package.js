@@ -27,19 +27,19 @@ export default class Package extends File {
           }
         }
 
-        if (target.scripts.build) {
-          let m = target.scripts.build.match(/--output=([^\s]+)/);
+        [target.scripts.build, target.scripts.prepublish].filter(s => s !== undefined).forEach(script => {
+          let m = script.match(/--output=([^\s]+)/);
           if (m) {
             buildOutput = m[1];
           }
 
-          m = target.scripts.build.match(/\&\&\s*(.+)/);
+          m = script.match(/\&\&\s*(.+)/);
           if (m) {
             extraBuild = m[1];
           }
+        });
 
-          delete target.scripts.build;
-        }
+        delete target.scripts.build;
       }
 
       deepPropeties.forEach(p => {
