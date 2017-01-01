@@ -18,8 +18,11 @@ import Replace from './Replace';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
 import MergeLineSet from './MergeLineSet';
 
+require('pkginfo')(module, 'version');
+
 program
   .description('Keep npm package in sync with its template')
+  .version(module.exports.version)
   .option('-k, --keystore <account/service>', 'keystore')
   .option('-s, --save', 'save keystore')
   .option('-t, --template <user/repo>', 'template repository')
