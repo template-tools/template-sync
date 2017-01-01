@@ -6,11 +6,13 @@
   "module": "src/npm-template-sync.js",
   "scripts": {
     "start": "node --harmony-async-await webhook/index",
-    "cover": "rollup -c tests/rollup.config.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js",
+    "cover": "npm run build && node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -u exports tests/*_test.js",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js > README.md",
-    "prepublish": "node_modules/rollup/bin/rollup --output=bin/npm-template-sync -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
+    "prepublish": "node_modules/rollup/bin/rollup --output=dist/npm-template-sync.js -c -- src/npm-template-sync.js",
     "test": "rollup -c tests/rollup.config.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js && markdown-doctest",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "pretest": "npm run prepublish",
+    "posttest": "markdown-doctest"
   },
   "bin": {
     "npm-template-sync": "bin/npm-template-sync"
@@ -64,8 +66,10 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [{
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }]
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ]
 }
