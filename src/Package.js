@@ -48,9 +48,8 @@ export default class Package extends File {
       });
 
       Object.keys(target.devDependencies).forEach(d => {
-        console.log(`${d} ${target.devDependencies[d]} ${template.devDependencies[d]}`);
         if (template.devDependencies[d] === '-') {
-          delete ds[d];
+          delete target.devDependencies[d];
         }
       });
 
