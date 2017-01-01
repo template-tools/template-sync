@@ -93,6 +93,10 @@ export default class Package extends File {
         }
       }
 
+      if (target.keywords) {
+        delete target.keywords['npm-package-template'];
+      }
+
       if (template.template && template.template.keywords) {
         Object.keys(template.template.keywords).forEach(r =>
           addKeyword(target, new RegExp(r), template.template.keywords[r])
