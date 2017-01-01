@@ -20,7 +20,7 @@
     "url": "https://github.com/arlac77/npm-template-sync.git"
   },
   "engines": {
-    "node": ">=6.9.1"
+    "node": ">=6.9.2"
   },
   "dependencies": {
     "deep-extend": "^0.4.1",
@@ -49,9 +49,7 @@
     "rollup-plugin-node-resolve": "^2.0.0",
     "semantic-release": "^6.3.5"
   },
-  "release": {
-    "verifyRelease": "cracks"
-  },
+  "release": {},
   "keywords": [
     "npm",
     "template"
