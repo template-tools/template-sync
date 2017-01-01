@@ -37,6 +37,8 @@ export default class Package extends File {
           if (m) {
             extraBuild = m[1];
           }
+
+          delete target.scripts.build;
         }
       }
 
@@ -61,16 +63,18 @@ export default class Package extends File {
         }
       });
 
-      if (buildOutput !== undefined) {
-        target.scripts.build = target.scripts.build.replace(/--output=([^\s]+)/, `--output=${buildOutput}`);
+      if (target.scripts.prepublish) {
+        if (buildOutput !== undefined) {
+          target.scripts.prepublish = target.scripts.prepublish.replace(/--output=([^\s]+)/,
+            `--output=${buildOutput}`);
+        }
+        if (extraBuild !== undefined) {
+          target.scripts.prepublish += ` && ${extraBuild}`;
+        }
       }
 
       if (specialTest !== undefined) {
         target.scripts.test = specialTest;
-      }
-
-      if (extraBuild !== undefined) {
-        target.scripts.build += ` && ${extraBuild}`;
       }
 
       if (target.module === '{{module}}') {

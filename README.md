@@ -25,8 +25,7 @@ npm-template-sync --template aTemplateGithubUser/aRepo  myGithubUser/myRepo
 
 merges contents from template repo into destination repo handling some special cases for:
 
-- Licenses
-  rewriting license years
+- Licenses - rewriting license years
 - line set files like .npmignore and .gitignore - by merging both sets together
 - package.json - merging dev depenencies and
 

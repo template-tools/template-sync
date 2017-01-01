@@ -9,7 +9,9 @@
     "cover": "rollup -c tests/rollup.config.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js > README.md",
     "prepublish": "node_modules/rollup/bin/rollup --output=bin/npm-template-sync -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
-    "test": "rollup -c tests/rollup.config.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js && markdown-doctest",
+    "pretest": "rollup -c tests/rollup.config.js",
+    "posttest": "markdown-doctest",
+    "test": "mocha --reporter tests/istanbul.reporter.js build/bundle.test.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "bin": {
