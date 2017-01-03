@@ -31,7 +31,7 @@
     "js-yaml": "^3.7.0",
     "keychain": "^1.2.0",
     "micro": "latest",
-    "now-logs": "0.0.6",
+    "now-logs": "0.0.7",
     "octonode": "^0.7.7",
     "pkginfo": "^0.4.0",
     "prompt": "^1.0.0",
