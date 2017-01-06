@@ -152,7 +152,7 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
         new License(context, 'LICENSE')
       ];
 
-      return Promise.all(files.map(f => f.merge));
+      return Promise.all(files.map(f => f.merge)).then(merges => merges.filter(m => m.changed));
     }).then(merges =>
       pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
         pr.commit(user, repo, {

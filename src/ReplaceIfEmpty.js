@@ -9,10 +9,15 @@ export default class ReplaceIfEmpty extends File {
     }), this.templateContent()]).then(contents => {
       const [original, template] = contents;
 
-      return {
+      return original === '' ? {
         path: this.path,
-        content: original === '' ? this.context.expand(template) : original,
+        content: this.context.expand(template),
         changed: true,
+        message: `insert missing ${this.path} from template`
+      } : {
+        path: this.path,
+        content: original,
+        changed: false,
         message: undefined
       };
     });
