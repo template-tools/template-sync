@@ -27,8 +27,9 @@ merges contents from template repo into destination repo handling some special c
 
 - Licenses - rewriting license years
 - line set files like .npmignore and .gitignore - by merging both sets together
-- package.json - merging dev depenencies and
+- package.json - merging dev depenencies and scripts
 
+![generated pull request](doc/pr_sample.png)
 
 Browse available [template modules](https://www.npmjs.com/browse/keyword/npm-package-template)
 
@@ -37,9 +38,9 @@ Browse available [template modules](https://www.npmjs.com/browse/keyword/npm-pac
 With [npm](http://npmjs.org) do:
 
 ```shell
-npm install npm-template-sync
-npm run build
-# ./bin/npm-template-sync
+npm install -g npm-template-sync
+
+# npm-template-sync --help
 ```
 
 # license

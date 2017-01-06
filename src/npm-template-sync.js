@@ -9,6 +9,10 @@ const program = require('commander'),
   githubBasic = require('github-basic'),
   pr = require('pull-request');
 
+import {
+  pull
+}
+from './github';
 import Context from './Context';
 import Travis from './Travis';
 import Readme from './Readme';
@@ -171,13 +175,4 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
           }, options)).then(r => console.log(r.body.html_url))
       )
     ).catch(e => console.error(e));
-}
-
-function pull(from, to, msg, options) {
-  return githubBasic.json('post', `/repos/${to.user}/${to.repo}/pulls`, {
-    title: msg.title,
-    body: msg.body,
-    base: from.branch,
-    head: to.branch
-  }, options).nodeify();
 }
