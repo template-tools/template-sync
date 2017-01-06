@@ -2,7 +2,7 @@
 import File from './File';
 
 export default class License extends File {
-  get mergedContent() {
+  get merge() {
     return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
       const [original, template] = contents;
       const m = original.match(/opyright\s*\(c\)\s*(\d+)([,\-\d]+)*(\s*(,|by)\s*(.*))?/);
@@ -29,11 +29,21 @@ export default class License extends File {
       }
 
       if (original !== '') {
-        return original.replace(/opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
-          `opyright (c) ${properties['date.year']}`);
+        return {
+          path: this.path,
+          changed: true,
+          message: undefined,
+          content: original.replace(/opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
+            `opyright (c) ${properties['date.year']}`)
+        };
       }
 
-      return this.context.expand(template);
+      return {
+        path: this.path,
+        content: this.context.expand(template),
+        changed: true,
+        message: undefined
+      };
     });
   }
 }

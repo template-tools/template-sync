@@ -21,6 +21,6 @@ describe('merge lines', () => {
   const merger = new MergeLineSet(context, 'aFile');
 
   it('lines', () =>
-    merger.mergedContent.then(c =>
-      assert.equal(c, ['Line 1', 'Line 2', 'Line 3'].join('\n'))));
+    merger.merge.then(m =>
+      assert.equal(m.content, ['Line 1', 'Line 2', 'Line 3'].join('\n'))));
 });

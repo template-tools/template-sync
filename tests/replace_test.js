@@ -23,7 +23,7 @@ describe('replace', () => {
   const replace = new Replace(context, 'aFile');
 
   it('lines', () =>
-    replace.mergedContent.then(c =>
-      assert.equal(c, `Line 1x
+    replace.merge.then(m =>
+      assert.equal(m.content, `Line 1x
         Line 2x`)));
 });

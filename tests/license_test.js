@@ -25,8 +25,8 @@ describe('modify year', () => {
     const license = new License(context, 'aFile');
 
     it('year range', () =>
-      license.mergedContent.then(c =>
-        assert.equal(c, 'Copyright (c) 1999,2099 by xyz')));
+      license.merge.then(m =>
+        assert.equal(m.content, 'Copyright (c) 1999,2099 by xyz')));
   });
 
   describe('year list', () => {
@@ -43,7 +43,7 @@ describe('modify year', () => {
     const license = new License(context, 'aFile');
 
     it('year range', () =>
-      license.mergedContent.then(c =>
-        assert.equal(c, 'Copyright (c) 1999,2000,2001,2007,2099 by xyz')));
+      license.merge.then(m =>
+        assert.equal(m.content, 'Copyright (c) 1999,2000,2001,2007,2099 by xyz')));
   });
 });

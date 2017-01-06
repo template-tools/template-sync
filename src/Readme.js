@@ -2,7 +2,7 @@
 import File from './File';
 
 export default class Readme extends File {
-  get mergedContent() {
+  get merge() {
     return Promise.all([
         this.originalContent({
           ignoreMissing: true
@@ -26,7 +26,12 @@ export default class Readme extends File {
           body = body.slice(body.findIndex(l => l.length > 0));
         }
 
-        return [...badges, '', ...body].join('\n');
+        return {
+          path: this.path,
+          content: [...badges, '', ...body].join('\n'),
+          changed: true,
+          message: undefined
+        };
       });
   }
 }

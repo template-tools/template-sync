@@ -24,8 +24,13 @@ export default class File {
     return this.getContent(this.context.targetRepo, this.path, options);
   }
 
-  get mergedContent() {
-    return this.originalContent;
+  get merge() {
+    return Promise.resolve({
+      path: this.path,
+      changed: false,
+      message: undefined,
+      content: this.originalContent()
+    });
   }
 
   getContent(repo, path, options = {}) {

@@ -3,10 +3,16 @@
 import File from './File';
 
 export default class Replace extends File {
-  get mergedContent() {
+  get merge() {
     return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
       const [original, template] = contents;
-      return this.context.expand(template);
+
+      return {
+        path: this.path,
+        content: this.context.expand(template),
+        changed: true,
+        message: undefined
+      };
     });
   }
 }

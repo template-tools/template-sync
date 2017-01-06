@@ -7,7 +7,7 @@ const yaml = require('js-yaml'),
 
 export default class Travis extends File {
 
-  get mergedContent() {
+  get merge() {
     return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
       const [original, template] = contents;
 
@@ -30,7 +30,13 @@ export default class Travis extends File {
           }
         });
       }
-      return yaml.safeDump(yml);
+
+      return {
+        path: this.path,
+        content: yaml.safeDump(yml),
+        changed: true,
+        message: undefined
+      };
     });
   }
 }

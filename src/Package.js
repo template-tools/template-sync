@@ -2,7 +2,7 @@
 import File from './File';
 
 export default class Package extends File {
-  get mergedContent() {
+  get merge() {
     return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
       const target = JSON.parse(contents[0]);
       const template = JSON.parse(contents[1]);
@@ -121,7 +121,12 @@ export default class Package extends File {
         first = Promise.resolve();
       }
 
-      return first.then(() => JSON.stringify(this.context.expand(target), undefined, 2));
+      return {
+        path: this.path,
+        content: first.then(() => JSON.stringify(this.context.expand(target), undefined, 2)),
+        changed: true,
+        message: undefined
+      };
     });
   }
 }

@@ -30,7 +30,7 @@ Line 2`
   const readme = new Readme(context, 'aFile');
 
   it('lines', () =>
-    readme.mergedContent.then(c =>
-      assert.equal(c, `
+    readme.merge.then(m =>
+      assert.equal(m.content, `
 Line 2`)));
 });
