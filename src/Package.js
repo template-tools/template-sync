@@ -107,12 +107,12 @@ export default class Package extends File {
 
       let first;
       if (rcj) {
-        first = rcj.mergedContent.then(c => {
-          if (c) {
-            if (!c.match(/rollup-plugin-node-resolve/)) {
+        first = rcj.merge.then(m => {
+          if (m.content) {
+            if (!m.content.match(/rollup-plugin-node-resolve/)) {
               delete target.devDependencies['rollup-plugin-node-resolve'];
             }
-            if (!c.match(/rollup-plugin-commonjs/)) {
+            if (!m.content.match(/rollup-plugin-commonjs/)) {
               delete target.devDependencies['rollup-plugin-commonjs'];
             }
           }
@@ -121,12 +121,14 @@ export default class Package extends File {
         first = Promise.resolve();
       }
 
-      return {
-        path: this.path,
-        content: first.then(() => JSON.stringify(this.context.expand(target), undefined, 2)),
-        changed: true,
-        message: undefined
-      };
+      return first.then(() => {
+        return {
+          content: JSON.stringify(this.context.expand(target), undefined, 2),
+          path: this.path,
+          changed: true,
+          message: undefined
+        };
+      });
     });
   }
 }

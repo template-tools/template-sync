@@ -25,12 +25,12 @@ export default class File {
   }
 
   get merge() {
-    return Promise.resolve({
+    return this.originalContent().then(content => Promise.resolve({
       path: this.path,
       changed: false,
       message: undefined,
-      content: this.originalContent()
-    });
+      content: content
+    }));
   }
 
   getContent(repo, path, options = {}) {

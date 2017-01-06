@@ -155,6 +155,7 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
       return Promise.all(files.map(f => f.merge)).then(merges => merges.filter(m => m.changed));
     }).then(merges =>
       pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
+
         pr.commit(user, repo, {
           branch: dest.branch,
           message: `fix(package): merge package template from ${templateRepo}`,
@@ -164,7 +165,20 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
               content: merge.content
             };
           })
-        }, options).then(
+        }, options)
+
+        /*
+                Promise.all(merges.map(merge => pr.commit(user, repo, {
+                  branch: dest.branch,
+                  message: merge.message ? merge.message : `fix(package): merge package template from ${templateRepo}`,
+                  updates: [{
+                    path: merge.path,
+                    content: merge.content
+                  }]
+                }, options)))
+        */
+
+        .then(
           () =>
           pull(source, dest, {
             title: `merge package template from ${templateRepo}`,

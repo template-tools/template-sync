@@ -7,11 +7,13 @@ export default class Replace extends File {
     return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
       const [original, template] = contents;
 
+      const content = this.context.expand(template);
+
       return {
         path: this.path,
-        content: this.context.expand(template),
-        changed: true,
-        message: undefined
+        content: content,
+        changed: content != original,
+        message: `${this.path} overwritten from template`
       };
     });
   }
