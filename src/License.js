@@ -29,12 +29,14 @@ export default class License extends File {
       }
 
       if (original !== '') {
+        const content = original.replace(/opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
+          `opyright (c) ${properties['date.year']}`);
+
         return {
           path: this.path,
-          changed: true,
-          message: undefined,
-          content: original.replace(/opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
-            `opyright (c) ${properties['date.year']}`)
+          changed: content !== original,
+          message: 'fix: update LICENSE',
+          content: content
         };
       }
 
@@ -42,7 +44,7 @@ export default class License extends File {
         path: this.path,
         content: this.context.expand(template),
         changed: true,
-        message: undefined
+        message: `fix: add missing LICENSE`
       };
     });
   }
