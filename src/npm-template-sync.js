@@ -6,11 +6,10 @@ const program = require('commander'),
   keychain = require('keychain'),
   prompt = require('prompt'),
   github = require('octonode'),
-  githubBasic = require('github-basic'),
-  pr = require('pull-request');
+  githubBasic = require('github-basic');
 
 import {
-  pull, createBranch
+  pull, createBranch, commit
 }
 from './github';
 import Context from './Context';
@@ -160,7 +159,7 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
         return;
       }
       return createBranch(user, repo, source.branch, dest.branch, options).then(() =>
-        pr.commit(user, repo, {
+        commit(user, repo, {
           branch: dest.branch,
           message: `fix(package): merge package template from ${templateRepo}`,
           updates: merges.map(merge => {
