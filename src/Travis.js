@@ -8,9 +8,8 @@ const yaml = require('js-yaml'),
 export default class Travis extends File {
 
   get merge() {
-    return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
-      const [original, template] = contents;
-
+    return Promise.all([this.originalContent(), this.templateContent()])
+      .then(([original, template]) => {
       const yml = yaml.safeLoad(original) || {};
       const tyml = yaml.safeLoad(this.context.expand(template));
       const before_script = yml.before_script;
