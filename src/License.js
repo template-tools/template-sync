@@ -3,8 +3,7 @@ import File from './File';
 
 export default class License extends File {
   get merge() {
-    return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
-      const [original, template] = contents;
+    return Promise.all([this.originalContent(), this.templateContent()]).then(([original,template]) => {
       const m = original.match(/opyright\s*\(c\)\s*(\d+)([,\-\d]+)*(\s*(,|by)\s*(.*))?/);
       const properties = this.context.properties;
 
