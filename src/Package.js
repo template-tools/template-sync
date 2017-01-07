@@ -18,13 +18,17 @@ export default class Package extends File {
 
       const deepPropeties = ['scripts', 'devDependencies', 'engines'];
 
-      let extraBuild, buildOutput, specialTest;
+      let extraBuild, buildOutput;
+
+      const keepScripts = {};
 
       if (target.scripts) {
         if (target.scripts.test) {
-          if (target.scripts.test.match(/rollup/)) {
+          if (target.scripts.test.match(/rollup/) || target.scripts.test.match(/istanbul.reporter.js/)) {
             // TODO how to detect special rollup test config ?
-            specialTest = target.scripts.test;
+            keepScripts.test = target.scripts.test;
+            keepScripts.pretest = target.scripts.pretest;
+            keepScripts.cover = target.scripts.cover;
           }
         }
 
@@ -74,9 +78,7 @@ export default class Package extends File {
         }
       }
 
-      if (specialTest !== undefined) {
-        target.scripts.test = specialTest;
-      }
+      target.scripts = Object.assign(target.scripts, keepScripts);
 
       if (target.module === '{{module}}') {
         delete target.module;
