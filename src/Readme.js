@@ -26,11 +26,12 @@ export default class Readme extends File {
           body = body.slice(body.findIndex(l => l.length > 0));
         }
 
+        const content = [...badges, '', ...body].join('\n')
         return {
           path: this.path,
-          content: [...badges, '', ...body].join('\n'),
-          changed: true,
-          message: undefined
+          content: content,
+          changed: content != original,
+          message: 'docs: update readme from template'
         };
       });
   }
