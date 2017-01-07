@@ -14,5 +14,5 @@ doc
 .npmignore
 .vscode
 .markdown-doctest-setup.js
-SUMMARY.md
 rollup.config.js
+SUMMARY.md
