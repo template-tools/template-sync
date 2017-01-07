@@ -31,11 +31,12 @@ export default class Travis extends File {
         });
       }
 
+      const content = yaml.safeDump(yml);
       return {
         path: this.path,
-        content: yaml.safeDump(yml),
-        changed: true,
-        message: undefined
+        content: content,
+        changed: content != original,
+        message: `chore(travis): merge from template ${this.path}`
       };
     });
   }

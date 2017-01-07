@@ -154,7 +154,11 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
 
       return Promise.all(files.map(f => f.merge)).then(merges => merges.filter(m => m.changed));
     }).then(merges => {
-      if(merges.length === 0) { return; }
+      console.log(merges.map(m => m.path + ': ' + m.changed).join(','));
+      if (merges.length === 0) {
+        console.log(`nothing changed`);
+        return;
+      }
       return pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
         pr.commit(user, repo, {
           branch: dest.branch,
@@ -184,7 +188,7 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
             title: `merge package template from ${templateRepo}`,
             body: 'Updated standard to latest version'
           }, options))
-            .then(r => console.log(r.body.html_url))
-      ); }
-    ).catch(e => console.error(e));
+        .then(r => console.log(r.body.html_url))
+      );
+    }).catch(e => console.error(e));
 }
