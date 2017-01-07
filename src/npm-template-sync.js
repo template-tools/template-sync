@@ -10,7 +10,7 @@ const program = require('commander'),
   pr = require('pull-request');
 
 import {
-  pull
+  pull, createBranch
 }
 from './github';
 import Context from './Context';
@@ -159,7 +159,7 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
         console.log(`nothing changed`);
         return;
       }
-      return pr.branch(user, repo, source.branch, dest.branch, options).then(() =>
+      return createBranch(user, repo, source.branch, dest.branch, options).then(() =>
         pr.commit(user, repo, {
           branch: dest.branch,
           message: `fix(package): merge package template from ${templateRepo}`,

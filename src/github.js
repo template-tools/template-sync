@@ -13,11 +13,14 @@ export function pull(from, to, msg, options) {
   }, options);
 }
 
-/*
-export function branch(user, repo, from, to, options) {
-  return github.json('get', '/repos/:owner/:repo/git/refs/:ref', {owner: user, repo: repo, ref: 'heads/' + from}, options)
-    .then(res  =>
-       github.json('post', '/repos/:owner/:repo/git/refs', {
+export function createBranch(user, repo, from, to, options) {
+  return github.json('get', '/repos/:owner/:repo/git/refs/:ref', {
+      owner: user,
+      repo: repo,
+      ref: 'heads/' + from
+    }, options)
+    .then(res =>
+      github.json('post', '/repos/:owner/:repo/git/refs', {
         owner: user,
         repo: repo,
         ref: 'refs/heads/' + to,
@@ -25,4 +28,3 @@ export function branch(user, repo, from, to, options) {
       }, options)
     );
 }
-*/
