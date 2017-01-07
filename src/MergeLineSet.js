@@ -12,11 +12,13 @@ export default class MergeLineSet extends File {
       const result = new Set(template.split(/\n/));
       original.split(/\n/).forEach(line => result.add(line));
 
+      const content = Array.from(result.values()).join('\n');
+
       return {
         path: this.path,
-        content: Array.from(result.values()).join('\n'),
-        changed: true,
-        message: undefined
+        content: content,
+        changed: content != original,
+        message: 'fix: updated set from template'
       };
     });
   }
