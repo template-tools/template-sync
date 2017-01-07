@@ -4,6 +4,7 @@ import File from './File';
 export default class Package extends File {
   get merge() {
     return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
+      const original = contents[0];
       const target = JSON.parse(contents[0]);
       const template = JSON.parse(contents[1]);
 
@@ -122,11 +123,12 @@ export default class Package extends File {
       }
 
       return first.then(() => {
+        const content = JSON.stringify(this.context.expand(target), undefined, 2);
         return {
-          content: JSON.stringify(this.context.expand(target), undefined, 2),
+          content: content,
           path: this.path,
-          changed: true,
-          message: undefined
+          changed: original != content,
+          message: 'chore: update package from template'
         };
       });
     });
