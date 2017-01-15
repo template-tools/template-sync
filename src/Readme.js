@@ -25,7 +25,7 @@ export default class Readme extends File {
           body = body.slice(body.findIndex(l => l.length > 0));
         }
 
-        const content = [...badges, '', ...body].join('\n')
+        const content = [...badges, '', ...body].join('\n');
         return {
           path: this.path,
           content: content,
