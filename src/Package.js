@@ -84,8 +84,8 @@ export default class Package extends File {
         delete target.module;
       }
 
-      if (target.contributors !== undefined && target.author !== undefined) {
-        const m = target.author.match(/(^[^<]+)<([^>]+)>/);
+      if (target.contributors !== undefined && target.author !== undefined && target.author.name !== undefined) {
+        const m = target.author.name.match(/(^[^<]+)<([^>]+)>/);
         if (m !== undefined) {
           const name = String(m[1]).replace(/^\s+|\s+$/g, '');
           const email = m[2];
