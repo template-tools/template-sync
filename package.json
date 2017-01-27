@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "deep-extend": "^0.4.1",
-    "expression-expander": "^5.3.7",
+    "expression-expander": "^5.3.8",
     "github-basic": "^2.1.0",
     "github-webhook-handler": "^0.6.0",
     "js-yaml": "^3.7.0",
