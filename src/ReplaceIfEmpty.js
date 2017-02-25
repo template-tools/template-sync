@@ -3,7 +3,7 @@
 import File from './File';
 
 export default class ReplaceIfEmpty extends File {
-  get merged() {
+  get merge() {
     return Promise.all([this.originalContent({
       ignoreMissing: true
     }), this.templateContent()]).then(([original, template]) => {
