@@ -2,7 +2,8 @@
 
 'use strict';
 
-const program = require('commander'),
+const program = require('caporal'),
+  path = require('path'),
   keychain = require('keychain'),
   prompt = require('prompt'),
   github = require('octonode'),
@@ -21,65 +22,65 @@ import Replace from './Replace';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
 import MergeLineSet from './MergeLineSet';
 
-require('pkginfo')(module, 'version');
-
-program
-  .description('Keep npm package in sync with its template')
-  .version(module.exports.version)
-  .option('-k, --keystore <account/service>', 'keystore')
-  .option('-s, --save', 'save keystore')
-  .option('-t, --template <user/repo>', 'template repository')
-  .parse(process.argv);
-
 process.on('uncaughtException', err => console.error(err));
 process.on('unhandledRejection', reason => console.error(reason));
 
-const keystore = {
-  account: 'arlac77',
-  service: 'GitHub for Mac SSH key passphrase — github.com'
-};
+program
+  .description('Keep npm package in sync with its template')
+  .version(require(path.join(__dirname,'..','package.json')).version)
+  .option('-k, --keystore <account/service>', 'keystore')
+  .option('-s, --save', 'save keystore')
+  .option('-t, --template <user/repo>', 'template repository')
+  .argument('[repos...]', 'repo to merge', /^\w+\/[\w\-]+$/)
+  .action( (args, options, logger) => {
+    const keystore = {
+      account: 'arlac77',
+      service: 'GitHub for Mac SSH key passphrase — github.com'
+    };
 
-if (program.keystore) {
-  [keystore.account, keystore.service] = program.keystore.split(/\//);
-}
+    if (program.keystore) {
+      [keystore.account, keystore.service] = options.keystore.split(/\//);
+    }
 
-if (program.save) {
-  prompt.start();
-  const schema = {
-    properties: {
-      password: {
-        required: true,
-        hidden: true
-      }
+    if (options.save) {
+      prompt.start();
+      const schema = {
+        properties: {
+          password: {
+            required: true,
+            hidden: true
+          }
+        }
+      };
+      prompt.get(schema, (err, result) => {
+        if (err) {
+          logger.error(err);
+          return;
+        }
+        keychain.setPassword({
+          account: keystore.account,
+          service: keystore.service,
+          password: result.password
+        }, (err, pass) => {
+          if (err) {
+            logger.error(err);
+            return;
+          }
+          logger.log('password set');
+        });
+      });
     }
-  };
-  prompt.get(schema, (err, result) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    keychain.setPassword({
-      account: keystore.account,
-      service: keystore.service,
-      password: result.password
-    }, (err, pass) => {
+
+    keychain.getPassword(keystore, (err, pass) => {
       if (err) {
-        console.error(err);
+        logger.error(err);
         return;
       }
-      console.log('password set');
+      args.repos.forEach(repo => work(pass, repo, options.template));
     });
   });
-}
 
-keychain.getPassword(keystore, (err, pass) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  program.args.forEach(repo => work(pass, repo, program.template));
-});
-
+program.parse(process.argv);
 
 function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-template') {
   const client = github.client(token);
@@ -151,7 +152,8 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
         new License(context, 'LICENSE')
       ];
 
-      return Promise.all(files.map(f => f.merge)).then(merges => merges.filter(m => m.changed));
+      return Promise.all(files.map(f => f.merge))
+        .then(merges => merges.filter(m => m.changed));
     }).then(merges => {
       console.log(merges.map(m => m.path + ': ' + m.changed).join(','));
       if (merges.length === 0) {
