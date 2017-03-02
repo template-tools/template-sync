@@ -33,7 +33,7 @@
     "keychain": "^1.3.0",
     "micro": "latest",
     "now-logs": "0.0.7",
-    "octonode": "^0.7.9",
+    "octonode": "^0.7.10",
     "pkginfo": "^0.4.0",
     "prompt": "^1.0.0"
   },
