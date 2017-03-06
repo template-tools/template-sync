@@ -27,18 +27,18 @@ process.on('unhandledRejection', reason => console.error(reason));
 
 program
   .description('Keep npm package in sync with its template')
-  .version(require(path.join(__dirname,'..','package.json')).version)
+  .version(require(path.join(__dirname, '..', 'package.json')).version)
   .option('-k, --keystore <account/service>', 'keystore')
   .option('-s, --save', 'save keystore')
   .option('-t, --template <user/repo>', 'template repository')
   .argument('[repos...]', 'repo to merge', /^\w+\/[\w\-]+$/)
-  .action( (args, options, logger) => {
+  .action((args, options, logger) => {
     const keystore = {
       account: 'arlac77',
       service: 'GitHub for Mac SSH key passphrase — github.com'
     };
 
-    if (program.keystore) {
+    if (options.keystore) {
       [keystore.account, keystore.service] = options.keystore.split(/\//);
     }
 
