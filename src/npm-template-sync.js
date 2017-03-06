@@ -31,7 +31,7 @@ program
   .option('-k, --keystore <account/service>', 'keystore')
   .option('-s, --save', 'save keystore')
   .option('-t, --template <user/repo>', 'template repository')
-  .argument('[repos...]', 'repo to merge', /^\w+\/[\w\-]+$/)
+  .argument('[repos...]', 'repos to merge', /^\w+\/[\w\-]+$/)
   .action((args, options, logger) => {
     const keystore = {
       account: 'arlac77',
