@@ -30,7 +30,7 @@ program
   .version(require(path.join(__dirname, '..', 'package.json')).version)
   .option('-k, --keystore <account/service>', 'keystore')
   .option('-s, --save', 'save keystore')
-  .option('-t, --template <user/repo>', 'template repository')
+  .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/, 'Kronos-Tools/npm-package-template')
   .argument('[repos...]', 'repos to merge', /^[\w\-]+\/[\w\-]+$/)
   .action((args, options, logger) => {
     const keystore = {
@@ -82,7 +82,7 @@ program
 
 program.parse(process.argv);
 
-function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-template') {
+function work(token, targetRepo, templateRepo) {
   const client = github.client(token);
   const [user, repo, branch] = targetRepo.split(/[\/#]/);
   const [tUser, tRepo] = templateRepo.split(/\//);
@@ -144,6 +144,7 @@ function work(token, targetRepo, templateRepo = 'Kronos-Tools/npm-package-templa
 
       const files = [
         new ReplaceIfEmpty(context, 'rollup.config.js'),
+        new ReplaceIfEmpty(context, 'rollup.config.test.js'),
         new Package(context, 'package.json'),
         new Readme(context, 'doc/README.hbs'),
         new Travis(context, '.travis.yml'),
