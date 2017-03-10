@@ -6,11 +6,13 @@ export default class ReplaceIfEmpty extends File {
   get merge() {
     return Promise.all([this.originalContent({
       ignoreMissing: true
-    }), this.templateContent()]).then(([original, template]) => {
+    }), this.templateContent({
+      ignoreMissing: true
+    })]).then(([original, template]) => {
       return original === '' ? {
         path: this.path,
         content: this.context.expand(template),
-        changed: true,
+        changed: template !== '',
         message: `insert missing ${this.path} from template`
       } : {
         path: this.path,
