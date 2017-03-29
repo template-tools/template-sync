@@ -6,6 +6,7 @@ const program = require('caporal'),
   path = require('path'),
   keychain = require('keychain'),
   prompt = require('prompt'),
+  ora = require('ora'),
   github = require('octonode'),
   githubBasic = require('github-basic');
 
@@ -72,16 +73,20 @@ program
         logger.error(err);
         return;
       }
-      args.repos.forEach(repo => work(pass, repo, options.template));
+      const spinner = ora('args').start();
+
+      args.repos.forEach(repo => work(spinner, pass, repo, options.template));
     });
   });
 
 program.parse(process.argv);
 
-function work(token, targetRepo, templateRepo) {
+function work(spinner, token, targetRepo, templateRepo) {
   const client = github.client(token);
   const [user, repo, branch] = targetRepo.split(/[\/#]/);
   const [tUser, tRepo] = templateRepo.split(/\//);
+
+  spinner.text = targetRepo;
 
   function getBranches(repo) {
     return new Promise((fullfill, reject) => {
@@ -152,13 +157,13 @@ function work(token, targetRepo, templateRepo) {
       return Promise.all(files.map(f => f.merge))
         .then(merges => merges.filter(m => m.changed));
     }).then(merges => {
-      console.log(merges.map(m => m.path + ': ' + m.changed).join(','));
       if (merges.length === 0) {
-        console.log(`nothing changed`);
+        spinner.succeed('nothing changed');
         return;
       }
-      return createBranch(user, repo, source.branch, dest.branch, options).then(() =>
+      spinner.text = merges.map(m => m.path + ': ' + m.changed).join(',');
 
+      return createBranch(user, repo, source.branch, dest.branch, options).then(() =>
         commit(user, repo, {
           branch: dest.branch,
           message: `fix(package): merge package template from ${templateRepo}`,
@@ -187,7 +192,11 @@ function work(token, targetRepo, templateRepo) {
             title: `merge package template from ${templateRepo}`,
             body: 'Updated standard to latest version'
           }, options))
-        .then(r => console.log(r.body.html_url))
+        .then(r => {
+          spinner.succeed(r.body.html_url);
+        })
       );
-    }).catch(e => console.error(e));
+    }).catch(e => {
+      spinner.fail(e);
+    });
 }
