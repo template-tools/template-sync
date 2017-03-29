@@ -3,7 +3,8 @@
 import File from './File';
 
 const yaml = require('js-yaml'),
-  deepExtend = require('deep-extend');
+  deepExtend = require('deep-extend'),
+  semverDiff = require('semver-diff');
 
 export default class Travis extends File {
 
@@ -14,8 +15,20 @@ export default class Travis extends File {
         const tyml = yaml.safeLoad(this.context.expand(template));
         const before_script = yml.before_script;
         const email = yml.notifications ? yml.notifications.email : undefined;
+        const formerNodeVersions = yml.node_js;
 
         deepExtend(yml, tyml);
+
+        if (formerNodeVersions !== undefined) {
+          formerNodeVersions.forEach(ov => {
+            /*        console.log(
+                      `${yml.node_js} <> ${ov} : ${yml.node_js.map(nv => { const x = semverDiff(ov, nv); return x ? x : 'null'} ).join(',')}`
+                    );*/
+            if (yml.node_js.find(nv => semverDiff(ov, nv) === 'major')) {
+              yml.node_js.push(ov);
+            }
+          });
+        }
 
         if (email !== undefined) {
           yml.notifications.email = email;

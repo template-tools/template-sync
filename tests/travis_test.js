@@ -11,22 +11,48 @@ import Travis from '../src/Travis';
 import Client from './Client';
 
 describe('merge travis', () => {
-  const context = new Context(new Client({
-    'aFile': {
-      templateRepo: `node_js:
+  describe('node versions', () => {
+    describe('simple', () => {
+      const context = new Context(new Client({
+        'aFile': {
+          templateRepo: `node_js:
   - 7.7.2
 `,
-      targetRepo: `node_js:
+          targetRepo: `node_js:
   - 7.7.1
 `
-    }
-  }), 'targetRepo', 'templateRepo', {});
+        }
+      }), 'targetRepo', 'templateRepo', {});
 
-  const merger = new Travis(context, 'aFile');
+      const merger = new Travis(context, 'aFile');
 
-  it('node_js versions', () =>
-    merger.merge.then(m =>
-      assert.equal(m.content, `node_js:
+      it('node_js versions', () =>
+        merger.merge.then(m =>
+          assert.equal(m.content, `node_js:
   - 7.7.2
 `)));
+    });
+    describe('complex', () => {
+      const context = new Context(new Client({
+        'aFile': {
+          templateRepo: `node_js:
+  - 7.7.2
+`,
+          targetRepo: `node_js:
+  - 6.10.1
+  - 7.7.1
+`
+        }
+      }), 'targetRepo', 'templateRepo', {});
+
+      const merger = new Travis(context, 'aFile');
+
+      it('node_js versions', () =>
+        merger.merge.then(m =>
+          assert.equal(m.content, `node_js:
+  - 7.7.2
+  - 6.10.1
+`)));
+    });
+  });
 });
