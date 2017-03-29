@@ -28,19 +28,15 @@ process.on('unhandledRejection', reason => console.error(reason));
 program
   .description('Keep npm package in sync with its template')
   .version(require(path.join(__dirname, '..', 'package.json')).version)
-  .option('-k, --keystore <account/service>', 'keystore')
+  .option('-k, --keystore <account/service>', 'keystore', /^[\w\-]+\/.*/,
+    'arlac77/GitHub for Mac SSH key passphrase — github.com')
   .option('-s, --save', 'save keystore')
-  .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/, 'Kronos-Tools/npm-package-template')
+  .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/,
+    'Kronos-Tools/npm-package-template')
   .argument('[repos...]', 'repos to merge', /^[\w\-]+\/[\w\-]+$/)
   .action((args, options, logger) => {
-    const keystore = {
-      account: 'arlac77',
-      service: 'GitHub for Mac SSH key passphrase — github.com'
-    };
-
-    if (options.keystore) {
-      [keystore.account, keystore.service] = options.keystore.split(/\//);
-    }
+    const keystore = {};
+    [keystore.account, keystore.service] = options.keystore.split(/\//);
 
     if (options.save) {
       prompt.start();
