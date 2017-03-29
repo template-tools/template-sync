@@ -34,7 +34,7 @@ program
   .option('-s, --save', 'save keystore')
   .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/,
     'Kronos-Tools/npm-package-template')
-  .argument('[repos...]', 'repos to merge', /^[\w\-]+\/[\w\-]+$/)
+  .argument('[repos...]', 'repos to merge' /*, /^[\w\-]+\/[\w\-]+$/*/ )
   .action((args, options, logger) => {
     const keystore = {};
     [keystore.account, keystore.service] = options.keystore.split(/\//);
@@ -158,7 +158,7 @@ function work(spinner, token, targetRepo, templateRepo) {
         .then(merges => merges.filter(m => m.changed));
     }).then(merges => {
       if (merges.length === 0) {
-        spinner.succeed('nothing changed');
+        spinner.succeed(`${targetRepo} nothing changed`);
         return;
       }
       spinner.text = merges.map(m => m.path + ': ' + m.changed).join(',');
