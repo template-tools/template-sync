@@ -13,16 +13,15 @@ export default class Travis extends File {
         const yml = yaml.safeLoad(original) || {};
         const tyml = yaml.safeLoad(this.context.expand(template));
         const before_script = yml.before_script;
-
-        const email = yml.notifications.email;
+        const email = yml.notifications ? yml.notifications.email : undefined;
 
         deepExtend(yml, tyml);
 
-        if (email) {
+        if (email !== undefined) {
           yml.notifications.email = email;
         }
 
-        if (before_script) {
+        if (before_script !== undefined) {
           before_script.forEach(s => {
             if (!yml.before_script.find(e => e === s)) {
               yml.before_script.push(s);
@@ -33,10 +32,11 @@ export default class Travis extends File {
         const content = yaml.safeDump(yml, {
           lineWidth: 128
         });
+
         return {
           path: this.path,
           content: content,
-          changed: content != original,
+          changed: content !== original,
           message: `chore(travis): merge from template ${this.path}`
         };
       });
