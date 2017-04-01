@@ -5,13 +5,15 @@
   "main": "dist/npm-template-sync.js",
   "module": "src/npm-template-sync.js",
   "scripts": {
+    "cover": "nyc ava",
+    "test": "ava",
+    "pretest": "rollup -c rollup.config.test.js",
+    "precover": "rollup -c rollup.config.test.js",
+    "posttest": "markdown-doctest",
     "start": "node --harmony-async-await webhook/index",
-    "cover": "rollup -c tests/rollup.config.js && mocha --reporter tests/istanbul.reporter.js build/bundle.test.js",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "prepublish": "rollup --output=bin/npm-template-sync -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
-    "pretest": "rollup -c tests/rollup.config.js",
     "posttest": "markdown-doctest",
-    "test": "mocha --reporter tests/istanbul.reporter.js build/bundle.test.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "bin": {
@@ -22,7 +24,7 @@
     "url": "https://github.com/arlac77/npm-template-sync.git"
   },
   "engines": {
-    "node": ">=6.9.3"
+    "node": ">=7.8.0"
   },
   "dependencies": {
     "caporal": "^0.4.1",
@@ -40,19 +42,20 @@
     "semver-diff": "^2.1.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
     "cracks": "3.1.2",
     "cz-conventional-changelog": "^2.0.0",
-    "istanbul": "^0.4.5",
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
-    "mocha": "^3.2.0",
     "rollup": "^0.41.6",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-istanbul": "^1.1.0",
     "rollup-plugin-multi-entry": "^2.0.1",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "semantic-release": "^6.3.6"
+    "rollup-plugin-node-resolve": "^2.1.0",
+    "semantic-release": "^6.3.6",
+    "ava": "^0.18.2",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "nyc": "^10.2.0",
+    "rollup-plugin-babel": "^2.7.1"
   },
   "release": {},
   "keywords": [
@@ -69,10 +72,26 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ]
+  "contributors": [{
+    "name": "Markus Felten",
+    "email": "markus.felten@gmx.de"
+  }],
+  "ava": {
+    "files": [
+      "build/test-bundle.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "build/test-bundle.js",
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
+    "report-dir": "./coverage"
+  }
 }
