@@ -197,6 +197,6 @@ function work(spinner, token, targetRepo, templateRepo) {
         })
       );
     }).catch(e => {
-      spinner.fail(e);
+      spinner.fail(`${dest.user}/${dest.repo}: ${e}`);
     });
 }
