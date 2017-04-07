@@ -34,9 +34,13 @@ export default class Context {
       value: targetRepo
     });
 
-    Object.defineProperty(this, 'templateRepo', {
-      value: templateRepo
-    });
+    /*
+        Object.defineProperty(this, 'templateRepo', {
+          value: templateRepo
+        });
+    */
+
+    this.templateRepo = templateRepo;
   }
 
   expand(...args) {

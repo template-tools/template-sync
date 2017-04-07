@@ -32,8 +32,10 @@ program
   .option('-k, --keystore <account/service>', 'keystore', /^[\w\-]+\/.*/,
     'arlac77/GitHub for Mac SSH key passphrase — github.com')
   .option('-s, --save', 'save keystore')
-  .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/,
-    'Kronos-Tools/npm-package-template')
+  .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/
+    /*,
+       'Kronos-Tools/npm-package-template' */
+  )
   .argument('[repos...]', 'repos to merge' /*, /^[\w\-]+\/[\w\-]+$/*/ )
   .action((args, options, logger) => {
     const keystore = {};
@@ -84,7 +86,6 @@ program.parse(process.argv);
 function work(spinner, token, targetRepo, templateRepo) {
   const client = github.client(token);
   const [user, repo, branch] = targetRepo.split(/[\/#]/);
-  const [tUser, tRepo] = templateRepo.split(/\//);
 
   spinner.text = targetRepo;
 
@@ -135,6 +136,7 @@ function work(spinner, token, targetRepo, templateRepo) {
 
       dest.branch += `-${maxBranchId + 1}`;
     }).then(() => {
+
       const context = new Context(client, targetRepo, templateRepo, {
         'github.user': user,
         'github.repo': repo,
@@ -154,8 +156,15 @@ function work(spinner, token, targetRepo, templateRepo) {
         new License(context, 'LICENSE')
       ];
 
-      return Promise.all(files.map(f => f.merge))
-        .then(merges => merges.filter(m => m.changed));
+      return (templateRepo === undefined ?
+          files[2].templateRepo().then(templateRepo => {
+            if (templateRepo === undefined) throw new Error(
+              `Unable to extract template repo url from ${targetRepo} package.json`);
+            context.templateRepo = templateRepo;
+          }) : Promise.resolve())
+        .then(() =>
+          Promise.all(files.map(f => f.merge))
+          .then(merges => merges.filter(m => m.changed)));
     }).then(merges => {
       if (merges.length === 0) {
         spinner.succeed(`${targetRepo} nothing changed`);

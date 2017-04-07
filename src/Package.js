@@ -2,6 +2,18 @@
 import File from './File';
 
 export default class Package extends File {
+
+  async templateRepo() {
+    const content = await this.originalContent();
+    const pkg = JSON.parse(content);
+    if (pkg.template !== undefined && pkg.template.repository !== undefined) {
+      const m = pkg.template.repository.url.match(/github.com\/(.*)\.git$/);
+      return m[1];
+    }
+
+    return undefined;
+  }
+
   get merge() {
     return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
       const original = contents[0];
@@ -10,7 +22,7 @@ export default class Package extends File {
 
       const properties = this.context.properties;
 
-      if (target.module && !target.module.match(/\{\{module\}\}/)) {
+      if (target.module !== undefined && !target.module.match(/\{\{module\}\}/)) {
         properties.module = target.module;
       }
 
@@ -22,8 +34,8 @@ export default class Package extends File {
 
       const keepScripts = {};
 
-      if (target.scripts) {
-        if (target.scripts.test) {
+      if (target.scripts !== undefined) {
+        if (target.scripts.test !== undefined) {
           if (target.scripts.test.match(/rollup/) || target.scripts.test.match(/istanbul.reporter.js/)) {
             // TODO how to detect special rollup test config ?
             keepScripts.test = target.scripts.test;
@@ -96,20 +108,26 @@ export default class Package extends File {
         }
       }
 
-      if (target.keywords) {
+      if (target.keywords !== undefined) {
         delete target.keywords['npm-package-template'];
       }
 
-      if (template.template && template.template.keywords) {
+      if (template.template !== undefined && template.template.keywords !== undefined) {
         Object.keys(template.template.keywords).forEach(r =>
           addKeyword(target, new RegExp(r), template.template.keywords[r])
         );
       }
 
+      target.template = {
+        repository: {
+          url: `https://github.com/${this.context.templateRepo}.git`
+        }
+      };
+
       const rcj = this.context.files.get('rollup.config.js');
 
       let first;
-      if (rcj) {
+      if (rcj !== undefined) {
         first = rcj.merge.then(m => {
           if (m.content) {
             if (!m.content.match(/rollup-plugin-node-resolve/)) {
