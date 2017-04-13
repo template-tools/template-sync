@@ -26,7 +26,7 @@
     "node": ">=7.9.0"
   },
   "dependencies": {
-    "caporal": "^0.4.1",
+    "caporal": "^0.5.0",
     "deep-extend": "^0.4.1",
     "expression-expander": "^5.3.9",
     "github-basic": "^2.1.0",
