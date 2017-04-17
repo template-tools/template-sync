@@ -7,9 +7,9 @@ export default class License extends File {
       ignoreMissing: true
     }), this.templateContent()]).then(([original, template]) => {
       const m = original.match(/opyright\s*\(c\)\s*(\d+)([,\-\d]+)*(\s*(,|by)\s*(.*))?/);
+      const properties = this.context.properties;
 
       if (m) {
-        const properties = this.context.properties;
         const years = new Set();
         years.add(properties['date.year']);
         years.add(parseInt(m[1]));
