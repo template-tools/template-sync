@@ -13,7 +13,7 @@ export default class ReplaceIfEmpty extends File {
         path: this.path,
         content: this.context.expand(template),
         changed: template !== '',
-        message: `insert missing ${this.path} from template`
+        message: `add missing ${this.path} from template`
       } : {
         path: this.path,
         content: original,

@@ -30,7 +30,7 @@ export default class Readme extends File {
           path: this.path,
           content: content,
           changed: content != original,
-          message: 'docs: update readme from template'
+          message: 'docs(README): update from template'
         };
       });
   }

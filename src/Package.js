@@ -148,7 +148,7 @@ export default class Package extends File {
           content: content,
           path: this.path,
           changed: original != content,
-          message: 'chore: update package from template'
+          message: 'chore: update package.json from template'
         };
       });
     });

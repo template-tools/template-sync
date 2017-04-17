@@ -133,7 +133,6 @@ function work(spinner, token, targetRepo, templateRepo) {
 
       dest.branch += `-${maxBranchId + 1}`;
     }).then(() => {
-
       const context = new Context(client, targetRepo, templateRepo, {
         'github.user': user,
         'github.repo': repo,
@@ -169,10 +168,13 @@ function work(spinner, token, targetRepo, templateRepo) {
       }
       spinner.text = merges.map(m => m.path + ': ' + m.message).join(',');
 
+      const messages = merges.map(m => m.message);
+      const message = messages.join('\n');
+
       return createBranch(user, repo, source.branch, dest.branch, options).then(() =>
         commit(user, repo, {
           branch: dest.branch,
-          message: `fix(package): merge package template from ${templateRepo}`,
+          message: message, // `fix(package): merge package template from ${templateRepo}`,
           updates: merges.map(merge => {
             return {
               path: merge.path,
