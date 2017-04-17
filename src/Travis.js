@@ -6,6 +6,18 @@ const yaml = require('js-yaml'),
   deepExtend = require('deep-extend'),
   semverDiff = require('semver-diff');
 
+function normalizeVersion(version) {
+  version = version + '';
+
+  const m = version.match(/^(\d+)$/);
+
+  if (m) {
+    return m[1] + '.0.0';
+  }
+
+  return version;
+}
+
 export default class Travis extends File {
 
   get merge() {
@@ -16,15 +28,15 @@ export default class Travis extends File {
         const before_script = yml.before_script;
         const email = yml.notifications ? yml.notifications.email : undefined;
         const formerNodeVersions = yml.node_js;
-
         deepExtend(yml, tyml);
 
         if (formerNodeVersions !== undefined) {
           formerNodeVersions.forEach(ov => {
-            /*        console.log(
-                      `${yml.node_js} <> ${ov} : ${yml.node_js.map(nv => { const x = semverDiff(ov, nv); return x ? x : 'null'} ).join(',')}`
-                    );*/
-            if (yml.node_js.find(nv => semverDiff(ov, nv) === 'major')) {
+            /*console.log(
+              `${yml.node_js} <> ${ov} : ${yml.node_js.map(nv => { const x = semverDiff(ov, nv); return x ? x : 'null'} ).join(',')}`
+            );
+            */
+            if (yml.node_js.find(nv => semverDiff(normalizeVersion(ov), normalizeVersion(nv)) === 'major')) {
               yml.node_js.push(ov);
             }
           });
