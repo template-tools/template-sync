@@ -40,7 +40,7 @@ export default class File {
           if (options.ignoreMissing) {
             fullfill('');
           } else {
-            reject(err);
+            reject(new Error(`${path}: ${err}`));
           }
         } else {
           const b = new Buffer(status.content, 'base64');
