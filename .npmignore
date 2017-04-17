@@ -16,5 +16,6 @@ doc
 .nyc_output
 .markdown-doctest-setup.js
 rollup.config.js
-rollup.config.test.js
 SUMMARY.md
+
+rollup.config.test.js

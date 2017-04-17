@@ -5,10 +5,10 @@
   "main": "dist/npm-template-sync.js",
   "module": "src/npm-template-sync.js",
   "scripts": {
-    "cover": "nyc ava",
-    "test": "ava",
-    "pretest": "rollup -c rollup.config.test.js",
-    "precover": "rollup -c rollup.config.test.js",
+    "cover": "nyc npm test",
+    "test": "mocha tests/*_test.js",
+    "pretest": "npm run prepublish",
+    "precover": "npm run prepublish",
     "posttest": "markdown-doctest",
     "start": "node --harmony-async-await webhook/index",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
@@ -54,7 +54,9 @@
     "ava": "^0.19.1",
     "babel-preset-es2015-rollup": "^3.0.0",
     "nyc": "^10.2.0",
-    "rollup-plugin-babel": "^2.7.1"
+    "rollup-plugin-babel": "^2.7.1",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
   },
   "release": {},
   "keywords": [
