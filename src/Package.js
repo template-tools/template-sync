@@ -45,14 +45,14 @@ export default class Package extends File {
         }
 
         [target.scripts.build, target.scripts.prepublish].filter(s => s !== undefined).forEach(script => {
-          let m = script.match(/--output=([^\s]+)/);
-          if (m) {
-            buildOutput = m[1];
+          const ma = script.match(/--output=([^\s]+)/);
+          if (ma) {
+            buildOutput = ma[1];
           }
 
-          m = script.match(/\&\&\s*(.+)/);
-          if (m) {
-            extraBuild = m[1];
+          const mb = script.match(/\&\&\s*(.+)/);
+          if (mb) {
+            extraBuild = mb[1];
           }
         });
 
