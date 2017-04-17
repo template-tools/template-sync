@@ -142,24 +142,22 @@ async function work(spinner, token, targetRepo, templateRepo) {
       new License(context, 'LICENSE')
     ];
 
-    const merges = await (templateRepo === undefined ?
-        files[2].templateRepo().then(templateRepo => {
-          if (templateRepo === undefined) throw new Error(
-            `Unable to extract template repo url from ${targetRepo} package.json`);
-          context.templateRepo = templateRepo;
-        }) : Promise.resolve())
-      .then(() =>
-        Promise.all(files.map(f => f.merge)));
+    if (templateRepo === undefined) {
+      templateRepo = await files[2].templateRepo();
+      if (templateRepo === undefined) throw new Error(
+        `Unable to extract template repo url from ${targetRepo} package.json`);
+      context.templateRepo = templateRepo;
+    }
 
-    const changedMerges = merges.filter(m => m.changed);
+    const merges = (await Promise.all(files.map(f => f.merge))).filter(m => m.changed);
 
-    if (changedMerges.length === 0) {
+    if (merges.length === 0) {
       spinner.succeed(`${targetRepo} nothing changed`);
       return;
     }
-    spinner.text = changedMerges.map(m => m.path + ': ' + m.message).join(',');
+    spinner.text = merges.map(m => m.path + ': ' + m.message).join(',');
 
-    const messages = changedMerges.map(m => m.message);
+    const messages = merges.map(m => m.message);
     const message = messages.join('\n');
 
     await createBranch(user, repo, source.branch, dest.branch, options);
@@ -167,7 +165,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
     await commit(user, repo, {
       branch: dest.branch,
       message: message, // `fix(package): merge package template from ${templateRepo}`,
-      updates: changedMerges.map(merge => {
+      updates: merges.map(merge => {
         return {
           path: merge.path,
           content: merge.content
