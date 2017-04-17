@@ -73,36 +73,16 @@ program
         return;
       }
       const spinner = ora('args').start();
-
-      args.repos.forEach(repo => work(spinner, pass, repo, options.template));
+      Promise.all(args.repos.map(repo => work(spinner, pass, repo, options.template)));
     });
   });
 
 program.parse(process.argv);
 
-function work(spinner, token, targetRepo, templateRepo) {
-  const client = github.client(token);
-  const [user, repo, branch] = targetRepo.split(/[\/#]/);
+async function work(spinner, token, targetRepo, templateRepo) {
 
   spinner.text = targetRepo;
-
-  function getBranches(repo) {
-    return new Promise((fullfill, reject) => {
-      client.repo(repo).branches((err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          fullfill(data);
-        }
-      });
-    });
-  }
-
-  const source = {
-    user: user,
-    repo: repo,
-    branch: branch || 'master'
-  };
+  const [user, repo, branch] = targetRepo.split(/[\/#]/);
 
   const dest = {
     user: user,
@@ -110,101 +90,110 @@ function work(spinner, token, targetRepo, templateRepo) {
     branch: 'template-sync'
   };
 
-  const options = {
-    auth: {
-      type: 'oauth',
-      token: token
-    }
-  };
+  try {
+    const client = github.client(token);
 
-  getBranches(targetRepo.replace(/#.*/, ''))
-    .then(branches => {
-      const maxBranchId = branches.reduce((prev, current) => {
-        const m = current.name.match(/template-sync-(\d+)/);
-        if (m) {
-          const r = parseInt(m[1]);
-          if (r > prev) {
-            return r;
-          }
-        }
+    const source = {
+      user: user,
+      repo: repo,
+      branch: branch || 'master'
+    };
 
-        return prev;
-      }, 0);
-
-      dest.branch += `-${maxBranchId + 1}`;
-    }).then(() => {
-      const context = new Context(client, targetRepo, templateRepo, {
-        'github.user': user,
-        'github.repo': repo,
-        'name': repo,
-        'date.year': new Date().getFullYear(),
-        'license.owner': user
-      });
-
-      const files = [
-        new ReplaceIfEmpty(context, 'rollup.config.js'),
-        new ReplaceIfEmpty(context, 'rollup.config.test.js'),
-        new Package(context, 'package.json'),
-        new Readme(context, 'doc/README.hbs'),
-        new Travis(context, '.travis.yml'),
-        new MergeLineSet(context, '.gitignore'),
-        new MergeLineSet(context, '.npmignore'),
-        new License(context, 'LICENSE')
-      ];
-
-      return (templateRepo === undefined ?
-          files[2].templateRepo().then(templateRepo => {
-            if (templateRepo === undefined) throw new Error(
-              `Unable to extract template repo url from ${targetRepo} package.json`);
-            context.templateRepo = templateRepo;
-          }) : Promise.resolve())
-        .then(() =>
-          Promise.all(files.map(f => f.merge))
-          .then(merges => merges.filter(m => m.changed)));
-    }).then(merges => {
-      if (merges.length === 0) {
-        spinner.succeed(`${targetRepo} nothing changed`);
-        return;
+    const options = {
+      auth: {
+        type: 'oauth',
+        token: token
       }
-      spinner.text = merges.map(m => m.path + ': ' + m.message).join(',');
+    };
 
-      const messages = merges.map(m => m.message);
-      const message = messages.join('\n');
+    const branches =
+      await getBranches(client, targetRepo.replace(/#.*/, ''));
 
-      return createBranch(user, repo, source.branch, dest.branch, options).then(() =>
-        commit(user, repo, {
-          branch: dest.branch,
-          message: message, // `fix(package): merge package template from ${templateRepo}`,
-          updates: merges.map(merge => {
-            return {
-              path: merge.path,
-              content: merge.content
-            };
-          })
-        }, options)
+    const maxBranchId = branches.reduce((prev, current) => {
+      const m = current.name.match(/template-sync-(\d+)/);
+      if (m) {
+        const r = parseInt(m[1]);
+        if (r > prev) {
+          return r;
+        }
+      }
 
-        /*
-                Promise.all(merges.map(merge => commit(user, repo, {
-                  branch: dest.branch,
-                  message: merge.message ? merge.message : `fix(package): merge package template from ${templateRepo}`,
-                  updates: [{
-                    path: merge.path,
-                    content: merge.content
-                  }]
-                }, options)))
-        */
+      return prev;
+    }, 0);
 
-        .then(
-          () =>
-          pull(source, dest, {
-            title: `merge package template from ${templateRepo}`,
-            body: 'Updated standard to latest version'
-          }, options))
-        .then(r => {
-          spinner.succeed(r.body.html_url);
-        })
-      );
-    }).catch(e => {
-      spinner.fail(`${dest.user}/${dest.repo}: ${e}`);
+    dest.branch += `-${maxBranchId + 1}`;
+
+    const context = new Context(client, targetRepo, templateRepo, {
+      'github.user': user,
+      'github.repo': repo,
+      'name': repo,
+      'date.year': new Date().getFullYear(),
+      'license.owner': user
     });
+
+    const files = [
+      new ReplaceIfEmpty(context, 'rollup.config.js'),
+      new ReplaceIfEmpty(context, 'rollup.config.test.js'),
+      new Package(context, 'package.json'),
+      new Readme(context, 'doc/README.hbs'),
+      new Travis(context, '.travis.yml'),
+      new MergeLineSet(context, '.gitignore'),
+      new MergeLineSet(context, '.npmignore'),
+      new License(context, 'LICENSE')
+    ];
+
+    const merges = await (templateRepo === undefined ?
+        files[2].templateRepo().then(templateRepo => {
+          if (templateRepo === undefined) throw new Error(
+            `Unable to extract template repo url from ${targetRepo} package.json`);
+          context.templateRepo = templateRepo;
+        }) : Promise.resolve())
+      .then(() =>
+        Promise.all(files.map(f => f.merge)));
+
+    const changedMerges = merges.filter(m => m.changed);
+
+    if (changedMerges.length === 0) {
+      spinner.succeed(`${targetRepo} nothing changed`);
+      return;
+    }
+    spinner.text = changedMerges.map(m => m.path + ': ' + m.message).join(',');
+
+    const messages = changedMerges.map(m => m.message);
+    const message = messages.join('\n');
+
+    await createBranch(user, repo, source.branch, dest.branch, options);
+
+    await commit(user, repo, {
+      branch: dest.branch,
+      message: message, // `fix(package): merge package template from ${templateRepo}`,
+      updates: changedMerges.map(merge => {
+        return {
+          path: merge.path,
+          content: merge.content
+        };
+      })
+    }, options);
+
+    const result = await pull(source, dest, {
+      title: `merge package template from ${context.templateRepo}`,
+      body: 'Updated standard to latest version'
+    }, options);
+
+    spinner.succeed(result.body.html_url);
+  } catch (e) {
+    spinner.fail(`${dest.user}/${dest.repo}: ${e}`);
+  }
+}
+
+function getBranches(client, repo) {
+  return new Promise((fullfill, reject) => {
+    client.repo(repo).branches((err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        fullfill(data);
+      }
+    });
+  });
 }
