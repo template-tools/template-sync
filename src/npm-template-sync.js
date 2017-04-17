@@ -32,10 +32,7 @@ program
   .option('-k, --keystore <account/service>', 'keystore', /^[\w\-]+\/.*/,
     'arlac77/GitHub for Mac SSH key passphrase — github.com')
   .option('-s, --save', 'save keystore')
-  .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/
-    /*,
-       'Kronos-Tools/npm-package-template' */
-  )
+  .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/)
   .argument('[repos...]', 'repos to merge' /*, /^[\w\-]+\/[\w\-]+$/*/ )
   .action((args, options, logger) => {
     const keystore = {};
@@ -170,7 +167,7 @@ function work(spinner, token, targetRepo, templateRepo) {
         spinner.succeed(`${targetRepo} nothing changed`);
         return;
       }
-      spinner.text = merges.map(m => m.path + ': ' + m.changed).join(',');
+      spinner.text = merges.map(m => m.path + ': ' + m.message).join(',');
 
       return createBranch(user, repo, source.branch, dest.branch, options).then(() =>
         commit(user, repo, {
