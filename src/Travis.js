@@ -6,13 +6,27 @@ const yaml = require('js-yaml'),
   deepExtend = require('deep-extend'),
   semverDiff = require('semver-diff');
 
+function diffVersion(a, b) {
+  const aa = ('' + a).split(/\./).map(x => parseInt(x));
+  const bb = ('' + b).split(/\./).map(x => parseInt(x));
+
+  for (const i in aa) {
+    if (i >= bb.length) break;
+
+    if (aa[i] < bb[i]) return -1;
+    if (aa[i] > bb[i]) return 1;
+  }
+
+  return 0;
+}
+
 function normalizeVersion(version) {
   version = version + '';
 
-  const m = version.match(/^(\d+)$/);
+  const m = version.match(/^(\d+)(\.(\d+))?$/);
 
   if (m) {
-    return m[1] + '.0.0';
+    return m[3] ? m[1] + m[2] + '.0' : m[1] + '.0.0';
   }
 
   return version;
@@ -28,6 +42,14 @@ export default class Travis extends File {
         const before_script = yml.before_script;
         const email = yml.notifications ? yml.notifications.email : undefined;
         const formerNodeVersions = yml.node_js;
+
+        let removeVersions = [];
+
+        if (tyml.node_js) {
+          removeVersions = tyml.node_js.filter(v => v < 0).map(v => -v);
+          tyml.node_js = tyml.node_js.filter(v => v < 0 ? false : true);
+        }
+
         deepExtend(yml, tyml);
 
         if (formerNodeVersions !== undefined) {
@@ -40,6 +62,10 @@ export default class Travis extends File {
               yml.node_js.push(ov);
             }
           });
+
+          yml.node_js = yml.node_js.filter(v =>
+            removeVersions.find(rv => diffVersion(rv, v) === 0) ? false : true
+          );
         }
 
         if (email !== undefined) {
