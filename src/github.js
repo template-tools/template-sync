@@ -4,6 +4,18 @@
 
 const github = require('github-basic');
 
+export function getBranches(client, repo) {
+  return new Promise((fullfill, reject) => {
+    client.repo(repo).branches((err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        fullfill(data);
+      }
+    });
+  });
+}
+
 export function pull(from, to, msg, options) {
   return github.json('post', `/repos/${to.user}/${to.repo}/pulls`, {
     title: msg.title,

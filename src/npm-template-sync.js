@@ -11,6 +11,7 @@ const program = require('caporal'),
   githubBasic = require('github-basic');
 
 import {
+  getBranches,
   pull, createBranch, commit
 }
 from './github';
@@ -182,16 +183,4 @@ async function work(spinner, token, targetRepo, templateRepo) {
   } catch (e) {
     spinner.fail(`${dest.user}/${dest.repo}: ${e}`);
   }
-}
-
-function getBranches(client, repo) {
-  return new Promise((fullfill, reject) => {
-    client.repo(repo).branches((err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        fullfill(data);
-      }
-    });
-  });
 }
