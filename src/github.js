@@ -25,20 +25,19 @@ export function pull(from, to, msg, options) {
   }, options);
 }
 
-export function createBranch(user, repo, from, to, options) {
-  return github.json('get', '/repos/:owner/:repo/git/refs/:ref', {
-      owner: user,
-      repo: repo,
-      ref: 'heads/' + from
-    }, options)
-    .then(res =>
-      github.json('post', '/repos/:owner/:repo/git/refs', {
-        owner: user,
-        repo: repo,
-        ref: 'refs/heads/' + to,
-        sha: res.body.object.sha
-      }, options)
-    );
+export async function createBranch(user, repo, from, to, options) {
+  const res = await github.json('get', '/repos/:owner/:repo/git/refs/:ref', {
+    owner: user,
+    repo: repo,
+    ref: 'heads/' + from
+  }, options);
+
+  return github.json('post', '/repos/:owner/:repo/git/refs', {
+    owner: user,
+    repo: repo,
+    ref: 'refs/heads/' + to,
+    sha: res.body.object.sha
+  }, options);
 }
 
 export function commit(user, repo, commit, options) {
@@ -47,7 +46,7 @@ export function commit(user, repo, commit, options) {
   } = commit;
   let shaLatestCommit, shaBaseTree, shaNewTree, shaNewCommit;
 
-  return Promise.resolve(null).then(() => {
+  return Promise.resolve().then(() => {
     updates = Promise.all(updates.map(file => {
       const path = file.path.replace(/\\/g, '/').replace(/^\//, '');
       const mode = file.mode || '100644';
