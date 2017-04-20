@@ -34,7 +34,7 @@ program
     'arlac77/GitHub for Mac SSH key passphrase — github.com')
   .option('-s, --save', 'save keystore')
   .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/)
-  .argument('[repos...]', 'repos to merge' /*, /^[\w\-]+\/[\w\-]+$/*/ )
+  .argument('[repos...]', 'repos to merge')
   .action((args, options, logger) => {
     const keystore = {};
     [keystore.account, keystore.service] = options.keystore.split(/\//);
@@ -165,7 +165,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
 
     await commit(user, repo, {
       branch: dest.branch,
-      message: message, // `fix(package): merge package template from ${templateRepo}`,
+      message: message,
       updates: merges.map(merge => {
         return {
           path: merge.path,
