@@ -20,6 +20,8 @@ export default class Package extends File {
       const target = JSON.parse(contents[0]);
       const template = JSON.parse(contents[1]);
 
+      const messages = ['chore: update package.json from template'];
+
       const properties = this.context.properties;
 
       if (target.module !== undefined && !target.module.match(/\{\{module\}\}/)) {
@@ -69,6 +71,7 @@ export default class Package extends File {
       Object.keys(target.devDependencies).forEach(d => {
         if (template.devDependencies[d] === '-') {
           delete target.devDependencies[d];
+          messages.push(`chore(dependencies): remove ${d}`);
         }
       });
 
@@ -143,7 +146,7 @@ export default class Package extends File {
           content: content,
           path: this.path,
           changed: original != content,
-          message: 'chore: update package.json from template'
+          message: messages.join('\n')
         };
       });
     });
