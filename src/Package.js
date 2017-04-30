@@ -19,8 +19,7 @@ export default class Package extends File {
       const original = contents[0];
       const target = JSON.parse(contents[0]);
       const template = JSON.parse(contents[1]);
-
-      const messages = ['chore: update package.json from template'];
+      const messages = [];
 
       const properties = this.context.properties;
 
@@ -139,6 +138,10 @@ export default class Package extends File {
             }
           }
         }) : Promise.resolve();
+
+      if (messages.length === 0) {
+        messages.push('chore: update package.json from template');
+      }
 
       return first.then(() => {
         const content = JSON.stringify(this.context.expand(target), undefined, 2);
