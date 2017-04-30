@@ -42,6 +42,7 @@ export default class Travis extends File {
         const before_script = yml.before_script;
         const email = yml.notifications ? yml.notifications.email : undefined;
         const formerNodeVersions = yml.node_js;
+        const messages = [];
 
         let removeVersions = [];
 
@@ -62,6 +63,11 @@ export default class Travis extends File {
               yml.node_js.push(ov);
             }
           });
+
+          const toBeRemoved = yml.node_js.filter(v => removeVersions.find(rv => diffVersion(rv, v) === 0));
+          if (toBeRemoved.length > 0) {
+            messages.push(`chore(travis): remove node version(s) ${toBeRemoved.join(' ')}`);
+          }
 
           yml.node_js = yml.node_js.filter(v =>
             removeVersions.find(rv => diffVersion(rv, v) === 0) ? false : true
@@ -84,11 +90,15 @@ export default class Travis extends File {
           lineWidth: 128
         });
 
+        if (messages.length === 0) {
+          messages.push(`chore(travis): merge from template ${this.path}`);
+        }
+
         return {
           path: this.path,
           content: content,
           changed: content !== original,
-          message: `chore(travis): merge from template ${this.path}`
+          message: messages.join('\n')
         };
       });
   }
