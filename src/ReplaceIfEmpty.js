@@ -3,6 +3,15 @@
 import File from './File';
 
 export default class ReplaceIfEmpty extends File {
+
+  constructor(context, path, message) {
+    super(context, path);
+
+    Object.defineProperty(this, 'message', {
+      value: message
+    });
+  }
+
   get merge() {
     return Promise.all([this.originalContent({
       ignoreMissing: true
@@ -13,7 +22,7 @@ export default class ReplaceIfEmpty extends File {
         path: this.path,
         content: this.context.expand(template),
         changed: template !== '',
-        message: `add missing ${this.path} from template`
+        message: this.message === undefined ? `chore: add missing ${this.path} from template` : this.message
       } : {
         path: this.path,
         content: original,

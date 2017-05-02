@@ -4,7 +4,6 @@
 
 export default class File {
   constructor(context, path) {
-
     Object.defineProperty(this, 'context', {
       value: context
     });
