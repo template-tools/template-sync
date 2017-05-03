@@ -24,8 +24,11 @@ import Replace from './Replace';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
 import MergeLineSet from './MergeLineSet';
 
-process.on('uncaughtException', err => console.error(err));
-process.on('unhandledRejection', reason => console.error(reason));
+
+const spinner = ora('args').start();
+
+process.on('uncaughtException', err => spinner.fail(err));
+process.on('unhandledRejection', reason => spinner.fail(reason));
 
 program
   .description('Keep npm package in sync with its template')
@@ -51,7 +54,7 @@ program
       };
       prompt.get(schema, (err, result) => {
         if (err) {
-          logger.error(err);
+          spinner.fail(err);
           return;
         }
         keychain.setPassword({
@@ -60,20 +63,20 @@ program
           password: result.password
         }, (err, pass) => {
           if (err) {
-            logger.error(err);
+            spinner.fail(err);
             return;
           }
-          logger.log('password set');
+          spinner.succeed('password set');
         });
       });
     }
 
     keychain.getPassword(keystore, (err, pass) => {
+
       if (err) {
-        logger.error(err);
+        spinner.fail(err);
         return;
       }
-      const spinner = ora('args').start();
       Promise.all(args.repos.map(repo => work(spinner, pass, repo, options.template)));
     });
   });
