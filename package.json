@@ -45,15 +45,15 @@
     "cz-conventional-changelog": "^2.0.0",
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
+    "semantic-release": "^6.3.6",
+    "ava": "^0.19.1",
+    "nyc": "^10.3.0",
+    "babel-preset-es2015-rollup": "^3.0.0",
     "rollup": "^0.41.6",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-istanbul": "^1.1.0",
     "rollup-plugin-multi-entry": "^2.0.1",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "semantic-release": "^6.3.6",
-    "ava": "^0.19.1",
-    "babel-preset-es2015-rollup": "^3.0.0",
-    "nyc": "^10.3.0",
     "rollup-plugin-babel": "^2.7.1"
   },
   "release": {},
@@ -71,15 +71,13 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ],
+  "contributors": [{
+    "name": "Markus Felten",
+    "email": "markus.felten@gmx.de"
+  }],
   "ava": {
     "files": [
-      "build/test-bundle.js"
+      "tests/build/bundle.js"
     ],
     "require": [
       "babel-register"
@@ -87,7 +85,7 @@
   },
   "nyc": {
     "include": [
-      "build/test-bundle.js",
+      "tests/build/bundle.js",
       "src/**/*.js"
     ],
     "reporter": [
