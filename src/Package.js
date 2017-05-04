@@ -163,7 +163,7 @@ export default class Package extends File {
           content: content,
           path: this.path,
           changed: original != content,
-          message: messages.join('\n')
+          message: messages
         };
       });
     });

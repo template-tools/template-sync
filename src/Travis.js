@@ -98,7 +98,7 @@ export default class Travis extends File {
           path: this.path,
           content: content,
           changed: content !== original,
-          message: messages.join('\n')
+          message: messages
         };
       });
   }

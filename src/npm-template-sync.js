@@ -163,14 +163,20 @@ async function work(spinner, token, targetRepo, templateRepo) {
     }
     spinner.text = merges.map(m => m.path + ': ' + m.message).join(',');
 
-    const messages = merges.map(m => m.message);
-    const message = messages.join('\n');
+    const messages = merges.reduce((result, merge) => {
+      if (Array.isArray(merge.message)) {
+        merge.message.forEach(m => result.push(m));
+      } else {
+        result.push(merge.message);
+      }
+      return result;
+    }, []);
 
     await createBranch(user, repo, source.branch, dest.branch, options);
 
     await commit(user, repo, {
       branch: dest.branch,
-      message: message,
+      message: messages.join('\n'),
       updates: merges.map(merge => {
         return {
           path: merge.path,
