@@ -11,7 +11,7 @@
     "precover": "rollup -c rollup.config.test.js",
     "posttest": "markdown-doctest",
     "start": "node --harmony-async-await webhook/index",
-    "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
+    "docs": "jsdoc2md --configure doc/jsdoc.json -l off -t doc/README.hbs -f src/*.js >README.md",
     "prepublish": "rollup --output=bin/npm-template-sync -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -41,20 +41,21 @@
     "semver-diff": "^2.1.0"
   },
   "devDependencies": {
+    "ava": "^0.19.1",
+    "babel-preset-es2015-rollup": "^3.0.0",
     "cracks": "3.1.2",
     "cz-conventional-changelog": "^2.0.0",
+    "jsdoc-babel": "^0.3.0",
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
-    "semantic-release": "^6.3.6",
-    "ava": "^0.19.1",
     "nyc": "^10.3.0",
-    "babel-preset-es2015-rollup": "^3.0.0",
     "rollup": "^0.41.6",
+    "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-istanbul": "^1.1.0",
     "rollup-plugin-multi-entry": "^2.0.1",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-babel": "^2.7.1"
+    "semantic-release": "^6.3.6"
   },
   "release": {},
   "keywords": [
