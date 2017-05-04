@@ -23,7 +23,7 @@
     "url": "https://github.com/arlac77/npm-template-sync.git"
   },
   "engines": {
-    "node": ">=7.9.0"
+    "node": ">=7.10.0"
   },
   "dependencies": {
     "caporal": "^0.5.0",
@@ -54,7 +54,13 @@
     "rollup-plugin-istanbul": "^1.1.0",
     "rollup-plugin-multi-entry": "^2.0.1",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-babel": "^2.7.1"
+    "rollup-plugin-babel": "^2.7.1",
+    "jsdoc": "-",
+    "istanbul": "-",
+    "mocha": "-",
+    "chai": "-",
+    "mocha-lcov-reporter": "-",
+    "babel-plugin-transform-async-generator-functions": "^6.24.1"
   },
   "release": {},
   "keywords": [
@@ -71,10 +77,12 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [{
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "ava": {
     "files": [
       "tests/build/bundle.js"
