@@ -31,7 +31,7 @@ test('package', async t => {
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 
-  console.log(merged.message);
+  //console.log(merged.message);
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
     bpkg: '2.3.4',
     cpkg: '2.3.4'

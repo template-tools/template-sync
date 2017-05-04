@@ -23,6 +23,7 @@ import License from './License';
 import Replace from './Replace';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
 import MergeLineSet from './MergeLineSet';
+import JSONFile from './JSONFile';
 
 
 const spinner = ora('args').start();
@@ -140,6 +141,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       new ReplaceIfEmpty(context, 'rollup.config.test.js'),
       new Package(context, 'package.json'),
       new Readme(context, 'doc/README.hbs'),
+      new JSONFile(context, 'doc/jsdoc.json'),
       new Travis(context, '.travis.yml'),
       new MergeLineSet(context, '.gitignore'),
       new MergeLineSet(context, '.npmignore'),
@@ -153,7 +155,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       context.templateRepo = templateRepo;
     }
 
-    const merges = (await Promise.all(files.map(f => f.merge))).filter(m => m.changed);
+    const merges = (await Promise.all(files.map(f => f.merge))).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
       spinner.succeed(`${targetRepo} nothing changed`);
