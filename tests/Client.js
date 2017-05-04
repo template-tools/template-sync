@@ -13,9 +13,13 @@ export default class Client {
     const c = this;
     return {
       contents(path, cb) {
-        cb(undefined, {
-          content: new Buffer(c.files[path][repo]).toString('base64')
-        }, '', {});
+        if (c.files[path][repo] === undefined) {
+          cb(new Error(`missing ${path}`));
+        } else {
+          cb(undefined, {
+            content: new Buffer(c.files[path][repo]).toString('base64')
+          }, '', {});
+        }
       }
     };
   }
