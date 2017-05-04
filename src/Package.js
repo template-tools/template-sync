@@ -29,8 +29,6 @@ export default class Package extends File {
 
       properties.main = target.main && !target.main.match(/\{\{main\}\}/) ? target.main : 'dist/index.js';
 
-      const deepPropeties = ['scripts', 'devDependencies', 'engines'];
-
       let extraBuild, buildOutput;
 
       const keepScripts = {};
@@ -60,17 +58,29 @@ export default class Package extends File {
         delete target.scripts.build;
       }
 
-      deepPropeties.forEach(p => {
+      const deepPropeties = {
+        scripts: {},
+        devDependencies: {},
+        engines: {}
+      };
+
+      Object.keys(deepPropeties).forEach(p => {
         if (target[p] === undefined) {
           target[p] = {};
         }
-        Object.assign(target[p], template[p]);
-      });
 
-      Object.keys(target.devDependencies).forEach(d => {
-        if (template.devDependencies[d] === '-') {
-          delete target.devDependencies[d];
-          messages.push(`chore(dependencies): remove ${d}`);
+        if (template[p] !== undefined) {
+          Object.keys(template[p]).forEach(d => {
+            if (template[p][d] === '-') {
+              delete target[p][d];
+              messages.push(`chore(${p}): remove ${d}`);
+            } else {
+              if (template[p][d] !== target[p][d]) {
+                target[p][d] = template[p][d];
+                messages.push(`chore(${p}): update ${d}=${template[p][d]} from template`);
+              }
+            }
+          });
         }
       });
 
