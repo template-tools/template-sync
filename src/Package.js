@@ -72,12 +72,16 @@ export default class Package extends File {
         if (template[p] !== undefined) {
           Object.keys(template[p]).forEach(d => {
             if (template[p][d] === '-') {
-              delete target[p][d];
-              messages.push(`chore(${p}): remove ${d}`);
+              if (target[p][d] !== undefined) {
+                delete target[p][d];
+                messages.push(`chore(${p}): remove ${d}`);
+              }
             } else {
-              if (template[p][d] !== target[p][d]) {
-                target[p][d] = template[p][d];
-                messages.push(`chore(${p}): update ${d}=${template[p][d]} from template`);
+              const tp = this.context.expand(template[p][d]);
+              if (tp !== target[p][d]) {
+                messages.push(target[p][d] === undefined ? `chore(${p}): add ${d}=${tp} from template` :
+                  `chore(${p}): update ${d}=${tp} from template`);
+                target[p][d] = tp;
               }
             }
           });
