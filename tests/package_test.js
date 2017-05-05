@@ -43,7 +43,26 @@ test('package devDependencies', async t => {
   });
 });
 
-test('package devDependencies', async t => {
+test('package keywords', async t => {
+  const context = createContext({
+    template: {
+      keywords: {
+        "_xxx_": "XXX"
+      }
+    }
+  }, {
+    name: 'abc_xxx_1',
+    keywords: ['YYY']
+  });
+
+  const pkg = new Package(context, 'package.json');
+  const merged = await pkg.merge;
+
+  t.deepEqual(merged.message, ['docs(package): add keyword XXX']);
+  t.deepEqual(JSON.parse(merged.content).keywords, ['YYY', 'XXX']);
+});
+
+test('package keywords empty', async t => {
   const context = createContext({
     template: {
       keywords: {
