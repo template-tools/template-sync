@@ -172,6 +172,9 @@ export default class Package extends File {
 
 function addKeyword(pkg, regex, keyword) {
   if (pkg.name.match(regex)) {
+    if (pkg.keywords === undefined) {
+      pkg.keywords = [];
+    }
     if (!pkg.keywords.find(k => k === keyword)) {
       pkg.keywords.push(keyword);
     }
