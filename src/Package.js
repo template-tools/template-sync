@@ -130,7 +130,7 @@ export default class Package extends File {
 
       if (template.template !== undefined && template.template.keywords !== undefined) {
         Object.keys(template.template.keywords).forEach(r =>
-          addKeyword(target, new RegExp(r), template.template.keywords[r])
+          addKeyword(target, new RegExp(r), template.template.keywords[r], messages)
         );
       }
 
@@ -170,12 +170,13 @@ export default class Package extends File {
   }
 }
 
-function addKeyword(pkg, regex, keyword) {
+function addKeyword(pkg, regex, keyword, messages) {
   if (pkg.name.match(regex)) {
     if (pkg.keywords === undefined) {
       pkg.keywords = [];
     }
     if (!pkg.keywords.find(k => k === keyword)) {
+      messages.push(`docs(package): add keyword ${keyword}`);
       pkg.keywords.push(keyword);
     }
   }

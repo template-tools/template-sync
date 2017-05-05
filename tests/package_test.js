@@ -57,5 +57,6 @@ test('package devDependencies', async t => {
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 
+  t.deepEqual(merged.message, ['docs(package): add keyword XXX']);
   t.deepEqual(JSON.parse(merged.content).keywords, ['XXX']);
 });
