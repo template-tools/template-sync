@@ -79,3 +79,24 @@ test('package keywords empty', async t => {
   t.deepEqual(merged.message, ['docs(package): add keyword XXX']);
   t.deepEqual(JSON.parse(merged.content).keywords, ['XXX']);
 });
+
+
+test('add xo/space=true', async t => {
+  const context = createContext({
+    "xo": {
+      "space": true
+    }
+  }, {
+    "xo": {
+      "space": true
+    }
+  });
+
+  const pkg = new Package(context, 'package.json');
+  const merged = await pkg.merge;
+
+  //t.deepEqual(merged.message, ['docs(package): add keyword XXX']);
+  t.deepEqual(JSON.parse(merged.content).xo, {
+    space: true
+  });
+});
