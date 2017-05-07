@@ -90,3 +90,20 @@ test('travis node semver remove', async t => {
   - 7.7.2
 `);
 });
+
+test('start fresh', async t => {
+  const context = new Context(new Client({
+    'aFile': {
+      templateRepo: `node_js:
+  - 7.7.2
+`,
+      targetRepo: ''
+    }
+  }), 'targetRepo', 'templateRepo', {});
+
+  const merger = new Travis(context, 'aFile');
+  const merged = await merger.merge;
+  t.deepEqual(merged.content, `node_js:
+  - 7.7.2
+`);
+});

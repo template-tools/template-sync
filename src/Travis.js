@@ -35,7 +35,9 @@ function normalizeVersion(version) {
 export default class Travis extends File {
 
   get merge() {
-    return Promise.all([this.originalContent(), this.templateContent()])
+    return Promise.all([this.originalContent({
+        ignoreMissing: true
+      }), this.templateContent()])
       .then(([original, template]) => {
         const yml = yaml.safeLoad(original) || {};
         const tyml = yaml.safeLoad(this.context.expand(template));
