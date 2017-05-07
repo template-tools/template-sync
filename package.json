@@ -56,7 +56,8 @@
     "rollup-plugin-multi-entry": "^2.0.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "semantic-release": "^6.3.6",
-    "babel-plugin-transform-async-generator-functions": "^6.24.1"
+    "babel-plugin-transform-async-generator-functions": "^6.24.1",
+    "xo": "^0.18.2"
   },
   "release": {},
   "keywords": [
@@ -101,5 +102,8 @@
     "repository": {
       "url": "https://github.com/arlac77/npm-package-template.git"
     }
+  },
+  "xo": {
+    "space": {}
   }
 }
