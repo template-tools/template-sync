@@ -134,11 +134,16 @@ export default class Package extends File {
         );
       }
 
-      target.template = {
-        repository: {
-          url: `https://github.com/${this.context.templateRepo}.git`
-        }
-      };
+      if (target.template === undefined || target.template.repository === undefined ||
+        target.template.repository.url !== `https://github.com/${this.context.templateRepo}.git`) {
+        //messages.push('chore: set template repo');
+
+        target.template = {
+          repository: {
+            url: `https://github.com/${this.context.templateRepo}.git`
+          }
+        };
+      }
 
       const rcj = this.context.files.get('rollup.config.js');
       const first = (rcj !== undefined) ?

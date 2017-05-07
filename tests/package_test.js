@@ -52,6 +52,11 @@ test('package keywords', async t => {
     }
   }, {
     name: 'abc_xxx_1',
+    template: {
+      repository: {
+        url: `https://github.com/.git`
+      }
+    },
     keywords: ['YYY']
   });
 
