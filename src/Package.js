@@ -4,7 +4,9 @@ import File from './File';
 export default class Package extends File {
 
   async templateRepo() {
-    const content = await this.originalContent();
+    const content = await this.originalContent({
+      ignoreMissing: true
+    });
     const pkg = JSON.parse(content);
     if (pkg.template !== undefined && pkg.template.repository !== undefined) {
       const m = pkg.template.repository.url.match(/github.com\/(.*)\.git$/);
@@ -15,13 +17,19 @@ export default class Package extends File {
   }
 
   get merge() {
-    return Promise.all([this.originalContent(), this.templateContent()]).then(contents => {
+    return Promise.all([this.originalContent({
+      ignoreMissing: true
+    }), this.templateContent()]).then(contents => {
       const original = contents[0];
-      const target = JSON.parse(contents[0]);
+      const target = contents[0] === undefined || contents[0] === '' ? {} : JSON.parse(contents[0]);
       const template = JSON.parse(contents[1]);
       const messages = [];
 
       const properties = this.context.properties;
+
+      if (target.name === undefined || target.name === '') {
+        target.name = this.context.targetRepo;
+      }
 
       if (target.module !== undefined && !target.module.match(/\{\{module\}\}/)) {
         properties.module = target.module;

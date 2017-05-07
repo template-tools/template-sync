@@ -17,7 +17,9 @@ function createContext(template, target) {
       }
     }),
     'targetRepo',
-    'templateRepo', {});
+    'templateRepo', {
+      'github.repo': 'the-repo-name'
+    });
 }
 
 test('package devDependencies', async t => {
@@ -103,5 +105,24 @@ test('add xo/space=true', async t => {
   //t.deepEqual(merged.message, ['docs(package): add keyword XXX']);
   t.deepEqual(JSON.parse(merged.content).xo, {
     space: true
+  });
+});
+
+test('start fresh', async t => {
+  const context = createContext({});
+
+  const pkg = new Package(context, 'package.json');
+  const merged = await pkg.merge;
+
+  t.deepEqual(JSON.parse(merged.content), {
+    name: 'targetRepo',
+    devDependencies: {},
+    engines: {},
+    scripts: {},
+    template: {
+      repository: {
+        url: 'https://github.com/templateRepo.git'
+      }
+    }
   });
 });
