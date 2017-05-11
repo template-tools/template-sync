@@ -28,7 +28,8 @@ export default class Package extends File {
       const properties = this.context.properties;
 
       if (target.name === undefined || target.name === '') {
-        target.name = this.context.targetRepo;
+        const m = this.context.targetRepo.match(/^([^\/]+)\/(.*)/);
+        target.name = m ? m[1] : this.context.targetRepo;
       }
 
       if (target.module !== undefined && !target.module.match(/\{\{module\}\}/)) {

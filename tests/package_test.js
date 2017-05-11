@@ -16,7 +16,7 @@ function createContext(template, target) {
         targetRepo: target !== undefined ? JSON.stringify(target) : undefined
       }
     }),
-    'targetRepo',
+    'tragetUser/targetRepo',
     'templateRepo', {
       'github.repo': 'the-repo-name'
     });
@@ -49,7 +49,7 @@ test('package keywords', async t => {
   const context = createContext({
     template: {
       keywords: {
-        "_xxx_": "XXX"
+        _xxx_: 'XXX'
       }
     }
   }, {
@@ -73,7 +73,7 @@ test('package keywords empty', async t => {
   const context = createContext({
     template: {
       keywords: {
-        "_xxx_": "XXX"
+        _xxx_: 'XXX'
       }
     }
   }, {
@@ -87,15 +87,14 @@ test('package keywords empty', async t => {
   t.deepEqual(JSON.parse(merged.content).keywords, ['XXX']);
 });
 
-
 test('add xo/space=true', async t => {
   const context = createContext({
-    "xo": {
-      "space": true
+    xo: {
+      space: true
     }
   }, {
-    "xo": {
-      "space": true
+    xo: {
+      space: true
     }
   });
 
@@ -110,12 +109,11 @@ test('add xo/space=true', async t => {
 
 test('start fresh', async t => {
   const context = createContext({});
-
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 
   t.deepEqual(JSON.parse(merged.content), {
-    name: 'targetRepo',
+    name: 'tragetUser',
     devDependencies: {},
     engines: {},
     scripts: {},
