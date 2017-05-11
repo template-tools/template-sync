@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "caporal": "^0.5.0",
-    "deep-extend": "^0.4.1",
+    "deep-extend": "^0.4.2",
     "expression-expander": "^5.3.11",
     "github-basic": "^2.3.0",
     "github-webhook-handler": "^0.6.0",
