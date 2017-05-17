@@ -113,7 +113,7 @@ test('start fresh', async t => {
   const merged = await pkg.merge;
 
   t.deepEqual(JSON.parse(merged.content), {
-    name: 'tragetUser',
+    name: 'targetRepo',
     devDependencies: {},
     engines: {},
     scripts: {},

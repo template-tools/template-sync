@@ -29,7 +29,7 @@ export default class Package extends File {
 
       if (target.name === undefined || target.name === '') {
         const m = this.context.targetRepo.match(/^([^\/]+)\/(.*)/);
-        target.name = m ? m[1] : this.context.targetRepo;
+        target.name = m ? m[2] : this.context.targetRepo;
       }
 
       if (target.module !== undefined && !target.module.match(/\{\{module\}\}/)) {
