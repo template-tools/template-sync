@@ -13,7 +13,7 @@ function createContext(template, target) {
   return new Context(new Client({
       [FILE_NAME]: {
         templateRepo: template !== undefined ? JSON.stringify(template) : undefined,
-        targetRepo: target !== undefined ? JSON.stringify(target) : undefined
+        'tragetUser/targetRepo': target !== undefined ? JSON.stringify(target) : undefined
       }
     }),
     'tragetUser/targetRepo',
@@ -25,23 +25,28 @@ function createContext(template, target) {
 test('package devDependencies', async t => {
   const context = createContext({
     devDependencies: {
-      apkg: '-',
-      cpkg: '2.3.4'
+      a: '-',
+      c: '1'
     }
   }, {
     devDependencies: {
-      apkg: '1.2.3',
-      bpkg: '2.3.4'
+      a: '1',
+      b: '1'
     }
   });
 
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 
-  //console.log(merged.message);
+  console.log(merged.message);
+
+  t.deepEqual(merged.message, ['chore(devDependencies): remove a@1',
+    'chore(devDependencies): add c@1 from template'
+  ]);
+
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
-    bpkg: '2.3.4',
-    cpkg: '2.3.4'
+    b: '1',
+    c: '1'
   });
 });
 
