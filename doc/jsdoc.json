@@ -4,10 +4,8 @@
   ],
   "babel": {
     "presets": [
-      "es2015"
-    ],
-    "plugins": [
-      "transform-async-to-generator"
+      "es2015",
+      "stage-3"
     ]
   }
 }
