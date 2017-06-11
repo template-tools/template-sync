@@ -58,7 +58,7 @@ export default class Package extends File {
             buildOutput = ma[1];
           }
 
-          const mb = script.match(/\&\&\s*(.+)/);
+          const mb = script.match(/&&\s*(.+)/);
           if (mb) {
             extraBuild = mb[1];
           }
@@ -176,7 +176,7 @@ export default class Package extends File {
         return {
           content: content,
           path: this.path,
-          changed: original != content,
+          changed: original !== content,
           message: messages
         };
       });

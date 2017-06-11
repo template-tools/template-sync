@@ -23,7 +23,7 @@
     "url": "https://github.com/arlac77/npm-template-sync.git"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=8.1.0"
   },
   "dependencies": {
     "caporal": "^0.6.0",
@@ -74,12 +74,10 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ],
+  "contributors": [{
+    "name": "Markus Felten",
+    "email": "markus.felten@gmx.de"
+  }],
   "ava": {
     "files": [
       "tests/build/bundle.js"
