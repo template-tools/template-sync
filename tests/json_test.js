@@ -1,7 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 import test from 'ava';
 import Context from '../src/Context';
 import JSONFile from '../src/JSONFile';

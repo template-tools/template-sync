@@ -1,7 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 import test from 'ava';
 import Context from '../src/Context';
 import MergeLineSet from '../src/MergeLineSet';
@@ -9,7 +5,7 @@ import Client from './Client';
 
 test('merge lines', async t => {
   const context = new Context(new Client({
-    'aFile': {
+    aFile: {
       templateRepo: ['Line 1', 'Line 2'].join('\n'),
       targetRepo: ['Line 1', 'Line 3'].join('\n')
     }

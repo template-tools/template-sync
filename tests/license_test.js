@@ -1,7 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 import test from 'ava';
 import Context from '../src/Context';
 import License from '../src/License';
@@ -9,7 +5,7 @@ import Client from './Client';
 
 test('modify one year', async t => {
   const context = new Context(new Client({
-    'aFile': {
+    aFile: {
       templateRepo: 'Copyright (c) {{date.year}} by {{owner}}',
       targetRepo: 'Copyright (c) 1999 by xyz'
     }
@@ -26,7 +22,7 @@ test('modify one year', async t => {
 
 test('modify year list', async t => {
   const context = new Context(new Client({
-    'aFile': {
+    aFile: {
       templateRepo: 'Copyright (c) {{date.year}} by {{owner}}',
       targetRepo: 'Copyright (c) 2001,1999,2000,2001,2007 by xyz'
     }

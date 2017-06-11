@@ -1,7 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 export default class Client {
   constructor(files) {
     Object.defineProperty(this, 'files', {

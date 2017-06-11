@@ -1,7 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 import test from 'ava';
 import Context from '../src/Context';
 import Replace from '../src/Replace';
@@ -9,7 +5,7 @@ import Client from './Client';
 
 test('replace', async t => {
   const context = new Context(new Client({
-    'aFile': {
+    aFile: {
       templateRepo: `Line 1x
         Line 2x`,
       targetRepo: `Line 1
