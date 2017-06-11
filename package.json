@@ -47,7 +47,6 @@
     "babel-preset-stage-3": "^6.24.1",
     "color-convert": "^1.9.0",
     "cracks": "^3.1.2",
-    "cz-conventional-changelog": "^2.0.0",
     "jsdoc-babel": "^0.3.0",
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
@@ -71,11 +70,7 @@
     "url": "https://github.com/arlac77/npm-template-sync/issues"
   },
   "homepage": "https://github.com/arlac77/npm-template-sync#readme",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
+  "config": {},
   "contributors": [
     {
       "name": "Markus Felten",
