@@ -1,5 +1,3 @@
-/* jslint node: true, esnext: true */
-
 import File from './File';
 
 const yaml = require('js-yaml'),
@@ -21,7 +19,7 @@ function diffVersion(a, b) {
 }
 
 function normalizeVersion(version) {
-  version = version + '';
+  version = String(version);
 
   const m = version.match(/^(\d+)(\.(\d+))?$/);
 
@@ -98,9 +96,9 @@ export default class Travis extends File {
 
         return {
           path: this.path,
-          content: content,
+          content,
           changed: content !== original,
-          message: messages
+          messages
         };
       });
   }

@@ -1,4 +1,3 @@
-/* jslint node: true, esnext: true */
 import File from './File';
 
 export default class License extends File {
@@ -12,7 +11,7 @@ export default class License extends File {
       if (m) {
         const years = new Set();
         years.add(properties['date.year']);
-        years.add(parseInt(m[1]));
+        years.add(parseInt(m[1], 10));
 
         if (m[2] !== undefined) {
           m[2].split(/\s*[,\-]\s*/).forEach(y => {
@@ -36,8 +35,8 @@ export default class License extends File {
         return {
           path: this.path,
           changed: content !== original,
-          message: 'fix: update LICENSE',
-          content: content
+          messages: ['fix: update LICENSE'],
+          content
         };
       }
 
@@ -45,7 +44,7 @@ export default class License extends File {
         path: this.path,
         content: this.context.expand(template),
         changed: true,
-        message: `fix: add LICENSE`
+        messages: [`fix: add LICENSE`]
       };
     });
   }

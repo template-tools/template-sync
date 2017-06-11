@@ -1,5 +1,3 @@
-/* jslint node: true, esnext: true */
-
 import File from './File';
 
 export default class JSONFile extends File {
@@ -23,9 +21,9 @@ export default class JSONFile extends File {
 
       return {
         path: this.path,
-        content: content,
-        changed: content != original,
-        message: 'fix: updated set from template'
+        content,
+        changed: content !== original,
+        messages: ['fix: updated set from template']
       };
     });
   }

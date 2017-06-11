@@ -1,5 +1,3 @@
-/* jslint node: true, esnext: true */
-
 import File from './File';
 
 export default class Replace extends File {
@@ -10,9 +8,9 @@ export default class Replace extends File {
 
         return {
           path: this.path,
-          content: content,
+          content,
           changed: content !== original,
-          message: `chore: ${this.path} overwritten from template`
+          messages: [`chore: ${this.path} overwritten from template`]
         };
       });
   }

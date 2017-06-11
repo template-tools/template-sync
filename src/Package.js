@@ -1,4 +1,3 @@
-/* jslint node: true, esnext: true */
 import File from './File';
 
 export default class Package extends File {
@@ -21,7 +20,7 @@ export default class Package extends File {
       ignoreMissing: true
     }), this.templateContent()]).then(contents => {
       const original = contents[0];
-      const target = contents[0] === undefined || contents[0] === '' ? {} : JSON.parse(contents[0]);
+      let target = contents[0] === undefined || contents[0] === '' ? {} : JSON.parse(contents[0]);
       const template = JSON.parse(contents[1]);
       const messages = [];
 
@@ -167,6 +166,8 @@ export default class Package extends File {
           }
         }) : Promise.resolve();
 
+      target = deleter(target, template, messages, []);
+
       if (messages.length === 0) {
         messages.push('chore: update package.json from template');
       }
@@ -174,14 +175,36 @@ export default class Package extends File {
       return first.then(() => {
         const content = JSON.stringify(this.context.expand(target), undefined, 2);
         return {
-          content: content,
+          content,
+          messages,
           path: this.path,
-          changed: original !== content,
-          message: messages
+            changed: original !== content
         };
       });
     });
   }
+}
+
+function deleter(object, reference, messages, path) {
+  if (typeof object === 'string' || object instanceof String ||
+    object === true || object === false || object === undefined || object === null ||
+    typeof object === 'number' || object instanceof Number) {
+    return object;
+  }
+
+  Object.keys(reference).forEach(key => {
+    path.push(key);
+
+    if (reference[key] === '--delete--') {
+      delete object[key];
+      messages.push(`chore(npm): delete ${path.join('.')}`);
+    } else {
+      object[key] = deleter(object[key], reference[key], messages, path);
+    }
+    path.pop();
+  });
+
+  return object;
 }
 
 function addKeyword(pkg, regex, keyword, messages) {

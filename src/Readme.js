@@ -1,4 +1,3 @@
-/* jslint node: true, esnext: true */
 import File from './File';
 
 export default class Readme extends File {
@@ -28,9 +27,9 @@ export default class Readme extends File {
         const content = [...badges, '', ...body].join('\n');
         return {
           path: this.path,
-          content: content,
-          changed: content != original,
-          message: 'docs(README): update from template'
+          content,
+          changed: content !== original,
+          messages: ['docs(README): update from template']
         };
       });
   }

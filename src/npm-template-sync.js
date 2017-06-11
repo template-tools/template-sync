@@ -1,15 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
-const program = require('caporal'),
-  path = require('path'),
-  keychain = require('keychain'),
-  prompt = require('prompt'),
-  ora = require('ora'),
-  github = require('octonode'),
-  githubBasic = require('github-basic');
-
 import {
   getBranches,
   pull, createBranch, commit
@@ -20,11 +8,17 @@ import Travis from './Travis';
 import Readme from './Readme';
 import Package from './Package';
 import License from './License';
-import Replace from './Replace';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
 import MergeLineSet from './MergeLineSet';
 import JSONFile from './JSONFile';
 
+const program = require('caporal'),
+  path = require('path'),
+  keychain = require('keychain'),
+  prompt = require('prompt'),
+  ora = require('ora'),
+  github = require('octonode'),
+  githubBasic = require('github-basic');
 
 const spinner = ora('args').start();
 
@@ -39,7 +33,7 @@ program
   .option('-s, --save', 'save keystore')
   .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/)
   .argument('[repos...]', 'repos to merge')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     const keystore = {};
     [keystore.account, keystore.service] = options.keystore.split(/\//);
 
@@ -62,7 +56,7 @@ program
           account: keystore.account,
           service: keystore.service,
           password: result.password
-        }, (err, pass) => {
+        }, (err) => {
           if (err) {
             spinner.fail(err);
             return;
@@ -73,7 +67,6 @@ program
     }
 
     keychain.getPassword(keystore, (err, pass) => {
-
       if (err) {
         spinner.fail(err);
         return;
@@ -90,8 +83,8 @@ async function work(spinner, token, targetRepo, templateRepo) {
   const [user, repo, branch] = targetRepo.split(/[\/#]/);
 
   const dest = {
-    user: user,
-    repo: repo,
+    user,
+    repo,
     branch: 'template-sync'
   };
 
@@ -99,15 +92,15 @@ async function work(spinner, token, targetRepo, templateRepo) {
     const client = github.client(token);
 
     const source = {
-      user: user,
-      repo: repo,
+      user,
+      repo,
       branch: branch || 'master'
     };
 
     const options = {
       auth: {
         type: 'oauth',
-        token: token
+        token
       }
     };
 
@@ -117,7 +110,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
     const maxBranchId = branches.reduce((prev, current) => {
       const m = current.name.match(/template-sync-(\d+)/);
       if (m) {
-        const r = parseInt(m[1]);
+        const r = parseInt(m[1], 10);
         if (r > prev) {
           return r;
         }
@@ -150,8 +143,10 @@ async function work(spinner, token, targetRepo, templateRepo) {
 
     if (templateRepo === undefined) {
       templateRepo = await files[2].templateRepo();
-      if (templateRepo === undefined) throw new Error(
-        `Unable to extract template repo url from ${targetRepo} package.json`);
+      if (templateRepo === undefined) {
+        throw new Error(
+          `Unable to extract template repo url from ${targetRepo} package.json`);
+      }
       context.templateRepo = templateRepo;
     }
 
@@ -161,14 +156,10 @@ async function work(spinner, token, targetRepo, templateRepo) {
       spinner.succeed(`${targetRepo} nothing changed`);
       return;
     }
-    spinner.text = merges.map(m => m.path + ': ' + m.message).join(',');
+    spinner.text = merges.map(m => m.path + ': ' + m.messages[0]).join(',');
 
     const messages = merges.reduce((result, merge) => {
-      if (Array.isArray(merge.message)) {
-        merge.message.forEach(m => result.push(m));
-      } else {
-        result.push(merge.message);
-      }
+      merge.messages.forEach(m => result.push(m));
       return result;
     }, []);
 

@@ -1,14 +1,12 @@
-/* jslint node: true, esnext: true */
-
 import File from './File';
 
 export default class ReplaceIfEmpty extends File {
 
-  constructor(context, path, message) {
+  constructor(context, path, messages) {
     super(context, path);
 
-    Object.defineProperty(this, 'message', {
-      value: message
+    Object.defineProperty(this, 'messages', {
+      value: messages
     });
   }
 
@@ -22,12 +20,11 @@ export default class ReplaceIfEmpty extends File {
         path: this.path,
         content: this.context.expand(template),
         changed: template !== '',
-        message: this.message === undefined ? `chore: add missing ${this.path} from template` : this.message
+        messages: this.messages === undefined ? [`chore: add missing ${this.path} from template`] : this.messages
       } : {
         path: this.path,
         content: original,
-        changed: false,
-        message: undefined
+        changed: false
       };
     });
   }

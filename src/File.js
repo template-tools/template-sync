@@ -1,7 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 export default class File {
   constructor(context, path) {
     Object.defineProperty(this, 'context', {
@@ -27,8 +23,7 @@ export default class File {
     return this.originalContent().then(content => Promise.resolve({
       path: this.path,
       changed: false,
-      message: undefined,
-      content: content
+      content
     }));
   }
 

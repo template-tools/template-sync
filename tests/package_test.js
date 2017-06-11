@@ -22,6 +22,31 @@ function createContext(template, target) {
     });
 }
 
+test('delete entries', async t => {
+  const context = createContext({
+    slot: {
+      something: '--delete--',
+      add: 2
+    }
+  }, {
+    slot: {
+      something: {
+        a: 1
+      },
+      preserve: 3
+    }
+  });
+
+  const pkg = new Package(context, 'package.json');
+  const merged = await pkg.merge;
+
+  t.deepEqual(JSON.parse(merged.content).slot, {
+    preserve: 3
+  });
+
+  t.deepEqual(merged.messages, ['chore(npm): delete slot.something']);
+});
+
 test('package devDependencies', async t => {
   const context = createContext({
     devDependencies: {
@@ -38,16 +63,14 @@ test('package devDependencies', async t => {
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 
-  console.log(merged.message);
-
-  t.deepEqual(merged.message, ['chore(devDependencies): remove a@1',
-    'chore(devDependencies): add c@1 from template'
-  ]);
-
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
     b: '1',
     c: '1'
   });
+
+  t.deepEqual(merged.messages, ['chore(devDependencies): remove a@1',
+    'chore(devDependencies): add c@1 from template'
+  ]);
 });
 
 test('package keywords', async t => {
@@ -70,8 +93,8 @@ test('package keywords', async t => {
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 
-  t.deepEqual(merged.message, ['docs(package): add keyword XXX']);
   t.deepEqual(JSON.parse(merged.content).keywords, ['YYY', 'XXX']);
+  t.deepEqual(merged.messages, ['docs(package): add keyword XXX']);
 });
 
 test('package keywords empty', async t => {
@@ -88,8 +111,8 @@ test('package keywords empty', async t => {
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 
-  t.deepEqual(merged.message, ['docs(package): add keyword XXX']);
   t.deepEqual(JSON.parse(merged.content).keywords, ['XXX']);
+  t.deepEqual(merged.messages, ['docs(package): add keyword XXX']);
 });
 
 test('add xo/space=true', async t => {
@@ -106,10 +129,10 @@ test('add xo/space=true', async t => {
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 
-  //t.deepEqual(merged.message, ['docs(package): add keyword XXX']);
   t.deepEqual(JSON.parse(merged.content).xo, {
     space: true
   });
+  t.deepEqual(merged.messages, ['chore: update package.json from template']);
 });
 
 test('start fresh', async t => {
