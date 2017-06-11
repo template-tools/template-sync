@@ -131,7 +131,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
 
     const files = [
       new ReplaceIfEmpty(context, 'rollup.config.js'),
-      new ReplaceIfEmpty(context, 'rollup.config.test.js'),
+      new ReplaceIfEmpty(context, 'tests/rollup.config.js'),
       new Package(context, 'package.json'),
       new Readme(context, 'doc/README.hbs'),
       new JSONFile(context, 'doc/jsdoc.json'),
