@@ -7,8 +7,8 @@
   "scripts": {
     "cover": "nyc ava",
     "test": "ava",
-    "pretest": "rollup -c rollup.config.test.js",
-    "precover": "rollup -c rollup.config.test.js",
+    "pretest": "rollup -c tests/rollup.config.js",
+    "precover": "rollup -c tests/rollup.config.js",
     "posttest": "npm run prepublish && markdown-doctest",
     "start": "node --harmony-async-await webhook/index",
     "docs": "jsdoc2md --configure doc/jsdoc.json -l off -t doc/README.hbs -f src/*.js >README.md",
@@ -74,15 +74,13 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ],
+  "contributors": [{
+    "name": "Markus Felten",
+    "email": "markus.felten@gmx.de"
+  }],
   "ava": {
     "files": [
-      "tests/build/bundle.js"
+      "build/test-bundle.js"
     ],
     "require": [
       "babel-register"
@@ -90,13 +88,13 @@
   },
   "nyc": {
     "include": [
-      "tests/build/bundle.js",
+      "build/test-bundle.js",
       "src/**/*.js"
     ],
     "reporter": [
       "lcov"
     ],
-    "report-dir": "./coverage"
+    "report-dir": "./build/coverage"
   },
   "template": {
     "repository": {
