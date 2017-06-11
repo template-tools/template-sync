@@ -38,7 +38,8 @@
     "octonode": "^0.7.13",
     "ora": "^1.2.0",
     "prompt": "^1.0.0",
-    "semver-diff": "^2.1.0"
+    "semver-diff": "^2.1.0",
+    "set-getter": "^0.1.0"
   },
   "devDependencies": {
     "ava": "^0.19.1",
@@ -74,10 +75,12 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "contributors": [{
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "ava": {
     "files": [
       "build/test-bundle.js"
