@@ -45,6 +45,7 @@
     "ava": "^0.19.1",
     "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-stage-3": "^6.24.1",
+    "color-convert": "^1.9.0",
     "cracks": "^3.1.2",
     "cz-conventional-changelog": "^2.0.0",
     "jsdoc-babel": "^0.3.0",
