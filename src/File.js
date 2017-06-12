@@ -29,7 +29,7 @@ export default class File {
 
   getContent(repo, path, options = {}) {
     return new Promise((fullfill, reject) =>
-      this.context.client.repo(repo).contents(path, (err, status, body, headers) => {
+      this.context.client.repo(repo).contents(path, (err, status, body) => {
         if (err) {
           if (options.ignoreMissing) {
             fullfill('');
@@ -37,7 +37,7 @@ export default class File {
             reject(new Error(`${path}: ${err}`));
           }
         } else {
-          const b = new Buffer(status.content, 'base64');
+          const b = Buffer.from(status.content, 'base64');
           fullfill(b.toString());
         }
       })

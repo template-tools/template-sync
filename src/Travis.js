@@ -5,14 +5,20 @@ const yaml = require('js-yaml'),
   semverDiff = require('semver-diff');
 
 function diffVersion(a, b) {
-  const aa = ('' + a).split(/\./).map(x => parseInt(x));
-  const bb = ('' + b).split(/\./).map(x => parseInt(x));
+  const aa = (String(a)).split(/\./).map(x => parseInt(x, 10));
+  const bb = (String(b)).split(/\./).map(x => parseInt(x, 10));
 
   for (const i in aa) {
-    if (i >= bb.length) break;
+    if (i >= bb.length) {
+      break;
+    }
 
-    if (aa[i] < bb[i]) return -1;
-    if (aa[i] > bb[i]) return 1;
+    if (aa[i] < bb[i]) {
+      return -1;
+    }
+    if (aa[i] > bb[i]) {
+      return 1;
+    }
   }
 
   return 0;
