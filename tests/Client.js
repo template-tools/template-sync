@@ -13,7 +13,7 @@ export default class Client {
           cb(new Error(`missing ${path}`));
         } else {
           cb(undefined, {
-            content: new Buffer(c.files[path][repo]).toString('base64')
+            content: Buffer.from(c.files[path][repo]).toString('base64')
           }, '', {});
         }
       }
