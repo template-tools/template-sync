@@ -39,18 +39,7 @@ export default class Package extends File {
 
       let extraBuild, buildOutput;
 
-      const keepScripts = {};
-
       if (target.scripts !== undefined) {
-        if (target.scripts.test !== undefined) {
-          if (target.scripts.test.match(/rollup/) || target.scripts.test.match(/istanbul.reporter.js/)) {
-            // TODO how to detect special rollup test config ?
-            keepScripts.test = target.scripts.test;
-            keepScripts.pretest = target.scripts.pretest;
-            keepScripts.cover = target.scripts.cover;
-          }
-        }
-
         [target.scripts.build, target.scripts.prepublish].filter(s => s !== undefined).forEach(script => {
           const ma = script.match(/--output=([^\s]+)/);
           if (ma) {
@@ -113,8 +102,6 @@ export default class Package extends File {
           target.scripts.prepublish += ` && ${extraBuild}`;
         }
       }
-
-      target.scripts = Object.assign(target.scripts, keepScripts);
 
       if (target.module === '{{module}}') {
         delete target.module;
