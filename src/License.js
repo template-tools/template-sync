@@ -15,8 +15,8 @@ export default class License extends File {
 
         if (m[2] !== undefined) {
           m[2].split(/\s*[,\-]\s*/).forEach(y => {
-            if (y.length > 0) { 
-              years.add(parseInt(y));
+            if (y.length > 0) {
+              years.add(parseInt(y, 10));
             }
           });
         }

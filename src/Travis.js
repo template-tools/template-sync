@@ -76,7 +76,7 @@ export default class Travis extends File {
           }
 
           yml.node_js = yml.node_js.filter(v =>
-            removeVersions.find(rv => diffVersion(rv, v) === 0) ? false : true
+            !removeVersions.find(rv => diffVersion(rv, v) === 0)
           );
         }
 
