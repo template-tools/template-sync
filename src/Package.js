@@ -141,7 +141,7 @@ export default class Package extends File {
       }
 
       const rcj = this.context.files.get('rollup.config.js');
-      const first = (rcj !== undefined) ?
+      const first = rcj === undefined ? Promise.resolve() :
         rcj.merge.then(m => {
           if (m.content) {
             if (!m.content.match(/rollup-plugin-node-resolve/)) {
@@ -151,7 +151,7 @@ export default class Package extends File {
               delete target.devDependencies['rollup-plugin-commonjs'];
             }
           }
-        }) : Promise.resolve();
+        });
 
       target = deleter(target, template, messages, []);
 

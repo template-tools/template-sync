@@ -61,10 +61,6 @@ export default class Travis extends File {
 
         if (formerNodeVersions !== undefined) {
           formerNodeVersions.forEach(ov => {
-            /*console.log(
-              `${yml.node_js} <> ${ov} : ${yml.node_js.map(nv => { const x = semverDiff(ov, nv); return x ? x : 'null'} ).join(',')}`
-            );
-            */
             if (yml.node_js.find(nv => semverDiff(normalizeVersion(ov), normalizeVersion(nv)) === 'major')) {
               yml.node_js.push(ov);
             }
