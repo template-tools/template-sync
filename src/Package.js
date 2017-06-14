@@ -131,7 +131,7 @@ export default class Package extends File {
 
       if (target.template === undefined || target.template.repository === undefined ||
         target.template.repository.url !== `https://github.com/${this.context.templateRepo}.git`) {
-        //messages.push('chore: set template repo');
+        messages.push('chore: set template repo');
 
         target.template = {
           repository: {
