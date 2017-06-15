@@ -135,8 +135,8 @@ async function work(spinner, token, targetRepo, templateRepo) {
       new Readme(context, 'doc/README.hbs'),
       new JSONFile(context, 'doc/jsdoc.json'),
       new Travis(context, '.travis.yml'),
-      new MergeAndRemoveLineSet(context, '.gitignore', 'core(git)'),
-      new MergeAndRemoveLineSet(context, '.npmignore', 'core(npm)'),
+      new MergeAndRemoveLineSet(context, '.gitignore', 'chore(git)'),
+      new MergeAndRemoveLineSet(context, '.npmignore', 'chore(npm)'),
       new License(context, 'LICENSE')
     ];
 
