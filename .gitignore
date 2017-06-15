@@ -1,4 +1,4 @@
-coverage
+package-lock.json
 node_modules
 build
 dist
@@ -10,4 +10,5 @@ out
 .test
 .tmp
 
+coverage
 bin
