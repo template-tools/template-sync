@@ -56,7 +56,7 @@ program
           account: keystore.account,
           service: keystore.service,
           password: result.password
-        }, (err) => {
+        }, err => {
           if (err) {
             spinner.fail(err);
             return;
@@ -78,7 +78,6 @@ program
 program.parse(process.argv);
 
 async function work(spinner, token, targetRepo, templateRepo) {
-
   spinner.text = targetRepo;
   const [user, repo, branch] = targetRepo.split(/[\/#]/);
 
@@ -124,7 +123,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
     const context = new Context(client, targetRepo, templateRepo, {
       'github.user': user,
       'github.repo': repo,
-      'name': repo,
+      name: repo,
       'date.year': new Date().getFullYear(),
       'license.owner': user
     });
