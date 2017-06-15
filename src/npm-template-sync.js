@@ -9,7 +9,7 @@ import Readme from './Readme';
 import Package from './Package';
 import License from './License';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
-import MergeLineSet from './MergeLineSet';
+import MergeAndRemoveLineSet from './MergeAndRemoveLineSet';
 import JSONFile from './JSONFile';
 
 const program = require('caporal'),
@@ -135,8 +135,8 @@ async function work(spinner, token, targetRepo, templateRepo) {
       new Readme(context, 'doc/README.hbs'),
       new JSONFile(context, 'doc/jsdoc.json'),
       new Travis(context, '.travis.yml'),
-      new MergeLineSet(context, '.gitignore'),
-      new MergeLineSet(context, '.npmignore'),
+      new MergeAndRemoveLineSet(context, '.gitignore', 'core(git)'),
+      new MergeAndRemoveLineSet(context, '.npmignore', 'core(npm)'),
       new License(context, 'LICENSE')
     ];
 

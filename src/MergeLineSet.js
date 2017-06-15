@@ -1,6 +1,12 @@
 import File from './File';
 
 export default class MergeLineSet extends File {
+  constructor(context, path, messageHead = 'fix') {
+    super(context, path);
+    Object.defineProperty(this, 'messageHead', {
+      value: messageHead
+    });
+  }
   get merge() {
     return Promise.all([this.originalContent({
       ignoreMissing: true
@@ -14,7 +20,7 @@ export default class MergeLineSet extends File {
         path: this.path,
         content,
         changed: content !== original,
-        messages: ['fix: updated set from template']
+        messages: [`${this.messageHead}: updated set from template`]
       };
     });
   }
