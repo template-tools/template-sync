@@ -17,7 +17,7 @@ export default class MergeAndRemoveLineSet extends MergeLineSet {
         path: this.path,
         content,
         changed: content !== original,
-        messages: [`${this.messageHead}: updated set from template`]
+        messages: [`${this.messageHead}: updated from template`]
       };
     });
   }

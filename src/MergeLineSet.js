@@ -20,7 +20,7 @@ export default class MergeLineSet extends File {
         path: this.path,
         content,
         changed: content !== original,
-        messages: [`${this.messageHead}: updated set from template`]
+        messages: [`${this.messageHead}: updated from template`]
       };
     });
   }

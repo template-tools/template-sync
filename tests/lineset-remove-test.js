@@ -14,4 +14,5 @@ test('merge lines', async t => {
   const merger = new MergeAndRemoveLineSet(context, 'aFile', 'chore(xxx)');
   const merged = await merger.merge;
   t.deepEqual(merged.content, ['Line 2', 'Line 3'].join('\n'));
+  t.true(merged.messages.includes('chore(xxx): updated from template'));
 });

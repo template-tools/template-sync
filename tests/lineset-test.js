@@ -14,4 +14,5 @@ test('merge lines', async t => {
   const merger = new MergeLineSet(context, 'aFile');
   const merged = await merger.merge;
   t.deepEqual(merged.content, ['Line 1', 'Line 2', 'Line 3'].join('\n'));
+  t.true(merged.messages.includes('fix: updated from template'));
 });
