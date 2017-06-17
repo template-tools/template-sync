@@ -12,7 +12,7 @@
     "posttest": "npm run prepublish && markdown-doctest",
     "start": "node --harmony-async-await webhook/index",
     "docs": "jsdoc2md --configure doc/jsdoc.json -l off -t doc/README.hbs -f src/*.js >README.md",
-    "prepublish": "rollup --output=bin/npm-template-sync -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
+    "prepublish": "rollup -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "bin": {
@@ -51,7 +51,7 @@
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
     "nyc": "^11.0.2",
-    "rollup": "^0.42.0",
+    "rollup": "^0.43.0",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-istanbul": "^1.1.0",
