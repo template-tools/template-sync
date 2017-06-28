@@ -111,6 +111,24 @@ test('package keywords empty', async t => {
   t.true(merged.messages.includes('docs(package): add keyword XXX'));
 });
 
+test('package remove null keyword', async t => {
+  const context = createContext({
+    template: {}
+  }, {
+    name: 'abc_xxx_1',
+    keywords: [
+      "null",
+      "abc"
+    ]
+  });
+
+  const pkg = new Package(context, 'package.json');
+  const merged = await pkg.merge;
+
+  t.deepEqual(JSON.parse(merged.content).keywords, ["abc"]);
+  t.true(merged.messages.includes('docs(package): remove keyword null'));
+});
+
 test('add xo/space=true', async t => {
   const context = createContext({
     xo: {

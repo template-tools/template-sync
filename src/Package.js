@@ -129,6 +129,8 @@ export default class Package extends File {
         );
       }
 
+      removeKeyword(target, ["null"], messages);
+
       if (target.template === undefined || target.template.repository === undefined ||
         target.template.repository.url !== `https://github.com/${this.context.templateRepo}.git`) {
         messages.push('chore: set template repo');
@@ -192,6 +194,17 @@ function deleter(object, reference, messages, path) {
   });
 
   return object;
+}
+
+function removeKeyword(pkg, keywords, messages) {
+  if (pkg.keywords !== undefined) {
+    keywords.forEach(keyword => {
+      if (pkg.keywords.find(k => k === keyword)) {
+        messages.push(`docs(package): remove keyword ${keyword}`);
+        pkg.keywords = pkg.keywords.filter(k => k !== keyword);
+      }
+    });
+  }
 }
 
 function addKeyword(pkg, regex, keyword, messages) {
