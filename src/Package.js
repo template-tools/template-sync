@@ -119,18 +119,6 @@ export default class Package extends File {
         }
       }
 
-      if (target.keywords !== undefined) {
-        delete target.keywords['npm-package-template'];
-      }
-
-      if (template.template !== undefined && template.template.keywords !== undefined) {
-        Object.keys(template.template.keywords).forEach(r =>
-          addKeyword(target, new RegExp(r), template.template.keywords[r], messages)
-        );
-      }
-
-      removeKeyword(target, ["null"], messages);
-
       if (target.template === undefined || target.template.repository === undefined ||
         target.template.repository.url !== `https://github.com/${this.context.templateRepo}.git`) {
         messages.push('chore: set template repo');
@@ -156,6 +144,18 @@ export default class Package extends File {
         });
 
       target = deleter(target, template, messages, []);
+
+      if (target.keywords !== undefined) {
+        delete target.keywords['npm-package-template'];
+      }
+
+      if (template.template !== undefined && template.template.keywords !== undefined) {
+        Object.keys(template.template.keywords).forEach(r =>
+          addKeyword(target, new RegExp(r), template.template.keywords[r], messages)
+        );
+      }
+
+      removeKeyword(target, ['null'], messages);
 
       if (messages.length === 0) {
         messages.push('chore: update package.json from template');
