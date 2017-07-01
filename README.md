@@ -28,7 +28,7 @@ merges contents from template repo into destination repo handling some special c
 
 - Licenses - rewriting license years
 - line set files like .npmignore and .gitignore - by merging both sets together
-- package.json - merging dev depenencies and scripts
+- package.json - merging dev dependencies and scripts
 
 ![generated pull request](doc/pr_sample.png)
 
