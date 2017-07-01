@@ -155,7 +155,7 @@ export default class Package extends File {
         );
       }
 
-      removeKeyword(target, ['null'], messages);
+      removeKeyword(target, ['null', null, undefined], messages);
 
       if (messages.length === 0) {
         messages.push('chore: update package.json from template');
@@ -204,10 +204,21 @@ function removeKeyword(pkg, keywords, messages) {
         pkg.keywords = pkg.keywords.filter(k => k !== keyword);
       }
     });
+
+    if (pkg.keywords[0] === null || pkg.keywords[0] === undefined) {
+      messages.push(`docs(package): remove keyword null`);
+      pkg.keywords = [];
+    }
   }
 }
 
 function addKeyword(pkg, regex, keyword, messages) {
+  if (keyword === undefined ||
+    keyword === null ||
+    keyword === 'null') {
+    return;
+  }
+
   if (pkg.name.match(regex)) {
     if (pkg.keywords === undefined) {
       pkg.keywords = [];

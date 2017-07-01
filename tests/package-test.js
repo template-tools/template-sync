@@ -117,15 +117,14 @@ test('package remove null keyword', async t => {
   }, {
     name: 'abc_xxx_1',
     keywords: [
-      "null",
-      "abc"
+      null
     ]
   });
 
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 
-  t.deepEqual(JSON.parse(merged.content).keywords, ["abc"]);
+  t.deepEqual(JSON.parse(merged.content).keywords, []);
   t.true(merged.messages.includes('docs(package): remove keyword null'));
 });
 
