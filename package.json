@@ -9,11 +9,11 @@
     "test": "ava",
     "pretest": "rollup -c tests/rollup.config.js",
     "precover": "rollup -c tests/rollup.config.js",
-    "posttest": "npm run prepublish && markdown-doctest",
+    "posttest": "npm run prepare && markdown-doctest",
     "start": "node --harmony-async-await webhook/index",
     "docs": "jsdoc2md --configure doc/jsdoc.json -l off -t doc/README.hbs -f src/*.js >README.md",
-    "prepublish": "rollup -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "prepare": "rollup -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync"
   },
   "bin": {
     "npm-template-sync": "bin/npm-template-sync"
