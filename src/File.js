@@ -20,11 +20,13 @@ export default class File {
   }
 
   get merge() {
-    return this.originalContent().then(content => Promise.resolve({
-      path: this.path,
-      changed: false,
-      content
-    }));
+    return this.originalContent().then(content =>
+      Promise.resolve({
+        path: this.path,
+        changed: false,
+        content
+      })
+    );
   }
 
   getContent(repo, path, options = {}) {

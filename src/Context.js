@@ -1,7 +1,4 @@
-import {
-  createContext
-}
-from 'expression-expander';
+import { createContext } from 'expression-expander';
 
 export default class Context {
   constructor(client, targetRepo, templateRepo, properties) {
@@ -9,7 +6,7 @@ export default class Context {
       keepUndefinedValues: true,
       leftMarker: '{{',
       rightMarker: '}}',
-      markerRegexp: '\{\{([^\}]+)\}\}'
+      markerRegexp: '{{([^}]+)}}'
     });
 
     this.ctx.properties = properties;

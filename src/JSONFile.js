@@ -2,17 +2,20 @@ import File from './File';
 
 export default class JSONFile extends File {
   get merge() {
-    return Promise.all([this.originalContent({
-      ignoreMissing: true
-    }), this.templateContent({
-      ignoreMissing: true
-    })]).then(([original, templateRaw]) => {
+    return Promise.all([
+      this.originalContent({
+        ignoreMissing: true
+      }),
+      this.templateContent({
+        ignoreMissing: true
+      })
+    ]).then(([original, templateRaw]) => {
       if (templateRaw === '' || templateRaw === undefined) {
         return undefined;
       }
 
-      const target = original === '' || original === undefined ? {} :
-        JSON.parse(original);
+      const target =
+        original === '' || original === undefined ? {} : JSON.parse(original);
       const template = JSON.parse(templateRaw);
 
       Object.assign(target, template);

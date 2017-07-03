@@ -8,9 +8,12 @@ export default class MergeLineSet extends File {
     });
   }
   get merge() {
-    return Promise.all([this.originalContent({
-      ignoreMissing: true
-    }), this.templateContent()]).then(([original, template]) => {
+    return Promise.all([
+      this.originalContent({
+        ignoreMissing: true
+      }),
+      this.templateContent()
+    ]).then(([original, template]) => {
       const result = new Set(template.split(/\n/));
       original.split(/\n/).forEach(line => result.add(line));
 

@@ -1,8 +1,4 @@
-import {
-  getBranches,
-  pull, createBranch, commit
-}
-from './github';
+import { getBranches, pull, createBranch, commit } from './github';
 import Context from './Context';
 import Travis from './Travis';
 import Readme from './Readme';
@@ -28,10 +24,18 @@ process.on('unhandledRejection', reason => spinner.fail(reason));
 program
   .description('Keep npm package in sync with its template')
   .version(require(path.join(__dirname, '..', 'package.json')).version)
-  .option('-k, --keystore <account/service>', 'keystore', /^[\w\-]+\/.*/,
-    'arlac77/GitHub for Mac SSH key passphrase — github.com')
+  .option(
+    '-k, --keystore <account/service>',
+    'keystore',
+    /^[\w\-]+\/.*/,
+    'arlac77/GitHub for Mac SSH key passphrase — github.com'
+  )
   .option('-s, --save', 'save keystore')
-  .option('-t, --template <user/repo>', 'template repository', /^[\w\-]+\/[\w\-]+$/)
+  .option(
+    '-t, --template <user/repo>',
+    'template repository',
+    /^[\w\-]+\/[\w\-]+$/
+  )
   .argument('[repos...]', 'repos to merge')
   .action((args, options) => {
     const keystore = {};
@@ -52,17 +56,20 @@ program
           spinner.fail(err);
           return;
         }
-        keychain.setPassword({
-          account: keystore.account,
-          service: keystore.service,
-          password: result.password
-        }, err => {
-          if (err) {
-            spinner.fail(err);
-            return;
+        keychain.setPassword(
+          {
+            account: keystore.account,
+            service: keystore.service,
+            password: result.password
+          },
+          err => {
+            if (err) {
+              spinner.fail(err);
+              return;
+            }
+            spinner.succeed('password set');
           }
-          spinner.succeed('password set');
-        });
+        );
       });
     }
 
@@ -71,7 +78,9 @@ program
         spinner.fail(err);
         return;
       }
-      Promise.all(args.repos.map(repo => work(spinner, pass, repo, options.template)));
+      Promise.all(
+        args.repos.map(repo => work(spinner, pass, repo, options.template))
+      );
     });
   });
 
@@ -103,8 +112,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       }
     };
 
-    const branches =
-      await getBranches(client, targetRepo.replace(/#.*/, ''));
+    const branches = await getBranches(client, targetRepo.replace(/#.*/, ''));
 
     const maxBranchId = branches.reduce((prev, current) => {
       const m = current.name.match(/template-sync-(\d+)/);
@@ -144,12 +152,15 @@ async function work(spinner, token, targetRepo, templateRepo) {
       templateRepo = await files[2].templateRepo();
       if (templateRepo === undefined) {
         throw new Error(
-          `Unable to extract template repo url from ${targetRepo} package.json`);
+          `Unable to extract template repo url from ${targetRepo} package.json`
+        );
       }
       context.templateRepo = templateRepo;
     }
 
-    const merges = (await Promise.all(files.map(f => f.merge))).filter(m => m !== undefined && m.changed);
+    const merges = (await Promise.all(files.map(f => f.merge))).filter(
+      m => m !== undefined && m.changed
+    );
 
     if (merges.length === 0) {
       spinner.succeed(`${targetRepo} nothing changed`);
@@ -164,21 +175,31 @@ async function work(spinner, token, targetRepo, templateRepo) {
 
     await createBranch(user, repo, source.branch, dest.branch, options);
 
-    await commit(user, repo, {
-      branch: dest.branch,
-      message: messages.join('\n'),
-      updates: merges.map(merge => {
-        return {
-          path: merge.path,
-          content: merge.content
-        };
-      })
-    }, options);
+    await commit(
+      user,
+      repo,
+      {
+        branch: dest.branch,
+        message: messages.join('\n'),
+        updates: merges.map(merge => {
+          return {
+            path: merge.path,
+            content: merge.content
+          };
+        })
+      },
+      options
+    );
 
-    const result = await pull(source, dest, {
-      title: `merge package template from ${context.templateRepo}`,
-      body: 'Updated standard to latest version'
-    }, options);
+    const result = await pull(
+      source,
+      dest,
+      {
+        title: `merge package template from ${context.templateRepo}`,
+        body: 'Updated standard to latest version'
+      },
+      options
+    );
 
     spinner.succeed(result.body.html_url);
   } catch (e) {
