@@ -58,9 +58,12 @@ export default class Package extends File {
             buildOutput = ma[1];
           }
 
-          const mb = script.match(/&&\s*(.+)/);
-          if (mb) {
-            extraBuilds[key] = mb[1];
+          const templateScript = template.scripts[key];
+          if (templateScript !== undefined) {
+            const mb = script.match(/&&\s*(.+)$/);
+            if (mb && !templateScript.includes(mb[1])) {
+              extraBuilds[key] = mb[1];
+            }
           }
         });
       }

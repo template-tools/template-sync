@@ -55,14 +55,14 @@ test('package preserve extra prepare', async t => {
   const context = createContext(
     {
       scripts: {
-        prepare: 'rollup x y z',
+        prepare: 'rollup x y z && chmod +x bin/xx',
         preprocess: 'rollup a'
       }
     },
     {
       scripts: {
         prepare: 'rollup x y && chmod +x bin/xx',
-        preprocess: 'rollup a && chmod +x /bin/yy'
+        preprocess: 'rollup a && chmod +x bin/yy'
       }
     }
   );
@@ -72,7 +72,7 @@ test('package preserve extra prepare', async t => {
 
   t.deepEqual(JSON.parse(merged.content).scripts, {
     prepare: 'rollup x y z && chmod +x bin/xx',
-    preprocess: 'rollup a && chmod +x /bin/yy'
+    preprocess: 'rollup a && chmod +x bin/yy'
   });
 });
 
