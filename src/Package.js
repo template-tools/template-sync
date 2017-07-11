@@ -28,7 +28,6 @@ export default class Package extends File {
           : JSON.parse(contents[0]);
       const template = JSON.parse(contents[1]);
       const messages = [];
-
       const properties = this.context.properties;
 
       if (target.name === undefined || target.name === '') {
@@ -48,22 +47,22 @@ export default class Package extends File {
           ? target.main
           : 'dist/index.js';
 
-      let extraBuild, buildOutput;
+      let buildOutput;
+      const extraBuilds = {};
 
       if (target.scripts !== undefined) {
-        [target.scripts.prepare]
-          .filter(s => s !== undefined)
-          .forEach(script => {
-            const ma = script.match(/--output=([^\s]+)/);
-            if (ma) {
-              buildOutput = ma[1];
-            }
+        Object.keys(target.scripts).forEach(key => {
+          const script = target.scripts[key];
+          const ma = script.match(/--output=([^\s]+)/);
+          if (ma) {
+            buildOutput = ma[1];
+          }
 
-            const mb = script.match(/&&\s*(.+)/);
-            if (mb) {
-              extraBuild = mb[1];
-            }
-          });
+          const mb = script.match(/&&\s*(.+)/);
+          if (mb) {
+            extraBuilds[key] = mb[1];
+          }
+        });
       }
 
       const deepPropeties = {
@@ -114,10 +113,11 @@ export default class Package extends File {
             `--output=${buildOutput}`
           );
         }
-        if (extraBuild !== undefined) {
-          target.scripts.prepare += ` && ${extraBuild}`;
-        }
       }
+
+      Object.keys(extraBuilds).forEach(key => {
+        target.scripts[key] += ` && ${extraBuilds[key]}`;
+      });
 
       if (target.module === '{{module}}') {
         delete target.module;
