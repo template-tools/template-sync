@@ -70,7 +70,7 @@ test('package preserve extra prepare', async t => {
 
   t.is(
     JSON.parse(merged.content).scripts.prepare,
-    'rollup x y z&& chmod +x bin/xx'
+    'rollup x y z && chmod +x bin/xx'
   );
 });
 
