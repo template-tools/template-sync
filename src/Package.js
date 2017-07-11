@@ -51,7 +51,7 @@ export default class Package extends File {
       let extraBuild, buildOutput;
 
       if (target.scripts !== undefined) {
-        [target.scripts.build, target.scripts.prepare]
+        [target.scripts.prepare]
           .filter(s => s !== undefined)
           .forEach(script => {
             const ma = script.match(/--output=([^\s]+)/);
@@ -64,8 +64,6 @@ export default class Package extends File {
               extraBuild = mb[1];
             }
           });
-
-        delete target.scripts.build;
       }
 
       const deepPropeties = {
@@ -109,15 +107,15 @@ export default class Package extends File {
         }
       });
 
-      if (target.scripts.prepublish) {
+      if (target.scripts.prepare) {
         if (buildOutput !== undefined) {
-          target.scripts.prepublish = target.scripts.prepublish.replace(
+          target.scripts.prepare = target.scripts.prepare.replace(
             /--output=([^\s]+)/,
             `--output=${buildOutput}`
           );
         }
         if (extraBuild !== undefined) {
-          target.scripts.prepublish += ` && ${extraBuild}`;
+          target.scripts.prepare += ` && ${extraBuild}`;
         }
       }
 
