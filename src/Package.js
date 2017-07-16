@@ -22,6 +22,8 @@ export default class Package extends File {
       this.templateContent()
     ]).then(contents => {
       const original = contents[0];
+      const originalLastChar = original[contents.length - 1];
+
       let target =
         contents[0] === undefined || contents[0] === ''
           ? {}
@@ -201,11 +203,16 @@ export default class Package extends File {
       }
 
       return first.then(() => {
-        const content = JSON.stringify(
-          this.context.expand(target),
-          undefined,
-          2
-        );
+        let content = JSON.stringify(this.context.expand(target), undefined, 2);
+        const lastChar = content[content.length - 1];
+
+        // keep trailing newline
+        if (lastChar !== originalLastChar) {
+          if (originalLastChar === '\u000A') {
+            content += '\u000A';
+          }
+        }
+
         return {
           content,
           messages,
