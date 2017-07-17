@@ -203,21 +203,23 @@ export default class Package extends File {
       }
 
       return first.then(() => {
-        let content = JSON.stringify(this.context.expand(target), undefined, 2);
-        const lastChar = content[content.length - 1];
+        let newContent = JSON.stringify(
+          this.context.expand(target),
+          undefined,
+          2
+        );
+        const lastChar = newContent[newContent.length - 1];
 
         // keep trailing newline
-        if (lastChar !== originalLastChar) {
-          if (originalLastChar === '\u000A') {
-            content += '\u000A';
-          }
+        if (originalLastChar === '\n' && lastChar === '}') {
+          newContent += '\n';
         }
 
         return {
-          content,
+          content: newContent,
           messages,
           path: this.path,
-          changed: original !== content
+          changed: original !== newContent
         };
       });
     });
