@@ -23,7 +23,7 @@
     "url": "https://github.com/arlac77/npm-template-sync.git"
   },
   "engines": {
-    "node": ">=8.1.4"
+    "node": ">=8.2.0"
   },
   "dependencies": {
     "caporal": "^0.7.0",
