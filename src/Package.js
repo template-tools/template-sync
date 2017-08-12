@@ -49,6 +49,20 @@ export default class Package extends File {
           ? target.main
           : 'dist/index.js';
 
+      const githubURL = `git+https://github.com/${properties.user}/${target.name}.git`;
+
+      if (
+        target.repository === undefined ||
+        (target.repository.type === 'git' &&
+          target.repository.url !== githubURL)
+      ) {
+        target.repository = {
+          type: 'git',
+          url: githubURL
+        };
+        messages.push(`chore(package): correct github url`);
+      }
+
       let buildOutput;
       const extraBuilds = {};
 
@@ -152,7 +166,7 @@ export default class Package extends File {
         target.template.repository.url !==
           `https://github.com/${this.context.templateRepo}.git`
       ) {
-        messages.push('chore: set template repo');
+        messages.push('chore(package): set template repo');
 
         target.template = {
           repository: {

@@ -132,6 +132,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       'github.user': user,
       'github.repo': repo,
       name: repo,
+      user: user,
       'date.year': new Date().getFullYear(),
       'license.owner': user
     });

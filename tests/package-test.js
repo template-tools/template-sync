@@ -18,7 +18,9 @@ function createContext(template, target) {
     'tragetUser/targetRepo',
     'templateRepo',
     {
-      'github.repo': 'the-repo-name'
+      'github.repo': 'the-repo-name',
+      'github.user': 'the-user-name',
+      user: 'x-user'
     }
   );
 }
@@ -205,6 +207,10 @@ test('start fresh', async t => {
     devDependencies: {},
     engines: {},
     scripts: {},
+    repository: {
+      type: 'git',
+      url: 'git+https://github.com/x-user/targetRepo.git'
+    },
     template: {
       repository: {
         url: 'https://github.com/templateRepo.git'
