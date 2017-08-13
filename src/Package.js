@@ -50,11 +50,13 @@ export default class Package extends File {
           : 'dist/index.js';
 
       const githubURL = `git+https://github.com/${properties.user}/${target.name}.git`;
+      const githubURLAlternative = `git+https://github.com/${properties.user}/node-${target.name}.git`;
 
       if (
         target.repository === undefined ||
         (target.repository.type === 'git' &&
-          target.repository.url !== githubURL)
+          (target.repository.url !== githubURL &&
+            target.repository.url !== githubURLAlternative))
       ) {
         target.repository = {
           type: 'git',
