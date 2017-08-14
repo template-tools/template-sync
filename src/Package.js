@@ -65,6 +65,19 @@ export default class Package extends File {
         messages.push(`chore(package): correct github url`);
       }
 
+      const bugsURL = `https://github.com/${properties.user}/${target.name}/issues`;
+      const bugsURLAlternative = `https://github.com/${properties.user}/node-${target.name}/issues`;
+
+      if (
+        target.bugs === undefined ||
+        (target.bugs.url !== bugsURL && target.bugs.url !== bugsURLAlternative)
+      ) {
+        target.bugs = {
+          url: bugsURL
+        };
+        messages.push(`chore(package): correct bugs url`);
+      }
+
       let buildOutput;
       const extraBuilds = {};
 

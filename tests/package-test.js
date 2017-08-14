@@ -207,6 +207,9 @@ test('start fresh', async t => {
     devDependencies: {},
     engines: {},
     scripts: {},
+    bugs: {
+      url: 'https://github.com/x-user/targetRepo/issues'
+    },
     repository: {
       type: 'git',
       url: 'git+https://github.com/x-user/targetRepo.git'
