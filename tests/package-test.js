@@ -207,6 +207,7 @@ test('start fresh', async t => {
     devDependencies: {},
     engines: {},
     scripts: {},
+    homepage: 'https://github.com/x-user/targetRepo#readme',
     bugs: {
       url: 'https://github.com/x-user/targetRepo/issues'
     },

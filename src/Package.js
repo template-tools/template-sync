@@ -78,6 +78,18 @@ export default class Package extends File {
         messages.push(`chore(package): correct bugs url`);
       }
 
+      const homepageURL = `https://github.com/${properties.user}/${target.name}#readme`;
+      const homepageURLAlternative = `https://github.com/${properties.user}/node-${target.name}#readme`;
+
+      if (
+        target.homepage === undefined ||
+        (target.homepage !== homepageURL &&
+          target.homepage !== homepageURLAlternative)
+      ) {
+        target.homepage = homepageURL;
+        messages.push(`chore(package): correct hompage url`);
+      }
+
       let buildOutput;
       const extraBuilds = {};
 
