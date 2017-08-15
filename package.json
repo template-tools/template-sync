@@ -42,7 +42,7 @@
     "set-getter": "^0.1.0"
   },
   "devDependencies": {
-    "ava": "^0.21.0",
+    "ava": "^0.22.0",
     "babel-preset-stage-3": "^6.24.1",
     "color-convert": "^1.9.0",
     "cracks": "^3.1.2",
@@ -59,10 +59,7 @@
     "xo": "^0.19.0"
   },
   "release": {},
-  "keywords": [
-    "npm",
-    "template"
-  ],
+  "keywords": ["npm", "template"],
   "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/arlac77/npm-template-sync/issues"
@@ -75,21 +72,12 @@
     }
   ],
   "ava": {
-    "files": [
-      "build/test-bundle.js"
-    ],
-    "require": [
-      "babel-register"
-    ]
+    "files": ["build/test-bundle.js"],
+    "require": ["babel-register"]
   },
   "nyc": {
-    "include": [
-      "build/test-bundle.js",
-      "src/**/*.js"
-    ],
-    "reporter": [
-      "lcov"
-    ],
+    "include": ["build/test-bundle.js", "src/**/*.js"],
+    "reporter": ["lcov"],
     "report-dir": "./build/coverage"
   },
   "template": {
