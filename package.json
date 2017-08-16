@@ -23,7 +23,7 @@
     "url": "git+https://github.com/arlac77/npm-template-sync.git"
   },
   "engines": {
-    "node": ">=8.3.0"
+    "node": ">=8.4.0"
   },
   "dependencies": {
     "caporal": "^0.7.0",
@@ -59,7 +59,10 @@
     "xo": "^0.19.0"
   },
   "release": {},
-  "keywords": ["npm", "template"],
+  "keywords": [
+    "npm",
+    "template"
+  ],
   "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/arlac77/npm-template-sync/issues"
@@ -72,12 +75,21 @@
     }
   ],
   "ava": {
-    "files": ["build/test-bundle.js"],
-    "require": ["babel-register"]
+    "files": [
+      "build/test-bundle.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
   },
   "nyc": {
-    "include": ["build/test-bundle.js", "src/**/*.js"],
-    "reporter": ["lcov"],
+    "include": [
+      "build/test-bundle.js",
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
     "report-dir": "./build/coverage"
   },
   "template": {
