@@ -52,11 +52,12 @@ export default class Package extends File {
       const githubURL = `git+https://github.com/${properties.user}/${target.name}.git`;
       const githubURLAlternative = `git+https://github.com/${properties.user}/node-${target.name}.git`;
 
+      let repoName = target.name;
+
       if (
         target.repository === undefined ||
-        (target.repository.type === 'git' &&
-          (target.repository.url !== githubURL &&
-            target.repository.url !== githubURLAlternative))
+        (target.repository.url !== githubURL &&
+          target.repository.url !== githubURLAlternative)
       ) {
         target.repository = {
           type: 'git',
@@ -65,27 +66,25 @@ export default class Package extends File {
         messages.push(`chore(package): correct github url`);
       }
 
-      const bugsURL = `https://github.com/${properties.user}/${target.name}/issues`;
-      const bugsURLAlternative = `https://github.com/${properties.user}/node-${target.name}/issues`;
-
       if (
-        target.bugs === undefined ||
-        (target.bugs.url !== bugsURL && target.bugs.url !== bugsURLAlternative)
+        target.repository !== undefined &&
+        githubURLAlternative === target.repository.url
       ) {
+        repoName = `node-${target.name}`;
+      }
+
+      const bugsURL = `https://github.com/${properties.user}/${repoName}/issues`;
+
+      if (target.bugs === undefined || target.bugs.url !== bugsURL) {
         target.bugs = {
           url: bugsURL
         };
         messages.push(`chore(package): correct bugs url`);
       }
 
-      const homepageURL = `https://github.com/${properties.user}/${target.name}#readme`;
-      const homepageURLAlternative = `https://github.com/${properties.user}/node-${target.name}#readme`;
+      const homepageURL = `https://github.com/${properties.user}/${repoName}#readme`;
 
-      if (
-        target.homepage === undefined ||
-        (target.homepage !== homepageURL &&
-          target.homepage !== homepageURLAlternative)
-      ) {
+      if (target.homepage === undefined || target.homepage !== homepageURL) {
         target.homepage = homepageURL;
         messages.push(`chore(package): correct hompage url`);
       }
