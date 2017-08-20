@@ -3,6 +3,7 @@ import Context from './Context';
 import Travis from './Travis';
 import Readme from './Readme';
 import Package from './Package';
+import Rollup from './Rollup';
 import License from './License';
 import ReplaceIfEmpty from './ReplaceIfEmpty';
 import MergeAndRemoveLineSet from './MergeAndRemoveLineSet';
@@ -138,8 +139,8 @@ async function work(spinner, token, targetRepo, templateRepo) {
     });
 
     const files = [
-      new ReplaceIfEmpty(context, 'rollup.config.js'),
-      new ReplaceIfEmpty(context, 'tests/rollup.config.js'),
+      new Rollup(context, 'rollup.config.js'),
+      new Rollup(context, 'tests/rollup.config.js'),
       new Package(context, 'package.json'),
       new Readme(context, 'doc/README.hbs'),
       new JSONFile(context, 'doc/jsdoc.json'),
