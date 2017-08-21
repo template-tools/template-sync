@@ -56,7 +56,7 @@ import pkg from './package.json';
 
 export default {
   output: {
-    dest: pkg.main,
+    file: pkg.main,
     format: 'cjs'
   },
   plugins: [

@@ -14,17 +14,15 @@ export default class Rollup extends File {
     ]).then(([original, templateRaw]) => {
       const ast = recast.parse(original);
 
-      //console.log(ast.program.body);
-
       for (const decl of ast.program.body) {
         if (decl.type === 'ExportDefaultDeclaration') {
           const exp = decl.declaration;
-          //const exp = ast.program.body[2].declaration;
 
           for (const p of exp.properties) {
             switch (p.key.name) {
               case 'targets':
                 p.key.name = 'output';
+                p.key.value = { file: p.value.value };
                 break;
               case 'entry':
                 p.key.name = 'input';
