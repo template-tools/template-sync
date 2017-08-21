@@ -3,7 +3,7 @@ import Context from '../src/Context';
 import Rollup from '../src/Rollup';
 import Client from './Client';
 
-test.only('rollup', async t => {
+test('rollup', async t => {
   const context = new Context(
     new Client({
       'rollup.config.json': {
@@ -11,8 +11,9 @@ test.only('rollup', async t => {
 import pkg from './package.json';
 
 export default {
+  input: pkg.module,
   output: {
-    dest: pkg.main,
+    file: pkg.main,
     format: 'cjs'
   },
   plugins: [
@@ -55,17 +56,21 @@ export default {
 import pkg from './package.json';
 
 export default {
-  output: {
-    file: pkg.main,
-    format: 'cjs'
-  },
   plugins: [
     babel({
       babelrc: false,
       presets: ['stage-3'],
       exclude: 'node_modules/**'
     })
-  ]
+  ],
+
+  output: {
+    file: pkg.main,
+    format: 'cjs'
+  },
+
+  external: ['url-resolver-fs'],
+  input: pkg.module
 };`
   );
 });
