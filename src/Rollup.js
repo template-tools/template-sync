@@ -6,10 +6,10 @@ export default class Rollup extends File {
   get merge() {
     return Promise.all([
       this.originalContent({
-        ignoreMissing: this.ignoreMissing
+        ignoreMissing: true
       }),
       this.templateContent({
-        ignoreMissing: this.ignoreMissing
+        ignoreMissing: true
       })
     ]).then(([original, template]) => {
       if (template === '') {
