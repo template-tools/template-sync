@@ -48,6 +48,19 @@ export default class Rollup extends File {
         );
       }
 
+      if (exp.properties.find(x => x.key.name === 'output') === undefined) {
+        exp.properties.push(
+          templateExp.properties.find(x => x.key.name === 'output')
+        );
+      }
+
+      const toBeRemoved = exp.properties.findIndex(
+        x => x.key.name === 'format'
+      );
+      if (toBeRemoved >= 0) {
+        exp.properties.splice(toBeRemoved, 1);
+      }
+
       const content = recast.print(ast).code;
 
       return {

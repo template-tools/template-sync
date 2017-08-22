@@ -39,6 +39,7 @@ export default {
     dest: pkg.main,
     format: 'cjs'
   }],
+  format: 'cjs',
   external: ['url-resolver-fs']
 };`
       }
@@ -63,12 +64,10 @@ export default {
       exclude: 'node_modules/**'
     })
   ],
-
   output: {
     file: pkg.main,
     format: 'cjs'
   },
-
   external: ['url-resolver-fs'],
   input: pkg.module
 };`
