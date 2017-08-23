@@ -24,9 +24,8 @@ export default {
     })
   ]
 };`,
-        targetRepo: `import babel from 'rollup-plugin-babel';
-import pkg from './package.json';
-
+        targetRepo: `'use strict';
+import babel from 'rollup-plugin-babel';
 export default {
   plugins: [
     babel({
@@ -53,9 +52,9 @@ export default {
   const merged = await rollup.merge;
   t.deepEqual(
     merged.content,
-    `import babel from 'rollup-plugin-babel';
-import pkg from './package.json';
+    `import pkg from './package.json';
 
+import babel from 'rollup-plugin-babel';
 export default {
   plugins: [
     babel({
@@ -78,9 +77,9 @@ test('rollup empty template', async t => {
   const context = new Context(
     new Client({
       'rollup.config.json': {
-        templateRepo: ``,
-        targetRepo: `import babel from 'rollup-plugin-babel';
-import pkg from './package.json';
+        templateRepo: '',
+        targetRepo: `import pkg from './package.json';
+import babel from 'rollup-plugin-babel';
 
 export default {
   plugins: [
@@ -107,8 +106,8 @@ export default {
   const merged = await rollup.merge;
   t.deepEqual(
     merged.content,
-    `import babel from 'rollup-plugin-babel';
-import pkg from './package.json';
+    `import pkg from './package.json';
+import babel from 'rollup-plugin-babel';
 
 export default {
   plugins: [

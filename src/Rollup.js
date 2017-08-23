@@ -1,6 +1,7 @@
 import File from './File';
 
 const recast = require('recast');
+//const types = require('ast-types');
 
 export default class Rollup extends File {
   get merge() {
@@ -22,6 +23,8 @@ export default class Rollup extends File {
 
       const templateAST = recast.parse(template);
       const ast = recast.parse(original);
+
+      removeUseStrict(ast);
 
       const exp = exportDefaultDeclaration(ast);
       const templateExp = exportDefaultDeclaration(templateAST);
@@ -61,7 +64,19 @@ export default class Rollup extends File {
         exp.properties.splice(toBeRemoved, 1);
       }
 
+      let pkg = importDeclaration(ast, 'pkg');
+      if (!pkg) {
+        pkg = importDeclaration(templateAST, 'pkg');
+
+        //console.log(`pkg: ${JSON.stringify(pkg)}`);
+
+        ast.program.body = [pkg, ast.program.body[0], ast.program.body[1]];
+        //ast.program.body.slice(1, 0, pkg);
+      }
+
       const content = recast.print(ast).code;
+
+      //console.log(content);
 
       return {
         path: this.path,
@@ -71,6 +86,33 @@ export default class Rollup extends File {
       };
     });
   }
+}
+
+function removeUseStrict(ast) {
+  for (const i in ast.program.body) {
+    const decl = ast.program.body[i];
+    if (
+      decl.type === 'ExpressionStatement' &&
+      decl.expression.type === 'Literal' &&
+      decl.expression.value === 'use strict'
+    ) {
+      ast.program.body.splice(i, 1);
+      return;
+    }
+  }
+}
+
+function importDeclaration(ast, localName) {
+  for (const decl of ast.program.body) {
+    if (
+      decl.type === 'ImportDeclaration' &&
+      decl.specifiers[0].local.name === localName
+    ) {
+      return decl;
+    }
+  }
+
+  return undefined;
 }
 
 function exportDefaultDeclaration(ast) {
