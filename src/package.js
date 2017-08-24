@@ -1,4 +1,4 @@
-import File from './File';
+import File from './file';
 
 export default class Package extends File {
   async templateRepo() {

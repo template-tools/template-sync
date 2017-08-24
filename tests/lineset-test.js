@@ -1,15 +1,20 @@
 import test from 'ava';
-import Context from '../src/Context';
-import MergeLineSet from '../src/MergeLineSet';
-import Client from './Client';
+import Context from '../src/context';
+import MergeLineSet from '../src/merge-line-set';
+import Client from './client';
 
 test('merge lines', async t => {
-  const context = new Context(new Client({
-    aFile: {
-      templateRepo: ['Line 1', 'Line 2'].join('\n'),
-      targetRepo: ['Line 1', 'Line 3'].join('\n')
-    }
-  }), 'targetRepo', 'templateRepo', {});
+  const context = new Context(
+    new Client({
+      aFile: {
+        templateRepo: ['Line 1', 'Line 2'].join('\n'),
+        targetRepo: ['Line 1', 'Line 3'].join('\n')
+      }
+    }),
+    'targetRepo',
+    'templateRepo',
+    {}
+  );
 
   const merger = new MergeLineSet(context, 'aFile');
   const merged = await merger.merge;

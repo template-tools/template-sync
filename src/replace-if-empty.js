@@ -1,4 +1,4 @@
-import File from './File';
+import File from './file';
 
 export default class ReplaceIfEmpty extends File {
   constructor(context, path, messages) {

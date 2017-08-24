@@ -1,4 +1,4 @@
-import File from './File';
+import File from './file';
 
 const recast = require('recast');
 //const types = require('ast-types');

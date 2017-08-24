@@ -1,7 +1,7 @@
 import test from 'ava';
-import Context from '../src/Context';
-import Rollup from '../src/Rollup';
-import Client from './Client';
+import Context from '../src/context';
+import Rollup from '../src/rollup';
+import Client from './client';
 
 test('rollup', async t => {
   const context = new Context(

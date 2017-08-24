@@ -1,4 +1,4 @@
-import MergeLineSet from './MergeLineSet';
+import MergeLineSet from './merge-line-set';
 
 export default class MergeAndRemoveLineSet extends MergeLineSet {
   get merge() {

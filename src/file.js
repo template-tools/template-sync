@@ -30,17 +30,17 @@ export default class File {
   }
 
   getContent(repo, path, options = {}) {
-    return new Promise((fullfill, reject) =>
+    return new Promise((resolve, reject) =>
       this.context.client.repo(repo).contents(path, (err, status, body) => {
         if (err) {
           if (options.ignoreMissing) {
-            fullfill('');
+            resolve('');
           } else {
             reject(new Error(`${path}: ${err}`));
           }
         } else {
           const b = Buffer.from(status.content, 'base64');
-          fullfill(b.toString());
+          resolve(b.toString());
         }
       })
     );

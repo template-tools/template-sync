@@ -1,4 +1,4 @@
-import File from './File';
+import File from './file';
 
 const yaml = require('js-yaml'),
   deepExtend = require('deep-extend'),

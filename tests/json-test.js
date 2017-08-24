@@ -1,27 +1,34 @@
 import test from 'ava';
-import Context from '../src/Context';
-import JSONFile from '../src/JSONFile';
-import Client from './Client';
+import Context from '../src/context';
+import JSONFile from '../src/json-file';
+import Client from './client';
 
 const FILE_NAME = 'a.json';
 
 function createContext(template, target) {
-  return new Context(new Client({
+  return new Context(
+    new Client({
       [FILE_NAME]: {
-        templateRepo: template !== undefined ? JSON.stringify(template) : undefined,
+        templateRepo:
+          template !== undefined ? JSON.stringify(template) : undefined,
         targetRepo: target !== undefined ? JSON.stringify(target) : undefined
       }
     }),
     'targetRepo',
-    'templateRepo', {});
+    'templateRepo',
+    {}
+  );
 }
 
 test('json merge', async t => {
-  const context = createContext({
-    key: 'value'
-  }, {
-    oldKey: 'oldValue'
-  });
+  const context = createContext(
+    {
+      key: 'value'
+    },
+    {
+      oldKey: 'oldValue'
+    }
+  );
 
   const json = new JSONFile(context, FILE_NAME);
   const merged = await json.merge;
@@ -44,9 +51,12 @@ test('json empty template', async t => {
 });
 
 test('json empty target', async t => {
-  const context = createContext({
-    key: 'value',
-  }, undefined);
+  const context = createContext(
+    {
+      key: 'value'
+    },
+    undefined
+  );
 
   const json = new JSONFile(context, FILE_NAME);
   const merged = await json.merge;

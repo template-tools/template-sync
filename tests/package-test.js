@@ -1,7 +1,7 @@
 import test from 'ava';
-import Context from '../src/Context';
-import Package from '../src/Package';
-import Client from './Client';
+import Context from '../src/context';
+import Package from '../src/package';
+import Client from './client';
 
 const FILE_NAME = 'package.json';
 

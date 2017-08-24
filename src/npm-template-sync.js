@@ -1,21 +1,20 @@
 import { getBranches, pull, createBranch, commit } from './github';
-import Context from './Context';
-import Travis from './Travis';
-import Readme from './Readme';
-import Package from './Package';
-import Rollup from './Rollup';
-import License from './License';
-import ReplaceIfEmpty from './ReplaceIfEmpty';
-import MergeAndRemoveLineSet from './MergeAndRemoveLineSet';
-import JSONFile from './JSONFile';
+import Context from './context';
+import Travis from './travis';
+import Readme from './readme';
+import Package from './package';
+import Rollup from './rollup';
+import License from './license';
+//import ReplaceIfEmpty from './replace-if-empty';
+import MergeAndRemoveLineSet from './merge-and-remove-line-set';
+import JSONFile from './json-file';
 
 const program = require('caporal'),
   path = require('path'),
   keychain = require('keychain'),
   prompt = require('prompt'),
   ora = require('ora'),
-  github = require('octonode'),
-  githubBasic = require('github-basic');
+  github = require('octonode');
 
 const spinner = ora('args').start();
 
@@ -133,7 +132,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       'github.user': user,
       'github.repo': repo,
       name: repo,
-      user: user,
+      user,
       'date.year': new Date().getFullYear(),
       'license.owner': user
     });
@@ -204,7 +203,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
     );
 
     spinner.succeed(result.body.html_url);
-  } catch (e) {
-    spinner.fail(`${dest.user}/${dest.repo}: ${e}`);
+  } catch (err) {
+    spinner.fail(`${dest.user}/${dest.repo}: ${err}`);
   }
 }
