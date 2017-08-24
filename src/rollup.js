@@ -57,18 +57,13 @@ export default class Rollup extends File {
         );
       }
 
-      const toBeRemoved = exp.properties.findIndex(
-        x => x.key.name === 'format'
-      );
-      if (toBeRemoved >= 0) {
-        exp.properties.splice(toBeRemoved, 1);
-      }
+      removePropertiesKey(exp.properties, 'format');
+      removePropertiesKey(exp.properties, 'sourceMap');
+      removePropertiesKey(exp.properties, 'dest');
 
       let pkg = importDeclaration(ast, 'pkg');
       if (!pkg) {
         pkg = importDeclaration(templateAST, 'pkg');
-
-        //console.log(`pkg: ${JSON.stringify(pkg)}`);
 
         ast.program.body = [pkg, ...ast.program.body];
       }
@@ -119,6 +114,17 @@ function exportDefaultDeclaration(ast) {
     if (decl.type === 'ExportDefaultDeclaration') {
       return decl.declaration;
     }
+  }
+
+  return undefined;
+}
+
+function removePropertiesKey(properties, name) {
+  const toBeRemoved = properties.findIndex(x => x.key.name === name);
+  if (toBeRemoved >= 0) {
+    const slot = properties[toBeRemoved];
+    properties.splice(toBeRemoved, 1);
+    return slot;
   }
 
   return undefined;
