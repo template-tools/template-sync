@@ -70,8 +70,7 @@ export default class Rollup extends File {
 
         //console.log(`pkg: ${JSON.stringify(pkg)}`);
 
-        ast.program.body = [pkg, ast.program.body[0], ast.program.body[1]];
-        //ast.program.body.slice(1, 0, pkg);
+        ast.program.body = [pkg, ...ast.program.body];
       }
 
       const content = recast.print(ast).code;
