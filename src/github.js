@@ -1,7 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 const github = require('github-basic');
 
 export function getBranches(client, repo) {
