@@ -27,6 +27,7 @@ export default {
         targetRepo: `'use strict';
 import babel from 'rollup-plugin-babel';
 export default {
+  banner: '#!/usr/bin/env node',
   plugins: [
     babel({
       babelrc: false,
@@ -68,7 +69,8 @@ export default {
 
   output: {
     file: pkg.main,
-    format: 'cjs'
+    format: 'cjs',
+    banner: '#!/usr/bin/env node'
   },
 
   external: ['url-resolver-fs'],

@@ -29,6 +29,9 @@ export default class Rollup extends File {
       const exp = exportDefaultDeclaration(ast);
       const templateExp = exportDefaultDeclaration(templateAST);
 
+      const banner = removePropertiesKey(exp.properties, 'banner');
+      let output;
+
       for (const p of exp.properties) {
         switch (p.key.name) {
           case 'targets':
@@ -36,6 +39,7 @@ export default class Rollup extends File {
             p.value = templateExp.properties.find(
               x => x.key.name === 'output'
             ).value;
+            output = p;
             break;
           case 'entry':
             p.key.name = 'input';
@@ -52,9 +56,12 @@ export default class Rollup extends File {
       }
 
       if (exp.properties.find(x => x.key.name === 'output') === undefined) {
-        exp.properties.push(
-          templateExp.properties.find(x => x.key.name === 'output')
-        );
+        output = templateExp.properties.find(x => x.key.name === 'output');
+        exp.properties.push(output);
+      }
+
+      if (banner !== undefined) {
+        output.value.properties.push(banner);
       }
 
       removePropertiesKey(exp.properties, 'format');
@@ -62,15 +69,13 @@ export default class Rollup extends File {
       removePropertiesKey(exp.properties, 'dest');
 
       let pkg = importDeclaration(ast, 'pkg');
-      if (!pkg) {
+      if (pkg === undefined) {
         pkg = importDeclaration(templateAST, 'pkg');
 
         ast.program.body = [pkg, ...ast.program.body];
       }
 
       const content = recast.print(ast).code;
-
-      //console.log(content);
 
       return {
         path: this.path,
