@@ -36,7 +36,7 @@ export default {
     })
   ],
   targets: [{
-    dest: pkg.main,
+    dest: pkg.bin['a-cmd'],
     format: 'cjs'
   }],
   format: 'cjs',
@@ -68,7 +68,7 @@ export default {
   ],
 
   output: {
-    file: pkg.main,
+    file: pkg.bin['a-cmd'],
     format: 'cjs',
     banner: '#!/usr/bin/env node'
   },

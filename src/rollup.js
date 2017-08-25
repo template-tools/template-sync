@@ -30,12 +30,13 @@ export default class Rollup extends File {
       const templateExp = exportDefaultDeclaration(templateAST);
 
       const banner = removePropertiesKey(exp.properties, 'banner');
-      let output;
+      let output, dest;
 
       for (const p of exp.properties) {
         switch (p.key.name) {
           case 'targets':
             p.key.name = 'output';
+            dest = p.value.elements[0].properties[0]; //.find(x => x.name === 'dest');
             p.value = templateExp.properties.find(
               x => x.key.name === 'output'
             ).value;
@@ -60,8 +61,15 @@ export default class Rollup extends File {
         exp.properties.push(output);
       }
 
-      if (banner !== undefined) {
-        output.value.properties.push(banner);
+      if (output !== undefined) {
+        if (banner !== undefined) {
+          output.value.properties.push(banner);
+        }
+
+        if (dest !== undefined) {
+          output.value.properties.find(x => x.key.name === 'file').value =
+            dest.value;
+        }
       }
 
       removePropertiesKey(exp.properties, 'format');
