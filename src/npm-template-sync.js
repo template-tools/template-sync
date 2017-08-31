@@ -5,7 +5,6 @@ import Readme from './readme';
 import Package from './package';
 import Rollup from './rollup';
 import License from './license';
-//import ReplaceIfEmpty from './replace-if-empty';
 import MergeAndRemoveLineSet from './merge-and-remove-line-set';
 import JSONFile from './json-file';
 
