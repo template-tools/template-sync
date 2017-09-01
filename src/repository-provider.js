@@ -1,10 +1,24 @@
 export class Provider {
+  static get repositoryClass() {
+    return Repositoy;
+  }
+
+  static get branchClass() {
+    return Branch;
+  }
+
   constructor() {
     Object.defineProperty(this, 'repositories', { value: new Map() });
   }
 
   async repository(name) {
-    return this.repositories.get(name);
+    let r = this.repositories.get(name);
+    if (r === undefined) {
+      r = new this.constructor.repositoryClass(this, name);
+      this.repositories.set(name, r);
+    }
+
+    return r;
   }
 
   async branch(name) {
@@ -16,6 +30,7 @@ export class Repository {
   constructor(provider, name) {
     Object.defineProperty(this, 'provider', { value: provider });
     Object.defineProperty(this, 'name', { value: name });
+    Object.defineProperty(this, '_branches', { value: new Map() });
   }
 
   async content(path) {
@@ -25,7 +40,13 @@ export class Repository {
   }
 
   async branch(name) {
-    return new Error('not implemented');
+    let b = this._branches.get(name);
+    if (b === undefined) {
+      b = new this.provider.constructor.branchClass(this, name);
+      this._branches.set(name, b);
+    }
+
+    return b;
   }
 
   async branches() {

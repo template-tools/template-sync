@@ -4,6 +4,14 @@ const github = require('github-basic');
 const octonode = require('octonode');
 
 export class GithubProvider extends Provider {
+  static get repositoryClass() {
+    return GithubRepository;
+  }
+
+  static get branchClass() {
+    return GithubBranch;
+  }
+
   constructor(token) {
     super();
 
@@ -19,16 +27,6 @@ export class GithubProvider extends Provider {
     });
 
     Object.defineProperty(this, 'client', { value: client });
-  }
-
-  async repository(name) {
-    let r = this.repositories.get(name);
-    if (r !== undefined) {
-      return r;
-    }
-    r = new GithubRepository(this, name);
-    this.repositories.set(name, r);
-    return r;
   }
 }
 
