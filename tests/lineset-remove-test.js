@@ -1,11 +1,11 @@
 import test from 'ava';
 import Context from '../src/context';
 import MergeAndRemoveLineSet from '../src/merge-and-remove-line-set';
-import Client from './client';
+import { MockProvider } from './repository-mock';
 
 test('merge lines', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       aFile: {
         templateRepo: ['- Line 1', 'Line 2'].join('\n'),
         targetRepo: ['Line 1', 'Line 3'].join('\n')

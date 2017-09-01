@@ -1,11 +1,11 @@
 import test from 'ava';
 import Context from '../src/context';
 import Replace from '../src/replace';
-import Client from './client';
+import { MockProvider } from './repository-mock';
 
 test('replace', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       aFile: {
         templateRepo: `Line 1x
         Line 2x`,

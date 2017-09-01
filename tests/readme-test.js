@@ -2,11 +2,11 @@ import test from 'ava';
 import Context from '../src/context';
 import Readme from '../src/readme';
 import Package from '../src/package';
-import Client from './client';
+import { MockProvider } from './repository-mock';
 
 test('readme', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       aFile: {
         templateRepo: `Line 1x
         Line 2x`,

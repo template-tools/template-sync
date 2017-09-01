@@ -1,4 +1,3 @@
-import { getBranches, pull, createBranch, commit } from './github';
 import Context from './context';
 import Travis from './travis';
 import Readme from './readme';
@@ -7,13 +6,13 @@ import Rollup from './rollup';
 import License from './license';
 import MergeAndRemoveLineSet from './merge-and-remove-line-set';
 import JSONFile from './json-file';
+import { GithubProvider } from './github-repository-provider';
 
 const program = require('caporal'),
   path = require('path'),
   keychain = require('keychain'),
   prompt = require('prompt'),
-  ora = require('ora'),
-  github = require('octonode');
+  ora = require('ora');
 
 const spinner = ora('args').start();
 
@@ -96,7 +95,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
   };
 
   try {
-    const client = github.client(token);
+    const provider = new GithubProvider(token);
 
     const source = {
       user,
@@ -111,7 +110,8 @@ async function work(spinner, token, targetRepo, templateRepo) {
       }
     };
 
-    const branches = await getBranches(client, targetRepo.replace(/#.*/, ''));
+    const repository = await provider.repository(targetRepo);
+    const branches = await repository.branches(targetRepo.replace(/#.*/, ''));
 
     const maxBranchId = branches.reduce((prev, current) => {
       const m = current.name.match(/template-sync-(\d+)/);
@@ -127,7 +127,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
 
     dest.branch += `-${maxBranchId + 1}`;
 
-    const context = new Context(client, targetRepo, templateRepo, {
+    const context = new Context(provider, targetRepo, templateRepo, {
       'github.user': user,
       'github.repo': repo,
       name: repo,
@@ -149,7 +149,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
     ];
 
     if (templateRepo === undefined) {
-      templateRepo = await files[2].templateRepo();
+      templateRepo = await files[2].templateRepo(); // package.json
       if (templateRepo === undefined) {
         throw new Error(
           `Unable to extract template repo url from ${targetRepo} package.json`
@@ -172,6 +172,8 @@ async function work(spinner, token, targetRepo, templateRepo) {
       merge.messages.forEach(m => result.push(m));
       return result;
     }, []);
+
+    const newBranch = await provider.createBranch();
 
     await createBranch(user, repo, source.branch, dest.branch, options);
 
