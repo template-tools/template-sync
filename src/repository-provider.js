@@ -50,7 +50,7 @@ export class Repository {
   }
 
   async branches() {
-    return [];
+    return this._branches;
   }
 
   async createBranch(name) {

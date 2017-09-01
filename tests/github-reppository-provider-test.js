@@ -8,6 +8,9 @@ test.only('provider', async t => {
 
   t.is(repository.name, 'arlac77/npm-template-sync');
 
+  const branches = await repository.branches();
+  t.deepEqual(branches.get('master').name, 'master');
+
   const branch = await repository.branch('master');
   t.is(branch.name, 'master');
 });

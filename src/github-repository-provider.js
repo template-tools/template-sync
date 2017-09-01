@@ -42,7 +42,11 @@ export class GithubRepository extends Repository {
         if (err) {
           reject(err);
         } else {
-          resolve(data);
+          data.forEach(d => {
+            const b = new this.provider.constructor.branchClass(this, d.name);
+            this._branches.set(b.name, b);
+          });
+          resolve(this._branches);
         }
       });
     });
