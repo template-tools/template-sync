@@ -100,14 +100,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
     const source = {
       user,
       repo,
-      branch: branch || 'master'
-    };
-
-    const options = {
-      auth: {
-        type: 'oauth',
-        token
-      }
+      branch
     };
 
     const repository = await provider.repository(targetRepo);
@@ -173,35 +166,23 @@ async function work(spinner, token, targetRepo, templateRepo) {
       return result;
     }, []);
 
-    const newBranch = await provider.createBranch();
+    const newBranch = await provider.createBranch(source.branch, dest.branch);
 
-    await createBranch(user, repo, source.branch, dest.branch, options);
+    await newBranch.commit({
+      branch: dest.branch,
+      message: messages.join('\n'),
+      updates: merges.map(merge => {
+        return {
+          path: merge.path,
+          content: merge.content
+        };
+      })
+    });
 
-    await commit(
-      user,
-      repo,
-      {
-        branch: dest.branch,
-        message: messages.join('\n'),
-        updates: merges.map(merge => {
-          return {
-            path: merge.path,
-            content: merge.content
-          };
-        })
-      },
-      options
-    );
-
-    const result = await pull(
-      source,
-      dest,
-      {
-        title: `merge package template from ${context.templateRepo}`,
-        body: 'Updated standard to latest version'
-      },
-      options
-    );
+    const result = await newBranch.createPullRequest(source, dest, {
+      title: `merge package template from ${context.templateRepo}`,
+      body: 'Updated standard to latest version'
+    });
 
     spinner.succeed(result.body.html_url);
   } catch (err) {

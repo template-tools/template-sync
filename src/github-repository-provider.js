@@ -30,10 +30,6 @@ export class GithubProvider extends Provider {
     this.repositories.set(name, r);
     return r;
   }
-
-  async branch(name) {
-    return undefined;
-  }
 }
 
 export class GithubRepository extends Repository {
@@ -42,7 +38,7 @@ export class GithubRepository extends Repository {
     Object.defineProperty(this, 'user', { value: name.split(/\//)[0] });
   }
 
-  branches(client, repo) {
+  async branches() {
     return new Promise((resolve, reject) => {
       this.provider.client.repo(this.name).branches((err, data) => {
         if (err) {

@@ -8,7 +8,7 @@ export class Provider {
   }
 
   async branch(name) {
-    return undefined;
+    return this.repository(name);
   }
 }
 
@@ -20,6 +20,7 @@ export class Repository {
 
   async content(path) {
     const branch = await this.branch('master');
+    console.log(branch);
     return branch.content(path);
   }
 
