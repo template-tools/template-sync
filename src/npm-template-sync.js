@@ -169,7 +169,6 @@ async function work(spinner, token, targetRepo, templateRepo) {
     const newBranch = await provider.createBranch(dest.branch, source.branch);
 
     await newBranch.commit({
-      branch: dest.branch,
       message: messages.join('\n'),
       updates: merges.map(merge => {
         return {

@@ -96,100 +96,99 @@ export class GithubRepository extends Repository {
 
 export class GithubBranch extends Branch {
   get options() {
-    return this.provicer.options;
+    return this.provider.options;
   }
 
-  async commit(message, updates) {
-    let shaLatestCommit, shaBaseTree, shaNewTree, shaNewCommit;
+  async commit(message, updates, options = {}) {
+    console.log(`*** 1 ***`);
 
-    return Promise.resolve()
-      .then(() => {
-        updates = Promise.all(
-          updates.map(file => {
-            const path = file.path.replace(/\\/g, '/').replace(/^\//, '');
-            const mode = file.mode || '100644';
-            const type = file.type || 'blob';
-            return github
-              .json(
-                'post',
-                `/repos/${this.repository.name}/git/blobs/`,
-                {
-                  content:
-                    typeof file.content === 'string'
-                      ? file.content
-                      : file.content.toString('base64'),
-                  encoding:
-                    typeof file.content === 'string' ? 'utf-8' : 'base64'
-                },
-                this.options
-              )
-              .then(res => {
-                return {
-                  path,
-                  mode,
-                  type,
-                  sha: res.body.sha
-                };
-              });
-          })
-        );
+    updates = await Promise.all(
+      updates.map(file => {
+        const path = file.path.replace(/\\/g, '/').replace(/^\//, '');
+        const mode = file.mode || '100644';
+        const type = file.type || 'blob';
+        return github
+          .json(
+            'post',
+            `/repos/${this.repository.name}/git/blobs/`,
+            {
+              content:
+                typeof file.content === 'string'
+                  ? file.content
+                  : file.content.toString('base64'),
+              encoding: typeof file.content === 'string' ? 'utf-8' : 'base64'
+            },
+            this.options
+          )
+          .then(res => {
+            return {
+              path,
+              mode,
+              type,
+              sha: res.body.sha
+            };
+          });
+      })
+    );
 
-        return github.json(
-          'get',
-          `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
-          {},
-          this.options
-        );
-      })
-      .then(res => {
-        shaLatestCommit = res.body.object.sha;
-        return github.json(
-          'get',
-          `/repos/${this.repository.name}/commits/${shaLatestCommit}`,
-          {},
-          this.options
-        );
-      })
-      .then(res => {
-        shaBaseTree = res.body.tree.sha;
-        return updates;
-      })
-      .then(updates => {
-        return github.json(
-          'post',
-          `/repos/${this.repository.name}/git/trees`,
-          {
-            tree: updates,
-            base_tree: shaBaseTree
-          },
-          this.options
-        );
-      })
-      .then(res => {
-        shaNewTree = res.body.sha;
-        return github.json(
-          'post',
-          `/repos/${this.repository.name}/git/commits`,
-          {
-            message: message,
-            tree: shaNewTree,
-            parents: [shaLatestCommit]
-          },
-          this.options
-        );
-      })
-      .then(res => {
-        shaNewCommit = res.body.sha;
-        return github.json(
-          'patch',
-          `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
-          {
-            sha: shaNewCommit,
-            force: options.force || false
-          },
-          this.options
-        );
-      });
+    console.log(`*** 2 ***`);
+
+    let res = await github.json(
+      'get',
+      `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
+      {},
+      this.options
+    );
+
+    console.log(`*** 3 ***`);
+
+    const shaLatestCommit = res.body.object.sha;
+    res = await github.json(
+      'get',
+      `/repos/${this.repository.name}/commits/${shaLatestCommit}`,
+      {},
+      this.options
+    );
+
+    console.log(`*** 4 ***`);
+
+    const shaBaseTree = res.body.tree.sha;
+    res = await github.json(
+      'post',
+      `/repos/${this.repository.name}/git/trees`,
+      {
+        tree: updates,
+        base_tree: shaBaseTree
+      },
+      this.options
+    );
+
+    console.log(`*** 5 ***`);
+
+    const shaNewTree = res.body.sha;
+    res = await github.json(
+      'post',
+      `/repos/${this.repository.name}/git/commits`,
+      {
+        message,
+        tree: shaNewTree,
+        parents: [shaLatestCommit]
+      },
+      this.options
+    );
+
+    console.log(`*** 6 ***`);
+
+    const shaNewCommit = res.body.sha;
+    return github.json(
+      'patch',
+      `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
+      {
+        sha: shaNewCommit,
+        force: options.force || false
+      },
+      this.options
+    );
   }
 
   content(path, options = {}) {
