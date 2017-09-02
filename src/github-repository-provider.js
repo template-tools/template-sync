@@ -53,12 +53,21 @@ export class GithubRepository extends Repository {
   }
 
   async createBranch(name, from = 'master') {
+    console.log(`*** 1 *** `);
+    console.log(`/repos/${this.name}/git/refs/header/${from}`);
+
     const res = await github.json(
       'get',
       `/repos/${this.name}/git/refs/header/${from}`,
       {},
       this.provider.options
     );
+
+    console.log(`*** 2 ***`);
+
+    console.log(res);
+
+    console.log(`*** 3 ***`);
 
     return github.json(
       'post',
