@@ -166,7 +166,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       return result;
     }, []);
 
-    const newBranch = await provider.createBranch(source.branch, dest.branch);
+    const newBranch = await provider.createBranch(dest.branch, source.branch);
 
     await newBranch.commit({
       branch: dest.branch,

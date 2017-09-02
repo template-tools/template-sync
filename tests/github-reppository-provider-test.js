@@ -17,7 +17,7 @@ test('provider', async t => {
   t.is(branch.name, 'master');
 });
 
-test.only('create branch', async t => {
+test('create branch', async t => {
   const provider = new GithubProvider(process.env.GH_TOKEN);
 
   const repository = await provider.repository(REPOSITORY_NAME);
@@ -27,12 +27,12 @@ test.only('create branch', async t => {
   t.is(branches.get('master').name, 'master');
 
   //console.log(Array.from(branches).map(b => b.name));
-  console.log(branches);
-  //console.log(`test-${branches.size}`);
+  //console.log(branches);
 
-  const branch = await repository.createBranch(`test-${branches.size}`);
+  const newName = `test-${branches.size}`;
+  const branch = await repository.createBranch(newName);
 
-  /*
-  t.is(branch.name, 'master');
-  */
+  //console.log(branch);
+
+  t.is(branch.name, newName);
 });

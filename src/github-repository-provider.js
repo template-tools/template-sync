@@ -36,6 +36,10 @@ export class GithubRepository extends Repository {
     Object.defineProperty(this, 'user', { value: name.split(/\//)[0] });
   }
 
+  get options() {
+    return this.provider.options;
+  }
+
   async branches() {
     return new Promise((resolve, reject) => {
       this.provider.client.repo(this.name).branches((err, data) => {
@@ -53,31 +57,26 @@ export class GithubRepository extends Repository {
   }
 
   async createBranch(name, from = 'master') {
-    console.log(`*** 1 *** `);
-    console.log(`/repos/${this.name}/git/refs/header/${from}`);
-
     const res = await github.json(
       'get',
-      `/repos/${this.name}/git/refs/header/${from}`,
+      `/repos/${this.name}/git/refs/heads/${from}`,
       {},
-      this.provider.options
+      this.options
     );
 
-    console.log(`*** 2 ***`);
-
-    console.log(res);
-
-    console.log(`*** 3 ***`);
-
-    return github.json(
+    const nb = await github.json(
       'post',
-      `/repos/${this.name}/git/ref`,
+      `/repos/${this.name}/git/refs`,
       {
         ref: `refs/heads/${name}`,
         sha: res.body.object.sha
       },
-      this.provider.options
+      this.options
     );
+
+    const b = new this.provider.constructor.branchClass(this, name);
+    this._branches.set(b.name, b);
+    return b;
   }
 
   createPullRequest(from, to, msg) {
@@ -90,12 +89,16 @@ export class GithubRepository extends Repository {
         base: from.branch,
         head: to.branch
       },
-      this.provider.options
+      this.options
     );
   }
 }
 
 export class GithubBranch extends Branch {
+  get options() {
+    return this.provicer.options;
+  }
+
   async commit(message, updates) {
     let shaLatestCommit, shaBaseTree, shaNewTree, shaNewCommit;
 
@@ -118,7 +121,7 @@ export class GithubBranch extends Branch {
                   encoding:
                     typeof file.content === 'string' ? 'utf-8' : 'base64'
                 },
-                this.provider.options
+                this.options
               )
               .then(res => {
                 return {
@@ -135,7 +138,7 @@ export class GithubBranch extends Branch {
           'get',
           `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
           {},
-          this.provider.options
+          this.options
         );
       })
       .then(res => {
@@ -144,7 +147,7 @@ export class GithubBranch extends Branch {
           'get',
           `/repos/${this.repository.name}/commits/${shaLatestCommit}`,
           {},
-          this.provider.options
+          this.options
         );
       })
       .then(res => {
@@ -159,7 +162,7 @@ export class GithubBranch extends Branch {
             tree: updates,
             base_tree: shaBaseTree
           },
-          this.provider.options
+          this.options
         );
       })
       .then(res => {
@@ -172,7 +175,7 @@ export class GithubBranch extends Branch {
             tree: shaNewTree,
             parents: [shaLatestCommit]
           },
-          this.provider.options
+          this.options
         );
       })
       .then(res => {
@@ -184,7 +187,7 @@ export class GithubBranch extends Branch {
             sha: shaNewCommit,
             force: options.force || false
           },
-          this.provider.options
+          this.options
         );
       });
   }
