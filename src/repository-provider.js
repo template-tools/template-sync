@@ -1,8 +1,14 @@
 export class Provider {
+  /**
+   * @return repository class used by the Provider
+   */
   static get repositoryClass() {
     return Repositoy;
   }
 
+  /**
+   * @return branch class used by the Provider
+   */
   static get branchClass() {
     return Branch;
   }
@@ -49,6 +55,9 @@ export class Repository {
     return b;
   }
 
+  /**
+   * @return {Map} of all branches
+   */
   async branches() {
     return this._branches;
   }

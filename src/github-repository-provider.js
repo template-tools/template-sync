@@ -52,22 +52,22 @@ export class GithubRepository extends Repository {
     });
   }
 
-  async createBranch(from, to) {
+  async createBranch(name, from = 'master') {
     const res = await github.json(
       'get',
       `/repos/${this.name}/git/refs/header/${from}`,
       {},
-      this.options
+      this.provider.options
     );
 
     return github.json(
       'post',
       `/repos/${this.name}/git/ref`,
       {
-        ref: 'refs/heads/' + to,
+        ref: `refs/heads/${name}`,
         sha: res.body.object.sha
       },
-      this.options
+      this.provider.options
     );
   }
 
@@ -81,7 +81,7 @@ export class GithubRepository extends Repository {
         base: from.branch,
         head: to.branch
       },
-      this.options
+      this.provider.options
     );
   }
 }
