@@ -100,8 +100,6 @@ export class GithubBranch extends Branch {
   }
 
   async commit(message, updates, options = {}) {
-    console.log(`*** 1 ***`);
-
     updates = await Promise.all(
       updates.map(file => {
         const path = file.path.replace(/\\/g, '/').replace(/^\//, '');
@@ -110,7 +108,7 @@ export class GithubBranch extends Branch {
         return github
           .json(
             'post',
-            `/repos/${this.repository.name}/git/blobs/`,
+            `/repos/${this.repository.name}/git/blobs`,
             {
               content:
                 typeof file.content === 'string'
@@ -131,8 +129,6 @@ export class GithubBranch extends Branch {
       })
     );
 
-    console.log(`*** 2 ***`);
-
     let res = await github.json(
       'get',
       `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
@@ -140,9 +136,8 @@ export class GithubBranch extends Branch {
       this.options
     );
 
-    console.log(`*** 3 ***`);
-
     const shaLatestCommit = res.body.object.sha;
+
     res = await github.json(
       'get',
       `/repos/${this.repository.name}/commits/${shaLatestCommit}`,
