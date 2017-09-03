@@ -40,8 +40,8 @@ test.only('create commit', async t => {
 
   const commit = await branch.commit('message text', [
     {
-      path: `file-${branches.size}.txt`,
-      content: 'file content'
+      path: `README.md`,
+      content: `file content #${branches.size}`
     }
   ]);
 
