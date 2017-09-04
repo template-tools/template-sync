@@ -158,8 +158,6 @@ export class GithubBranch extends Branch {
       this.options
     );
 
-    console.log(`*** 5 ***`);
-
     const shaNewTree = res.body.sha;
     res = await github.json(
       'post',
@@ -172,10 +170,8 @@ export class GithubBranch extends Branch {
       this.options
     );
 
-    console.log(`*** 6 ***`);
-
     const shaNewCommit = res.body.sha;
-    return github.json(
+    res = await github.json(
       'patch',
       `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
       {
@@ -184,6 +180,9 @@ export class GithubBranch extends Branch {
       },
       this.options
     );
+
+    //console.log(res);
+    return res.body;
   }
 
   content(path, options = {}) {

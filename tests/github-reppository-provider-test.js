@@ -29,7 +29,7 @@ test('create branch', async t => {
   t.is(branch.name, newName);
 });
 
-test.only('create commit', async t => {
+test('create commit', async t => {
   const provider = new GithubProvider(process.env.GH_TOKEN);
   const repository = await provider.repository(REPOSITORY_NAME);
 
@@ -45,7 +45,5 @@ test.only('create commit', async t => {
     }
   ]);
 
-  //console.log(branch);
-
-  t.is(commit, 'xxx');
+  t.is(commit.ref, `refs/heads/${newName}`);
 });
