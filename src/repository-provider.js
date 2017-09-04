@@ -41,7 +41,6 @@ export class Repository {
 
   async content(path) {
     const branch = await this.branch('master');
-    console.log(branch);
     return branch.content(path);
   }
 

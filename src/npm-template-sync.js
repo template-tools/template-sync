@@ -133,6 +133,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
 
     if (templateRepo === undefined) {
       templateRepo = await files[2].templateRepo(); // package.json
+
       if (templateRepo === undefined) {
         throw new Error(
           `Unable to extract template repo url from ${targetRepo} package.json`
@@ -156,7 +157,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       return result;
     }, []);
 
-    const newBranch = await provider.createBranch(newBrachName, sourceBranch);
+    const newBranch = await repository.createBranch(newBrachName, sourceBranch);
 
     await newBranch.commit({
       message: messages.join('\n'),

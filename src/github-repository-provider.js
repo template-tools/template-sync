@@ -187,7 +187,7 @@ export class GithubBranch extends Branch {
 
   content(path, options = {}) {
     return new Promise((resolve, reject) =>
-      this.repository.client
+      this.provider.client
         .repo(this.repository.name)
         .contents(path, (err, status, body) => {
           if (err) {
