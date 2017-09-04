@@ -88,25 +88,14 @@ async function work(spinner, token, targetRepo, templateRepo) {
   spinner.text = targetRepo;
   const [user, repo, branch] = targetRepo.split(/[\/#]/);
 
-  const dest = {
-    user,
-    repo,
-    branch: 'template-sync'
-  };
-
   try {
     const provider = new GithubProvider(token);
-
-    const source = {
-      user,
-      repo,
-      branch
-    };
-
     const repository = await provider.repository(targetRepo);
     const branches = await repository.branches(targetRepo.replace(/#.*/, ''));
 
-    const maxBranchId = branches.reduce((prev, current) => {
+    const maxBranchId = Array.from(
+      branches.values()
+    ).reduce((prev, current) => {
       const m = current.name.match(/template-sync-(\d+)/);
       if (m) {
         const r = parseInt(m[1], 10);
@@ -118,7 +107,8 @@ async function work(spinner, token, targetRepo, templateRepo) {
       return prev;
     }, 0);
 
-    dest.branch += `-${maxBranchId + 1}`;
+    const sourceBranch = repository.branch('master');
+    const newBrachName = `template-sync-${maxBranchId + 1}`;
 
     const context = new Context(provider, targetRepo, templateRepo, {
       'github.user': user,
@@ -166,7 +156,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       return result;
     }, []);
 
-    const newBranch = await provider.createBranch(dest.branch, source.branch);
+    const newBranch = await provider.createBranch(newBrachName, sourceBranch);
 
     await newBranch.commit({
       message: messages.join('\n'),
@@ -178,13 +168,13 @@ async function work(spinner, token, targetRepo, templateRepo) {
       })
     });
 
-    const result = await newBranch.createPullRequest(source, dest, {
+    const result = await newBranch.createPullRequest(sourceBranch, {
       title: `merge package template from ${context.templateRepo}`,
       body: 'Updated standard to latest version'
     });
 
     spinner.succeed(result.body.html_url);
   } catch (err) {
-    spinner.fail(`${dest.user}/${dest.repo}: ${err}`);
+    spinner.fail(`${user}/${repo}: ${err}`);
   }
 }

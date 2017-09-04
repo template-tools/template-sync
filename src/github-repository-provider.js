@@ -78,20 +78,6 @@ export class GithubRepository extends Repository {
     this._branches.set(b.name, b);
     return b;
   }
-
-  createPullRequest(from, to, msg) {
-    return github.json(
-      'post',
-      `/repos/${to.user}/${to.repo}/pulls`,
-      {
-        title: msg.title,
-        body: msg.body,
-        base: from.branch,
-        head: to.branch
-      },
-      this.options
-    );
-  }
 }
 
 export class GithubBranch extends Branch {
@@ -123,6 +109,20 @@ export class GithubBranch extends Branch {
       type,
       sha: res.body.sha
     };
+  }
+
+  createPullRequest(to, msg) {
+    return github.json(
+      'post',
+      `/repos/${this.repository.name}/pulls`,
+      {
+        title: msg.title,
+        body: msg.body,
+        base: this.name,
+        head: to.name
+      },
+      this.options
+    );
   }
 
   async commit(message, blobs, options = {}) {

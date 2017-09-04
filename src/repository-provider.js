@@ -88,4 +88,8 @@ export class Branch {
   async commit(message, updates, options) {
     return new Error('not implemented');
   }
+
+  async createPullRequest(toBranch, msg) {
+    return new Error('not implemented');
+  }
 }
