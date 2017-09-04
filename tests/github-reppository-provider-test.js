@@ -35,7 +35,7 @@ test('create commit', async t => {
 
   const branches = await repository.branches();
 
-  const newName = `test-${branches.size}`;
+  const newName = `commit-test-${branches.size}`;
   const branch = await repository.createBranch(newName);
 
   const commit = await branch.commit('message text', [
