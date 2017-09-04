@@ -99,35 +99,34 @@ export class GithubBranch extends Branch {
     return this.provider.options;
   }
 
-  async commit(message, updates, options = {}) {
-    updates = await Promise.all(
-      updates.map(file => {
-        const path = file.path.replace(/\\/g, '/').replace(/^\//, '');
-        const mode = file.mode || '100644';
-        const type = file.type || 'blob';
-        return github
-          .json(
-            'post',
-            `/repos/${this.repository.name}/git/blobs`,
-            {
-              content:
-                typeof file.content === 'string'
-                  ? file.content
-                  : file.content.toString('base64'),
-              encoding: typeof file.content === 'string' ? 'utf-8' : 'base64'
-            },
-            this.options
-          )
-          .then(res => {
-            return {
-              path,
-              mode,
-              type,
-              sha: res.body.sha
-            };
-          });
-      })
+  async writeBlob(blob) {
+    const path = blob.path.replace(/\\/g, '/').replace(/^\//, '');
+    const mode = blob.mode || '100644';
+    const type = blob.type || 'blob';
+
+    const res = await github.json(
+      'post',
+      `/repos/${this.repository.name}/git/blobs`,
+      {
+        content:
+          typeof blob.content === 'string'
+            ? blob.content
+            : blob.content.toString('base64'),
+        encoding: typeof blob.content === 'string' ? 'utf-8' : 'base64'
+      },
+      this.options
     );
+
+    return {
+      path,
+      mode,
+      type,
+      sha: res.body.sha
+    };
+  }
+
+  async commit(message, blobs, options = {}) {
+    const updates = await Promise.all(blobs.map(b => this.writeBlob(b)));
 
     let res = await github.json(
       'get',
@@ -135,8 +134,9 @@ export class GithubBranch extends Branch {
       {},
       this.options
     );
-
     const shaLatestCommit = res.body.object.sha;
+
+    console.log(`latest commit: ${shaLatestCommit}`);
 
     res = await github.json(
       'get',
@@ -144,6 +144,8 @@ export class GithubBranch extends Branch {
       {},
       this.options
     );
+
+    console.log(res);
 
     console.log(`*** 4 ***`);
 
