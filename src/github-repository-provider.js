@@ -144,12 +144,10 @@ export class GithubBranch extends Branch {
       {},
       this.options
     );
+    const shaBaseTree = res.body.commit.tree.sha;
 
-    console.log(res);
+    console.log(`base tree ${shaBaseTree}`);
 
-    console.log(`*** 4 ***`);
-
-    const shaBaseTree = res.body.tree.sha;
     res = await github.json(
       'post',
       `/repos/${this.repository.name}/git/trees`,
