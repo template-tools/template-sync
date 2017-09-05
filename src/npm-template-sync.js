@@ -169,12 +169,10 @@ async function work(spinner, token, targetRepo, templateRepo) {
       })
     );
 
-    const result = await newBranch.createPullRequest(sourceBranch, {
+    const result = await sourceBranch.createPullRequest(newBranch, {
       title: `merge package template from ${context.templateRepo}`,
       body: 'Updated standard to latest version'
     });
-
-    console.log(`*** 7 ***`);
 
     spinner.succeed(result.body.html_url);
   } catch (err) {
