@@ -56,10 +56,12 @@ export class GithubRepository extends Repository {
     });
   }
 
-  async createBranch(name, from = 'master') {
+  async createBranch(name, from) {
     const res = await github.json(
       'get',
-      `/repos/${this.name}/git/refs/heads/${from}`,
+      `/repos/${this.name}/git/refs/heads/${from === undefined
+        ? 'master'
+        : from.name}`,
       {},
       this.options
     );

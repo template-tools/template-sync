@@ -107,7 +107,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       return prev;
     }, 0);
 
-    const sourceBranch = repository.branch('master');
+    const sourceBranch = await repository.branch('master');
     const newBrachName = `template-sync-${maxBranchId + 1}`;
 
     const context = new Context(provider, targetRepo, templateRepo, {
@@ -159,20 +159,22 @@ async function work(spinner, token, targetRepo, templateRepo) {
 
     const newBranch = await repository.createBranch(newBrachName, sourceBranch);
 
-    await newBranch.commit({
-      message: messages.join('\n'),
-      updates: merges.map(merge => {
+    await newBranch.commit(
+      messages.join('\n'),
+      merges.map(merge => {
         return {
           path: merge.path,
           content: merge.content
         };
       })
-    });
+    );
 
     const result = await newBranch.createPullRequest(sourceBranch, {
       title: `merge package template from ${context.templateRepo}`,
       body: 'Updated standard to latest version'
     });
+
+    console.log(`*** 7 ***`);
 
     spinner.succeed(result.body.html_url);
   } catch (err) {
