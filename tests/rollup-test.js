@@ -1,11 +1,11 @@
 import test from 'ava';
 import Context from '../src/context';
 import Rollup from '../src/rollup';
-import Client from './client';
+import { MockProvider } from './repository-mock';
 
 test('rollup', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       'rollup.config.json': {
         templateRepo: `import babel from 'rollup-plugin-babel';
 import pkg from './package.json';
@@ -81,7 +81,7 @@ export default {
 
 test('rollup empty template', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       'rollup.config.json': {
         templateRepo: '',
         targetRepo: `import pkg from './package.json';

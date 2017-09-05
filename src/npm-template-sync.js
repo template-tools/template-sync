@@ -1,4 +1,3 @@
-import { getBranches, pull, createBranch, commit } from './github';
 import Context from './context';
 import Travis from './travis';
 import Readme from './readme';
@@ -7,13 +6,13 @@ import Rollup from './rollup';
 import License from './license';
 import MergeAndRemoveLineSet from './merge-and-remove-line-set';
 import JSONFile from './json-file';
+import { GithubProvider } from './github-repository-provider';
 
 const program = require('caporal'),
   path = require('path'),
   keychain = require('keychain'),
   prompt = require('prompt'),
-  ora = require('ora'),
-  github = require('octonode');
+  ora = require('ora');
 
 const spinner = ora('args').start();
 
@@ -89,31 +88,14 @@ async function work(spinner, token, targetRepo, templateRepo) {
   spinner.text = targetRepo;
   const [user, repo, branch] = targetRepo.split(/[\/#]/);
 
-  const dest = {
-    user,
-    repo,
-    branch: 'template-sync'
-  };
-
   try {
-    const client = github.client(token);
+    const provider = new GithubProvider(token);
+    const repository = await provider.repository(targetRepo);
+    const branches = await repository.branches(targetRepo.replace(/#.*/, ''));
 
-    const source = {
-      user,
-      repo,
-      branch: branch || 'master'
-    };
-
-    const options = {
-      auth: {
-        type: 'oauth',
-        token
-      }
-    };
-
-    const branches = await getBranches(client, targetRepo.replace(/#.*/, ''));
-
-    const maxBranchId = branches.reduce((prev, current) => {
+    const maxBranchId = Array.from(
+      branches.values()
+    ).reduce((prev, current) => {
       const m = current.name.match(/template-sync-(\d+)/);
       if (m) {
         const r = parseInt(m[1], 10);
@@ -125,9 +107,10 @@ async function work(spinner, token, targetRepo, templateRepo) {
       return prev;
     }, 0);
 
-    dest.branch += `-${maxBranchId + 1}`;
+    const sourceBranch = await repository.branch('master');
+    const newBrachName = `template-sync-${maxBranchId + 1}`;
 
-    const context = new Context(client, targetRepo, templateRepo, {
+    const context = new Context(provider, targetRepo, templateRepo, {
       'github.user': user,
       'github.repo': repo,
       name: repo,
@@ -149,7 +132,8 @@ async function work(spinner, token, targetRepo, templateRepo) {
     ];
 
     if (templateRepo === undefined) {
-      templateRepo = await files[2].templateRepo();
+      templateRepo = await files[2].templateRepo(); // package.json
+
       if (templateRepo === undefined) {
         throw new Error(
           `Unable to extract template repo url from ${targetRepo} package.json`
@@ -173,36 +157,25 @@ async function work(spinner, token, targetRepo, templateRepo) {
       return result;
     }, []);
 
-    await createBranch(user, repo, source.branch, dest.branch, options);
+    const newBranch = await repository.createBranch(newBrachName, sourceBranch);
 
-    await commit(
-      user,
-      repo,
-      {
-        branch: dest.branch,
-        message: messages.join('\n'),
-        updates: merges.map(merge => {
-          return {
-            path: merge.path,
-            content: merge.content
-          };
-        })
-      },
-      options
+    await newBranch.commit(
+      messages.join('\n'),
+      merges.map(merge => {
+        return {
+          path: merge.path,
+          content: merge.content
+        };
+      })
     );
 
-    const result = await pull(
-      source,
-      dest,
-      {
-        title: `merge package template from ${context.templateRepo}`,
-        body: 'Updated standard to latest version'
-      },
-      options
-    );
+    const result = await sourceBranch.createPullRequest(newBranch, {
+      title: `merge package template from ${context.templateRepo}`,
+      body: 'Updated standard to latest version'
+    });
 
     spinner.succeed(result.body.html_url);
   } catch (err) {
-    spinner.fail(`${dest.user}/${dest.repo}: ${err}`);
+    spinner.fail(`${user}/${repo}: ${err}`);
   }
 }

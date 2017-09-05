@@ -1,13 +1,13 @@
 import test from 'ava';
 import Context from '../src/context';
 import Package from '../src/package';
-import Client from './client';
+import { MockProvider } from './repository-mock';
 
 const FILE_NAME = 'package.json';
 
 function createContext(template, target) {
   return new Context(
-    new Client({
+    new MockProvider({
       [FILE_NAME]: {
         templateRepo:
           template !== undefined ? JSON.stringify(template) : undefined,

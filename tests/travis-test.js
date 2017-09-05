@@ -1,11 +1,11 @@
 import test from 'ava';
 import Context from '../src/context';
 import Travis from '../src/travis';
-import Client from './client';
+import { MockProvider } from './repository-mock';
 
 test('travis node versions simple', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       aFile: {
         templateRepo: `node_js:
   - 7.7.2
@@ -33,7 +33,7 @@ test('travis node versions simple', async t => {
 
 test('travis node versions complex', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       aFile: {
         templateRepo: `node_js:
   - 7.7.2
@@ -62,7 +62,7 @@ test('travis node versions complex', async t => {
 
 test('travis node semver mayor only', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       aFile: {
         templateRepo: `node_js:
   - 7.7.2
@@ -92,7 +92,7 @@ test('travis node semver mayor only', async t => {
 
 test('travis node semver remove', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       aFile: {
         templateRepo: `node_js:
   - -4
@@ -121,7 +121,7 @@ test('travis node semver remove', async t => {
 
 test('start fresh', async t => {
   const context = new Context(
-    new Client({
+    new MockProvider({
       aFile: {
         templateRepo: `node_js:
   - 7.7.2

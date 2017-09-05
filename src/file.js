@@ -12,11 +12,11 @@ export default class File {
   }
 
   templateContent(options) {
-    return this.getContent(this.context.templateRepo, this.path, options);
+    return this.content(this.context.templateRepo, this.path, options);
   }
 
   originalContent(options) {
-    return this.getContent(this.context.targetRepo, this.path, options);
+    return this.content(this.context.targetRepo, this.path, options);
   }
 
   get merge() {
@@ -29,20 +29,8 @@ export default class File {
     );
   }
 
-  getContent(repo, path, options = {}) {
-    return new Promise((resolve, reject) =>
-      this.context.client.repo(repo).contents(path, (err, status, body) => {
-        if (err) {
-          if (options.ignoreMissing) {
-            resolve('');
-          } else {
-            reject(new Error(`${path}: ${err}`));
-          }
-        } else {
-          const b = Buffer.from(status.content, 'base64');
-          resolve(b.toString());
-        }
-      })
-    );
+  async content(repo, path, options) {
+    const repository = await this.context.provider.repository(repo);
+    return repository.content(path, options);
   }
 }
