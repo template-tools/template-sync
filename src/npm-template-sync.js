@@ -152,29 +152,31 @@ async function work(spinner, token, targetRepo, templateRepo) {
     }
     spinner.text = merges.map(m => m.path + ': ' + m.messages[0]).join(',');
 
+    const newBranch = await repository.createBranch(newBrachName, sourceBranch);
+
+    /*
+    const commits = await merges.map(m =>
+      pThrottle(newBranch.commit(m.messages.join('\n'), [m]), 1, 1000)
+    );
+    await delay(3000);
+    */
+
     const messages = merges.reduce((result, merge) => {
       merge.messages.forEach(m => result.push(m));
       return result;
     }, []);
 
-    const newBranch = await repository.createBranch(newBrachName, sourceBranch);
+    await newBranch.commit(messages.join('\n'), merges);
 
-    await newBranch.commit(
-      messages.join('\n'),
-      merges.map(merge => {
-        return {
-          path: merge.path,
-          content: merge.content
-        };
-      })
-    );
-
-    const result = await sourceBranch.createPullRequest(newBranch, {
-      title: `merge package template from ${context.templateRepo}`,
-      body: 'Updated standard to latest version'
-    });
-
-    spinner.succeed(result.body.html_url);
+    try {
+      const result = await sourceBranch.createPullRequest(newBranch, {
+        title: `merge package template from ${context.templateRepo}`,
+        body: 'Updated standard to latest version'
+      });
+      spinner.succeed(result.body.html_url);
+    } catch (err) {
+      spinner.fail(err.res.body.errors);
+    }
   } catch (err) {
     spinner.fail(`${user}/${repo}: ${err}`);
   }
