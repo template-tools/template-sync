@@ -138,8 +138,6 @@ export class GithubBranch extends Branch {
     );
     const shaLatestCommit = res.body.object.sha;
 
-    console.log(`latest commit: ${shaLatestCommit}`);
-
     res = await github.json(
       'get',
       `/repos/${this.repository.name}/commits/${shaLatestCommit}`,
@@ -147,8 +145,6 @@ export class GithubBranch extends Branch {
       this.options
     );
     const shaBaseTree = res.body.commit.tree.sha;
-
-    console.log(`base tree: ${shaBaseTree}`);
 
     res = await github.json(
       'post',
@@ -160,8 +156,6 @@ export class GithubBranch extends Branch {
       this.options
     );
     const shaNewTree = res.body.sha;
-
-    console.log(`new tree: ${shaNewTree}`);
 
     res = await github.json(
       'post',
@@ -175,8 +169,6 @@ export class GithubBranch extends Branch {
     );
     const shaNewCommit = res.body.sha;
 
-    console.log(`new commit: ${shaNewCommit}`);
-
     res = await github.json(
       'patch',
       `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
@@ -186,7 +178,6 @@ export class GithubBranch extends Branch {
       },
       this.options
     );
-    console.log(res);
 
     return res.body;
   }

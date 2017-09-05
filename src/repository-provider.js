@@ -39,9 +39,9 @@ export class Repository {
     Object.defineProperty(this, '_branches', { value: new Map() });
   }
 
-  async content(path) {
+  async content(...args) {
     const branch = await this.branch('master');
-    return branch.content(path);
+    return branch.content(...args);
   }
 
   async branch(name) {
