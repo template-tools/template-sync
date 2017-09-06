@@ -48,7 +48,7 @@ test('create commit', async t => {
   t.is(commit.ref, `refs/heads/${newName}`);
 });
 
-test.only('list files', async t => {
+test('list files', async t => {
   const provider = new GithubProvider(process.env.GH_TOKEN);
   const repository = await provider.repository(REPOSITORY_NAME);
   const branch = await repository.branch('master');
