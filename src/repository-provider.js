@@ -26,10 +26,6 @@ export class Provider {
 
     return r;
   }
-
-  async branch(name) {
-    return this.repository(name);
-  }
 }
 
 export class Repository {
