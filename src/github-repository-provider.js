@@ -127,26 +127,33 @@ export class GithubBranch extends Branch {
     );
   }
 
-  async commit(message, blobs, options = {}) {
-    const updates = await Promise.all(blobs.map(b => this.writeBlob(b)));
-
-    let res = await github.json(
+  async latestCommitSha() {
+    const res = await github.json(
       'get',
       `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
       {},
       this.options
     );
-    const shaLatestCommit = res.body.object.sha;
+    return res.body.object.sha;
+  }
 
-    res = await github.json(
+  async baseTreeSha(commitSha) {
+    const res = await github.json(
       'get',
-      `/repos/${this.repository.name}/commits/${shaLatestCommit}`,
+      `/repos/${this.repository.name}/commits/${commitSha}`,
       {},
       this.options
     );
-    const shaBaseTree = res.body.commit.tree.sha;
 
-    res = await github.json(
+    return res.body.commit.tree.sha;
+  }
+
+  async commit(message, blobs, options = {}) {
+    const updates = await Promise.all(blobs.map(b => this.writeBlob(b)));
+
+    const shaLatestCommit = await this.latestCommitSha();
+    const shaBaseTree = await this.baseTreeSha(shaLatestCommit);
+    let res = await github.json(
       'post',
       `/repos/${this.repository.name}/git/trees`,
       {
@@ -199,5 +206,37 @@ export class GithubBranch extends Branch {
           }
         })
     );
+  }
+
+  async tree(sha, prefix = '') {
+    const res = await github.json(
+      'get',
+      `/repos/${this.repository.name}/git/trees/${sha}`,
+      {},
+      this.options
+    );
+    const files = res.body.tree;
+
+    const dirs = await Promise.all(
+      files
+        .filter(f => f.type === 'tree')
+        .map(dir => this.tree(dir.sha, prefix + dir.path + '/'))
+    );
+
+    return [
+      ...files.map(f => {
+        f.path = prefix + f.path;
+        return f;
+      }),
+      ...dirs.map(d => d[0])
+    ];
+  }
+
+  async list() {
+    const shaBaseTree = await this.baseTreeSha(await this.latestCommitSha());
+    const files = await this.tree(shaBaseTree);
+    //    console.log(files);
+
+    return files;
   }
 }

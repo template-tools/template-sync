@@ -47,3 +47,15 @@ test('create commit', async t => {
 
   t.is(commit.ref, `refs/heads/${newName}`);
 });
+
+test.only('list files', async t => {
+  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const repository = await provider.repository(REPOSITORY_NAME);
+  const branch = await repository.branch('master');
+
+  const files = await branch.list();
+
+  t.is(files[0].path, `README.md`);
+  t.is(files[1].path, `tests`);
+  t.is(files[2].path, `tests/rollup.config.js`);
+});

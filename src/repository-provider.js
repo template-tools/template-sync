@@ -91,4 +91,8 @@ export class Branch {
   async createPullRequest(toBranch, msg) {
     return new Error('not implemented');
   }
+
+  async list() {
+    return [];
+  }
 }
