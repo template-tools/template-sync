@@ -33,8 +33,8 @@ export default class Package extends File {
       const properties = this.context.properties;
 
       if (target.name === undefined || target.name === '') {
-        const m = this.context.targetRepo.match(/^([^\/]+)\/(.*)/);
-        target.name = m ? m[2] : this.context.targetRepo;
+        const m = this.context.targetRepo.name.match(/^([^\/]+)\/(.*)/);
+        target.name = m ? m[2] : this.context.targetRepo.name;
       }
 
       if (
@@ -190,13 +190,13 @@ export default class Package extends File {
         target.template === undefined ||
         target.template.repository === undefined ||
         target.template.repository.url !==
-          `https://github.com/${this.context.templateRepo}.git`
+          `https://github.com/${this.context.templateRepo.name}.git`
       ) {
         messages.push('chore(package): set template repo');
 
         target.template = {
           repository: {
-            url: `https://github.com/${this.context.templateRepo}.git`
+            url: `https://github.com/${this.context.templateRepo.name}.git`
           }
         };
       }

@@ -5,18 +5,19 @@ import { MockProvider } from './repository-mock';
 
 const FILE_NAME = 'package.json';
 
-function createContext(template, target) {
+async function createContext(template, target) {
+  const provider = new MockProvider({
+    [FILE_NAME]: {
+      templateRepo:
+        template !== undefined ? JSON.stringify(template) : undefined,
+      'tragetUser/targetRepo':
+        target !== undefined ? JSON.stringify(target) : undefined
+    }
+  });
+
   return new Context(
-    new MockProvider({
-      [FILE_NAME]: {
-        templateRepo:
-          template !== undefined ? JSON.stringify(template) : undefined,
-        'tragetUser/targetRepo':
-          target !== undefined ? JSON.stringify(target) : undefined
-      }
-    }),
-    'tragetUser/targetRepo',
-    'templateRepo',
+    await provider.repository('tragetUser/targetRepo'),
+    await provider.repository('templateRepo'),
     {
       'github.repo': 'the-repo-name',
       'github.user': 'the-user-name',
@@ -26,7 +27,7 @@ function createContext(template, target) {
 }
 
 test('delete entries', async t => {
-  const context = createContext(
+  const context = await createContext(
     {
       slot: {
         something: '--delete--',
@@ -54,7 +55,7 @@ test('delete entries', async t => {
 });
 
 test('package preserve extra prepare', async t => {
-  const context = createContext(
+  const context = await createContext(
     {
       scripts: {
         prepare: 'rollup x y z && chmod +x bin/xx',
@@ -79,7 +80,7 @@ test('package preserve extra prepare', async t => {
 });
 
 test('package devDependencies', async t => {
-  const context = createContext(
+  const context = await createContext(
     {
       devDependencies: {
         a: '-',
@@ -109,7 +110,7 @@ test('package devDependencies', async t => {
 });
 
 test('package keywords', async t => {
-  const context = createContext(
+  const context = await createContext(
     {
       template: {
         keywords: {
@@ -136,7 +137,7 @@ test('package keywords', async t => {
 });
 
 test('package keywords empty', async t => {
-  const context = createContext(
+  const context = await createContext(
     {
       template: {
         keywords: {
@@ -157,7 +158,7 @@ test('package keywords empty', async t => {
 });
 
 test('package remove null keyword', async t => {
-  const context = createContext(
+  const context = await createContext(
     {
       template: {}
     },
@@ -175,7 +176,7 @@ test('package remove null keyword', async t => {
 });
 
 test('add xo/space=true', async t => {
-  const context = createContext(
+  const context = await createContext(
     {
       xo: {
         space: true
@@ -198,7 +199,7 @@ test('add xo/space=true', async t => {
 });
 
 test('start fresh', async t => {
-  const context = createContext({});
+  const context = await createContext({});
   const pkg = new Package(context, 'package.json');
   const merged = await pkg.merge;
 

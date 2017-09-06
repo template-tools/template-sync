@@ -4,17 +4,18 @@ import Replace from '../src/replace';
 import { MockProvider } from './repository-mock';
 
 test('replace', async t => {
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: `Line 1x
+Line 2x`,
+      targetRepo: `Line 1
+Line 2`
+    }
+  });
+
   const context = new Context(
-    new MockProvider({
-      aFile: {
-        templateRepo: `Line 1x
-        Line 2x`,
-        targetRepo: `Line 1
-        Line 2`
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 
@@ -23,6 +24,6 @@ test('replace', async t => {
   t.deepEqual(
     merged.content,
     `Line 1x
-        Line 2x`
+Line 2x`
   );
 });

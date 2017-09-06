@@ -1,7 +1,7 @@
 import { createContext } from 'expression-expander';
 
 export default class Context {
-  constructor(provider, targetRepo, templateRepo, properties) {
+  constructor(targetRepo, templateRepo, properties) {
     this.ctx = createContext({
       keepUndefinedValues: true,
       leftMarker: '{{',
@@ -19,15 +19,13 @@ export default class Context {
       value: new Map()
     });
 
-    Object.defineProperty(this, 'provider', {
-      value: provider
-    });
-
     Object.defineProperty(this, 'targetRepo', {
       value: targetRepo
     });
-
-    this.templateRepo = templateRepo;
+    Object.defineProperty(this, 'templateRepo', {
+      value: templateRepo,
+      writable: true
+    });
   }
 
   expand(...args) {

@@ -5,23 +5,24 @@ import { MockProvider } from './repository-mock';
 
 const FILE_NAME = 'a.json';
 
-function createContext(template, target) {
+async function createContext(template, target) {
+  const provider = new MockProvider({
+    [FILE_NAME]: {
+      templateRepo:
+        template !== undefined ? JSON.stringify(template) : undefined,
+      targetRepo: target !== undefined ? JSON.stringify(target) : undefined
+    }
+  });
+
   return new Context(
-    new MockProvider({
-      [FILE_NAME]: {
-        templateRepo:
-          template !== undefined ? JSON.stringify(template) : undefined,
-        targetRepo: target !== undefined ? JSON.stringify(target) : undefined
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 }
 
 test('json merge', async t => {
-  const context = createContext(
+  const context = await createContext(
     {
       key: 'value'
     },
@@ -40,7 +41,7 @@ test('json merge', async t => {
 });
 
 test('json empty template', async t => {
-  const context = createContext(undefined, {
+  const context = await createContext(undefined, {
     oldKey: 'oldValue'
   });
 
@@ -51,7 +52,7 @@ test('json empty template', async t => {
 });
 
 test('json empty target', async t => {
-  const context = createContext(
+  const context = await createContext(
     {
       key: 'value'
     },

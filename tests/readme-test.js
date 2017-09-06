@@ -5,22 +5,23 @@ import Package from '../src/package';
 import { MockProvider } from './repository-mock';
 
 test('readme', async t => {
-  const context = new Context(
-    new MockProvider({
-      aFile: {
-        templateRepo: `Line 1x
-        Line 2x`,
-        targetRepo: `Line 1
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: `Line 1x
+      Line 2x`,
+      targetRepo: `Line 1
 
 Line 2`
-      },
-      'package.json': {
-        templateRepo: JSON.stringify({}),
-        targetRepo: '{}'
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    },
+    'package.json': {
+      templateRepo: JSON.stringify({}),
+      targetRepo: '{}'
+    }
+  });
+
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 

@@ -4,15 +4,16 @@ import MergeLineSet from '../src/merge-line-set';
 import { MockProvider } from './repository-mock';
 
 test('merge lines', async t => {
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: ['Line 1', 'Line 2'].join('\n'),
+      targetRepo: ['Line 1', 'Line 3'].join('\n')
+    }
+  });
+
   const context = new Context(
-    new MockProvider({
-      aFile: {
-        templateRepo: ['Line 1', 'Line 2'].join('\n'),
-        targetRepo: ['Line 1', 'Line 3'].join('\n')
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 

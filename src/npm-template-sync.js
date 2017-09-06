@@ -90,6 +90,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
 
   try {
     const provider = new GithubProvider(token);
+
     const repository = await provider.repository(targetRepo);
     const branches = await repository.branches(targetRepo.replace(/#.*/, ''));
 
@@ -110,7 +111,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
     const sourceBranch = await repository.branch('master');
     const newBrachName = `template-sync-${maxBranchId + 1}`;
 
-    const context = new Context(provider, targetRepo, templateRepo, {
+    const context = new Context(repository, undefined, {
       'github.user': user,
       'github.repo': repo,
       name: repo,
@@ -139,8 +140,9 @@ async function work(spinner, token, targetRepo, templateRepo) {
           `Unable to extract template repo url from ${targetRepo} package.json`
         );
       }
-      context.templateRepo = templateRepo;
     }
+
+    context.templateRepo = await provider.repository(templateRepo);
 
     const merges = (await Promise.all(files.map(f => f.merge))).filter(
       m => m !== undefined && m.changed
@@ -170,7 +172,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
 
     try {
       const result = await sourceBranch.createPullRequest(newBranch, {
-        title: `merge package template from ${context.templateRepo}`,
+        title: `merge package template from ${context.templateRepo.name}`,
         body: 'Updated standard to latest version'
       });
       spinner.succeed(result.body.html_url);

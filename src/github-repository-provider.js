@@ -234,9 +234,6 @@ export class GithubBranch extends Branch {
 
   async list() {
     const shaBaseTree = await this.baseTreeSha(await this.latestCommitSha());
-    const files = await this.tree(shaBaseTree);
-    //    console.log(files);
-
-    return files;
+    return await this.tree(shaBaseTree);
   }
 }

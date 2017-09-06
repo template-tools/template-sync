@@ -4,10 +4,9 @@ import Rollup from '../src/rollup';
 import { MockProvider } from './repository-mock';
 
 test('rollup', async t => {
-  const context = new Context(
-    new MockProvider({
-      'rollup.config.json': {
-        templateRepo: `import babel from 'rollup-plugin-babel';
+  const provider = new MockProvider({
+    'rollup.config.json': {
+      templateRepo: `import babel from 'rollup-plugin-babel';
 import pkg from './package.json';
 
 export default {
@@ -24,7 +23,7 @@ export default {
     })
   ]
 };`,
-        targetRepo: `'use strict';
+      targetRepo: `'use strict';
 import babel from 'rollup-plugin-babel';
 export default {
   banner: '#!/usr/bin/env node',
@@ -44,10 +43,12 @@ export default {
   sourceMap: true,
   dest: 'build/test-bundle.js'
 };`
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    }
+  });
+
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 
@@ -80,11 +81,10 @@ export default {
 });
 
 test('rollup empty template', async t => {
-  const context = new Context(
-    new MockProvider({
-      'rollup.config.json': {
-        templateRepo: '',
-        targetRepo: `import pkg from './package.json';
+  const provider = new MockProvider({
+    'rollup.config.json': {
+      templateRepo: '',
+      targetRepo: `import pkg from './package.json';
 import babel from 'rollup-plugin-babel';
 
 export default {
@@ -101,10 +101,11 @@ export default {
   }],
   external: ['url-resolver-fs']
 };`
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    }
+  });
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 

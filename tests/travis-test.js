@@ -4,19 +4,20 @@ import Travis from '../src/travis';
 import { MockProvider } from './repository-mock';
 
 test('travis node versions simple', async t => {
-  const context = new Context(
-    new MockProvider({
-      aFile: {
-        templateRepo: `node_js:
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: `node_js:
   - 7.7.2
 `,
-        targetRepo: `node_js:
+      targetRepo: `node_js:
   - 7.7.1
 `
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    }
+  });
+
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 
@@ -32,20 +33,21 @@ test('travis node versions simple', async t => {
 });
 
 test('travis node versions complex', async t => {
-  const context = new Context(
-    new MockProvider({
-      aFile: {
-        templateRepo: `node_js:
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: `node_js:
   - 7.7.2
 `,
-        targetRepo: `node_js:
+      targetRepo: `node_js:
   - 6.10.1
   - 7.7.1
 `
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    }
+  });
+
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 
@@ -61,20 +63,20 @@ test('travis node versions complex', async t => {
 });
 
 test('travis node semver mayor only', async t => {
-  const context = new Context(
-    new MockProvider({
-      aFile: {
-        templateRepo: `node_js:
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: `node_js:
   - 7.7.2
 `,
-        targetRepo: `node_js:
+      targetRepo: `node_js:
   - 5
   - 6.2
 `
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    }
+  });
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 
@@ -91,21 +93,21 @@ test('travis node semver mayor only', async t => {
 });
 
 test('travis node semver remove', async t => {
-  const context = new Context(
-    new MockProvider({
-      aFile: {
-        templateRepo: `node_js:
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: `node_js:
   - -4
   - 7.7.2
 `,
-        targetRepo: `node_js:
+      targetRepo: `node_js:
   - 4.2
   - 4.2.3
 `
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+    }
+  });
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 
@@ -120,17 +122,18 @@ test('travis node semver remove', async t => {
 });
 
 test('start fresh', async t => {
-  const context = new Context(
-    new MockProvider({
-      aFile: {
-        templateRepo: `node_js:
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: `node_js:
   - 7.7.2
 `,
-        targetRepo: ''
-      }
-    }),
-    'targetRepo',
-    'templateRepo',
+      targetRepo: ''
+    }
+  });
+
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
     {}
   );
 

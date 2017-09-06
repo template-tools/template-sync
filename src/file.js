@@ -29,8 +29,7 @@ export default class File {
     );
   }
 
-  async content(repo, path, options) {
-    const repository = await this.context.provider.repository(repo);
+  async content(repository, path, options) {
     return repository.content(path, options);
   }
 }
