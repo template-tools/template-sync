@@ -118,20 +118,10 @@ async function work(spinner, token, targetRepo, templateRepo) {
       'license.owner': user
     });
 
-    const files = [
-      new Rollup(context, 'rollup.config.js'),
-      new Rollup(context, 'tests/rollup.config.js'),
-      new Package(context, 'package.json'),
-      new Readme(context, 'doc/README.hbs'),
-      new JSONFile(context, 'doc/jsdoc.json'),
-      new Travis(context, '.travis.yml'),
-      new MergeAndRemoveLineSet(context, '.gitignore', 'chore(git)'),
-      new MergeAndRemoveLineSet(context, '.npmignore', 'chore(npm)'),
-      new License(context, 'LICENSE')
-    ];
+    const pkg = new Package(context, 'package.json');
 
     if (templateRepo === undefined) {
-      templateRepo = await files[2].templateRepo(); // package.json
+      templateRepo = await pkg.templateRepo(); // package.json
 
       if (templateRepo === undefined) {
         throw new Error(
@@ -141,6 +131,22 @@ async function work(spinner, token, targetRepo, templateRepo) {
     }
 
     context.templateRepo = await provider.repository(templateRepo);
+    const templateBranch = await context.templateRepo.branch('master');
+    const templateFiles = new Map(
+      (await templateBranch.list()).map(f => [f.path, f])
+    );
+
+    const files = [
+      new Rollup(context, 'rollup.config.js'),
+      new Rollup(context, 'tests/rollup.config.js'),
+      pkg,
+      new Readme(context, 'doc/README.hbs'),
+      new JSONFile(context, 'doc/jsdoc.json'),
+      new Travis(context, '.travis.yml'),
+      new MergeAndRemoveLineSet(context, '.gitignore', 'chore(git)'),
+      new MergeAndRemoveLineSet(context, '.npmignore', 'chore(npm)'),
+      new License(context, 'LICENSE')
+    ].filter(f => templateFiles.get(f.path));
 
     const merges = (await Promise.all(files.map(f => f.merge))).filter(
       m => m !== undefined && m.changed
