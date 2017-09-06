@@ -86,18 +86,16 @@ program.parse(process.argv);
 
 async function work(spinner, token, targetRepo, templateRepo) {
   spinner.text = targetRepo;
-  const [user, repo, branch] = targetRepo.split(/[\/#]/);
+  const [user, repo, branch = 'master'] = targetRepo.split(/[\/#]/);
 
   try {
     const provider = new GithubProvider(token);
-
     const repository = await provider.repository(targetRepo);
-    const branches = await repository.branches(targetRepo.replace(/#.*/, ''));
 
     const maxBranchId = Array.from(
-      branches.values()
+      (await repository.branches()).keys()
     ).reduce((prev, current) => {
-      const m = current.name.match(/template-sync-(\d+)/);
+      const m = current.match(/template-sync-(\d+)/);
       if (m) {
         const r = parseInt(m[1], 10);
         if (r > prev) {
@@ -108,7 +106,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
       return prev;
     }, 0);
 
-    const sourceBranch = await repository.branch('master');
+    const sourceBranch = await repository.branch(branch);
     const newBrachName = `template-sync-${maxBranchId + 1}`;
 
     const context = new Context(repository, undefined, {
@@ -173,7 +171,15 @@ async function work(spinner, token, targetRepo, templateRepo) {
     try {
       const result = await sourceBranch.createPullRequest(newBranch, {
         title: `merge package template from ${context.templateRepo.name}`,
-        body: 'Updated standard to latest version'
+        body: merges
+          .map(
+            m =>
+              `${m.path}
+---
+- ${m.messages.join('\n- ')}
+`
+          )
+          .join('\n')
       });
       spinner.succeed(result.body.html_url);
     } catch (err) {
