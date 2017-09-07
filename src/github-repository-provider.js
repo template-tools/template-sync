@@ -1,7 +1,6 @@
 import { Provider, Repository, Branch } from './repository-provider';
 
 const github = require('github-basic');
-const octonode = require('octonode');
 
 export class GithubProvider extends Provider {
   static get repositoryClass() {
@@ -15,8 +14,6 @@ export class GithubProvider extends Provider {
   constructor(token) {
     super();
 
-    const client = octonode.client(token);
-
     Object.defineProperty(this, 'options', {
       value: {
         auth: {
@@ -25,8 +22,6 @@ export class GithubProvider extends Provider {
         }
       }
     });
-
-    Object.defineProperty(this, 'client', { value: client });
   }
 }
 
@@ -41,19 +36,19 @@ export class GithubRepository extends Repository {
   }
 
   async branches() {
-    return new Promise((resolve, reject) => {
-      this.provider.client.repo(this.name).branches((err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          data.forEach(d => {
-            const b = new this.provider.constructor.branchClass(this, d.name);
-            this._branches.set(b.name, b);
-          });
-          resolve(this._branches);
-        }
-      });
+    const res = await github.json(
+      'get',
+      `/repos/${this.name}/branches`,
+      {},
+      this.options
+    );
+
+    res.body.forEach(b => {
+      const branch = new this.provider.constructor.branchClass(this, b.name);
+      this._branches.set(branch.name, branch);
     });
+
+    return this._branches;
   }
 
   async createBranch(name, from) {
@@ -189,23 +184,21 @@ export class GithubBranch extends Branch {
     return res.body;
   }
 
-  content(path, options = {}) {
-    return new Promise((resolve, reject) =>
-      this.provider.client
-        .repo(this.repository.name)
-        .contents(path, (err, status, body) => {
-          if (err) {
-            if (options.ignoreMissing) {
-              resolve('');
-            } else {
-              reject(new Error(`${path}: ${err}`));
-            }
-          } else {
-            const b = Buffer.from(status.content, 'base64');
-            resolve(b.toString());
-          }
-        })
-    );
+  async content(path, options = {}) {
+    try {
+      const res = await github.json(
+        'get',
+        `/repos/${this.repository.name}/contents/${path}`,
+        { ref: this.name },
+        this.options
+      );
+      const b = Buffer.from(res.body.content, 'base64');
+      return b.toString();
+    } catch (e) {
+      if (options.ignoreMissing) {
+        return '';
+      }
+    }
   }
 
   async tree(sha, prefix = '') {

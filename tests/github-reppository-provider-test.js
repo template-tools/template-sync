@@ -59,3 +59,28 @@ test('list files', async t => {
   t.is(files[1].path, `tests`);
   t.is(files[2].path, `tests/rollup.config.js`);
 });
+
+test('content', async t => {
+  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const repository = await provider.repository(REPOSITORY_NAME);
+  const branch = await repository.branch('master');
+
+  const content = await branch.content('README.md');
+
+  t.is(content.length == 5, true);
+});
+
+test('missing content', async t => {
+  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const repository = await provider.repository(REPOSITORY_NAME);
+  const branch = await repository.branch('master');
+
+  try {
+    const content = await branch.content('missing/file', {
+      ignoreMissing: true
+    });
+    t.pass();
+  } catch (e) {
+    t.fail(e);
+  }
+});
