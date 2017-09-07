@@ -72,7 +72,7 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
       new License(context, 'LICENSE')
     ].filter(f => templateFiles.get(f.path));
 
-    const merges = (await Promise.all(files.map(f => f.merge))).filter(
+    const merges = (await Promise.all(files.map(f => f.saveMerge))).filter(
       m => m !== undefined && m.changed
     );
 

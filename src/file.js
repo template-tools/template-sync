@@ -29,6 +29,16 @@ export default class File {
     );
   }
 
+  get saveMerge() {
+    const r = this.merge;
+
+    r.catch(err => {
+      console.log(`${this.path}: ${err}`);
+    });
+
+    return r;
+  }
+
   async content(repository, path, options) {
     return repository.content(path, options);
   }

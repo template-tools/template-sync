@@ -20,6 +20,14 @@ export default class Rollup extends File {
           changed: false
         };
       }
+      if (original === '') {
+        return {
+          path: this.path,
+          content: template,
+          messages: ['chore(rollup): copy from template'],
+          changed: true
+        };
+      }
 
       const templateAST = recast.parse(template);
       const ast = recast.parse(original);
