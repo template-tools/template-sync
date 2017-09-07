@@ -121,7 +121,7 @@ async function work(spinner, token, targetRepo, templateRepo) {
     const pkg = new Package(context, 'package.json');
 
     if (templateRepo === undefined) {
-      templateRepo = await pkg.templateRepo(); // package.json
+      templateRepo = await pkg.templateRepo();
 
       if (templateRepo === undefined) {
         throw new Error(
@@ -161,11 +161,10 @@ async function work(spinner, token, targetRepo, templateRepo) {
     const newBranch = await repository.createBranch(newBrachName, sourceBranch);
 
     /*
-    const commits = await merges.map(m =>
-      pThrottle(newBranch.commit(m.messages.join('\n'), [m]), 1, 1000)
+    await merges.map(m =>
+      newBranch.commit(m.messages.join('\n'), [m], { force: true })
     );
-    await delay(3000);
-    */
+*/
 
     const messages = merges.reduce((result, merge) => {
       merge.messages.forEach(m => result.push(m));
