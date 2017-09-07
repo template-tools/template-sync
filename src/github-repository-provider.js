@@ -14,14 +14,9 @@ export class GithubProvider extends Provider {
   constructor(token) {
     super();
 
-    Object.defineProperty(this, 'options', {
-      value: {
-        auth: {
-          type: 'oauth',
-          token
-        }
-      }
-    });
+    const client = github({ version: 3, auth: token });
+
+    Object.defineProperty(this, 'client', { value: client });
   }
 }
 
@@ -31,19 +26,14 @@ export class GithubRepository extends Repository {
     Object.defineProperty(this, 'user', { value: name.split(/\//)[0] });
   }
 
-  get options() {
-    return this.provider.options;
+  get client() {
+    return this.provider.client;
   }
 
   async branches() {
-    const res = await github.json(
-      'get',
-      `/repos/${this.name}/branches`,
-      {},
-      this.options
-    );
+    const res = await this.client.get(`/repos/${this.name}/branches`);
 
-    res.body.forEach(b => {
+    res.forEach(b => {
       const branch = new this.provider.constructor.branchClass(this, b.name);
       this._branches.set(branch.name, branch);
     });
@@ -52,24 +42,16 @@ export class GithubRepository extends Repository {
   }
 
   async createBranch(name, from) {
-    const res = await github.json(
-      'get',
+    const res = await this.client.get(
       `/repos/${this.name}/git/refs/heads/${from === undefined
         ? 'master'
-        : from.name}`,
-      {},
-      this.options
+        : from.name}`
     );
 
-    const nb = await github.json(
-      'post',
-      `/repos/${this.name}/git/refs`,
-      {
-        ref: `refs/heads/${name}`,
-        sha: res.body.object.sha
-      },
-      this.options
-    );
+    const nb = await this.client.post(`/repos/${this.name}/git/refs`, {
+      ref: `refs/heads/${name}`,
+      sha: res.object.sha
+    });
 
     const b = new this.provider.constructor.branchClass(this, name);
     this._branches.set(b.name, b);
@@ -78,8 +60,8 @@ export class GithubRepository extends Repository {
 }
 
 export class GithubBranch extends Branch {
-  get options() {
-    return this.provider.options;
+  get client() {
+    return this.provider.client;
   }
 
   async writeBlob(blob) {
@@ -87,8 +69,7 @@ export class GithubBranch extends Branch {
     const mode = blob.mode || '100644';
     const type = blob.type || 'blob';
 
-    const res = await github.json(
-      'post',
+    const res = await this.client.post(
       `/repos/${this.repository.name}/git/blobs`,
       {
         content:
@@ -96,51 +77,39 @@ export class GithubBranch extends Branch {
             ? blob.content
             : blob.content.toString('base64'),
         encoding: typeof blob.content === 'string' ? 'utf-8' : 'base64'
-      },
-      this.options
+      }
     );
 
     return {
       path,
       mode,
       type,
-      sha: res.body.sha
+      sha: res.sha
     };
   }
 
   createPullRequest(to, msg) {
-    return github.json(
-      'post',
-      `/repos/${this.repository.name}/pulls`,
-      {
-        title: msg.title,
-        body: msg.body,
-        base: this.name,
-        head: to.name
-      },
-      this.options
-    );
+    return this.client.post(`/repos/${this.repository.name}/pulls`, {
+      title: msg.title,
+      body: msg.body,
+      base: this.name,
+      head: to.name
+    });
   }
 
   async latestCommitSha() {
-    const res = await github.json(
-      'get',
-      `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
-      {},
-      this.options
+    const res = await this.client.get(
+      `/repos/${this.repository.name}/git/refs/heads/${this.name}`
     );
-    return res.body.object.sha;
+    return res.object.sha;
   }
 
   async baseTreeSha(commitSha) {
-    const res = await github.json(
-      'get',
-      `/repos/${this.repository.name}/commits/${commitSha}`,
-      {},
-      this.options
+    const res = await this.client.get(
+      `/repos/${this.repository.name}/commits/${commitSha}`
     );
 
-    return res.body.commit.tree.sha;
+    return res.commit.tree.sha;
   }
 
   async commit(message, blobs, options = {}) {
@@ -148,51 +117,40 @@ export class GithubBranch extends Branch {
 
     const shaLatestCommit = await this.latestCommitSha();
     const shaBaseTree = await this.baseTreeSha(shaLatestCommit);
-    let res = await github.json(
-      'post',
+    let res = await this.client.post(
       `/repos/${this.repository.name}/git/trees`,
       {
         tree: updates,
         base_tree: shaBaseTree
-      },
-      this.options
+      }
     );
-    const shaNewTree = res.body.sha;
+    const shaNewTree = res.sha;
 
-    res = await github.json(
-      'post',
-      `/repos/${this.repository.name}/git/commits`,
-      {
-        message,
-        tree: shaNewTree,
-        parents: [shaLatestCommit]
-      },
-      this.options
-    );
-    const shaNewCommit = res.body.sha;
+    res = await this.client.post(`/repos/${this.repository.name}/git/commits`, {
+      message,
+      tree: shaNewTree,
+      parents: [shaLatestCommit]
+    });
+    const shaNewCommit = res.sha;
 
-    res = await github.json(
-      'patch',
+    res = await this.client.patch(
       `/repos/${this.repository.name}/git/refs/heads/${this.name}`,
       {
         sha: shaNewCommit,
         force: options.force || false
-      },
-      this.options
+      }
     );
 
-    return res.body;
+    return res;
   }
 
   async content(path, options = {}) {
     try {
-      const res = await github.json(
-        'get',
+      const res = await this.client.get(
         `/repos/${this.repository.name}/contents/${path}`,
-        { ref: this.name },
-        this.options
+        { ref: this.name }
       );
-      const b = Buffer.from(res.body.content, 'base64');
+      const b = Buffer.from(res.content, 'base64');
       return b.toString();
     } catch (e) {
       if (options.ignoreMissing) {
@@ -202,13 +160,10 @@ export class GithubBranch extends Branch {
   }
 
   async tree(sha, prefix = '') {
-    const res = await github.json(
-      'get',
-      `/repos/${this.repository.name}/git/trees/${sha}`,
-      {},
-      this.options
+    const res = await this.client.get(
+      `/repos/${this.repository.name}/git/trees/${sha}`
     );
-    const files = res.body.tree;
+    const files = res.tree;
 
     const dirs = await Promise.all(
       files
