@@ -28,7 +28,8 @@ merges contents from template repo into destination repo handling some special c
 
 - Licenses - rewriting license years
 - line set files like .npmignore and .gitignore - by merging both sets together
-- package.json - merging dev dependencies and scripts
+- package.json - merge devDependencies, engines and scripts
+- rollup.conf.js - copy / rewrite
 
 ![generated pull request](doc/pr_sample.png)
 
