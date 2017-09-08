@@ -284,9 +284,10 @@ function deleter(object, reference, messages, path) {
     path.push(key);
 
     if (reference[key] === '--delete--' && object[key] !== undefined) {
-      //console.log(`delete '${key}' '${object[key]}'`);
+      if (object[key] !== '--delete--') {
+        messages.push(`chore(npm): delete ${path.join('.')}`);
+      }
       delete object[key];
-      messages.push(`chore(npm): delete ${path.join('.')}`);
     } else {
       object[key] = deleter(object[key], reference[key], messages, path);
     }

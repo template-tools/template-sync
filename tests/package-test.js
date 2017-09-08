@@ -32,7 +32,8 @@ test('delete entries', async t => {
       slot: {
         something: '--delete--',
         add: 2
-      }
+      },
+      other: '--delete--'
     },
     {
       slot: {
@@ -51,6 +52,7 @@ test('delete entries', async t => {
     preserve: 3
   });
 
+  t.false(merged.messages.includes('chore(npm): delete other'));
   t.true(merged.messages.includes('chore(npm): delete slot.something'));
 });
 
