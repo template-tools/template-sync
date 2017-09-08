@@ -283,7 +283,8 @@ function deleter(object, reference, messages, path) {
   Object.keys(reference).forEach(key => {
     path.push(key);
 
-    if (reference[key] === '--delete--') {
+    if (reference[key] === '--delete--' && object[key] !== undefined) {
+      //console.log(`delete '${key}' '${object[key]}'`);
       delete object[key];
       messages.push(`chore(npm): delete ${path.join('.')}`);
     } else {
