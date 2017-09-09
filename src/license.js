@@ -1,14 +1,7 @@
 import File from './file';
 
 export default class License extends File {
-  async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: true
-      }),
-      this.templateContent(context)
-    ]);
-
+  async mergeContent(context, original, template) {
     const m = original.match(
       /opyright\s*\(c\)\s*(\d+)([,\-\d]+)*(\s*(,|by)\s*(.*))?/
     );

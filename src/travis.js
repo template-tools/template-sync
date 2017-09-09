@@ -41,14 +41,7 @@ function normalizeVersion(version) {
 }
 
 export default class Travis extends File {
-  async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: true
-      }),
-      this.templateContent(context)
-    ]);
-
+  async mergeContent(context, original, template) {
     const yml = yaml.safeLoad(original) || {};
     const tyml = yaml.safeLoad(context.expand(template));
     const before_script = yml.before_script;

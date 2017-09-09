@@ -1,14 +1,7 @@
 import MergeLineSet from './merge-line-set';
 
 export default class MergeAndRemoveLineSet extends MergeLineSet {
-  async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: true
-      }),
-      this.templateContent(context)
-    ]);
-
+  async mergeContent(context, original, template) {
     const toBeRemoved = new Set(
       template
         .split(/\n/)

@@ -9,16 +9,11 @@ export default class ReplaceIfEmpty extends File {
     });
   }
 
-  async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: true
-      }),
-      this.templateContent(context, {
-        ignoreMissing: true
-      })
-    ]);
+  get needsTemplate() {
+    return false;
+  }
 
+  async mergeContent(context, original, template) {
     return original === ''
       ? {
           path: this.path,

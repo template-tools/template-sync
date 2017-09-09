@@ -1,12 +1,7 @@
 import File from './file';
 
 export default class Replace extends File {
-  async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context),
-      this.templateContent(context)
-    ]);
-
+  async mergeContent(context, original, template) {
     const content = context.expand(template);
 
     return {

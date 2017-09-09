@@ -1,16 +1,11 @@
 import File from './file';
 
 export default class JSONFile extends File {
-  async merge(context) {
-    const [original, templateRaw] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: true
-      }),
-      this.templateContent(context, {
-        ignoreMissing: true
-      })
-    ]);
+  get needsTemplate() {
+    return false;
+  }
 
+  async mergeContent(context, original, templateRaw) {
     if (templateRaw === '' || templateRaw === undefined) {
       return undefined;
     }

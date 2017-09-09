@@ -8,14 +8,7 @@ export default class MergeLineSet extends File {
     });
   }
 
-  async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: true
-      }),
-      this.templateContent(context)
-    ]);
-
+  async mergeContent(context, original, template) {
     const result = new Set(template.split(/\n/));
     original.split(/\n/).forEach(line => result.add(line));
 

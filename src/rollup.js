@@ -4,16 +4,11 @@ const recast = require('recast');
 //const types = require('ast-types');
 
 export default class Rollup extends File {
-  async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: true
-      }),
-      this.templateContent(context, {
-        ignoreMissing: true
-      })
-    ]);
+  get needsTemplate() {
+    return false;
+  }
 
+  async mergeContent(context, original, template) {
     if (template === '') {
       return {
         path: this.path,

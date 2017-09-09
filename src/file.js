@@ -5,6 +5,14 @@ export default class File {
     });
   }
 
+  get needsTemplate() {
+    return true;
+  }
+
+  get needsOriginal() {
+    return false;
+  }
+
   templateContent(context, options) {
     return this.content(context.templateRepo, this.path, options);
   }
@@ -13,12 +21,25 @@ export default class File {
     return this.content(context.targetRepo, this.path, options);
   }
 
-  async merge(context) {
+  async mergeContent(context, original, template) {
     return {
       path: this.path,
       changed: false,
-      content: await this.originalContent(context)
+      content: original
     };
+  }
+
+  async merge(context) {
+    const [original, template] = await Promise.all([
+      this.originalContent(context, {
+        ignoreMissing: !this.needsOriginal
+      }),
+      this.templateContent(context, {
+        ignoreMissing: !this.needsTemplate
+      })
+    ]);
+
+    return this.mergeContent(context, original, template);
   }
 
   async saveMerge(context) {

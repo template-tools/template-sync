@@ -1,14 +1,10 @@
 import File from './file';
 
 export default class Readme extends File {
-  async merge(context) {
-    const [original, template, pkg] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: true
-      }),
-      this.templateContent(context),
-      context.files.get('package.json').templateContent(context)
-    ]);
+  async mergeContent(context, original, template) {
+    const pkg = await context.files
+      .get('package.json')
+      .templateContent(context);
 
     const p = JSON.parse(pkg);
     const badges =
