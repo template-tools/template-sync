@@ -8,6 +8,20 @@ export default class Rollup extends File {
     return false;
   }
 
+  usedModules(content) {
+    const modules = new Set();
+
+    const ast = recast.parse(content);
+
+    for (const decl of ast.program.body) {
+      if (decl.type === 'ImportDeclaration') {
+        modules.add(decl.source.value);
+      }
+    }
+
+    return modules;
+  }
+
   async mergeContent(context, original, template) {
     if (template === '') {
       return {

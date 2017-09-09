@@ -196,19 +196,28 @@ export default class Package extends File {
       };
     }
 
-    const rcj = await context.files.get('rollup.config.js');
+    const [modules1, modules2] = await Promise.all(
+      ['rollup.config.js', 'tests/rollup.config.js'].map(async file => {
+        const rcj = await context.files.get(file);
+        if (rcj) {
+          const m = await rcj.merge(context);
+          return rcj.usedModules(m.content);
+        }
+        return new Set();
+      })
+    );
 
-    if (rcj) {
-      const m = await rcj.merge(context);
-      if (m.content) {
-        if (!m.content.match(/rollup-plugin-node-resolve/)) {
-          delete target.devDependencies['rollup-plugin-node-resolve'];
+    Object.keys(target.devDependencies)
+      .filter(m => {
+        if (m.match(/rollup-plugin/)) {
+          return modules1.has(m) || modules2.has(m) ? false : true;
         }
-        if (!m.content.match(/rollup-plugin-commonjs/)) {
-          delete target.devDependencies['rollup-plugin-commonjs'];
-        }
-      }
-    }
+
+        return false;
+      })
+      .forEach(toBeRemoved => {
+        delete target.devDependencies[toBeRemoved];
+      });
 
     target = deleter(target, template, messages, []);
 
