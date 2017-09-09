@@ -5,8 +5,12 @@ const yaml = require('js-yaml'),
   semverDiff = require('semver-diff');
 
 function diffVersion(a, b) {
-  const aa = String(a).split(/\./).map(x => parseInt(x, 10));
-  const bb = String(b).split(/\./).map(x => parseInt(x, 10));
+  const aa = String(a)
+    .split(/\./)
+    .map(x => parseInt(x, 10));
+  const bb = String(b)
+    .split(/\./)
+    .map(x => parseInt(x, 10));
 
   for (const i in aa) {
     if (i >= bb.length) {
@@ -37,82 +41,81 @@ function normalizeVersion(version) {
 }
 
 export default class Travis extends File {
-  get merge() {
-    return Promise.all([
-      this.originalContent({
+  async merge(context) {
+    const [original, template] = await Promise.all([
+      this.originalContent(context, {
         ignoreMissing: true
       }),
-      this.templateContent()
-    ]).then(([original, template]) => {
-      const yml = yaml.safeLoad(original) || {};
-      const tyml = yaml.safeLoad(this.context.expand(template));
-      const before_script = yml.before_script;
-      const email = yml.notifications ? yml.notifications.email : undefined;
-      const formerNodeVersions = yml.node_js;
-      const messages = [];
+      this.templateContent(context)
+    ]);
 
-      let removeVersions = [];
+    const yml = yaml.safeLoad(original) || {};
+    const tyml = yaml.safeLoad(context.expand(template));
+    const before_script = yml.before_script;
+    const email = yml.notifications ? yml.notifications.email : undefined;
+    const formerNodeVersions = yml.node_js;
+    const messages = [];
 
-      if (tyml.node_js) {
-        removeVersions = tyml.node_js.filter(v => v < 0).map(v => -v);
-        tyml.node_js = tyml.node_js.filter(v => (v < 0 ? false : true));
-      }
+    let removeVersions = [];
 
-      deepExtend(yml, tyml);
+    if (tyml.node_js) {
+      removeVersions = tyml.node_js.filter(v => v < 0).map(v => -v);
+      tyml.node_js = tyml.node_js.filter(v => (v < 0 ? false : true));
+    }
 
-      if (formerNodeVersions !== undefined) {
-        formerNodeVersions.forEach(ov => {
-          if (
-            yml.node_js.find(
-              nv =>
-                semverDiff(normalizeVersion(ov), normalizeVersion(nv)) ===
-                'major'
-            )
-          ) {
-            yml.node_js.push(ov);
-          }
-        });
+    deepExtend(yml, tyml);
 
-        const toBeRemoved = yml.node_js.filter(v =>
-          removeVersions.find(rv => diffVersion(rv, v) === 0)
-        );
-        if (toBeRemoved.length > 0) {
-          messages.push(
-            `chore(travis): remove node version(s) ${toBeRemoved.join(' ')}`
-          );
+    if (formerNodeVersions !== undefined) {
+      formerNodeVersions.forEach(ov => {
+        if (
+          yml.node_js.find(
+            nv =>
+              semverDiff(normalizeVersion(ov), normalizeVersion(nv)) === 'major'
+          )
+        ) {
+          yml.node_js.push(ov);
         }
-
-        yml.node_js = yml.node_js.filter(
-          v => !removeVersions.find(rv => diffVersion(rv, v) === 0)
-        );
-      }
-
-      if (email !== undefined) {
-        yml.notifications.email = email;
-      }
-
-      if (before_script !== undefined) {
-        before_script.forEach(s => {
-          if (!yml.before_script.find(e => e === s)) {
-            yml.before_script.push(s);
-          }
-        });
-      }
-
-      const content = yaml.safeDump(yml, {
-        lineWidth: 128
       });
 
-      if (messages.length === 0) {
-        messages.push(`chore(travis): merge from template ${this.path}`);
+      const toBeRemoved = yml.node_js.filter(v =>
+        removeVersions.find(rv => diffVersion(rv, v) === 0)
+      );
+      if (toBeRemoved.length > 0) {
+        messages.push(
+          `chore(travis): remove node version(s) ${toBeRemoved.join(' ')}`
+        );
       }
 
-      return {
-        path: this.path,
-        content,
-        changed: content !== original,
-        messages
-      };
+      yml.node_js = yml.node_js.filter(
+        v => !removeVersions.find(rv => diffVersion(rv, v) === 0)
+      );
+    }
+
+    if (email !== undefined) {
+      yml.notifications.email = email;
+    }
+
+    if (before_script !== undefined) {
+      before_script.forEach(s => {
+        if (!yml.before_script.find(e => e === s)) {
+          yml.before_script.push(s);
+        }
+      });
+    }
+
+    const content = yaml.safeDump(yml, {
+      lineWidth: 128
     });
+
+    if (messages.length === 0) {
+      messages.push(`chore(travis): merge from template ${this.path}`);
+    }
+
+    return {
+      path: this.path,
+      content,
+      changed: content !== original,
+      messages
+    };
   }
 }

@@ -52,8 +52,8 @@ export default {
     {}
   );
 
-  const rollup = new Rollup(context, 'rollup.config.json');
-  const merged = await rollup.merge;
+  const rollup = new Rollup('rollup.config.json');
+  const merged = await rollup.merge(context);
   t.deepEqual(
     merged.content,
     `import pkg from './package.json';
@@ -109,8 +109,8 @@ export default {
     {}
   );
 
-  const rollup = new Rollup(context, 'rollup.config.json');
-  const merged = await rollup.merge;
+  const rollup = new Rollup('rollup.config.json');
+  const merged = await rollup.merge(context);
   t.deepEqual(
     merged.content,
     `import pkg from './package.json';

@@ -19,8 +19,8 @@ Line 2`
     {}
   );
 
-  const replace = new Replace(context, 'aFile');
-  const merged = await replace.merge;
+  const replace = new Replace('aFile');
+  const merged = await replace.merge(context);
   t.deepEqual(
     merged.content,
     `Line 1x

@@ -31,8 +31,8 @@ test('json merge', async t => {
     }
   );
 
-  const json = new JSONFile(context, FILE_NAME);
-  const merged = await json.merge;
+  const json = new JSONFile(FILE_NAME);
+  const merged = await json.merge(context);
 
   t.deepEqual(JSON.parse(merged.content), {
     key: 'value',
@@ -45,8 +45,8 @@ test('json empty template', async t => {
     oldKey: 'oldValue'
   });
 
-  const json = new JSONFile(context, FILE_NAME);
-  const merged = await json.merge;
+  const json = new JSONFile(FILE_NAME);
+  const merged = await json.merge(context);
 
   t.is(merged, undefined);
 });
@@ -59,8 +59,8 @@ test('json empty target', async t => {
     undefined
   );
 
-  const json = new JSONFile(context, FILE_NAME);
-  const merged = await json.merge;
+  const json = new JSONFile(FILE_NAME);
+  const merged = await json.merge(context);
 
   t.deepEqual(JSON.parse(merged.content), {
     key: 'value'

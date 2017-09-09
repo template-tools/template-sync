@@ -25,10 +25,10 @@ Line 2`
     {}
   );
 
-  context.addFile(new Package(context, 'package.json'));
+  context.addFile(new Package('package.json'));
 
-  const readme = new Readme(context, 'aFile');
-  const merged = await readme.merge;
+  const readme = new Readme('aFile');
+  const merged = await readme.merge(context);
 
   t.deepEqual(
     merged.content,

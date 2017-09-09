@@ -1,38 +1,38 @@
 import File from './file';
 
 export default class ReplaceIfEmpty extends File {
-  constructor(context, path, messages) {
-    super(context, path);
+  constructor(path, messages) {
+    super(path);
 
     Object.defineProperty(this, 'messages', {
       value: messages
     });
   }
 
-  get merge() {
-    return Promise.all([
-      this.originalContent({
+  async merge(context) {
+    const [original, template] = await Promise.all([
+      this.originalContent(context, {
         ignoreMissing: true
       }),
-      this.templateContent({
+      this.templateContent(context, {
         ignoreMissing: true
       })
-    ]).then(([original, template]) => {
-      return original === ''
-        ? {
-            path: this.path,
-            content: this.context.expand(template),
-            changed: template !== '',
-            messages:
-              this.messages === undefined
-                ? [`chore: add missing ${this.path} from template`]
-                : this.messages
-          }
-        : {
-            path: this.path,
-            content: original,
-            changed: false
-          };
-    });
+    ]);
+
+    return original === ''
+      ? {
+          path: this.path,
+          content: context.expand(template),
+          changed: template !== '',
+          messages:
+            this.messages === undefined
+              ? [`chore: add missing ${this.path} from template`]
+              : this.messages
+        }
+      : {
+          path: this.path,
+          content: original,
+          changed: false
+        };
   }
 }

@@ -1,42 +1,36 @@
 export default class File {
-  constructor(context, path) {
-    Object.defineProperty(this, 'context', {
-      value: context
-    });
-
+  constructor(path) {
     Object.defineProperty(this, 'path', {
       value: path
     });
-
-    context.addFile(this);
   }
 
-  templateContent(options) {
-    return this.content(this.context.templateRepo, this.path, options);
+  templateContent(context, options) {
+    return this.content(context.templateRepo, this.path, options);
   }
 
-  originalContent(options) {
-    return this.content(this.context.targetRepo, this.path, options);
+  originalContent(context, options) {
+    return this.content(context.targetRepo, this.path, options);
   }
 
-  get merge() {
-    return this.originalContent().then(content =>
-      Promise.resolve({
-        path: this.path,
-        changed: false,
-        content
-      })
-    );
+  async merge(context) {
+    return {
+      path: this.path,
+      changed: false,
+      content: await this.originalContent(context)
+    };
   }
 
-  get saveMerge() {
-    const r = this.merge;
-
-    r.catch(err => {
+  async saveMerge(context) {
+    try {
+      return this.merge(context);
+    } catch (err) {
       console.log(`${this.path}: ${err}`);
-    });
-
-    return r;
+      return {
+        path: this.path,
+        changed: false
+      };
+    }
   }
 
   async content(repository, path, options) {

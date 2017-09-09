@@ -1,19 +1,19 @@
 import File from './file';
 
 export default class Replace extends File {
-  get merge() {
-    return Promise.all([
-      this.originalContent(),
-      this.templateContent()
-    ]).then(([original, template]) => {
-      const content = this.context.expand(template);
+  async merge(context) {
+    const [original, template] = await Promise.all([
+      this.originalContent(context),
+      this.templateContent(context)
+    ]);
 
-      return {
-        path: this.path,
-        content,
-        changed: content !== original,
-        messages: [`chore: ${this.path} overwritten from template`]
-      };
-    });
+    const content = context.expand(template);
+
+    return {
+      path: this.path,
+      content,
+      changed: content !== original,
+      messages: [`chore: ${this.path} overwritten from template`]
+    };
   }
 }

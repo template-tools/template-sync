@@ -1,38 +1,38 @@
 import File from './file';
 
 export default class Readme extends File {
-  get merge() {
-    return Promise.all([
-      this.originalContent({
+  async merge(context) {
+    const [original, template, pkg] = await Promise.all([
+      this.originalContent(context, {
         ignoreMissing: true
       }),
-      this.templateContent(),
-      this.context.files.get('package.json').templateContent()
-    ]).then(([original, template, pkg]) => {
-      const p = JSON.parse(pkg);
-      const badges =
-        p.template && p.template.badges
-          ? p.template.badges.map(b =>
-              this.context.expand(`[![${b.name}](${b.icon})](${b.url})`)
-            )
-          : [];
+      this.templateContent(context),
+      context.files.get('package.json').templateContent(context)
+    ]);
 
-      let body = original.split(/\n/);
+    const p = JSON.parse(pkg);
+    const badges =
+      p.template && p.template.badges
+        ? p.template.badges.map(b =>
+            context.expand(`[![${b.name}](${b.icon})](${b.url})`)
+          )
+        : [];
 
-      if (body.length === 0) {
-        body = this.context.expand(template).split(/\n/);
-      } else {
-        body = body.slice(body.findIndex(l => l.length === 0));
-        body = body.slice(body.findIndex(l => l.length > 0));
-      }
+    let body = original.split(/\n/);
 
-      const content = [...badges, '', ...body].join('\n');
-      return {
-        path: this.path,
-        content,
-        changed: content !== original,
-        messages: ['docs(README): update from template']
-      };
-    });
+    if (body.length === 0) {
+      body = context.expand(template).split(/\n/);
+    } else {
+      body = body.slice(body.findIndex(l => l.length === 0));
+      body = body.slice(body.findIndex(l => l.length > 0));
+    }
+
+    const content = [...badges, '', ...body].join('\n');
+    return {
+      path: this.path,
+      content,
+      changed: content !== original,
+      messages: ['docs(README): update from template']
+    };
   }
 }

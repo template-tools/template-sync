@@ -1,30 +1,31 @@
 import File from './file';
 
 export default class MergeLineSet extends File {
-  constructor(context, path, messageHead = 'fix') {
-    super(context, path);
+  constructor(path, messageHead = 'fix') {
+    super(path);
     Object.defineProperty(this, 'messageHead', {
       value: messageHead
     });
   }
-  get merge() {
-    return Promise.all([
-      this.originalContent({
+
+  async merge(context) {
+    const [original, template] = await Promise.all([
+      this.originalContent(context, {
         ignoreMissing: true
       }),
-      this.templateContent()
-    ]).then(([original, template]) => {
-      const result = new Set(template.split(/\n/));
-      original.split(/\n/).forEach(line => result.add(line));
+      this.templateContent(context)
+    ]);
 
-      const content = Array.from(result.values()).join('\n');
+    const result = new Set(template.split(/\n/));
+    original.split(/\n/).forEach(line => result.add(line));
 
-      return {
-        path: this.path,
-        content,
-        changed: content !== original,
-        messages: [`${this.messageHead}: updated from template`]
-      };
-    });
+    const content = Array.from(result.values()).join('\n');
+
+    return {
+      path: this.path,
+      content,
+      changed: content !== original,
+      messages: [`${this.messageHead}: updated from template`]
+    };
   }
 }

@@ -21,8 +21,8 @@ test('travis node versions simple', async t => {
     {}
   );
 
-  const merger = new Travis(context, 'aFile');
-  const merged = await merger.merge;
+  const merger = new Travis('aFile');
+  const merged = await merger.merge(context);
 
   t.deepEqual(
     merged.content,
@@ -51,8 +51,8 @@ test('travis node versions complex', async t => {
     {}
   );
 
-  const merger = new Travis(context, 'aFile');
-  const merged = await merger.merge;
+  const merger = new Travis('aFile');
+  const merged = await merger.merge(context);
   t.deepEqual(
     merged.content,
     `node_js:
@@ -80,8 +80,8 @@ test('travis node semver mayor only', async t => {
     {}
   );
 
-  const merger = new Travis(context, 'aFile');
-  const merged = await merger.merge;
+  const merger = new Travis('aFile');
+  const merged = await merger.merge(context);
   t.deepEqual(
     merged.content,
     `node_js:
@@ -111,8 +111,8 @@ test('travis node semver remove', async t => {
     {}
   );
 
-  const merger = new Travis(context, 'aFile');
-  const merged = await merger.merge;
+  const merger = new Travis('aFile');
+  const merged = await merger.merge(context);
   t.deepEqual(
     merged.content,
     `node_js:
@@ -137,8 +137,8 @@ test('start fresh', async t => {
     {}
   );
 
-  const merger = new Travis(context, 'aFile');
-  const merged = await merger.merge;
+  const merger = new Travis('aFile');
+  const merged = await merger.merge(context);
   t.deepEqual(
     merged.content,
     `node_js:

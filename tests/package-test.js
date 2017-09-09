@@ -45,8 +45,8 @@ test('delete entries', async t => {
     }
   );
 
-  const pkg = new Package(context, 'package.json');
-  const merged = await pkg.merge;
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).slot, {
     preserve: 3
@@ -72,8 +72,8 @@ test('package preserve extra prepare', async t => {
     }
   );
 
-  const pkg = new Package(context, 'package.json');
-  const merged = await pkg.merge;
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).scripts, {
     prepare: 'rollup x y z && chmod +x bin/xx',
@@ -97,8 +97,8 @@ test('package devDependencies', async t => {
     }
   );
 
-  const pkg = new Package(context, 'package.json');
-  const merged = await pkg.merge;
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
     b: '1',
@@ -131,8 +131,8 @@ test('package keywords', async t => {
     }
   );
 
-  const pkg = new Package(context, 'package.json');
-  const merged = await pkg.merge;
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).keywords, ['YYY', 'XXX']);
   t.true(merged.messages.includes('docs(package): add keyword XXX'));
@@ -152,8 +152,8 @@ test('package keywords empty', async t => {
     }
   );
 
-  const pkg = new Package(context, 'package.json');
-  const merged = await pkg.merge;
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).keywords, ['XXX']);
   t.true(merged.messages.includes('docs(package): add keyword XXX'));
@@ -170,8 +170,8 @@ test('package remove null keyword', async t => {
     }
   );
 
-  const pkg = new Package(context, 'package.json');
-  const merged = await pkg.merge;
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).keywords, []);
   t.true(merged.messages.includes('docs(package): remove keyword null'));
@@ -191,8 +191,8 @@ test('add xo/space=true', async t => {
     }
   );
 
-  const pkg = new Package(context, 'package.json');
-  const merged = await pkg.merge;
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).xo, {
     space: true
@@ -202,8 +202,8 @@ test('add xo/space=true', async t => {
 
 test('start fresh', async t => {
   const context = await createContext({});
-  const pkg = new Package(context, 'package.json');
-  const merged = await pkg.merge;
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content), {
     name: 'targetRepo',

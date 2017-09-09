@@ -1,33 +1,33 @@
 import File from './file';
 
 export default class JSONFile extends File {
-  get merge() {
-    return Promise.all([
-      this.originalContent({
+  async merge(context) {
+    const [original, templateRaw] = await Promise.all([
+      this.originalContent(context, {
         ignoreMissing: true
       }),
-      this.templateContent({
+      this.templateContent(context, {
         ignoreMissing: true
       })
-    ]).then(([original, templateRaw]) => {
-      if (templateRaw === '' || templateRaw === undefined) {
-        return undefined;
-      }
+    ]);
 
-      const target =
-        original === '' || original === undefined ? {} : JSON.parse(original);
-      const template = JSON.parse(templateRaw);
+    if (templateRaw === '' || templateRaw === undefined) {
+      return undefined;
+    }
 
-      Object.assign(target, template);
+    const target =
+      original === '' || original === undefined ? {} : JSON.parse(original);
+    const template = JSON.parse(templateRaw);
 
-      const content = JSON.stringify(this.context.expand(target), undefined, 2);
+    Object.assign(target, template);
 
-      return {
-        path: this.path,
-        content,
-        changed: content !== original,
-        messages: ['fix: updated set from template']
-      };
-    });
+    const content = JSON.stringify(context.expand(target), undefined, 2);
+
+    return {
+      path: this.path,
+      content,
+      changed: content !== original,
+      messages: ['fix: updated set from template']
+    };
   }
 }

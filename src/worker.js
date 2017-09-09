@@ -42,10 +42,10 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
       'license.owner': user
     });
 
-    const pkg = new Package(context, 'package.json');
+    const pkg = new Package('package.json');
 
     if (templateRepo === undefined) {
-      templateRepo = await pkg.templateRepo();
+      templateRepo = await pkg.templateRepo(context);
 
       if (templateRepo === undefined) {
         throw new Error(
@@ -61,20 +61,22 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
     );
 
     const files = [
-      new Rollup(context, 'rollup.config.js'),
-      new Rollup(context, 'tests/rollup.config.js'),
+      new Rollup('rollup.config.js'),
+      new Rollup('tests/rollup.config.js'),
       pkg,
-      new Readme(context, 'doc/README.hbs'),
-      new JSONFile(context, 'doc/jsdoc.json'),
-      new Travis(context, '.travis.yml'),
-      new MergeAndRemoveLineSet(context, '.gitignore', 'chore(git)'),
-      new MergeAndRemoveLineSet(context, '.npmignore', 'chore(npm)'),
-      new License(context, 'LICENSE')
+      new Readme('doc/README.hbs'),
+      new JSONFile('doc/jsdoc.json'),
+      new Travis('.travis.yml'),
+      new MergeAndRemoveLineSet('.gitignore', 'chore(git)'),
+      new MergeAndRemoveLineSet('.npmignore', 'chore(npm)'),
+      new License('LICENSE')
     ].filter(f => templateFiles.get(f.path));
 
-    const merges = (await Promise.all(files.map(f => f.saveMerge))).filter(
-      m => m !== undefined && m.changed
-    );
+    files.forEach(f => context.addFile(f));
+
+    const merges = (await Promise.all(
+      files.map(f => f.saveMerge(context))
+    )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
       spinner.succeed(`${targetRepo} nothing changed`);
