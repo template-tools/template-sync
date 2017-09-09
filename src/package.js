@@ -196,6 +196,7 @@ export default class Package extends File {
       };
     }
 
+    // TODO loop over all rollup files
     const [modules1, modules2] = await Promise.all(
       ['rollup.config.js', 'tests/rollup.config.js'].map(async file => {
         const rcj = await context.files.get(file);
