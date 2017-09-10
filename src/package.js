@@ -14,14 +14,7 @@ export default class Package extends File {
     return undefined;
   }
 
-  async merge(context) {
-    const [original, templateContent] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: true
-      }),
-      this.templateContent(context)
-    ]);
-
+  async mergeContent(context, original, templateContent) {
     const originalLastChar = original[original.length - 1];
 
     let target =
