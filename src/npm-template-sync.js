@@ -18,7 +18,7 @@ program
     '-k, --keystore <account/service>',
     'keystore',
     /^[\w\-]+\/.*/,
-    'key passphrase — github.com'
+    'arlac77/GitHub for Mac SSH key passphrase — github.com'
   )
   .option('-s, --save', 'save keystore')
   .option(
