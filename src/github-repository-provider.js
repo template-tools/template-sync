@@ -22,7 +22,7 @@ export class GithubProvider extends Provider {
 
 export class GithubRepository extends Repository {
   constructor(provider, name) {
-    super(provider, name);
+    super(provider, name.replace(/#.*/, ''));
     Object.defineProperty(this, 'user', { value: name.split(/\//)[0] });
   }
 

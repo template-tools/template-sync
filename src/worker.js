@@ -30,7 +30,12 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
       return prev;
     }, 0);
 
+    console.log(`branch: ${branch}`);
+
     const sourceBranch = await repository.branch(branch);
+
+    console.log(`${branch} -> ${sourceBranch.name}`);
+
     const newBrachName = `template-sync-${maxBranchId + 1}`;
 
     const context = new Context(repository, undefined, {

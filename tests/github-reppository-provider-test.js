@@ -16,6 +16,18 @@ test('provider', async t => {
   t.is(branch.name, 'master');
 });
 
+test('provider repo with branch name', async t => {
+  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const repository = await provider.repository(
+    REPOSITORY_NAME + '#some-other-branch'
+  );
+
+  t.is(repository.name, REPOSITORY_NAME);
+
+  const branches = await repository.branches();
+  t.is(branches.get('master').name, 'master');
+});
+
 test('create branch', async t => {
   const provider = new GithubProvider(process.env.GH_TOKEN);
   const repository = await provider.repository(REPOSITORY_NAME);
