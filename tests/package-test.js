@@ -81,6 +81,24 @@ test('package preserve extra prepare', async t => {
   });
 });
 
+test('package handle missing scripts in template', async t => {
+  const context = await createContext(
+    {
+      scripts: {
+        prepare: 'rollup'
+      }
+    },
+    {}
+  );
+
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
+
+  t.deepEqual(JSON.parse(merged.content).scripts, {
+    prepare: 'rollup'
+  });
+});
+
 test('package devDependencies', async t => {
   const context = await createContext(
     {
