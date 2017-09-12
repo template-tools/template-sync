@@ -1,5 +1,3 @@
-/* jslint node: true, esnext: true */
-
 const micro = require('micro'),
   createHandler = require('github-webhook-handler');
 require('now-logs')('dfgkjd&dfh');
@@ -9,9 +7,8 @@ const handler = createHandler({
   secret: 'dfgkjd&dfh'
 });
 
-const server = micro(async(req, res) => {
-
-  handler(req, res, (err) => {
+const server = micro(async (req, res) => {
+  handler(req, res, err => {
     res.statusCode = 404;
     res.end('no such location');
   });
@@ -20,14 +17,16 @@ const server = micro(async(req, res) => {
   res.end('woot');
 });
 
-handler.on('error', function (err) {
+handler.on('error', err => {
   console.error('Error:', err.message);
 });
 
-handler.on('push', function (event) {
-  console.log('Received a push event for %s to %s',
+handler.on('push', event => {
+  console.log(
+    'Received a push event for %s to %s',
     event.payload.repository.name,
-    event.payload.ref);
+    event.payload.ref
+  );
 });
 
 server.listen(3000);
