@@ -202,11 +202,12 @@ export default class Package extends File {
         return new Set();
       })
     );
+    const usedModules = new Set([...modules1, ...modules2]);
 
     Object.keys(target.devDependencies)
       .filter(m => {
-        if (m.match(/rollup-plugin/)) {
-          return modules1.has(m) || modules2.has(m) ? false : true;
+        if (m.match(/rollup-plugin/) || m.match(/babel-preset/)) {
+          return usedModules.has(m) ? false : true;
         }
 
         return false;
