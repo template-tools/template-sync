@@ -100,33 +100,47 @@ export default class Package extends File {
       });
     }
 
+    // TODO loop over all files
+    const usedModules = (await Promise.all(
+      ['rollup.config.js', 'tests/rollup.config.js'].map(async file => {
+        const rcj = await context.files.get(file);
+        if (rcj) {
+          const m = await rcj.merge(context);
+          return rcj.usedDevModules(m.content);
+        }
+        return new Set();
+      })
+    )).reduce((sum, current) => new Set([...sum, ...current]), new Set());
+
     const deepPropeties = {
       scripts: {},
       devDependencies: {},
       engines: {}
     };
 
-    Object.keys(deepPropeties).forEach(p => {
-      if (target[p] === undefined) {
-        target[p] = {};
+    Object.keys(deepPropeties).forEach(category => {
+      if (target[category] === undefined) {
+        target[category] = {};
       }
 
-      if (template[p] !== undefined) {
-        Object.keys(template[p]).forEach(d => {
-          if (template[p][d] === '-') {
-            if (target[p][d] !== undefined) {
-              messages.push(`chore(${p}): remove ${d}@${target[p][d]}`);
-              delete target[p][d];
+      if (template[category] !== undefined) {
+        Object.keys(template[category]).forEach(d => {
+          if (template[category][d] === '-') {
+            if (target[category][d] !== undefined) {
+              messages.push(
+                `chore(${category}): remove ${d}@${target[category][d]}`
+              );
+              delete target[category][d];
             }
           } else {
-            const tp = context.expand(template[p][d]);
-            if (tp !== target[p][d]) {
+            const tp = context.expand(template[category][d]);
+            if (tp !== target[category][d]) {
               messages.push(
-                target[p][d] === undefined
-                  ? `chore(${p}): add ${d}@${tp} from template`
-                  : `chore(${p}): update ${d}@${tp} from template`
+                target[category][d] === undefined
+                  ? `chore(${category}): add ${d}@${tp} from template`
+                  : `chore(${category}): update ${d}@${tp} from template`
               );
-              target[p][d] = tp;
+              target[category][d] = tp;
             }
           }
         });
@@ -191,29 +205,19 @@ export default class Package extends File {
       };
     }
 
-    // TODO loop over all rollup files
-    const usedModules = (await Promise.all(
-      ['rollup.config.js', 'tests/rollup.config.js'].map(async file => {
-        const rcj = await context.files.get(file);
-        if (rcj) {
-          const m = await rcj.merge(context);
-          return rcj.usedDevModules(m.content);
-        }
-        return new Set();
-      })
-    )).reduce((sum, current) => new Set([...sum, ...current]), new Set());
+    const devModulesToBeRemoved = Object.keys(
+      target.devDependencies
+    ).filter(m => {
+      if (m.match(/rollup-plugin/) || m.match(/babel-preset/)) {
+        return usedModules.has(m) ? false : true;
+      }
 
-    Object.keys(target.devDependencies)
-      .filter(m => {
-        if (m.match(/rollup-plugin/) || m.match(/babel-preset/)) {
-          return usedModules.has(m) ? false : true;
-        }
+      return false;
+    });
 
-        return false;
-      })
-      .forEach(toBeRemoved => {
-        delete target.devDependencies[toBeRemoved];
-      });
+    devModulesToBeRemoved.forEach(
+      toBeRemoved => delete target.devDependencies[toBeRemoved]
+    );
 
     target = deleter(target, template, messages, []);
 
