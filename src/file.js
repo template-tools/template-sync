@@ -13,6 +13,14 @@ export default class File {
     return false;
   }
 
+  usedDevModules(content) {
+    return new Set([]);
+  }
+
+  usedModules(content) {
+    return new Set([]);
+  }
+
   templateContent(context, options) {
     return this.content(context.templateRepo, this.path, options);
   }

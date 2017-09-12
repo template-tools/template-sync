@@ -8,7 +8,7 @@ export default class Rollup extends File {
     return false;
   }
 
-  usedModules(content) {
+  usedDevModules(content) {
     const modules = new Set();
 
     const ast = recast.parse(content);
