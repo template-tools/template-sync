@@ -1,6 +1,21 @@
 import File from './file';
 
 export default class Package extends File {
+  async usedDevModules(content) {
+    const modules = new Set();
+    content = await content;
+
+    const pkg = content.length === 0 ? {} : JSON.parse(content);
+
+    if (pkg.release !== undefined) {
+      if (pkg.release.verifyRelease !== undefined) {
+        modules.add(pkg.release.verifyRelease);
+      }
+    }
+
+    return modules;
+  }
+
   async templateRepo(context) {
     const content = await this.originalContent(context, {
       ignoreMissing: true
@@ -102,9 +117,18 @@ export default class Package extends File {
 
     // TODO loop over all files
     const usedModules = (await Promise.all(
-      ['rollup.config.js', 'tests/rollup.config.js'].map(async file => {
+      [
+        'package.json',
+        'rollup.config.js',
+        'tests/rollup.config.js'
+      ].map(async file => {
         const rcj = await context.files.get(file);
         if (rcj) {
+          if (file === 'package.json') {
+            return rcj.usedDevModules(
+              this.originalContent(context, { ignoreMissing: true })
+            );
+          }
           const m = await rcj.merge(context);
           return rcj.usedDevModules(m.content);
         }
@@ -208,7 +232,11 @@ export default class Package extends File {
     const devModulesToBeRemoved = Object.keys(
       target.devDependencies
     ).filter(m => {
-      if (m.match(/rollup-plugin/) || m.match(/babel-preset/)) {
+      if (
+        m === 'cracks' ||
+        m.match(/rollup-plugin/) ||
+        m.match(/babel-preset/)
+      ) {
         return usedModules.has(m) ? false : true;
       }
 
