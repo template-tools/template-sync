@@ -13,6 +13,10 @@ export default class File {
     return false;
   }
 
+  optionalDevModules(modules) {
+    return new Set([]);
+  }
+
   usedDevModules(content) {
     return new Set([]);
   }

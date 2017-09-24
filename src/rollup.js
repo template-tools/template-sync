@@ -8,6 +8,14 @@ export default class Rollup extends File {
     return false;
   }
 
+  optionalDevModules(modules) {
+    return new Set(
+      Array.from(modules).filter(
+        m => m.match(/rollup-plugin/) || m.match(/babel-preset/)
+      )
+    );
+  }
+
   usedDevModules(content) {
     const modules = new Set();
 

@@ -1,6 +1,10 @@
 import File from './file';
 
 export default class Package extends File {
+  optionalDevModules(modules) {
+    return new Set(['cracks']);
+  }
+
   async usedDevModules(content) {
     const modules = new Set();
     content = await content;
@@ -8,9 +12,11 @@ export default class Package extends File {
     const pkg = content.length === 0 ? {} : JSON.parse(content);
 
     if (pkg.release !== undefined) {
-      if (pkg.release.verifyRelease !== undefined) {
-        modules.add(pkg.release.verifyRelease);
-      }
+      Object.keys(pkg.release).forEach(m => {
+        if (typeof m === 'string') {
+          modules.add(m);
+        }
+      });
     }
 
     return modules;
@@ -228,6 +234,8 @@ export default class Package extends File {
         }
       };
     }
+
+    //context.files.forEach( file => file.optionalDevModules);
 
     const devModulesToBeRemoved = Object.keys(
       target.devDependencies
