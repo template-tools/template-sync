@@ -99,6 +99,48 @@ test('package handle missing scripts in template', async t => {
   });
 });
 
+test('package devDependencies keep cracks', async t => {
+  const context = await createContext(
+    {
+      devDependencies: {}
+    },
+    {
+      release: {
+        verifyRelease: 'cracks'
+      },
+      devDependencies: {
+        cracks: '3.1.2'
+      }
+    }
+  );
+
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
+
+  t.deepEqual(JSON.parse(merged.content).devDependencies, {
+    cracks: '3.1.2'
+  });
+});
+
+test('package devDependencies remove cracks', async t => {
+  const context = await createContext(
+    {
+      devDependencies: {}
+    },
+    {
+      devDependencies: {
+        cracks: '3.1.2'
+      }
+    }
+  );
+
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
+
+  t.deepEqual(JSON.parse(merged.content).devDependencies, {});
+  t.true(merged.messages.includes('chore(devDependencies): remove cracks'));
+});
+
 test('package devDependencies', async t => {
   const context = await createContext(
     {
