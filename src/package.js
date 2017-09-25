@@ -1,8 +1,22 @@
 import File from './file';
 
 export default class Package extends File {
-  optionalDevModules(modules) {
-    return new Set(['cracks']);
+  optionalDevModules(modules = new Set()) {
+    const r = new Set();
+
+    ['cracks'].forEach(m => {
+      if (modules.has(m)) {
+        r.add(m);
+      }
+    });
+
+    modules.forEach(m => {
+      if (m.match(/rollup-plugin/) || m.match(/babel-preset/)) {
+        r.add(m);
+      }
+    });
+
+    return r;
   }
 
   async usedDevModules(content) {
@@ -235,7 +249,7 @@ export default class Package extends File {
       };
     }
 
-    //context.files.forEach( file => file.optionalDevModules);
+    //this.optionalDevModules(new Set(Object.keys(target.devDependencies)));
 
     const devModulesToBeRemoved = Object.keys(
       target.devDependencies
