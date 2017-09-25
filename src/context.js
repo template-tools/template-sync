@@ -35,4 +35,23 @@ export default class Context {
   addFile(file) {
     this.files.set(file.path, file);
   }
+
+  async usedDevModules() {
+    const usedModuleSets = await Promise.all(
+      Array.from(this.files.values()).map(async file => {
+        if (file.path === 'package.json') {
+          return file.usedDevModules(
+            file.originalContent(this, { ignoreMissing: true })
+          );
+        }
+        const m = await file.merge(this);
+        return file.usedDevModules(m.content);
+      })
+    );
+
+    return usedModuleSets.reduce(
+      (sum, current) => new Set([...sum, ...current]),
+      new Set()
+    );
+  }
 }
