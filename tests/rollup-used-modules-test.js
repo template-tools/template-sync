@@ -27,3 +27,14 @@ test('rollup used modules', async t => {
     new Set(['rollup-plugin-babel', 'rollup-plugin-multi-entry'])
   );
 });
+
+test('optional dev modules', t => {
+  const file = new Rollup('rollup.config.json');
+
+  t.deepEqual(
+    file.optionalDevModules(
+      new Set(['a', 'rollup-plugin-1', 'babel-preset-xyz'])
+    ),
+    new Set(['rollup-plugin-1', 'babel-preset-xyz'])
+  );
+});

@@ -2,21 +2,7 @@ import File from './file';
 
 export default class Package extends File {
   optionalDevModules(modules = new Set()) {
-    const r = new Set();
-
-    ['cracks'].forEach(m => {
-      if (modules.has(m)) {
-        r.add(m);
-      }
-    });
-
-    modules.forEach(m => {
-      if (m.match(/rollup-plugin/) || m.match(/babel-preset/)) {
-        r.add(m);
-      }
-    });
-
-    return r;
+    return new Set(['cracks'].filter(m => modules.has(m)));
   }
 
   async usedDevModules(content) {
