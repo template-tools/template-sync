@@ -14,15 +14,15 @@ export default class File {
   }
 
   optionalDevModules(modules) {
-    return new Set([]);
+    return new Set();
   }
 
   usedDevModules(content) {
-    return new Set([]);
+    return new Set();
   }
 
   usedModules(content) {
-    return new Set([]);
+    return new Set();
   }
 
   templateContent(context, options) {
