@@ -12,9 +12,10 @@ export default class Package extends File {
     const pkg = content.length === 0 ? {} : JSON.parse(content);
 
     if (pkg.release !== undefined) {
-      Object.keys(pkg.release).forEach(m => {
-        if (typeof m === 'string') {
-          modules.add(m);
+      Object.keys(pkg.release).forEach(k => {
+        const v = pkg.release[k];
+        if (typeof v === 'string') {
+          modules.add(v);
         }
       });
     }
@@ -121,26 +122,7 @@ export default class Package extends File {
       });
     }
 
-    // TODO loop over all files
-    const usedModules = (await Promise.all(
-      [
-        'package.json',
-        'rollup.config.js',
-        'tests/rollup.config.js'
-      ].map(async file => {
-        const rcj = await context.files.get(file);
-        if (rcj) {
-          if (file === 'package.json') {
-            return rcj.usedDevModules(
-              this.originalContent(context, { ignoreMissing: true })
-            );
-          }
-          const m = await rcj.merge(context);
-          return rcj.usedDevModules(m.content);
-        }
-        return new Set();
-      })
-    )).reduce((sum, current) => new Set([...sum, ...current]), new Set());
+    const usedModules = await context.usedDevModules();
 
     const deepPropeties = {
       scripts: {},
