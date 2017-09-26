@@ -109,7 +109,8 @@ test('package devDependencies keep cracks', async t => {
         verifyRelease: 'cracks'
       },
       devDependencies: {
-        cracks: '3.1.2'
+        cracks: '3.1.2' /*,
+        'dont-crack': '1.0.0'*/
       }
     }
   );
@@ -131,7 +132,8 @@ test('package devDependencies remove cracks', async t => {
     },
     {
       devDependencies: {
-        cracks: '3.1.2'
+        cracks: '3.1.2' /*,
+        'dont-crack': '1.0.0'*/
       }
     }
   );

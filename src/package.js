@@ -1,26 +1,37 @@
 import File from './file';
 
+function moduleNames(object) {
+  if (object === undefined) return new Set();
+
+  const modules = new Set();
+
+  Object.keys(object).forEach(k => {
+    const v = object[k];
+    if (typeof v === 'string') {
+      modules.add(v);
+    } else if (Array.isArray(v)) {
+      v.forEach(e => {
+        if (typeof e === 'string') {
+          modules.add(e);
+        }
+      });
+    }
+  });
+
+  return modules;
+}
+
 export default class Package extends File {
   optionalDevModules(modules = new Set()) {
-    return new Set(['cracks'].filter(m => modules.has(m)));
+    return new Set(['cracks', 'dont-crack'].filter(m => modules.has(m)));
   }
 
   async usedDevModules(content) {
-    const modules = new Set();
     content = await content;
 
     const pkg = content.length === 0 ? {} : JSON.parse(content);
 
-    if (pkg.release !== undefined) {
-      Object.keys(pkg.release).forEach(k => {
-        const v = pkg.release[k];
-        if (typeof v === 'string') {
-          modules.add(v);
-        }
-      });
-    }
-
-    return modules;
+    return moduleNames(pkg.release);
   }
 
   async templateRepo(context) {

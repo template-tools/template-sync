@@ -4,8 +4,8 @@ import Package from '../src/package';
 test('optional dev modules', t => {
   const pkg = new Package('package.json');
   t.deepEqual(
-    pkg.optionalDevModules(new Set(['a', 'cracks'])),
-    new Set(['cracks'])
+    pkg.optionalDevModules(new Set(['a', 'cracks', 'dont-crack'])),
+    new Set(['cracks', 'dont-crack'])
   );
 });
 
