@@ -133,7 +133,7 @@ export default class Package extends File {
       });
     }
 
-    const usedModules = await context.usedDevModules();
+    const usedDevModules = await context.usedDevModules();
 
     const deepPropeties = {
       scripts: {},
@@ -228,7 +228,11 @@ export default class Package extends File {
       };
     }
 
-    //this.optionalDevModules(new Set(Object.keys(target.devDependencies)));
+    /*
+    context
+      .optionalDevModules(new Set(Object.keys(target.devDependencies)))
+      .forEach(toBeRemoved => delete target.devDependencies[toBeRemoved]);
+*/
 
     const devModulesToBeRemoved = Object.keys(
       target.devDependencies
@@ -238,7 +242,7 @@ export default class Package extends File {
         m.match(/rollup-plugin/) ||
         m.match(/babel-preset/)
       ) {
-        return usedModules.has(m) ? false : true;
+        return usedDevModules.has(m) ? false : true;
       }
 
       return false;
