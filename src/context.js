@@ -54,4 +54,10 @@ export default class Context {
       new Set()
     );
   }
+
+  optionalDevModules(modules) {
+    return Array.from(this.files.values())
+      .map(file => file.optionalDevModules(modules))
+      .reduce((sum, current) => new Set([...sum, ...current]), new Set());
+  }
 }
