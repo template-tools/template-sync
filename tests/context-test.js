@@ -4,27 +4,22 @@ import Rollup from '../src/rollup';
 
 import { MockProvider } from './repository-mock';
 
+const ROLLUP_FILE_CONTENT = `import babel from 'rollup-plugin-babel';
+
+export default {
+  plugins: [],
+  input: 'file.js',
+  output: {
+    format: 'cjs',
+    file: 'main.js'
+  }
+};`;
+
 test('context used dev modules', async t => {
   const provider = new MockProvider({
-    'rollup.config.json': {
-      templateRepo: `import babel from 'rollup-plugin-babel';
-export default {
-  plugins: [
-    babel({
-      presets: ['stage-3'],
-      exclude: 'node_modules/**'
-    })
-  ]
-};`,
-      targetRepo: `import babel from 'rollup-plugin-babel';
-export default {
-  plugins: [
-    babel({
-      presets: ['stage-3'],
-      exclude: 'node_modules/**'
-    })
-  ]
-};`
+    'rollup.config.js': {
+      templateRepo: ROLLUP_FILE_CONTENT,
+      targetRepo: ROLLUP_FILE_CONTENT
     }
   });
 

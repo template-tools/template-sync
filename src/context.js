@@ -44,10 +44,7 @@ export default class Context {
             file.originalContent(this, { ignoreMissing: true })
           );
         }
-        console.log(file);
-
         const m = await file.merge(this);
-        console.log(m);
         return file.usedDevModules(m.content);
       })
     );
