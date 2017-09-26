@@ -82,7 +82,7 @@ export default class Rollup extends File {
       );
     }
 
-    if (exp.properties.find(x => x.key.name === 'output') === undefined) {
+    if (exp.properties.find(x => x && x.key.name === 'output') === undefined) {
       output = templateExp.properties.find(x => x.key.name === 'output');
       exp.properties.push(output);
     }
@@ -158,7 +158,7 @@ function exportDefaultDeclaration(ast) {
 }
 
 function removePropertiesKey(properties, name) {
-  const toBeRemoved = properties.findIndex(x => x.key.name === name);
+  const toBeRemoved = properties.findIndex(x => x && x.key.name === name);
   if (toBeRemoved >= 0) {
     const slot = properties[toBeRemoved];
     properties.splice(toBeRemoved, 1);
