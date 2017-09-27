@@ -5,7 +5,7 @@ const REPOSITORY_URL =
   'https://arlac77@bitbucket.org/arlac77/sync-test-repository.git';
 const REPOSITORY_NAME = 'arlac77/sync-test-repository';
 
-test('provider', async t => {
+test('bitbucket provider', async t => {
   const provider = new BitbucketProvider({
     password: process.env.BITBUCKET_PASSWORD,
     user: process.env.BITBUCKET_USER
@@ -20,4 +20,16 @@ test('provider', async t => {
 
   const branch = await repository.branch('master');
   t.is(branch.name, 'master');
+});
+
+test('bitbucket list', async t => {
+  const provider = new BitbucketProvider({
+    password: process.env.BITBUCKET_PASSWORD,
+    user: process.env.BITBUCKET_USER
+  });
+
+  const repository = await provider.repository(REPOSITORY_NAME);
+  const branch = await repository.branch('master');
+
+  t.deepEqual(await branch.list(), [{ path: 'README.md' }]);
 });

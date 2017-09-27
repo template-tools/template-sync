@@ -63,10 +63,17 @@ export class BitbucketBranch extends Branch {
     }
   }
 
-  async list() {
+  async tree(path) {
     const res = await this.client.get(
-      `repositories/${this.repository.name}/src`
+      `repositories/${this.repository.name}/src/${this.name}/${path}`
     );
-    return res;
+
+    return res.values.map(e => {
+      return { path: e.path };
+    });
+  }
+
+  async list() {
+    return this.tree('/');
   }
 }
