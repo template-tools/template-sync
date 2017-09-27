@@ -45,4 +45,28 @@ export class BitbucketRepository extends Repository {
   }
 }
 
-export class BitbucketBranch extends Branch {}
+export class BitbucketBranch extends Branch {
+  get client() {
+    return this.provider.client;
+  }
+
+  async content(path, options = {}) {
+    try {
+      const res = await this.client.get(
+        `repositories/${this.repository.name}/raw/${this.name}/${path}`
+      );
+      return res;
+    } catch (e) {
+      if (options.ignoreMissing) {
+        return '';
+      }
+    }
+  }
+
+  async list() {
+    const res = await this.client.get(
+      `repositories/${this.repository.name}/src`
+    );
+    return res;
+  }
+}
