@@ -22,6 +22,34 @@ test('bitbucket provider', async t => {
   t.is(branch.name, 'master');
 });
 
+test('provider repo with branch name', async t => {
+  const provider = new BitbucketProvider({
+    password: process.env.BITBUCKET_PASSWORD,
+    user: process.env.BITBUCKET_USER
+  });
+
+  const repository = await provider.repository(
+    REPOSITORY_NAME + '#some-other-branch'
+  );
+
+  const branches = await repository.branches();
+  t.is(branches.get('master').name, 'master');
+});
+
+test.skip('create branch', async t => {
+  const provider = new BitbucketProvider({
+    password: process.env.BITBUCKET_PASSWORD,
+    user: process.env.BITBUCKET_USER
+  });
+  const repository = await provider.repository(REPOSITORY_NAME);
+  const branches = await repository.branches();
+
+  const newName = `test-${branches.size}`;
+  const branch = await repository.createBranch(newName);
+
+  t.is(branch.name, newName);
+});
+
 test('bitbucket list', async t => {
   const provider = new BitbucketProvider({
     password: process.env.BITBUCKET_PASSWORD,

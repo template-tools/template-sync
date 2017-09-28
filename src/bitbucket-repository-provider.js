@@ -43,6 +43,17 @@ export class BitbucketRepository extends Repository {
 
     return this._branches;
   }
+
+  async createBranch(name, from) {
+    const res = await this.client.put(
+      `repositories/${this.name}/branches/${name}`
+    );
+    console.log(res);
+
+    const b = new this.provider.constructor.branchClass(this, name);
+    this._branches.set(b.name, b);
+    return b;
+  }
 }
 
 export class BitbucketBranch extends Branch {
