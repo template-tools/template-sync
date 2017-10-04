@@ -1,6 +1,10 @@
 import File from './file';
 
 export default class JSONFile extends File {
+  static matchesFileName(name) {
+    return name.match(/\.json$/);
+  }
+
   get needsTemplate() {
     return false;
   }

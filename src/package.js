@@ -22,6 +22,10 @@ function moduleNames(object) {
 }
 
 export default class Package extends File {
+  static matchesFileName(name) {
+    return name.match(/^package\.json$/);
+  }
+
   optionalDevModules(modules = new Set()) {
     return new Set(['cracks', 'dont-crack'].filter(m => modules.has(m)));
   }

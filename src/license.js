@@ -1,6 +1,10 @@
 import File from './file';
 
 export default class License extends File {
+  static matchesFileName(name) {
+    return name.match(/^LICENSE/);
+  }
+
   async mergeContent(context, original, template) {
     const m = original.match(
       /opyright\s*\(c\)\s*(\d+)([,\-\d]+)*(\s*(,|by)\s*(.*))?/

@@ -4,6 +4,10 @@ const recast = require('recast');
 //const types = require('ast-types');
 
 export default class Rollup extends File {
+  static matchesFileName(name) {
+    return name.match(/rollup\.config\.js/);
+  }
+
   get needsTemplate() {
     return false;
   }

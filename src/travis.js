@@ -41,6 +41,10 @@ function normalizeVersion(version) {
 }
 
 export default class Travis extends File {
+  static matchesFileName(name) {
+    return name === '.travis.yml';
+  }
+
   async mergeContent(context, original, template) {
     const yml = yaml.safeLoad(original) || {};
     const tyml = yaml.safeLoad(context.expand(template));

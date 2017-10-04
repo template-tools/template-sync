@@ -8,6 +8,32 @@ import MergeAndRemoveLineSet from './merge-and-remove-line-set';
 import JSONFile from './json-file';
 import { GithubProvider } from './github-repository-provider';
 
+const mergers = [
+  Rollup,
+  Package,
+  JSONFile,
+  Travis,
+  MergeAndRemoveLineSet,
+  License
+];
+
+export async function createFiles(branch) {
+  const allFiles = new Map((await branch.list()).map(f => [f.path, f]));
+  const files = [];
+
+  for (const [name, f] of allFiles) {
+    for (const m of mergers) {
+      if (m.matchesFileName(name)) {
+        files.push(new m(name));
+        console.log(`${name} :  ${m.name}`);
+        break;
+      }
+    }
+  }
+
+  return files;
+}
+
 export async function worker(spinner, token, targetRepo, templateRepo) {
   spinner.text = targetRepo;
   const [user, repo, branch = 'master'] = targetRepo.split(/[\/#]/);

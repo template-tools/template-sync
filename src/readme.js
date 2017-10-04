@@ -1,6 +1,10 @@
 import File from './file';
 
 export default class Readme extends File {
+  static matchesFileName(name) {
+    return name.match(/README\./);
+  }
+
   async mergeContent(context, original, template) {
     const pkg = await context.files
       .get('package.json')

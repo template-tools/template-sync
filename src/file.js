@@ -1,4 +1,8 @@
 export default class File {
+  static matchesFileName(name) {
+    return false;
+  }
+
   constructor(path) {
     Object.defineProperty(this, 'path', {
       value: path
