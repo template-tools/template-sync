@@ -60,48 +60,51 @@ export default class Rollup extends File {
       const exp = exportDefaultDeclaration(ast);
       const templateExp = exportDefaultDeclaration(templateAST);
 
-      const banner = removePropertiesKey(exp.properties, 'banner');
-      let output, dest;
+      if (exp.properties !== undefined) {
+        let output, dest;
 
-      for (const p of exp.properties) {
-        switch (p.key.name) {
-          case 'targets':
-            p.key.name = 'output';
-            dest = p.value.elements[0].properties[0]; //.find(x => x.name === 'dest');
-            p.value = templateExp.properties.find(
-              x => x.key.name === 'output'
-            ).value;
-            output = p;
-            break;
-          case 'entry':
-            p.key.name = 'input';
-            p.value = templateExp.properties.find(
-              x => x.key.name === 'input'
-            ).value;
-        }
-      }
+        const banner = removePropertiesKey(exp.properties, 'banner');
 
-      if (exp.properties.find(x => x.key.name === 'input') === undefined) {
-        exp.properties.push(
-          templateExp.properties.find(x => x.key.name === 'input')
-        );
-      }
-
-      if (
-        exp.properties.find(x => x && x.key.name === 'output') === undefined
-      ) {
-        output = templateExp.properties.find(x => x.key.name === 'output');
-        exp.properties.push(output);
-      }
-
-      if (output !== undefined) {
-        if (banner !== undefined) {
-          output.value.properties.push(banner);
+        for (const p of exp.properties) {
+          switch (p.key.name) {
+            case 'targets':
+              p.key.name = 'output';
+              dest = p.value.elements[0].properties[0]; //.find(x => x.name === 'dest');
+              p.value = templateExp.properties.find(
+                x => x.key.name === 'output'
+              ).value;
+              output = p;
+              break;
+            case 'entry':
+              p.key.name = 'input';
+              p.value = templateExp.properties.find(
+                x => x.key.name === 'input'
+              ).value;
+          }
         }
 
-        if (dest !== undefined) {
-          output.value.properties.find(x => x.key.name === 'file').value =
-            dest.value;
+        if (exp.properties.find(x => x.key.name === 'input') === undefined) {
+          exp.properties.push(
+            templateExp.properties.find(x => x.key.name === 'input')
+          );
+        }
+
+        if (
+          exp.properties.find(x => x && x.key.name === 'output') === undefined
+        ) {
+          output = templateExp.properties.find(x => x.key.name === 'output');
+          exp.properties.push(output);
+        }
+
+        if (output !== undefined) {
+          if (banner !== undefined) {
+            output.value.properties.push(banner);
+          }
+
+          if (dest !== undefined) {
+            output.value.properties.find(x => x.key.name === 'file').value =
+              dest.value;
+          }
         }
       }
 
@@ -176,6 +179,10 @@ function exportDefaultDeclaration(ast) {
 }
 
 function removePropertiesKey(properties, name) {
+  if (properties === undefined) {
+    return undefined;
+  }
+
   const toBeRemoved = properties.findIndex(x => x && x.key.name === name);
   if (toBeRemoved >= 0) {
     const slot = properties[toBeRemoved];
