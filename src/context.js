@@ -77,6 +77,14 @@ export default class Context {
     }
   }
 
+  warn(...args) {
+    if (this.spinner === undefined) {
+      console.log(...args);
+    } else {
+      this.spinner.warn(...args);
+    }
+  }
+
   fail(...args) {
     if (this.spinner === undefined) {
       console.log(...args);

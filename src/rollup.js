@@ -126,8 +126,10 @@ export default class Rollup extends File {
         messages: ['chore(rollup): update from template']
       };
     } catch (e) {
-      context.fail(e);
+      context.warn(`unable to parse ${this.path}`);
+      context.warn(e);
     }
+
     return {
       path: this.path,
       content: original,
