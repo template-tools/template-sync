@@ -51,75 +51,87 @@ export default class Rollup extends File {
       };
     }
 
-    const templateAST = recast.parse(template);
-    const ast = recast.parse(original);
+    try {
+      const templateAST = recast.parse(template);
+      const ast = recast.parse(original);
 
-    removeUseStrict(ast);
+      removeUseStrict(ast);
 
-    const exp = exportDefaultDeclaration(ast);
-    const templateExp = exportDefaultDeclaration(templateAST);
+      const exp = exportDefaultDeclaration(ast);
+      const templateExp = exportDefaultDeclaration(templateAST);
 
-    const banner = removePropertiesKey(exp.properties, 'banner');
-    let output, dest;
+      const banner = removePropertiesKey(exp.properties, 'banner');
+      let output, dest;
 
-    for (const p of exp.properties) {
-      switch (p.key.name) {
-        case 'targets':
-          p.key.name = 'output';
-          dest = p.value.elements[0].properties[0]; //.find(x => x.name === 'dest');
-          p.value = templateExp.properties.find(
-            x => x.key.name === 'output'
-          ).value;
-          output = p;
-          break;
-        case 'entry':
-          p.key.name = 'input';
-          p.value = templateExp.properties.find(
-            x => x.key.name === 'input'
-          ).value;
-      }
-    }
-
-    if (exp.properties.find(x => x.key.name === 'input') === undefined) {
-      exp.properties.push(
-        templateExp.properties.find(x => x.key.name === 'input')
-      );
-    }
-
-    if (exp.properties.find(x => x && x.key.name === 'output') === undefined) {
-      output = templateExp.properties.find(x => x.key.name === 'output');
-      exp.properties.push(output);
-    }
-
-    if (output !== undefined) {
-      if (banner !== undefined) {
-        output.value.properties.push(banner);
+      for (const p of exp.properties) {
+        switch (p.key.name) {
+          case 'targets':
+            p.key.name = 'output';
+            dest = p.value.elements[0].properties[0]; //.find(x => x.name === 'dest');
+            p.value = templateExp.properties.find(
+              x => x.key.name === 'output'
+            ).value;
+            output = p;
+            break;
+          case 'entry':
+            p.key.name = 'input';
+            p.value = templateExp.properties.find(
+              x => x.key.name === 'input'
+            ).value;
+        }
       }
 
-      if (dest !== undefined) {
-        output.value.properties.find(x => x.key.name === 'file').value =
-          dest.value;
+      if (exp.properties.find(x => x.key.name === 'input') === undefined) {
+        exp.properties.push(
+          templateExp.properties.find(x => x.key.name === 'input')
+        );
       }
+
+      if (
+        exp.properties.find(x => x && x.key.name === 'output') === undefined
+      ) {
+        output = templateExp.properties.find(x => x.key.name === 'output');
+        exp.properties.push(output);
+      }
+
+      if (output !== undefined) {
+        if (banner !== undefined) {
+          output.value.properties.push(banner);
+        }
+
+        if (dest !== undefined) {
+          output.value.properties.find(x => x.key.name === 'file').value =
+            dest.value;
+        }
+      }
+
+      removePropertiesKey(exp.properties, 'format');
+      removePropertiesKey(exp.properties, 'sourceMap');
+      removePropertiesKey(exp.properties, 'dest');
+
+      let pkg = importDeclaration(ast, 'pkg');
+      if (pkg === undefined) {
+        pkg = importDeclaration(templateAST, 'pkg');
+        if (pkg !== undefined) {
+          ast.program.body = [pkg, ...ast.program.body];
+        }
+      }
+
+      const content = recast.print(ast).code;
+
+      return {
+        path: this.path,
+        content,
+        changed: content !== original,
+        messages: ['chore(rollup): update from template']
+      };
+    } catch (e) {
+      context.fail(e);
     }
-
-    removePropertiesKey(exp.properties, 'format');
-    removePropertiesKey(exp.properties, 'sourceMap');
-    removePropertiesKey(exp.properties, 'dest');
-
-    let pkg = importDeclaration(ast, 'pkg');
-    if (pkg === undefined) {
-      pkg = importDeclaration(templateAST, 'pkg');
-
-      ast.program.body = [pkg, ...ast.program.body];
-    }
-
-    const content = recast.print(ast).code;
-
     return {
       path: this.path,
-      content,
-      changed: content !== original,
-      messages: ['chore(rollup): update from template']
+      content: original,
+      changed: false
     };
   }
 }

@@ -132,3 +132,46 @@ export default {
 };`
   );
 });
+
+test('rollup without imports and complex target expression', async t => {
+  const provider = new MockProvider({
+    'rollup.config.json': {
+      templateRepo: `
+export default {
+  input: "input.js",
+  output: {
+    file: "output.js",
+    format: 'cjs'
+  }
+};`,
+      targetRepo: `export default ['base'].map(name => {
+  return {
+    input: 'tests/xx-test.js',
+    output: {
+      file: 'build/xx-test.js',
+      format: 'cjs'
+    }
+  };`
+    }
+  });
+
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
+    {}
+  );
+
+  const rollup = new Rollup('rollup.config.json');
+  const merged = await rollup.merge(context);
+  t.deepEqual(
+    merged.content,
+    `export default ['base'].map(name => {
+  return {
+    input: 'tests/xx-test.js',
+    output: {
+      file: 'build/xx-test.js',
+      format: 'cjs'
+    }
+  };`
+  );
+});
