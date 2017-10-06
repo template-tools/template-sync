@@ -60,4 +60,28 @@ export default class Context {
       .map(file => file.optionalDevModules(modules))
       .reduce((sum, current) => new Set([...sum, ...current]), new Set());
   }
+
+  set text(value) {
+    if (this.spinner === undefined) {
+      console.log(value);
+    } else {
+      this.spinner.text = value;
+    }
+  }
+
+  succeed(...args) {
+    if (this.spinner === undefined) {
+      console.log(...args);
+    } else {
+      this.spinner.succeed(...args);
+    }
+  }
+
+  fail(...args) {
+    if (this.spinner === undefined) {
+      console.log(...args);
+    } else {
+      this.spinner.fail(...args);
+    }
+  }
 }

@@ -69,6 +69,8 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
       'license.owner': user
     });
 
+    context.spiner = spinner;
+
     const pkg = new Package('package.json');
 
     if (templateRepo === undefined) {
@@ -102,7 +104,7 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
     files.forEach(f => context.addFile(f));
 
     const merges = (await Promise.all(
-      files.map(f => f.saveMerge(context))
+      files.map(f => f.saveMerge(context, spinner))
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {

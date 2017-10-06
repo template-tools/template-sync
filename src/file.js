@@ -58,7 +58,7 @@ export default class File {
     try {
       return this.merge(context);
     } catch (err) {
-      console.log(`${this.path}: ${err}`);
+      context.fail(`${this.name},${this.path}: ${err}`);
       return {
         path: this.path,
         changed: false
