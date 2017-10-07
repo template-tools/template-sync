@@ -293,7 +293,6 @@ export default class Package extends File {
     return {
       content: newContent,
       messages,
-      path: this.path,
       changed: original !== newContent
     };
   }

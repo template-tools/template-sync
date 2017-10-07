@@ -37,14 +37,12 @@ export default class Rollup extends File {
   async mergeContent(context, original, template) {
     if (template === '') {
       return {
-        path: this.path,
         content: original,
         changed: false
       };
     }
     if (original === '') {
       return {
-        path: this.path,
         content: template,
         messages: ['chore(rollup): copy from template'],
         changed: true
@@ -123,7 +121,6 @@ export default class Rollup extends File {
       const content = recast.print(ast).code;
 
       return {
-        path: this.path,
         content,
         changed: content !== original,
         messages: ['chore(rollup): update from template']
@@ -134,7 +131,6 @@ export default class Rollup extends File {
     }
 
     return {
-      path: this.path,
       content: original,
       changed: false
     };

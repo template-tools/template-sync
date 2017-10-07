@@ -104,14 +104,16 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
     files.forEach(f => context.addFile(f));
 
     const merges = (await Promise.all(
-      files.map(f => f.saveMerge(context, spinner))
+      files.map(f => Object.assign({ file: f }, f.saveMerge(context, spinner)))
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
       spinner.succeed(`${targetRepo} nothing changed`);
       return;
     }
-    spinner.text = merges.map(m => m.path + ': ' + m.messages[0]).join(',');
+    spinner.text = merges
+      .map(m => m.file.path + ': ' + m.messages[0])
+      .join(',');
 
     const newBranch = await repository.createBranch(newBrachName, sourceBranch);
 
@@ -134,7 +136,7 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
         body: merges
           .map(
             m =>
-              `${m.path}
+              `${m.file.path}
 ---
 - ${m.messages.join('\n- ')}
 `

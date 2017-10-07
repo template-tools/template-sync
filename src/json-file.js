@@ -23,7 +23,6 @@ export default class JSONFile extends File {
     const content = JSON.stringify(context.expand(target), undefined, 2);
 
     return {
-      path: this.path,
       content,
       changed: content !== original,
       messages: ['fix: updated set from template']

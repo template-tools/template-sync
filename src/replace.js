@@ -5,7 +5,6 @@ export default class Replace extends File {
     const content = context.expand(template);
 
     return {
-      path: this.path,
       content,
       changed: content !== original,
       messages: [`chore: ${this.path} overwritten from template`]

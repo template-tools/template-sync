@@ -18,7 +18,6 @@ export default class MergeAndRemoveLineSet extends MergeLineSet {
     const content = Array.from(result.values()).join('\n');
 
     return {
-      path: this.path,
       content,
       changed: content !== original,
       messages: [`${this.messageHead}: updated from template`]

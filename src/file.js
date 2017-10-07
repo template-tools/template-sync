@@ -35,7 +35,6 @@ export default class File {
 
   async mergeContent(context, original, template) {
     return {
-      path: this.path,
       changed: false,
       content: original
     };
@@ -60,7 +59,6 @@ export default class File {
     } catch (err) {
       context.fail(`${this.name},${this.path}: ${err}`);
       return {
-        path: this.path,
         changed: false
       };
     }

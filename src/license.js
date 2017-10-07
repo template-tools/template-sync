@@ -40,7 +40,6 @@ export default class License extends File {
       );
 
       return {
-        path: this.path,
         changed: content !== original,
         messages: ['fix: update LICENSE'],
         content
@@ -48,7 +47,6 @@ export default class License extends File {
     }
 
     return {
-      path: this.path,
       content: context.expand(template),
       changed: true,
       messages: [`fix: add LICENSE`]

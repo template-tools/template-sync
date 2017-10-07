@@ -109,7 +109,6 @@ export default class Travis extends File {
     }
 
     return {
-      path: this.path,
       content,
       changed: content !== original,
       messages

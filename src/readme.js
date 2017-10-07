@@ -29,7 +29,6 @@ export default class Readme extends File {
 
     const content = [...badges, '', ...body].join('\n');
     return {
-      path: this.path,
       content,
       changed: content !== original,
       messages: ['docs(README): update from template']
