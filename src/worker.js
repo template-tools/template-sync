@@ -106,7 +106,7 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
 
       if (templateRepo === undefined) {
         throw new Error(
-          `Unable to extract template repo url from ${targetRepo} package.json`
+          `Unable to extract template repo url from ${targetRepo} ${pkg.path}`
         );
       }
     }
@@ -114,7 +114,14 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
     context.templateRepo = await provider.repository(templateRepo);
     const templateBranch = await context.templateRepo.branch('master');
 
-    const files = await createFiles(templateBranch);
+    const json = JSON.parse(
+      await pkg.templateContent(context, { ignoreMissing: true })
+    );
+
+    const files = await createFiles(
+      templateBranch,
+      json.template && json.template.files
+    );
 
     files.forEach(f => context.addFile(f));
 
