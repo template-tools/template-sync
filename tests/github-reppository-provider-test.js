@@ -67,9 +67,11 @@ test('list files', async t => {
 
   const files = await branch.list();
 
-  t.is(files[0].path, `README.md`);
-  t.is(files[1].path, `tests`);
-  t.is(files[2].path, `tests/rollup.config.js`);
+  t.is(files[0].path, 'README.md');
+  t.is(files[0].type, 'blob');
+  t.is(files[1].path, 'tests');
+  t.is(files[1].type, 'tree');
+  t.is(files[2].path, 'tests/rollup.config.js');
 });
 
 test('content', async t => {
