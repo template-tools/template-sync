@@ -1,13 +1,6 @@
 import File from './file';
 
 export default class MergeLineSet extends File {
-  constructor(path, messageHead = 'fix') {
-    super(path);
-    Object.defineProperty(this, 'messageHead', {
-      value: messageHead
-    });
-  }
-
   async mergeContent(context, original, template) {
     const result = new Set(template.split(/\n/));
     original.split(/\n/).forEach(line => result.add(line));
@@ -17,7 +10,7 @@ export default class MergeLineSet extends File {
     return {
       content,
       changed: content !== original,
-      messages: [`${this.messageHead}: updated from template`]
+      messages: [this.options.message || 'fix: updated from template']
     };
   }
 }

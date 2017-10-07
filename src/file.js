@@ -3,9 +3,13 @@ export default class File {
     return false;
   }
 
-  constructor(path) {
+  constructor(path, options = {}) {
     Object.defineProperty(this, 'path', {
       value: path
+    });
+
+    Object.defineProperty(this, 'options', {
+      value: options
     });
   }
 
@@ -55,10 +59,19 @@ export default class File {
 
   async saveMerge(context) {
     try {
-      return this.merge(context);
+      const result = await this.merge(context);
+      if (result === undefined) {
+        return {
+          path: this.path,
+          changed: false
+        };
+      }
+      result.path = this.path;
+      return result;
     } catch (err) {
       context.fail(`${this.name},${this.path}: ${err}`);
       return {
+        path: this.path,
         changed: false
       };
     }

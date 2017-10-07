@@ -5,11 +5,15 @@ import Package from './package';
 import Rollup from './rollup';
 import License from './license';
 import MergeAndRemoveLineSet from './merge-and-remove-line-set';
+import ReplaceIfEmpty from './replace-if-empty';
 import JSONFile from './json-file';
 import { GithubProvider } from './github-repository-provider';
 
+const mm = require('micromatch');
+
 const mergers = [
   Rollup,
+  Readme,
   Package,
   JSONFile,
   Travis,
@@ -17,21 +21,46 @@ const mergers = [
   License
 ];
 
-export async function createFiles(branch) {
-  const allFiles = new Map((await branch.list()).map(f => [f.path, f]));
-  const files = [];
+const defaultMapping = [
+  { merger: 'Package', pattern: '**/package.json' },
+  { merger: 'Readme', pattern: '**/README.*' },
+  { merger: 'Rollup', pattern: '**/rollup.conf.js' },
+  { merger: 'License', pattern: 'LICENSE' },
+  {
+    merger: 'MergeAndRemoveLineSet',
+    pattern: '.gitignore',
+    options: { message: 'chore(git)' }
+  },
+  {
+    merger: 'MergeAndRemoveLineSet',
+    pattern: '.npmignore',
+    options: { message: 'chore(npm)' }
+  },
+  { merger: 'ReplaceIfEmpty', pattern: '**/*' }
+];
 
-  for (const [name, f] of allFiles) {
-    for (const m of mergers) {
-      if (m.matchesFileName(name)) {
-        files.push(new m(name));
-        console.log(`${name} :  ${m.name}`);
-        break;
-      }
-    }
-  }
+export async function createFiles(branch, mapping = defaultMapping) {
+  const files = await branch.list();
+  let alreadyPresent = new Set();
 
-  return files;
+  return mapping
+    .map(m => {
+      const found = mm(
+        files.filter(f => f.type === 'blob').map(f => f.path),
+        m.pattern
+      );
+
+      const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
+
+      alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
+
+      return notAlreadyProcessed.map(f => {
+        const merger = mergers.find(merger => merger.name === m.merger);
+
+        return new (merger ? merger : ReplaceIfEmpty)(f, m.options);
+      });
+    })
+    .reduce((last, current) => Array.from([...last, ...current]), []);
 }
 
 export async function worker(spinner, token, targetRepo, templateRepo) {
@@ -57,7 +86,6 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
     }, 0);
 
     const sourceBranch = await repository.branch(branch);
-
     const newBrachName = `template-sync-${maxBranchId + 1}`;
 
     const context = new Context(repository, undefined, {
@@ -85,35 +113,20 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
 
     context.templateRepo = await provider.repository(templateRepo);
     const templateBranch = await context.templateRepo.branch('master');
-    const templateFiles = new Map(
-      (await templateBranch.list()).map(f => [f.path, f])
-    );
 
-    const files = [
-      new Rollup('rollup.config.js'),
-      new Rollup('tests/rollup.config.js'),
-      pkg,
-      new Readme('doc/README.hbs'),
-      new JSONFile('doc/jsdoc.json'),
-      new Travis('.travis.yml'),
-      new MergeAndRemoveLineSet('.gitignore', 'chore(git)'),
-      new MergeAndRemoveLineSet('.npmignore', 'chore(npm)'),
-      new License('LICENSE')
-    ].filter(f => templateFiles.get(f.path));
+    const files = await createFiles(templateBranch);
 
     files.forEach(f => context.addFile(f));
 
     const merges = (await Promise.all(
-      files.map(f => Object.assign({ file: f }, f.saveMerge(context, spinner)))
+      files.map(f => f.saveMerge(context, spinner))
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
       spinner.succeed(`${targetRepo} nothing changed`);
       return;
     }
-    spinner.text = merges
-      .map(m => m.file.path + ': ' + m.messages[0])
-      .join(',');
+    spinner.text = merges.map(m => m.path + ': ' + m.messages[0]).join(',');
 
     const newBranch = await repository.createBranch(newBrachName, sourceBranch);
 
@@ -136,7 +149,7 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
         body: merges
           .map(
             m =>
-              `${m.file.path}
+              `${m.path}
 ---
 - ${m.messages.join('\n- ')}
 `

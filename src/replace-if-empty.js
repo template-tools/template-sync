@@ -1,14 +1,6 @@
 import File from './file';
 
 export default class ReplaceIfEmpty extends File {
-  constructor(path, messages) {
-    super(path);
-
-    Object.defineProperty(this, 'messages', {
-      value: messages
-    });
-  }
-
   get needsTemplate() {
     return false;
   }
@@ -18,10 +10,10 @@ export default class ReplaceIfEmpty extends File {
       ? {
           content: context.expand(template),
           changed: template !== '',
-          messages:
-            this.messages === undefined
-              ? [`chore: add missing ${this.path} from template`]
-              : this.messages
+          messages: [
+            this.options.message ||
+              `chore: add missing ${this.path} from template`
+          ]
         }
       : {
           path: this.path,

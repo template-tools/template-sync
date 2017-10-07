@@ -14,9 +14,10 @@ test('worker files', async t => {
 
   const files = await createFiles(branch);
 
-  console.log(files);
+  //console.log(files.map(f => `${f.constructor.name}:${f.path}`));
 
   t.is(files.find(f => f.path === 'package.json').path, 'package.json');
+  t.is(files.find(f => f.path === 'package.json').constructor.name, 'Package');
 });
 
 test('worker', async t => {
