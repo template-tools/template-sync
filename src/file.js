@@ -67,6 +67,10 @@ export default class File {
         };
       }
       result.path = this.path;
+
+      context.properties.path = this.path;
+      result.messages = context.expand(result.messages);
+
       return result;
     } catch (err) {
       context.fail(`${this.name},${this.path}: ${err}`);

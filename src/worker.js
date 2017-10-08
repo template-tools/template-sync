@@ -29,12 +29,12 @@ const defaultMapping = [
   {
     merger: 'MergeAndRemoveLineSet',
     pattern: '.gitignore',
-    options: { message: 'chore(git)' }
+    options: { message: 'chore(git): update {{path}} from template' }
   },
   {
     merger: 'MergeAndRemoveLineSet',
     pattern: '.npmignore',
-    options: { message: 'chore(npm)' }
+    options: { message: 'chore(npm): update {{path}} from template' }
   },
   { merger: 'ReplaceIfEmpty', pattern: '**/*' }
 ];
@@ -133,6 +133,7 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
       spinner.succeed(`${targetRepo} nothing changed`);
       return;
     }
+
     spinner.text = merges.map(m => m.path + ': ' + m.messages[0]).join(',');
 
     const newBranch = await repository.createBranch(newBrachName, sourceBranch);
