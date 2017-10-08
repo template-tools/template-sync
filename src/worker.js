@@ -15,6 +15,7 @@ const mm = require('micromatch');
 
 const mergers = [
   Rollup,
+  Travis,
   Readme,
   Package,
   JSONFile,
@@ -28,6 +29,7 @@ const mergers = [
 
 const defaultMapping = [
   { merger: 'Package', pattern: '**/package.json' },
+  { merger: 'Travis', pattern: '.travis.yml' },
   { merger: 'Readme', pattern: '**/README.*' },
   { merger: 'Rollup', pattern: '**/rollup.conf.js' },
   { merger: 'License', pattern: 'LICENSE' },
