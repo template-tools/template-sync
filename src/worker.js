@@ -5,7 +5,9 @@ import Package from './package';
 import Rollup from './rollup';
 import License from './license';
 import MergeAndRemoveLineSet from './merge-and-remove-line-set';
+import MergeLineSet from './merge-line-set';
 import ReplaceIfEmpty from './replace-if-empty';
+import Replace from './replace';
 import JSONFile from './json-file';
 import { GithubProvider } from './github-repository-provider';
 
@@ -18,7 +20,10 @@ const mergers = [
   JSONFile,
   Travis,
   MergeAndRemoveLineSet,
-  License
+  MergeLineSet,
+  License,
+  ReplaceIfEmpty,
+  Replace
 ];
 
 const defaultMapping = [
