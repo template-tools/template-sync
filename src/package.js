@@ -138,6 +138,7 @@ export default class Package extends File {
     }
 
     const usedDevModules = await context.usedDevModules();
+    const optionalDevModules = context.optionalDevModules(usedDevModules);
 
     const deepPropeties = {
       scripts: {},
@@ -161,6 +162,13 @@ export default class Package extends File {
             }
           } else {
             const tp = context.expand(template[category][d]);
+
+            /*if (category === 'devDependencies') {
+              if (optionalDevModules.has(d)) {
+                return;
+              }
+            }*/
+
             if (tp !== target[category][d]) {
               messages.push(
                 target[category][d] === undefined
@@ -232,29 +240,20 @@ export default class Package extends File {
       };
     }
 
-    /*
-    context
-      .optionalDevModules(new Set(Object.keys(target.devDependencies)))
-      .forEach(toBeRemoved => delete target.devDependencies[toBeRemoved]);
-*/
+    const toBeDeletedModules = Array.from(
+      context.optionalDevModules(new Set(Object.keys(target.devDependencies)))
+    ).filter(m => !usedDevModules.has(m));
 
-    const devModulesToBeRemoved = Object.keys(
-      target.devDependencies
-    ).filter(m => {
-      if (
-        m === 'cracks' ||
-        m.match(/rollup-plugin/) ||
-        m.match(/babel-preset/)
-      ) {
-        return usedDevModules.has(m) ? false : true;
-      }
-
-      return false;
-    });
-
-    devModulesToBeRemoved.forEach(
-      toBeRemoved => delete target.devDependencies[toBeRemoved]
+    console.log(`modules: ${Object.keys(target.devDependencies)}`);
+    console.log(`used modules: ${Array.from(usedDevModules)}`);
+    console.log(
+      `optional modules: ${Array.from(
+        context.optionalDevModules(new Set(Object.keys(target.devDependencies)))
+      )}`
     );
+    console.log(`toBeDeletedModules: ${Array.from(toBeDeletedModules)}`);
+
+    toBeDeletedModules.forEach(d => delete target.devDependencies[d]);
 
     target = deleter(target, template, messages, []);
 

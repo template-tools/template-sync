@@ -39,13 +39,20 @@ export default class Context {
   async usedDevModules() {
     const usedModuleSets = await Promise.all(
       Array.from(this.files.values()).map(async file => {
+        let usedDevModules;
         if (file.path === 'package.json') {
-          return file.usedDevModules(
+          usedDevModules = file.usedDevModules(
             file.originalContent(this, { ignoreMissing: true })
           );
+        } else {
+          const m = await file.merge(this);
+          usedDevModules = file.usedDevModules(m.content);
         }
-        const m = await file.merge(this);
-        return file.usedDevModules(m.content);
+
+        console.log(
+          `usedDevModules: ${file.path} -> ${Array.from(usedDevModules)}`
+        );
+        return usedDevModules;
       })
     );
 

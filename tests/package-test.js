@@ -99,7 +99,7 @@ test('package handle missing scripts in template', async t => {
   });
 });
 
-test('package devDependencies keep cracks', async t => {
+test.only('package devDependencies keep cracks', async t => {
   const context = await createContext(
     {
       devDependencies: {}
@@ -109,8 +109,8 @@ test('package devDependencies keep cracks', async t => {
         verifyRelease: 'cracks'
       },
       devDependencies: {
-        cracks: '3.1.2' /*,
-        'dont-crack': '1.0.0'*/
+        cracks: '3.1.2',
+        'dont-crack': '1.0.0'
       }
     }
   );
@@ -119,21 +119,23 @@ test('package devDependencies keep cracks', async t => {
   context.addFile(pkg);
 
   const merged = await pkg.merge(context);
+
+  //console.log(merged.messages);
 
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
     cracks: '3.1.2'
   });
 });
 
-test('package devDependencies remove cracks', async t => {
+test.only('package devDependencies remove cracks', async t => {
   const context = await createContext(
     {
       devDependencies: {}
     },
     {
       devDependencies: {
-        cracks: '3.1.2' /*,
-        'dont-crack': '1.0.0'*/
+        cracks: '3.1.2',
+        'dont-crack': '1.0.0'
       }
     }
   );
@@ -141,6 +143,8 @@ test('package devDependencies remove cracks', async t => {
   const pkg = new Package('package.json');
   context.addFile(pkg);
   const merged = await pkg.merge(context);
+
+  //console.log(merged.messages);
 
   t.deepEqual(JSON.parse(merged.content).devDependencies, {});
   //t.true(merged.messages.includes('chore(devDependencies): remove cracks'));
