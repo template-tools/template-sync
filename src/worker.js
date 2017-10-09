@@ -31,7 +31,7 @@ const defaultMapping = [
   { merger: 'Package', pattern: '**/package.json' },
   { merger: 'Travis', pattern: '.travis.yml' },
   { merger: 'Readme', pattern: '**/README.*' },
-  { merger: 'Rollup', pattern: '**/rollup.conf.js' },
+  { merger: 'Rollup', pattern: '**/rollup.config.js' },
   { merger: 'License', pattern: 'LICENSE' },
   {
     merger: 'MergeAndRemoveLineSet',
@@ -70,7 +70,13 @@ export async function createFiles(branch, mapping = defaultMapping) {
     .reduce((last, current) => Array.from([...last, ...current]), []);
 }
 
-export async function worker(spinner, token, targetRepo, templateRepo) {
+export async function worker(
+  spinner,
+  token,
+  targetRepo,
+  templateRepo,
+  dry = false
+) {
   spinner.text = targetRepo;
   const [user, repo, branch = 'master'] = targetRepo.split(/[\/#]/);
 
@@ -142,6 +148,10 @@ export async function worker(spinner, token, targetRepo, templateRepo) {
     }
 
     spinner.text = merges.map(m => m.path + ': ' + m.messages[0]).join(',');
+
+    if (dry) {
+      return;
+    }
 
     const newBranch = await repository.createBranch(newBrachName, sourceBranch);
 

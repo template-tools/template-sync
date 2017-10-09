@@ -99,7 +99,7 @@ test('package handle missing scripts in template', async t => {
   });
 });
 
-test.only('package devDependencies keep cracks', async t => {
+test('package devDependencies keep cracks', async t => {
   const context = await createContext(
     {
       devDependencies: {}
@@ -127,7 +127,7 @@ test.only('package devDependencies keep cracks', async t => {
   });
 });
 
-test.only('package devDependencies remove cracks', async t => {
+test('package devDependencies remove cracks', async t => {
   const context = await createContext(
     {
       devDependencies: {}

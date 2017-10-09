@@ -244,6 +244,7 @@ export default class Package extends File {
       context.optionalDevModules(new Set(Object.keys(target.devDependencies)))
     ).filter(m => !usedDevModules.has(m));
 
+    /*
     console.log(`modules: ${Object.keys(target.devDependencies)}`);
     console.log(`used modules: ${Array.from(usedDevModules)}`);
     console.log(
@@ -252,6 +253,7 @@ export default class Package extends File {
       )}`
     );
     console.log(`toBeDeletedModules: ${Array.from(toBeDeletedModules)}`);
+*/
 
     toBeDeletedModules.forEach(d => delete target.devDependencies[d]);
 

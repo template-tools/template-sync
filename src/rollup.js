@@ -21,8 +21,6 @@ export default class Rollup extends File {
   }
 
   usedDevModules(content) {
-    console.log(`START usedDevModules ${this.path} `);
-
     const modules = new Set();
 
     const ast = recast.parse(content);
@@ -33,7 +31,6 @@ export default class Rollup extends File {
       }
     }
 
-    console.log(`usedDevModules ${this.path} : ${modules}`);
     return modules;
   }
 

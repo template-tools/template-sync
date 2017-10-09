@@ -14,6 +14,7 @@ process.on('unhandledRejection', reason => spinner.fail(reason));
 program
   .description('Keep npm package in sync with its template')
   .version(require(path.join(__dirname, '..', 'package.json')).version)
+  //.option('--dry', 'do not create branch/pull request')
   .option(
     '-k, --keystore <account/service>',
     'keystore',
@@ -69,7 +70,9 @@ program
         return;
       }
       Promise.all(
-        args.repos.map(repo => worker(spinner, pass, repo, options.template))
+        args.repos.map(repo =>
+          worker(spinner, pass, repo, options.template, options.dry)
+        )
       );
     });
   });
