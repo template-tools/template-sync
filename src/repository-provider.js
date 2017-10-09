@@ -61,6 +61,10 @@ export class Repository {
     return new Error('not implemented');
   }
 
+  async deleteBranch(name) {
+    return new Error('not implemented');
+  }
+
   async createPullRequest() {
     return new Error('not implemented');
   }
