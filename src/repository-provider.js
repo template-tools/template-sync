@@ -80,6 +80,10 @@ export class Branch {
     return this.repository.provider;
   }
 
+  delete() {
+    return this.repository.deleteBarnch(this.name);
+  }
+
   async content(path) {
     return new Error('not implemented');
   }

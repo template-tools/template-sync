@@ -28,7 +28,7 @@ test('provider repo with branch name', async t => {
   t.is(branches.get('master').name, 'master');
 });
 
-test('create branch', async t => {
+test.only('create branch', async t => {
   const provider = new GithubProvider(process.env.GH_TOKEN);
   const repository = await provider.repository(REPOSITORY_NAME);
   const branches = await repository.branches();
@@ -39,7 +39,7 @@ test('create branch', async t => {
   const branch = await repository.createBranch(newName);
 
   t.is(branch.name, newName);
-  
+
   await repository.deleteBranch(newName);
   t.is(branches.get(newName), undefined);
 });

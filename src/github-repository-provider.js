@@ -57,13 +57,13 @@ export class GithubRepository extends Repository {
     this._branches.set(b.name, b);
     return b;
   }
-  
+
   async deleteBranch(name) {
     const res = await this.client.delete(
       `/repos/${this.name}/git/refs/heads/${name}`
     );
-    console.log(res);
-    return res;
+
+    this._branches.delete(name);
   }
 }
 
