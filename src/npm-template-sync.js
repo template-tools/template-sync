@@ -43,8 +43,6 @@ program
 
     //const pass = await keytar.getPassword(keystore.account, keystore.service);
 
-    console.log(pass);
-
     await Promise.all(
       args.repos.map(repo =>
         worker(spinner, pass, repo, options.template, options.dry)

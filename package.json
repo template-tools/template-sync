@@ -11,9 +11,12 @@
     "precover": "rollup -c tests/rollup.config.js",
     "posttest": "npm run prepare && markdown-doctest",
     "start": "node --harmony-async-await webhook/index",
-    "docs": "jsdoc2md --configure doc/jsdoc.json -l off -t doc/README.hbs -f src/*.js >README.md",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "prepare": "rollup -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync"
+    "docs":
+      "jsdoc2md --configure doc/jsdoc.json -l off -t doc/README.hbs -f src/*.js >README.md",
+    "semantic-release":
+      "semantic-release pre && npm publish && semantic-release post",
+    "prepare":
+      "rollup -c -- src/npm-template-sync.js && chmod +x bin/npm-template-sync"
   },
   "bin": {
     "npm-template-sync": "bin/npm-template-sync"
@@ -32,7 +35,6 @@
     "github-basic": "^6.0.0",
     "github-webhook-handler": "^0.6.0",
     "js-yaml": "^3.10.0",
-    "keychain": "^1.3.0",
     "keytar": "^4.0.4",
     "micro": "^9.0.0",
     "micromatch": "^3.1.0",
@@ -62,10 +64,7 @@
     "xo": "^0.19.0"
   },
   "release": {},
-  "keywords": [
-    "npm",
-    "template"
-  ],
+  "keywords": ["npm", "template"],
   "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/arlac77/npm-template-sync/issues"
@@ -78,21 +77,12 @@
     }
   ],
   "ava": {
-    "files": [
-      "build/test-bundle.js"
-    ],
-    "require": [
-      "babel-register"
-    ]
+    "files": ["build/test-bundle.js"],
+    "require": ["babel-register"]
   },
   "nyc": {
-    "include": [
-      "build/test-bundle.js",
-      "src/**/*.js"
-    ],
-    "reporter": [
-      "lcov"
-    ],
+    "include": ["build/test-bundle.js", "src/**/*.js"],
+    "reporter": ["lcov"],
     "report-dir": "./build/coverage"
   },
   "template": {
