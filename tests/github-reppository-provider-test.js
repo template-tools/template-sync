@@ -39,6 +39,9 @@ test('create branch', async t => {
   const branch = await repository.createBranch(newName);
 
   t.is(branch.name, newName);
+  
+  await repository.deleteBranch(newName);
+  t.is(branches.get(newName), undefined);
 });
 
 test('create commit', async t => {
