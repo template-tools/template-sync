@@ -58,7 +58,7 @@ export default class Rollup extends File {
       const exp = exportDefaultDeclaration(ast);
       const templateExp = exportDefaultDeclaration(templateAST);
 
-      if (exp.properties !== undefined) {
+      if (exp !== undefined && exp.properties !== undefined) {
         let output, dest;
 
         const banner = removePropertiesKey(exp.properties, 'banner');
@@ -104,11 +104,11 @@ export default class Rollup extends File {
               dest.value;
           }
         }
-      }
 
-      removePropertiesKey(exp.properties, 'format');
-      removePropertiesKey(exp.properties, 'sourceMap');
-      removePropertiesKey(exp.properties, 'dest');
+        removePropertiesKey(exp.properties, 'format');
+        removePropertiesKey(exp.properties, 'sourceMap');
+        removePropertiesKey(exp.properties, 'dest');
+      }
 
       let pkg = importDeclaration(ast, 'pkg');
       if (pkg === undefined) {
