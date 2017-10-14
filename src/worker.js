@@ -9,6 +9,7 @@ import MergeLineSet from './merge-line-set';
 import ReplaceIfEmpty from './replace-if-empty';
 import Replace from './replace';
 import JSONFile from './json-file';
+import JSDoc from './jsdoc';
 import { GithubProvider } from './github-repository-provider';
 
 const mm = require('micromatch');
@@ -19,6 +20,7 @@ const mergers = [
   Readme,
   Package,
   JSONFile,
+  JSDoc,
   Travis,
   MergeAndRemoveLineSet,
   MergeLineSet,
@@ -31,6 +33,7 @@ const defaultMapping = [
   { merger: 'Package', pattern: '**/package.json' },
   { merger: 'Travis', pattern: '.travis.yml' },
   { merger: 'Readme', pattern: '**/README.*' },
+  { merger: 'JSDoc', pattern: '**/jsdoc.json' },
   { merger: 'Rollup', pattern: '**/rollup.config.js' },
   { merger: 'License', pattern: 'LICENSE' },
   {
