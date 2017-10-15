@@ -251,7 +251,7 @@ export default class Package extends File {
 
     toBeDeletedModules.forEach(d => {
       messages = messages.filter(
-        m => !m.startsWith(`chore(devDependency): add ${d}@`)
+        m => !m.startsWith(`chore(devDependencies): add ${d}@`)
       );
       delete target.devDependencies[d];
     });
