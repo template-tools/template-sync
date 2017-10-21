@@ -31,7 +31,7 @@ function diffVersion(a, b) {
 function isValidVersion(version) {
   version = String(version);
 
-  const m = version.match(/^(\d+)(\.(\d+))?$/);
+  const m = version.match(/^(\d+)(\.(\d+))*$/);
 
   return m ? true : false;
 }
