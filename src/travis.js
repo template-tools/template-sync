@@ -28,6 +28,14 @@ function diffVersion(a, b) {
   return 0;
 }
 
+function isValidVersion(version) {
+  version = String(version);
+
+  const m = version.match(/^(\d+)(\.(\d+))?$/);
+
+  return m ? true : false;
+}
+
 function normalizeVersion(version) {
   version = String(version);
 
@@ -65,6 +73,7 @@ export default class Travis extends File {
     if (formerNodeVersions !== undefined) {
       formerNodeVersions.forEach(ov => {
         if (
+          isValidVersion(ov) &&
           yml.node_js.find(
             nv =>
               semverDiff(normalizeVersion(ov), normalizeVersion(nv)) === 'major'
