@@ -23,7 +23,14 @@ test('worker files', async t => {
 test('worker', async t => {
   const spinner = ora('args');
 
-  await worker(spinner, process.env.GH_TOKEN, REPOSITORY_NAME, TEMPLATE_REPO);
+  const pullRequest = await worker(
+    spinner,
+    process.env.GH_TOKEN,
+    REPOSITORY_NAME,
+    TEMPLATE_REPO
+  );
 
-  t.pass('worker done');
+  //console.log(pullRequest.name);
+  t.truthy(pullRequest.name.length > 0, true);
+  //t.pass('worker done');
 });

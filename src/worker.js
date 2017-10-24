@@ -172,7 +172,7 @@ export async function worker(
     await newBranch.commit(messages.join('\n'), merges);
 
     try {
-      const result = await sourceBranch.createPullRequest(newBranch, {
+      const pullRequest = await sourceBranch.createPullRequest(newBranch, {
         title: `merge package template from ${context.templateRepo.name}`,
         body: merges
           .map(
@@ -184,9 +184,11 @@ export async function worker(
           )
           .join('\n')
       });
-      spinner.succeed(result.body.html_url);
+      spinner.succeed(`${targetRepo}: ${pullRequest.name}`);
+
+      return pullRequest;
     } catch (err) {
-      spinner.fail(err.res.body.errors);
+      spinner.fail(err);
     }
   } catch (err) {
     spinner.fail(`${user}/${repo}: ${err}`);
