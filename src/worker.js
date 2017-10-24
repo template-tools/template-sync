@@ -146,11 +146,11 @@ export async function worker(
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      spinner.succeed(`${targetRepo} nothing changed`);
+      spinner.succeed(`${targetRepo}: nothing changed`);
       return;
     }
 
-    spinner.text = merges.map(m => m.path + ': ' + m.messages[0]).join(',');
+    spinner.text = merges.map(m => `${targetRepo}: ${m.messages[0]}`).join(',');
 
     if (dry) {
       return;
