@@ -2,79 +2,83 @@ import { worker } from './worker';
 
 const program = require('caporal'),
   path = require('path'),
-  keychain = require('keychain'),
+  //keychain = require('keychain'),
+  keytar = require('keytar'),
   prompt = require('prompt'),
-  ora = require('ora');
+  ora = require('ora'),
+  fs = require('fs');
 
-const spinner = ora('args').start();
+const spinner = ora('args');
 
 process.on('uncaughtException', err => spinner.fail(err));
 process.on('unhandledRejection', reason => spinner.fail(reason));
 
 program
   .description('Keep npm package in sync with its template')
-  .version(require(path.join(__dirname, '..', 'package.json')).version)
-  //.option('--dry', 'do not create branch/pull request')
+  .version(
+    JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')))
+      .version
+  )
   .option(
     '-k, --keystore <account/service>',
     'keystore',
-    /^[\w\-]+\/.*/,
-    'arlac77/GitHub for Mac SSH key passphrase — github.com'
+    /\w+(\/\w+)?/,
+    'github/GH_TOKEN'
   )
-  .option('-s, --save', 'save keystore')
+  //  .option('-d, --dry', 'dry run do not change anything')
   .option(
     '-t, --template <user/repo>',
     'template repository',
     /^[\w\-]+\/[\w\-]+$/
   )
   .argument('[repos...]', 'repos to merge')
-  .action((args, options) => {
-    const keystore = {};
-    [keystore.account, keystore.service] = options.keystore.split(/\//);
+  .action(async (args, options) => {
+    const password = await getPassword(options);
 
-    if (options.save) {
-      prompt.start();
-      const schema = {
-        properties: {
-          password: {
-            required: true,
-            hidden: true
-          }
-        }
-      };
-      prompt.get(schema, (err, result) => {
-        if (err) {
-          spinner.fail(err);
-          return;
-        }
-        keychain.setPassword(
-          {
-            account: keystore.account,
-            service: keystore.service,
-            password: result.password
-          },
-          err => {
-            if (err) {
-              spinner.fail(err);
-              return;
-            }
-            spinner.succeed('password set');
-          }
-        );
-      });
-    }
+    spinner.start();
 
-    keychain.getPassword(keystore, (err, pass) => {
-      if (err) {
-        spinner.fail(err);
-        return;
-      }
-      Promise.all(
-        args.repos.map(repo =>
-          worker(spinner, pass, repo, options.template, options.dry)
-        )
-      );
-    });
+    await Promise.all(
+      args.repos.map(repo =>
+        worker(spinner, password, repo, options.template, options.dry)
+      )
+    );
   });
 
 program.parse(process.argv);
+
+async function getPassword(options) {
+  let [account, service] = options.keystore.split(/\//);
+
+  const password = await keytar.getPassword(account, service);
+
+  //const password = await keytar.findPassword(service);
+
+  if (password !== null) {
+    return password;
+  }
+
+  return await savePassword(account, service);
+}
+
+function savePassword(account, service) {
+  const schema = {
+    properties: {
+      password: {
+        required: true,
+        hidden: true
+      }
+    }
+  };
+
+  return new Promise((resolve, reject) =>
+    prompt.get(schema, (err, result) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+        return;
+      }
+      keytar.setPassword(account, service, result.password);
+      resolve(result.password);
+    })
+  );
+}
