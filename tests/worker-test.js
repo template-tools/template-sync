@@ -31,6 +31,6 @@ test('worker', async t => {
   );
 
   //console.log(pullRequest.name);
-  t.truthy(pullRequest.name.length > 0, true);
+  t.truthy(pullRequest.name);
   //t.pass('worker done');
 });
