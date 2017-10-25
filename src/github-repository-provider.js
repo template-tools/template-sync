@@ -70,6 +70,15 @@ export class GithubRepository extends Repository {
 
     this._branches.delete(name);
   }
+
+  async deletePullRequest(name) {
+    /*
+    const res = await this.client.delete(`/repos/${this.name}/pull/${name}`);
+    console.log(res);
+    return res;
+    */
+    //return new Error('not implemented');
+  }
 }
 
 export class GithubBranch extends Branch {

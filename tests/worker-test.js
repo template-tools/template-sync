@@ -32,5 +32,8 @@ test('worker', async t => {
 
   //console.log(pullRequest.name);
   t.truthy(pullRequest.name);
+
+  await pullRequest.delete();
+
   //t.pass('worker done');
 });

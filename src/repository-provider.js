@@ -75,6 +75,10 @@ export class Repository {
   async createPullRequest() {
     return new Error('not implemented');
   }
+
+  async deletePullRequest(name) {
+    return new Error('not implemented');
+  }
 }
 
 export class Branch {
@@ -116,5 +120,9 @@ export class PullRequest {
 
   get provider() {
     return this.repository.provider;
+  }
+
+  delete() {
+    return this.repository.deletePullRequest(this.name);
   }
 }
