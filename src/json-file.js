@@ -25,7 +25,7 @@ export default class JSONFile extends File {
     return {
       content,
       changed: content !== original,
-      messages: ['fix: updated set from template']
+      messages: ['chore: update from template']
     };
   }
 }

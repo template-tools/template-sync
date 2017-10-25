@@ -61,6 +61,8 @@ test('create commit', async t => {
   ]);
 
   t.is(commit.ref, `refs/heads/${newName}`);
+
+  await repository.deleteBranch(newName);
 });
 
 test('list files', async t => {

@@ -13,6 +13,13 @@ export class Provider {
     return Branch;
   }
 
+  /**
+   * @return pull request class used by the Provider
+   */
+  static get pullRequestClass() {
+    return PullRequest;
+  }
+
   constructor() {
     Object.defineProperty(this, 'repositories', { value: new Map() });
   }
@@ -68,6 +75,10 @@ export class Repository {
   async createPullRequest() {
     return new Error('not implemented');
   }
+
+  async deletePullRequest(name) {
+    return new Error('not implemented');
+  }
 }
 
 export class Branch {
@@ -98,5 +109,20 @@ export class Branch {
 
   async list() {
     return [];
+  }
+}
+
+export class PullRequest {
+  constructor(repository, name) {
+    Object.defineProperty(this, 'repository', { value: repository });
+    Object.defineProperty(this, 'name', { value: name });
+  }
+
+  get provider() {
+    return this.repository.provider;
+  }
+
+  delete() {
+    return this.repository.deletePullRequest(this.name);
   }
 }

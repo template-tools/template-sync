@@ -57,7 +57,7 @@ export default class Package extends File {
     let target =
       original === undefined || original === '' ? {} : JSON.parse(original);
     const template = JSON.parse(templateContent);
-    const messages = [];
+    let messages = [];
     const properties = context.properties;
 
     if (target.name === undefined || target.name === '') {
@@ -163,12 +163,6 @@ export default class Package extends File {
           } else {
             const tp = context.expand(template[category][d]);
 
-            /*if (category === 'devDependencies') {
-              if (optionalDevModules.has(d)) {
-                return;
-              }
-            }*/
-
             if (tp !== target[category][d]) {
               messages.push(
                 target[category][d] === undefined
@@ -255,7 +249,12 @@ export default class Package extends File {
     console.log(`toBeDeletedModules: ${Array.from(toBeDeletedModules)}`);
 */
 
-    toBeDeletedModules.forEach(d => delete target.devDependencies[d]);
+    toBeDeletedModules.forEach(d => {
+      messages = messages.filter(
+        m => !m.startsWith(`chore(devDependencies): add ${d}@`)
+      );
+      delete target.devDependencies[d];
+    });
 
     target = deleter(target, template, messages, []);
 

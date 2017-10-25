@@ -3,6 +3,36 @@ import Context from '../src/context';
 import Travis from '../src/travis';
 import { MockProvider } from './repository-mock';
 
+test('travis node versions none numeric', async t => {
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: `node_js:
+  - 7.7.2
+`,
+      targetRepo: `node_js:
+  - 7.7.1
+  - iojs
+`
+    }
+  });
+
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
+    {}
+  );
+
+  const merger = new Travis('aFile');
+  const merged = await merger.merge(context);
+
+  t.deepEqual(
+    merged.content,
+    `node_js:
+  - 7.7.2
+`
+  );
+});
+
 test('travis node versions simple', async t => {
   const provider = new MockProvider({
     aFile: {

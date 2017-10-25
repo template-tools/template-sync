@@ -1,4 +1,9 @@
-import { Provider, Repository, Branch } from './repository-provider';
+import {
+  Provider,
+  Repository,
+  Branch,
+  PullRequest
+} from './repository-provider';
 
 const github = require('github-basic');
 
@@ -65,6 +70,15 @@ export class GithubRepository extends Repository {
 
     this._branches.delete(name);
   }
+
+  async deletePullRequest(name) {
+    /*
+    const res = await this.client.delete(`/repos/${this.name}/pull/${name}`);
+    console.log(res);
+    return res;
+    */
+    //return new Error('not implemented');
+  }
 }
 
 export class GithubBranch extends Branch {
@@ -96,13 +110,18 @@ export class GithubBranch extends Branch {
     };
   }
 
-  createPullRequest(to, msg) {
-    return this.client.post(`/repos/${this.repository.name}/pulls`, {
-      title: msg.title,
-      body: msg.body,
-      base: this.name,
-      head: to.name
-    });
+  async createPullRequest(to, msg) {
+    const result = await this.client.post(
+      `/repos/${this.repository.name}/pulls`,
+      {
+        title: msg.title,
+        body: msg.body,
+        base: this.name,
+        head: to.name
+      }
+    );
+    //console.log(result);
+    return new PullRequest(this.repository, result.number);
   }
 
   async latestCommitSha() {

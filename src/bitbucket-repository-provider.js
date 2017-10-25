@@ -46,7 +46,8 @@ export class BitbucketRepository extends Repository {
 
   async createBranch(name, from) {
     const res = await this.client.put(
-      `repositories/${this.name}/branches/${name}`
+      `repositories/${this.name}/branches/master/`,
+      { branch: name }
     );
     console.log(res);
 
