@@ -6,16 +6,24 @@ export default class Readme extends File {
   }
 
   async mergeContent(context, original, template) {
-    const pkg = await context.files
+    const pkgTemplate = await context.files
       .get('package.json')
       .templateContent(context);
+    const pkg = await context.files
+      .get('package.json')
+      .originalContent(context);
 
     const p = JSON.parse(pkg);
+    const pTemplate = JSON.parse(pkgTemplate);
+
     const badges =
-      p.template && p.template.badges
-        ? p.template.badges.map(b =>
-            context.expand(`[![${b.name}](${b.icon})](${b.url})`)
-          )
+      pTemplate.template && pTemplate.template.badges
+        ? pTemplate.template.badges.map(b => {
+            // TODO do not alter global properties use private layer here
+            Object.assign(context.properties, p.template.badges[b.name]);
+
+            return context.expand(`[![${b.name}](${b.icon})](${b.url})`);
+          })
         : [];
 
     let body = original.split(/\n/);
