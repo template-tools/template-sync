@@ -24,7 +24,11 @@ export default class Readme extends File {
               Object.assign(context.properties, p.template.badges[b.name]);
             }
 
-            return context.expand(`[![${b.name}](${b.icon})](${b.url})`);
+            const r = context.expand(`[![${b.name}](${b.icon})](${b.url})`);
+            if (r.match(/\{\{/)) {
+              return '';
+            }
+            return r;
           })
         : [];
 
