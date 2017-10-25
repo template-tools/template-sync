@@ -20,7 +20,9 @@ export default class Readme extends File {
       pTemplate.template && pTemplate.template.badges
         ? pTemplate.template.badges.map(b => {
             // TODO do not alter global properties use private layer here
-            Object.assign(context.properties, p.template.badges[b.name]);
+            if (p.template !== undefined && p.template.badges !== undefined) {
+              Object.assign(context.properties, p.template.badges[b.name]);
+            }
 
             return context.expand(`[![${b.name}](${b.icon})](${b.url})`);
           })
