@@ -4,17 +4,31 @@ import Readme from '../src/readme';
 import Package from '../src/package';
 import { MockProvider } from './repository-mock';
 
-test('readme', async t => {
+test.only('readme', async t => {
   const provider = new MockProvider({
     aFile: {
-      templateRepo: `Line 1x
-      Line 2x`,
-      targetRepo: `Line 1
+      templateRepo: `[![Badge 1
+[![Badge 2
 
-Line 2`
+body
+body`,
+      targetRepo: `[![Badge 1
+
+body
+body`
     },
     'package.json': {
-      templateRepo: JSON.stringify({}),
+      templateRepo: JSON.stringify({
+        template: {
+          badges: [
+            {
+              name: 'npm',
+              icon: 'https://img.shields.io/npm/v/{{name}}.svg',
+              url: 'https://www.npmjs.com/package/{{name}}'
+            }
+          ]
+        }
+      }),
       targetRepo: '{}'
     }
   });
@@ -33,6 +47,7 @@ Line 2`
   t.deepEqual(
     merged.content,
     `
-Line 2`
+body
+body`
   );
 });

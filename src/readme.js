@@ -18,18 +18,20 @@ export default class Readme extends File {
 
     const badges =
       pTemplate.template && pTemplate.template.badges
-        ? pTemplate.template.badges.map(b => {
-            // TODO do not alter global properties use private layer here
-            if (p.template !== undefined && p.template.badges !== undefined) {
-              Object.assign(context.properties, p.template.badges[b.name]);
-            }
+        ? pTemplate.template.badges
+            .map(b => {
+              // TODO do not alter global properties use private layer here
+              if (p.template !== undefined && p.template.badges !== undefined) {
+                Object.assign(context.properties, p.template.badges[b.name]);
+              }
 
-            const r = context.expand(`[![${b.name}](${b.icon})](${b.url})`);
-            if (r.match(/\{\{/)) {
-              return '';
-            }
-            return r;
-          })
+              const r = context.expand(`[![${b.name}](${b.icon})](${b.url})`);
+              if (r.match(/\{\{/)) {
+                return '';
+              }
+              return r;
+            })
+            .filter(b => b.length > 0)
         : [];
 
     let body = original.split(/\n/);
@@ -37,8 +39,13 @@ export default class Readme extends File {
     if (body.length === 0) {
       body = context.expand(template).split(/\n/);
     } else {
-      body = body.slice(body.findIndex(l => l.length === 0));
-      body = body.slice(body.findIndex(l => l.length > 0));
+      const afterBadges = body.findIndex(
+        l => l.length > 0 && !l.match(/^\[\!\[/)
+      );
+      if (afterBadges > 0) {
+        body = body.slice(afterBadges);
+      }
+      //body = body.slice(body.findIndex(l => l.length > 0));
     }
 
     const content = [...badges, '', ...body].join('\n');
