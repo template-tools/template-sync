@@ -4,15 +4,14 @@ import Readme from '../src/readme';
 import Package from '../src/package';
 import { MockProvider } from './repository-mock';
 
-test.only('readme', async t => {
+test('readme', async t => {
   const provider = new MockProvider({
     aFile: {
-      templateRepo: `[![Badge 1
-[![Badge 2
+      templateRepo: ``,
+      targetRepo: `[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)
 
-body
-body`,
-      targetRepo: `[![Badge 1
+[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)
+[![Badge 2](http://domain.net/somewhere2.svg)](http://domain.net/somewhere2)
 
 body
 body`
@@ -22,9 +21,9 @@ body`
         template: {
           badges: [
             {
-              name: 'npm',
-              icon: 'https://img.shields.io/npm/v/{{name}}.svg',
-              url: 'https://www.npmjs.com/package/{{name}}'
+              name: 'Badge 1',
+              icon: 'http://domain.net/somewhere1.svg',
+              url: 'http://domain.net/somewhere1'
             }
           ]
         }
@@ -46,7 +45,9 @@ body`
 
   t.deepEqual(
     merged.content,
-    `
+    `[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)
+
+
 body
 body`
   );

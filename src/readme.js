@@ -26,6 +26,7 @@ export default class Readme extends File {
               }
 
               const r = context.expand(`[![${b.name}](${b.icon})](${b.url})`);
+
               if (r.match(/\{\{/)) {
                 return '';
               }
@@ -39,16 +40,10 @@ export default class Readme extends File {
     if (body.length === 0) {
       body = context.expand(template).split(/\n/);
     } else {
-      const afterBadges = body.findIndex(
-        l => l.length > 0 && !l.match(/^\[\!\[/)
-      );
-      if (afterBadges > 0) {
-        body = body.slice(afterBadges);
-      }
-      //body = body.slice(body.findIndex(l => l.length > 0));
+      body = body.filter(l => !l.match(/^\[\!\[.*\)$/));
     }
 
-    const content = [...badges, '', ...body].join('\n');
+    const content = [...badges, ...body].join('\n');
     return {
       content,
       changed: content !== original,
