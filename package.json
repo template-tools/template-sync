@@ -23,7 +23,7 @@
     "url": "git+https://github.com/arlac77/npm-template-sync.git"
   },
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=8.9.1"
   },
   "dependencies": {
     "caporal": "^0.8.0",
@@ -50,7 +50,7 @@
     "jsdoc-to-markdown": "^3.0.1",
     "markdown-doctest": "^0.9.1",
     "nyc": "^11.3.0",
-    "rollup": "^0.51.0",
+    "rollup": "^0.51.1",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-multi-entry": "^2.0.2",
