@@ -9,6 +9,8 @@ export default class License extends File {
     const properties = context.properties;
     const messages = [];
 
+    let year = properties['date.year'];
+
     const m = original.match(
       /opyright\s*\(c\)\s*(\d+)([,\-\d]+)*(\s*(,|by)\s*(.*))?/
     );
@@ -29,14 +31,12 @@ export default class License extends File {
         properties['license.owner'] = m[5];
       }
 
-      if (!years.has(properties['date.year'])) {
-        years.add(properties['date.year']);
-        messages.push(
-          `chore(license): add current year ${properties['date.year']}`
-        );
+      if (!years.has(year)) {
+        years.add(year);
+        messages.push(`chore(license): add current year ${year}`);
       }
 
-      properties['date.year'] = Array.from(years)
+      year = Array.from(years)
         .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
         .join(',');
     }
@@ -48,7 +48,7 @@ export default class License extends File {
     if (original !== '') {
       const content = original.replace(
         /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
-        `opyright (c) ${properties['date.year']}`
+        `opyright (c) ${year}`
       );
 
       return {
