@@ -7,6 +7,11 @@ import {
 
 const github = require('github-basic');
 
+// TODO
+// handle rate limit
+// statusCode: 403
+// "API rate limit exceeded for [secure]."
+
 export class GithubProvider extends Provider {
   static get repositoryClass() {
     return GithubRepository;
