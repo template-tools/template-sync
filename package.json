@@ -5,7 +5,7 @@
   "main": "dist/npm-template-sync.js",
   "module": "src/npm-template-sync.js",
   "scripts": {
-    "cover": "nyc ava",
+    "cover": "nyc --temp-directory build/nyc ava",
     "test": "ava",
     "pretest": "rollup -c tests/rollup.config.js",
     "precover": "rollup -c tests/rollup.config.js",
