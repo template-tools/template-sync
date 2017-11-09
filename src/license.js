@@ -6,14 +6,15 @@ export default class License extends File {
   }
 
   async mergeContent(context, original, template) {
+    const properties = context.properties;
+    const messages = [];
+
     const m = original.match(
       /opyright\s*\(c\)\s*(\d+)([,\-\d]+)*(\s*(,|by)\s*(.*))?/
     );
-    const properties = context.properties;
 
     if (m) {
       const years = new Set();
-      years.add(properties['date.year']);
       years.add(parseInt(m[1], 10));
 
       if (m[2] !== undefined) {
@@ -28,9 +29,20 @@ export default class License extends File {
         properties['license.owner'] = m[5];
       }
 
+      if (!years.has(properties['date.year'])) {
+        years.add(properties['date.year']);
+        messages.push(
+          `chore(license): add current year ${properties['date.year']}`
+        );
+      }
+
       properties['date.year'] = Array.from(years)
         .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
         .join(',');
+    }
+
+    if (messages.length === 0) {
+      messages.push('chore(license): update');
     }
 
     if (original !== '') {
@@ -41,7 +53,7 @@ export default class License extends File {
 
       return {
         changed: content !== original,
-        messages: ['fix: update LICENSE'],
+        messages,
         content
       };
     }
@@ -49,7 +61,7 @@ export default class License extends File {
     return {
       content: context.expand(template),
       changed: true,
-      messages: [`fix: add LICENSE`]
+      messages: [`chore(license): add LICENSE`]
     };
   }
 }
