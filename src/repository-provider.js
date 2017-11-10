@@ -20,7 +20,15 @@ export class Provider {
     return PullRequest;
   }
 
-  constructor() {
+  static config(config) {
+    return Object.assign({}, config);
+  }
+
+  constructor(config) {
+    Object.defineProperty(this, 'config', {
+      value: this.constructor.config(config)
+    });
+
     Object.defineProperty(this, 'repositories', { value: new Map() });
   }
 

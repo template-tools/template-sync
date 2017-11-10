@@ -21,10 +21,14 @@ export class GithubProvider extends Provider {
     return GithubBranch;
   }
 
-  constructor(token) {
-    super();
+  static config(config) {
+    return Object.assign({ version: 3 }, config);
+  }
 
-    const client = github({ version: 3, auth: token });
+  constructor(config) {
+    super(config);
+
+    const client = github(this.config);
 
     Object.defineProperty(this, 'client', { value: client });
   }

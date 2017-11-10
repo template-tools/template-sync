@@ -3,8 +3,12 @@ import { GithubProvider } from '../src/github-repository-provider';
 
 const REPOSITORY_NAME = 'arlac77/sync-test-repository';
 
+const config = {
+  auth: process.env.GH_TOKEN
+};
+
 test('provider', async t => {
-  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const provider = new GithubProvider(config);
   const repository = await provider.repository(REPOSITORY_NAME);
 
   t.is(repository.name, REPOSITORY_NAME);
@@ -17,7 +21,7 @@ test('provider', async t => {
 });
 
 test('provider repo with branch name', async t => {
-  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const provider = new GithubProvider(config);
   const repository = await provider.repository(
     REPOSITORY_NAME + '#some-other-branch'
   );
@@ -29,7 +33,7 @@ test('provider repo with branch name', async t => {
 });
 
 test('create branch', async t => {
-  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const provider = new GithubProvider(config);
   const repository = await provider.repository(REPOSITORY_NAME);
   const branches = await repository.branches();
 
@@ -45,7 +49,7 @@ test('create branch', async t => {
 });
 
 test('create commit', async t => {
-  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const provider = new GithubProvider(config);
   const repository = await provider.repository(REPOSITORY_NAME);
 
   const branches = await repository.branches();
@@ -66,7 +70,7 @@ test('create commit', async t => {
 });
 
 test('list files', async t => {
-  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const provider = new GithubProvider(config);
   const repository = await provider.repository(REPOSITORY_NAME);
   const branch = await repository.branch('master');
 
@@ -80,7 +84,7 @@ test('list files', async t => {
 });
 
 test('content', async t => {
-  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const provider = new GithubProvider(config);
   const repository = await provider.repository(REPOSITORY_NAME);
   const branch = await repository.branch('master');
 
@@ -90,7 +94,7 @@ test('content', async t => {
 });
 
 test('missing content', async t => {
-  const provider = new GithubProvider(process.env.GH_TOKEN);
+  const provider = new GithubProvider(config);
   const repository = await provider.repository(REPOSITORY_NAME);
   const branch = await repository.branch('master');
 

@@ -11,10 +11,15 @@ export class BitbucketProvider extends Provider {
     return BitbucketBranch;
   }
 
-  constructor(auth = {}) {
-    super();
+  static config(config) {
+    return Object.assign({ url: 'https://api.bitbucket.org/2.0' }, config);
+  }
+
+  constructor(config) {
+    super(config);
+
     Object.defineProperty(this, 'client', {
-      value: new Client('https://api.bitbucket.org/2.0', auth)
+      value: new Client(this.config.url, this.config.auth)
     });
   }
 }

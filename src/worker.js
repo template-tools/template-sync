@@ -84,7 +84,7 @@ export async function worker(
   const [user, repo, branch = 'master'] = targetRepo.split(/[\/#]/);
 
   try {
-    const provider = new GithubProvider(token);
+    const provider = new GithubProvider({ auth: token });
     const repository = await provider.repository(targetRepo);
 
     const maxBranchId = Array.from(

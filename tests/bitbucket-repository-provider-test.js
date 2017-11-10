@@ -5,11 +5,15 @@ const REPOSITORY_URL =
   'https://arlac77@bitbucket.org/arlac77/sync-test-repository.git';
 const REPOSITORY_NAME = 'arlac77/sync-test-repository';
 
-test('bitbucket provider', async t => {
-  const provider = new BitbucketProvider({
+const config = {
+  auth: {
     password: process.env.BITBUCKET_PASSWORD,
     user: process.env.BITBUCKET_USER
-  });
+  }
+};
+
+test('bitbucket provider', async t => {
+  const provider = new BitbucketProvider(config);
 
   const repository = await provider.repository(REPOSITORY_NAME);
 
@@ -23,10 +27,7 @@ test('bitbucket provider', async t => {
 });
 
 test('provider repo with branch name', async t => {
-  const provider = new BitbucketProvider({
-    password: process.env.BITBUCKET_PASSWORD,
-    user: process.env.BITBUCKET_USER
-  });
+  const provider = new BitbucketProvider(config);
 
   const repository = await provider.repository(
     REPOSITORY_NAME + '#some-other-branch'
@@ -37,10 +38,7 @@ test('provider repo with branch name', async t => {
 });
 
 test.skip('create branch', async t => {
-  const provider = new BitbucketProvider({
-    password: process.env.BITBUCKET_PASSWORD,
-    user: process.env.BITBUCKET_USER
-  });
+  const provider = new BitbucketProvider(config);
   const repository = await provider.repository(REPOSITORY_NAME);
   const branches = await repository.branches();
 
@@ -51,10 +49,7 @@ test.skip('create branch', async t => {
 });
 
 test('bitbucket list', async t => {
-  const provider = new BitbucketProvider({
-    password: process.env.BITBUCKET_PASSWORD,
-    user: process.env.BITBUCKET_USER
-  });
+  const provider = new BitbucketProvider(config);
 
   const repository = await provider.repository(REPOSITORY_NAME);
   const branch = await repository.branch('master');
