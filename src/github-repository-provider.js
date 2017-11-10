@@ -7,11 +7,12 @@ import {
 
 const github = require('github-basic');
 
-// TODO
-// handle rate limit
-// statusCode: 403
-// "API rate limit exceeded for [secure]."
-
+/* TODO
+ handle rate limit
+ statusCode: 403
+ "API rate limit exceeded for [secure]."
+ "You have triggered an abuse detection mechanism. Please wait a few minutes before you try again."
+*/
 export class GithubProvider extends Provider {
   static get repositoryClass() {
     return GithubRepository;
