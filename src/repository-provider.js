@@ -36,6 +36,7 @@ export class Provider {
     let r = this.repositories.get(name);
     if (r === undefined) {
       r = new this.constructor.repositoryClass(this, name);
+      await r.initialize();
       this.repositories.set(name, r);
     }
 
@@ -49,6 +50,8 @@ export class Repository {
     Object.defineProperty(this, 'name', { value: name });
     Object.defineProperty(this, '_branches', { value: new Map() });
   }
+
+  async initialize() {}
 
   async content(...args) {
     const branch = await this.branch('master');
