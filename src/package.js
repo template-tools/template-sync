@@ -312,6 +312,10 @@ function deleter(object, reference, messages, path) {
     return object;
   }
 
+  if (Array.isArray(object)) {
+    return object;
+  }
+
   Object.keys(reference).forEach(key => {
     path.push(key);
 
