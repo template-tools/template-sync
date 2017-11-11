@@ -83,6 +83,8 @@ export async function worker(
   spinner.text = targetRepo;
   const [user, repo, branch = 'master'] = targetRepo.split(/[\/#]/);
 
+  let newBranch;
+
   try {
     const provider = new GithubProvider({ auth: token });
     const repository = await provider.repository(targetRepo);
@@ -158,7 +160,7 @@ export async function worker(
       return;
     }
 
-    const newBranch = await repository.createBranch(newBrachName, sourceBranch);
+    newBranch = await repository.createBranch(newBrachName, sourceBranch);
 
     /*
     await merges.map(m =>
@@ -190,6 +192,10 @@ export async function worker(
 
       return pullRequest;
     } catch (err) {
+      if (newBranch !== undefined) {
+        newBranch.delete();
+      }
+
       spinner.fail(err);
     }
   } catch (err) {
