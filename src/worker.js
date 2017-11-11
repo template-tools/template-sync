@@ -113,6 +113,7 @@ export async function worker(
       'license.owner': user
     });
 
+    context.dry = dry;
     context.spiner = spinner;
 
     const pkg = new Package('package.json');
