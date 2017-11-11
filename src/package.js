@@ -313,7 +313,12 @@ function deleter(object, reference, messages, path) {
   }
 
   if (Array.isArray(object)) {
-    return object;
+    return object.map((e, i) => {
+      path.push(i);
+      const n = deleter(object[key], reference[key], messages, path);
+      path.pop();
+      return n;
+    });
   }
 
   Object.keys(reference).forEach(key => {
