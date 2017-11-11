@@ -14,7 +14,7 @@ process.on('unhandledRejection', reason => spinner.fail(reason));
 program
   .description('Keep npm package in sync with its template')
   .version(require(path.join(__dirname, '..', 'package.json')).version)
-  //.option('--dry', 'do not create branch/pull request')
+  .option('--dry', 'do not create branch/pull request', program.BOOL)
   .option(
     '-k, --keystore <account/service>',
     'keystore',

@@ -153,6 +153,7 @@ export async function worker(
     spinner.text = merges.map(m => `${targetRepo}: ${m.messages[0]}`).join(',');
 
     if (dry) {
+      spinner.succeed(`${targetRepo}: dry run`);
       return;
     }
 
