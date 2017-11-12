@@ -315,7 +315,7 @@ function deleter(object, reference, messages, path) {
   if (Array.isArray(object)) {
     return object.map((e, i) => {
       path.push(i);
-      const n = deleter(object[key], reference[key], messages, path);
+      const n = deleter(object[i], reference[i], messages, path);
       path.pop();
       return n;
     });
