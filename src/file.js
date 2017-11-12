@@ -73,7 +73,7 @@ export default class File {
 
       return result;
     } catch (err) {
-      context.fail(`${context.targetRepo},${this.path}: ${err}`);
+      context.fail(`${context.targetRepo.name},${this.path}: ${err}`);
       return {
         path: this.path,
         changed: false

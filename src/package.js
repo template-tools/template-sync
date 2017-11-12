@@ -138,7 +138,16 @@ export default class Package extends File {
     }
 
     const usedDevModules = await context.usedDevModules();
+
+    context.logger.debug(
+      `usedDevModules: ${Array.from(usedDevModules).join(',')}`
+    );
+
     const optionalDevModules = context.optionalDevModules(usedDevModules);
+
+    context.logger.debug(
+      `optionalDevModules: ${Array.from(optionalDevModules).join(',')}`
+    );
 
     const deepPropeties = {
       scripts: {},

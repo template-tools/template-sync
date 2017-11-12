@@ -26,6 +26,8 @@ export default class Context {
       value: templateRepo,
       writable: true
     });
+
+    this.logger = console;
   }
 
   expand(...args) {

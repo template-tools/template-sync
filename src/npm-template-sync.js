@@ -28,7 +28,7 @@ program
     /^[\w\-]+\/[\w\-]+$/
   )
   .argument('[repos...]', 'repos to merge')
-  .action((args, options) => {
+  .action((args, options, logger) => {
     const keystore = {};
     [keystore.account, keystore.service] = options.keystore.split(/\//);
 
@@ -71,7 +71,7 @@ program
       }
       Promise.all(
         args.repos.map(repo =>
-          worker(spinner, pass, repo, options.template, options.dry)
+          worker(spinner, logger, pass, repo, options.template, options.dry)
         )
       );
     });

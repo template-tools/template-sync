@@ -75,6 +75,7 @@ export async function createFiles(branch, mapping = defaultMapping) {
 
 export async function worker(
   spinner,
+  logger,
   token,
   targetRepo,
   templateRepo,
@@ -115,6 +116,7 @@ export async function worker(
       'license.owner': user
     });
 
+    context.logger = logger;
     context.dry = dry;
     context.spiner = spinner;
 

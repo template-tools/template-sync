@@ -25,6 +25,7 @@ test('worker', async t => {
 
   const pullRequest = await worker(
     spinner,
+    console,
     process.env.GH_TOKEN,
     REPOSITORY_NAME,
     TEMPLATE_REPO
