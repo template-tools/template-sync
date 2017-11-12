@@ -60,6 +60,10 @@ export async function createFiles(branch, mapping = defaultMapping) {
         m.pattern
       );
 
+      /*console.log(
+        `found: ${m.merger} ${m.pattern}: ${found} (${files.map(f => f.path)})`
+      );*/
+
       const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
 
       alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
@@ -145,6 +149,8 @@ export async function worker(
     );
 
     files.forEach(f => context.addFile(f));
+
+    context.logger.debug(context.files.values());
 
     const merges = (await Promise.all(
       files.map(f => f.saveMerge(context, spinner))
