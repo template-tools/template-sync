@@ -335,19 +335,21 @@ function deleter(object, reference, messages, path) {
     });
   }
 
-  Object.keys(reference).forEach(key => {
-    path.push(key);
+  if (reference) {
+    Object.keys(reference).forEach(key => {
+      path.push(key);
 
-    if (reference[key] === '--delete--' && object[key] !== undefined) {
-      if (object[key] !== '--delete--') {
-        messages.push(`chore(npm): delete ${path.join('.')}`);
+      if (reference[key] === '--delete--' && object[key] !== undefined) {
+        if (object[key] !== '--delete--') {
+          messages.push(`chore(npm): delete ${path.join('.')}`);
+        }
+        delete object[key];
+      } else {
+        object[key] = deleter(object[key], reference[key], messages, path);
       }
-      delete object[key];
-    } else {
-      object[key] = deleter(object[key], reference[key], messages, path);
-    }
-    path.pop();
-  });
+      path.pop();
+    });
+  }
 
   return object;
 }
