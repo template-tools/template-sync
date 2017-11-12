@@ -151,6 +151,35 @@ test('travis node semver remove', async t => {
   );
 });
 
+test('travis remove before_script', async t => {
+  const provider = new MockProvider({
+    aFile: {
+      templateRepo: `before_script:
+  - npm prune
+  - -npm install -g codecov
+`,
+      targetRepo: `before_script:
+  - npm prune
+  - npm install -g codecov
+`
+    }
+  });
+  const context = new Context(
+    await provider.repository('targetRepo'),
+    await provider.repository('templateRepo'),
+    {}
+  );
+
+  const merger = new Travis('aFile');
+  const merged = await merger.merge(context);
+  t.deepEqual(
+    merged.content,
+    `before_script:
+  - npm prune
+`
+  );
+});
+
 test('start fresh', async t => {
   const provider = new MockProvider({
     aFile: {

@@ -107,6 +107,11 @@ export default class Travis extends File {
           yml.before_script.push(s);
         }
       });
+
+      yml.before_script = yml.before_script.filter(
+        s =>
+          !tyml.before_script.find(e => e === `-${s}`) && s.indexOf('-') !== 0
+      );
     }
 
     const content = yaml.safeDump(yml, {
