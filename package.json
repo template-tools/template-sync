@@ -48,7 +48,7 @@
     "bitbucket-server-nodejs": "^2.11.4",
     "color-convert": "^1.9.0",
     "jsdoc-babel": "^0.3.0",
-    "jsdoc-to-markdown": "^3.0.1",
+    "jsdoc-to-markdown": "^3.0.2",
     "markdown-doctest": "^0.9.1",
     "nyc": "^11.3.0",
     "rollup": "^0.51.5",
