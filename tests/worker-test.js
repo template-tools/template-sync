@@ -1,6 +1,6 @@
 import test from 'ava';
 import { worker, createFiles } from '../src/worker';
-import { GithubProvider } from '../src/github-repository-provider';
+import { GithubProvider } from 'repository-provider';
 
 const ora = require('ora');
 

@@ -1,4 +1,4 @@
-import { Provider, Repository, Branch } from '../src/repository-provider';
+import { Provider, Repository, Branch } from 'repository-provider';
 
 export class MockProvider extends Provider {
   constructor(files) {

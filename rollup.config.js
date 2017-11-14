@@ -9,6 +9,6 @@ export default {
     banner: '#!/usr/bin/env node'
   },
   plugins: [nodeResolve(), commonjs()],
-  external: [],
+  external: ['repository-provider'],
   input: pkg.module
 };

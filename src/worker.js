@@ -10,7 +10,7 @@ import ReplaceIfEmpty from './replace-if-empty';
 import Replace from './replace';
 import JSONFile from './json-file';
 import JSDoc from './jsdoc';
-import { GithubProvider } from './github-repository-provider';
+import { GithubProvider } from 'repository-provider';
 
 const mm = require('micromatch');
 
@@ -94,19 +94,20 @@ export async function worker(
     const provider = new GithubProvider({ auth: token });
     const repository = await provider.repository(targetRepo);
 
-    const maxBranchId = Array.from(
-      (await repository.branches()).keys()
-    ).reduce((prev, current) => {
-      const m = current.match(/template-sync-(\d+)/);
-      if (m) {
-        const r = parseInt(m[1], 10);
-        if (r > prev) {
-          return r;
+    const maxBranchId = Array.from((await repository.branches()).keys()).reduce(
+      (prev, current) => {
+        const m = current.match(/template-sync-(\d+)/);
+        if (m) {
+          const r = parseInt(m[1], 10);
+          if (r > prev) {
+            return r;
+          }
         }
-      }
 
-      return prev;
-    }, 0);
+        return prev;
+      },
+      0
+    );
 
     const sourceBranch = await repository.branch(branch);
     const newBrachName = `template-sync-${maxBranchId + 1}`;
