@@ -1,6 +1,9 @@
+import { worker } from '../src/worker';
+
 const micro = require('micro'),
   createHandler = require('github-webhook-handler');
 require('now-logs')('dfgkjd&dfh');
+const ora = require('ora');
 
 const handler = createHandler({
   path: '/webhook',
@@ -21,11 +24,20 @@ handler.on('error', err => {
   console.error('Error:', err.message);
 });
 
-handler.on('push', event => {
+const spinner = ora('args');
+
+handler.on('push', async event => {
   console.log(
     'Received a push event for %s to %s',
     event.payload.repository.name,
     event.payload.ref
+  );
+
+  const pullRequest = await worker(
+    spinner,
+    console,
+    process.env.GH_TOKEN,
+    event.payload.repository.name
   );
 });
 
