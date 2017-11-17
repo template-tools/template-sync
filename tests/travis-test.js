@@ -185,6 +185,9 @@ test('start fresh', async t => {
     aFile: {
       templateRepo: `node_js:
   - 7.7.2
+before_script:
+  - npm prune
+  - -npm install -g codecov
 `,
       targetRepo: ''
     }
@@ -198,10 +201,13 @@ test('start fresh', async t => {
 
   const merger = new Travis('aFile');
   const merged = await merger.merge(context);
+
   t.deepEqual(
     merged.content,
     `node_js:
   - 7.7.2
+before_script:
+  - npm prune
 `
   );
 });
