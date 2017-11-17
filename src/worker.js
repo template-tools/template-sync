@@ -10,7 +10,7 @@ import ReplaceIfEmpty from './replace-if-empty';
 import Replace from './replace';
 import JSONFile from './json-file';
 import JSDoc from './jsdoc';
-import { GithubProvider } from 'repository-provider';
+import { GithubProvider } from 'github-repository-provider';
 
 const mm = require('micromatch');
 

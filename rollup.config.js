@@ -2,7 +2,7 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import pkg from './package.json';
 
-const external = ['repository-provider'];
+const external = ['github-repository-provider'];
 
 export default [
   {
