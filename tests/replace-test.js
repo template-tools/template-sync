@@ -1,7 +1,7 @@
 import test from 'ava';
 import Context from '../src/context';
 import Replace from '../src/replace';
-import { MockProvider } from './repository-mock';
+import { MockProvider } from 'mock-repository-provider';
 
 test('replace', async t => {
   const provider = new MockProvider({

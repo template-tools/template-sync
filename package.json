@@ -49,6 +49,7 @@
     "jsdoc-babel": "^0.3.0",
     "jsdoc-to-markdown": "^3.0.2",
     "markdown-doctest": "^0.9.1",
+    "mock-repository-provider": "^1.0.0",
     "nyc": "^11.3.0",
     "repository-provider": "^2.0.0",
     "rollup": "^0.51.7",

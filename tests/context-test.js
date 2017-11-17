@@ -3,7 +3,7 @@ import Context from '../src/context';
 import Rollup from '../src/rollup';
 import Package from '../src/package';
 
-import { MockProvider } from './repository-mock';
+import { MockProvider } from 'mock-repository-provider';
 
 const ROLLUP_FILE_CONTENT = `import babel from 'rollup-plugin-babel';
 

@@ -1,7 +1,7 @@
 import test from 'ava';
 import Context from '../src/context';
 import JSONFile from '../src/json-file';
-import { MockProvider } from './repository-mock';
+import { MockProvider } from 'mock-repository-provider';
 
 const FILE_NAME = 'a.json';
 

@@ -1,7 +1,7 @@
 import test from 'ava';
 import Context from '../src/context';
 import Travis from '../src/travis';
-import { MockProvider } from './repository-mock';
+import { MockProvider } from 'mock-repository-provider';
 
 test('travis node versions none numeric', async t => {
   const provider = new MockProvider({

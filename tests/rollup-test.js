@@ -1,7 +1,7 @@
 import test from 'ava';
 import Context from '../src/context';
 import Rollup from '../src/rollup';
-import { MockProvider } from './repository-mock';
+import { MockProvider } from 'mock-repository-provider';
 
 test('rollup', async t => {
   const provider = new MockProvider({
