@@ -1,8 +1,8 @@
 import { worker } from './worker';
+import { setPassword, getPassword } from './util';
 
 const program = require('caporal'),
   path = require('path'),
-  keychain = require('keychain'),
   prompt = require('prompt'),
   ora = require('ora');
 
@@ -28,7 +28,7 @@ program
     /^[\w\-]+\/[\w\-]+$/
   )
   .argument('[repos...]', 'repos to merge')
-  .action((args, options, logger) => {
+  .action(async (args, options, logger) => {
     const keystore = {};
     [keystore.account, keystore.service] = options.keystore.split(/\//);
 
@@ -42,39 +42,37 @@ program
           }
         }
       };
-      prompt.get(schema, (err, result) => {
+      prompt.get(schema, async (err, result) => {
         if (err) {
           spinner.fail(err);
           return;
         }
-        keychain.setPassword(
-          {
+
+        try {
+          await setPassword({
             account: keystore.account,
             service: keystore.service,
             password: result.password
-          },
-          err => {
-            if (err) {
-              spinner.fail(err);
-              return;
-            }
-            spinner.succeed('password set');
-          }
-        );
+          });
+        } catch (e) {
+          spinner.fail(err);
+          return;
+        }
+        spinner.succeed('password set');
       });
     }
 
-    keychain.getPassword(keystore, (err, pass) => {
-      if (err) {
-        spinner.fail(err);
-        return;
-      }
+    try {
+      const pass = await getPassword(keystore);
+
       Promise.all(
         args.repos.map(repo =>
           worker(spinner, logger, pass, repo, options.template, options.dry)
         )
       );
-    });
+    } catch (err) {
+      spinner.fail(err);
+    }
   });
 
 program.parse(process.argv);
