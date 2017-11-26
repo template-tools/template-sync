@@ -4,7 +4,8 @@ import { setPassword, getPassword } from './util';
 const program = require('caporal'),
   path = require('path'),
   prompt = require('prompt'),
-  ora = require('ora');
+  ora = require('ora'),
+  PQueue = require('p-queue');
 
 const spinner = ora('args').start();
 
@@ -65,10 +66,13 @@ program
     try {
       const pass = await getPassword(keystore);
 
-      Promise.all(
-        args.repos.map(repo =>
-          worker(spinner, logger, pass, repo, options.template, options.dry)
-        )
+      const queue = new PQueue({ concurrency: 1 });
+
+      await queue.addAll(
+        args.repos.map(repo => {
+          return () =>
+            worker(spinner, logger, pass, repo, options.template, options.dry);
+        })
       );
     } catch (err) {
       spinner.fail(err);
