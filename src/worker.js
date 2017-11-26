@@ -60,10 +60,6 @@ export async function createFiles(branch, mapping = defaultMapping) {
         m.pattern
       );
 
-      /*console.log(
-        `found: ${m.merger} ${m.pattern}: ${found} (${files.map(f => f.path)})`
-      );*/
-
       const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
 
       alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
@@ -170,12 +166,6 @@ export async function worker(
     }
 
     newBranch = await repository.createBranch(newBrachName, sourceBranch);
-
-    /*
-    await merges.map(m =>
-      newBranch.commit(m.messages.join('\n'), [m], { force: true })
-    );
-*/
 
     const messages = merges.reduce((result, merge) => {
       merge.messages.forEach(m => result.push(m));
