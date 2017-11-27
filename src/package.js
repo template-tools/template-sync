@@ -74,8 +74,12 @@ export default class Package extends File {
         ? target.main
         : 'dist/index.js';
 
-    const githubURL = `git+https://github.com/${properties.user}/${target.name}.git`;
-    const githubURLAlternative = `git+https://github.com/${properties.user}/node-${target.name}.git`;
+    const githubURL = `git+https://github.com/${properties.user}/${
+      target.name
+    }.git`;
+    const githubURLAlternative = `git+https://github.com/${
+      properties.user
+    }/node-${target.name}.git`;
 
     let repoName = target.name;
 
@@ -107,7 +111,9 @@ export default class Package extends File {
       messages.push(`chore(package): correct bugs url`);
     }
 
-    const homepageURL = `https://github.com/${properties.user}/${repoName}#readme`;
+    const homepageURL = `https://github.com/${properties.user}/${
+      repoName
+    }#readme`;
 
     if (target.homepage === undefined || target.homepage !== homepageURL) {
       target.homepage = homepageURL;
@@ -149,13 +155,13 @@ export default class Package extends File {
       `optionalDevModules: ${Array.from(optionalDevModules).join(',')}`
     );
 
-    const deepPropeties = {
+    const deepProperties = {
       scripts: {},
       devDependencies: {},
       engines: {}
     };
 
-    Object.keys(deepPropeties).forEach(category => {
+    Object.keys(deepProperties).forEach(category => {
       if (target[category] === undefined) {
         target[category] = {};
       }
@@ -172,13 +178,21 @@ export default class Package extends File {
           } else {
             const tp = context.expand(template[category][d]);
 
-            if (tp !== target[category][d]) {
-              messages.push(
-                target[category][d] === undefined
-                  ? `chore(${category}): add ${d}@${tp} from template`
-                  : `chore(${category}): update ${d}@${tp} from template`
-              );
-              target[category][d] = tp;
+            if (
+              category === 'devDependencies' &&
+              target.dependencies !== undefined &&
+              target.dependencies[d] === tp
+            ) {
+              // do not include dev dependency if regular rependency is already present
+            } else {
+              if (tp !== target[category][d]) {
+                messages.push(
+                  target[category][d] === undefined
+                    ? `chore(${category}): add ${d}@${tp} from template`
+                    : `chore(${category}): update ${d}@${tp} from template`
+                );
+                target[category][d] = tp;
+              }
             }
           }
         });
