@@ -1,5 +1,6 @@
 import { worker } from './worker';
 import { setPassword, getPassword } from './util';
+import { version } from '../package.json';
 
 const program = require('caporal'),
   path = require('path'),
@@ -13,7 +14,7 @@ process.on('unhandledRejection', reason => spinner.fail(reason));
 
 program
   .description('Keep npm package in sync with its template')
-  .version(require(path.join(__dirname, '..', 'package.json')).version)
+  .version(version)
   .option('--dry', 'do not create branch/pull request', program.BOOL)
   .option(
     '-k, --keystore <account/service>',
