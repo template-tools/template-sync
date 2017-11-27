@@ -8,8 +8,6 @@ const program = require('caporal'),
   ora = require('ora'),
   PQueue = require('p-queue');
 
-const spinner = ora('args').start();
-
 process.on('uncaughtException', err => spinner.fail(err));
 process.on('unhandledRejection', reason => spinner.fail(reason));
 
@@ -31,6 +29,8 @@ program
   )
   .argument('[repos...]', 'repos to merge')
   .action(async (args, options, logger) => {
+    const spinner = ora('args').start();
+
     const keystore = {};
     [keystore.account, keystore.service] = options.keystore.split(/\//);
 
