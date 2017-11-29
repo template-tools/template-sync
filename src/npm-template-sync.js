@@ -8,6 +8,8 @@ const program = require('caporal'),
   ora = require('ora'),
   PQueue = require('p-queue');
 
+const spinner = ora('args');
+
 process.on('uncaughtException', err => spinner.fail(err));
 process.on('unhandledRejection', reason => spinner.fail(reason));
 
@@ -27,9 +29,15 @@ program
     'template repository',
     /^[\w\-]+\/[\w\-]+$/
   )
+  .option(
+    '--concurrency <number>',
+    'number of concurrent repository request',
+    program.INT,
+    1
+  )
   .argument('[repos...]', 'repos to merge')
   .action(async (args, options, logger) => {
-    const spinner = ora('args').start();
+    spinner.start();
 
     const keystore = {};
     [keystore.account, keystore.service] = options.keystore.split(/\//);
@@ -66,8 +74,7 @@ program
 
     try {
       const pass = await getPassword(keystore);
-
-      const queue = new PQueue({ concurrency: 1 });
+      const queue = new PQueue({ concurrency: options.concurrency });
 
       await queue.addAll(
         args.repos.map(repo => {
