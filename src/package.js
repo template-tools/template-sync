@@ -156,20 +156,22 @@ export default class Package extends File {
     );
 
     const deepProperties = {
-      scripts: {},
       devDependencies: {},
+      dependencies: {},
+      peerDependencies: {},
+      optionalDependencies: {},
+      scripts: {},
       engines: {}
     };
 
     Object.keys(deepProperties).forEach(category => {
-      if (target[category] === undefined) {
-        target[category] = {};
-      }
-
       if (template[category] !== undefined) {
         Object.keys(template[category]).forEach(d => {
           if (template[category][d] === '-') {
-            if (target[category][d] !== undefined) {
+            if (
+              target[category] !== undefined &&
+              target[category][d] !== undefined
+            ) {
               messages.push(
                 `chore(${category}): remove ${d}@${target[category][d]}`
               );
@@ -183,9 +185,12 @@ export default class Package extends File {
               target.dependencies !== undefined &&
               target.dependencies[d] === tp
             ) {
-              // do not include dev dependency if regular rependency is already present
+              // do not include dev dependency if regular dependency is already present
             } else {
-              if (tp !== target[category][d]) {
+              if (
+                target[category] !== undefined &&
+                tp !== target[category][d]
+              ) {
                 messages.push(
                   target[category][d] === undefined
                     ? `chore(${category}): add ${d}@${tp} from template`
@@ -207,7 +212,7 @@ export default class Package extends File {
       }
     });
 
-    if (target.scripts.prepare) {
+    if (target.scripts !== undefined && target.scripts.prepare) {
       if (buildOutput !== undefined) {
         target.scripts.prepare = target.scripts.prepare.replace(
           /--output=([^\s]+)/,
@@ -257,20 +262,14 @@ export default class Package extends File {
       };
     }
 
-    const toBeDeletedModules = Array.from(
-      context.optionalDevModules(new Set(Object.keys(target.devDependencies)))
-    ).filter(m => !usedDevModules.has(m));
-
-    /*
-    console.log(`modules: ${Object.keys(target.devDependencies)}`);
-    console.log(`used modules: ${Array.from(usedDevModules)}`);
-    console.log(
-      `optional modules: ${Array.from(
-        context.optionalDevModules(new Set(Object.keys(target.devDependencies)))
-      )}`
-    );
-    console.log(`toBeDeletedModules: ${Array.from(toBeDeletedModules)}`);
-*/
+    const toBeDeletedModules =
+      target.devDependencies === undefined
+        ? []
+        : Array.from(
+            context.optionalDevModules(
+              new Set(Object.keys(target.devDependencies))
+            )
+          ).filter(m => !usedDevModules.has(m));
 
     toBeDeletedModules.forEach(d => {
       messages = messages.filter(

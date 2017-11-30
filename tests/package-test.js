@@ -276,9 +276,6 @@ test('start fresh', async t => {
 
   t.deepEqual(JSON.parse(merged.content), {
     name: 'targetRepo',
-    devDependencies: {},
-    engines: {},
-    scripts: {},
     homepage: 'https://github.com/x-user/targetRepo#readme',
     bugs: {
       url: 'https://github.com/x-user/targetRepo/issues'
