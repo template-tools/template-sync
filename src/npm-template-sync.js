@@ -39,9 +39,6 @@ program
   .action(async (args, options, logger) => {
     spinner.start();
 
-    const keystore = {};
-    [keystore.account, keystore.service] = options.keystore.split(/\//);
-
     if (options.save) {
       prompt.start();
       const schema = {
@@ -59,11 +56,7 @@ program
         }
 
         try {
-          await setPassword({
-            account: keystore.account,
-            service: keystore.service,
-            password: result.password
-          });
+          await setPassword(result.password, options);
         } catch (e) {
           spinner.fail(err);
           return;
@@ -73,7 +66,7 @@ program
     }
 
     try {
-      const pass = await getPassword(keystore);
+      const pass = await getPassword(options);
       const queue = new PQueue({ concurrency: options.concurrency });
 
       await queue.addAll(

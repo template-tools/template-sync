@@ -1,8 +1,10 @@
 const keychain = require('keychain');
 
-export function getPassword(...args) {
+export function getPassword(options) {
+  const [account, service] = options.keystore.split(/\//);
+
   return new Promise((resolve, reject) => {
-    keychain.getPassword(...args, (err, pass) => {
+    keychain.getPassword({ account, service }, (err, pass) => {
       if (err) {
         reject(err);
       } else {
@@ -12,9 +14,11 @@ export function getPassword(...args) {
   });
 }
 
-export function setPassword(...args) {
+export function setPassword(password, options) {
+  const [account, service] = options.keystore.split(/\//);
+
   return new Promise((resolve, reject) => {
-    keychain.setPassword(...args, (err, pass) => {
+    keychain.setPassword({ account, service }, (err, pass) => {
       if (err) {
         reject(err);
       } else {
@@ -32,22 +36,11 @@ export async function getPassword(options) {
 
   const password = await keytar.getPassword(account, service);
 
-  if (password !== null) {
-    return password;
-  }
-
-  return savePassword(account, service);
+  return password;
 }
 
-export async function savePassword(account, service) {
-  const schema = {
-    properties: {
-      password: {
-        required: true,
-        hidden: true
-      }
-    }
-  };
+export async function setPassword(pasword, options) {
+  const [account, service] = options.keystore.split(/\//);
 
   keytar.setPassword(account, service, password);
 
