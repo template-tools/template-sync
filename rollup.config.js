@@ -24,6 +24,6 @@ export default [
     },
     plugins: [nodeResolve(), commonjs()],
     external,
-    input: 'webhook/index.js'
+    input: 'webhook/github-webhook.js'
   }
 ];

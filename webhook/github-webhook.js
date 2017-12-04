@@ -39,6 +39,11 @@ handler.on('push', async event => {
     process.env.GH_TOKEN,
     event.payload.repository.name
   );
+
+  console.log('Generated PullRequest %s', pullRequest.name);
 });
 
-server.listen(3000);
+server.listen(3000, () => {
+  // TODO public interface
+  console.log(`listening...`, server._connectionKey);
+});
