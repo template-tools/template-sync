@@ -1,5 +1,5 @@
 import test from 'ava';
-import { worker, createFiles } from '../src/worker';
+import { npmTemplateSync, createFiles } from '../src/npm-template-sync';
 import { GithubProvider } from 'github-repository-provider';
 
 const ora = require('ora');
@@ -7,7 +7,7 @@ const ora = require('ora');
 const REPOSITORY_NAME = 'arlac77/sync-test-repository';
 const TEMPLATE_REPO = 'Kronos-Tools/npm-package-template';
 
-test('worker files', async t => {
+test('npmTemplateSync files', async t => {
   const provider = new GithubProvider(process.env.GH_TOKEN);
   const repo = await provider.repository(TEMPLATE_REPO);
   const branch = await repo.branch('master');
@@ -20,10 +20,10 @@ test('worker files', async t => {
   t.is(files.find(f => f.path === 'package.json').constructor.name, 'Package');
 });
 
-test('worker', async t => {
+test('npmTemplateSync', async t => {
   const spinner = ora('args');
 
-  const pullRequest = await worker(
+  const pullRequest = await npmTemplateSync(
     spinner,
     console,
     process.env.GH_TOKEN,

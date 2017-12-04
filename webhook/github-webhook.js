@@ -1,4 +1,4 @@
-import { worker } from '../src/worker';
+import { npmTemplateSync } from '../src/npm-template-sync';
 
 const micro = require('micro'),
   createHandler = require('github-webhook-handler');
@@ -33,7 +33,7 @@ handler.on('push', async event => {
     event.payload.ref
   );
 
-  const pullRequest = await worker(
+  const pullRequest = await npmTemplateSync(
     spinner,
     console,
     process.env.GH_TOKEN,

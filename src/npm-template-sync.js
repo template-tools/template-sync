@@ -1,83 +1,204 @@
-import { worker } from './worker';
-import { setPassword, getPassword } from './util';
-import { version } from '../package.json';
+import Context from './context';
+import Travis from './travis';
+import Readme from './readme';
+import Package from './package';
+import Rollup from './rollup';
+import License from './license';
+import MergeAndRemoveLineSet from './merge-and-remove-line-set';
+import MergeLineSet from './merge-line-set';
+import ReplaceIfEmpty from './replace-if-empty';
+import Replace from './replace';
+import JSONFile from './json-file';
+import JSDoc from './jsdoc';
+import { GithubProvider } from 'github-repository-provider';
 
-const program = require('caporal'),
-  path = require('path'),
-  prompt = require('prompt'),
-  ora = require('ora'),
-  PQueue = require('p-queue');
+const mm = require('micromatch');
 
-const spinner = ora('args');
+const mergers = [
+  Rollup,
+  Travis,
+  Readme,
+  Package,
+  JSONFile,
+  JSDoc,
+  Travis,
+  MergeAndRemoveLineSet,
+  MergeLineSet,
+  License,
+  ReplaceIfEmpty,
+  Replace
+];
 
-process.on('uncaughtException', err => spinner.fail(err));
-process.on('unhandledRejection', reason => spinner.fail(reason));
+const defaultMapping = [
+  { merger: 'Package', pattern: '**/package.json' },
+  { merger: 'Travis', pattern: '.travis.yml' },
+  { merger: 'Readme', pattern: '**/README.*' },
+  { merger: 'JSDoc', pattern: '**/jsdoc.json' },
+  { merger: 'Rollup', pattern: '**/rollup.config.js' },
+  { merger: 'License', pattern: 'LICENSE' },
+  {
+    merger: 'MergeAndRemoveLineSet',
+    pattern: '.gitignore',
+    options: { message: 'chore(git): update {{path}} from template' }
+  },
+  {
+    merger: 'MergeAndRemoveLineSet',
+    pattern: '.npmignore',
+    options: { message: 'chore(npm): update {{path}} from template' }
+  },
+  { merger: 'ReplaceIfEmpty', pattern: '**/*' }
+];
 
-program
-  .description('Keep npm package in sync with its template')
-  .version(version)
-  .option('--dry', 'do not create branch/pull request', program.BOOL)
-  .option(
-    '-k, --keystore <account/service>',
-    'keystore',
-    /^[\w\-]+\/.*/,
-    'arlac77/GitHub for Mac SSH key passphrase — github.com'
-  )
-  .option('-s, --save', 'save keystore')
-  .option(
-    '-t, --template <user/repo>',
-    'template repository',
-    /^[\w\-]+\/[\w\-]+$/
-  )
-  .option(
-    '--concurrency <number>',
-    'number of concurrent repository request',
-    program.INT,
-    1
-  )
-  .argument('[repos...]', 'repos to merge')
-  .action(async (args, options, logger) => {
-    spinner.start();
+export async function createFiles(branch, mapping = defaultMapping) {
+  const files = await branch.list();
+  let alreadyPresent = new Set();
 
-    if (options.save) {
-      prompt.start();
-      const schema = {
-        properties: {
-          password: {
-            required: true,
-            hidden: true
+  return mapping
+    .map(m => {
+      const found = mm(
+        files.filter(f => f.type === 'blob').map(f => f.path),
+        m.pattern
+      );
+
+      const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
+
+      alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
+
+      return notAlreadyProcessed.map(f => {
+        const merger = mergers.find(merger => merger.name === m.merger);
+
+        return new (merger ? merger : ReplaceIfEmpty)(f, m.options);
+      });
+    })
+    .reduce((last, current) => Array.from([...last, ...current]), []);
+}
+
+export async function npmTemplateSync(
+  spinner,
+  logger,
+  token,
+  targetRepo,
+  templateRepo,
+  dry = false
+) {
+  spinner.text = targetRepo;
+  const [user, repo, branch = 'master'] = targetRepo.split(/[\/#]/);
+
+  let newBranch;
+
+  try {
+    const provider = new GithubProvider({ auth: token });
+    const repository = await provider.repository(targetRepo);
+
+    const maxBranchId = Array.from((await repository.branches()).keys()).reduce(
+      (prev, current) => {
+        const m = current.match(/template-sync-(\d+)/);
+        if (m) {
+          const r = parseInt(m[1], 10);
+          if (r > prev) {
+            return r;
           }
         }
-      };
-      prompt.get(schema, async (err, result) => {
-        if (err) {
-          spinner.fail(err);
-          return;
-        }
 
-        try {
-          await setPassword(result.password, options);
-        } catch (e) {
-          spinner.fail(err);
-          return;
-        }
-        spinner.succeed('password set');
-      });
+        return prev;
+      },
+      0
+    );
+
+    const sourceBranch = await repository.branch(branch);
+    const newBrachName = `template-sync-${maxBranchId + 1}`;
+
+    const context = new Context(repository, undefined, {
+      'github.user': user,
+      'github.repo': repo,
+      name: repo,
+      user,
+      'date.year': new Date().getFullYear(),
+      'license.owner': user
+    });
+
+    context.logger = logger;
+    context.dry = dry;
+    context.spiner = spinner;
+
+    const pkg = new Package('package.json');
+
+    if (templateRepo === undefined) {
+      templateRepo = await pkg.templateRepo(context);
+
+      if (templateRepo === undefined) {
+        throw new Error(
+          `Unable to extract template repo url from ${targetRepo} ${pkg.path}`
+        );
+      }
     }
+
+    context.templateRepo = await provider.repository(templateRepo);
+    const templateBranch = await context.templateRepo.branch('master');
+
+    const json = JSON.parse(
+      await pkg.templateContent(context, { ignoreMissing: true })
+    );
+
+    const files = await createFiles(
+      templateBranch,
+      json.template && json.template.files
+    );
+
+    files.forEach(f => context.addFile(f));
+
+    context.logger.debug(context.files.values());
+
+    const merges = (await Promise.all(
+      files.map(f => f.saveMerge(context, spinner))
+    )).filter(m => m !== undefined && m.changed);
+
+    if (merges.length === 0) {
+      spinner.succeed(`${targetRepo}: nothing changed`);
+      return;
+    }
+
+    spinner.text = merges.map(m => `${targetRepo}: ${m.messages[0]}`).join(',');
+
+    if (dry) {
+      spinner.succeed(`${targetRepo}: dry run`);
+      return;
+    }
+
+    newBranch = await repository.createBranch(newBrachName, sourceBranch);
+
+    const messages = merges.reduce((result, merge) => {
+      merge.messages.forEach(m => result.push(m));
+      return result;
+    }, []);
+
+    await newBranch.commit(messages.join('\n'), merges);
 
     try {
-      const pass = await getPassword(options);
-      const queue = new PQueue({ concurrency: options.concurrency });
+      const pullRequest = await sourceBranch.createPullRequest(newBranch, {
+        title: `merge package template from ${context.templateRepo.name}`,
+        body: merges
+          .map(
+            m =>
+              `${m.path}
+---
+- ${m.messages.join('\n- ')}
+`
+          )
+          .join('\n')
+      });
+      spinner.succeed(`${targetRepo}: ${pullRequest.name}`);
 
-      await queue.addAll(
-        args.repos.map(repo => {
-          return () =>
-            worker(spinner, logger, pass, repo, options.template, options.dry);
-        })
-      );
+      return pullRequest;
     } catch (err) {
+      if (newBranch !== undefined) {
+        newBranch.delete();
+      }
+
       spinner.fail(err);
     }
-  });
-
-program.parse(process.argv);
+  } catch (err) {
+    spinner.fail(`${user}/${repo}: ${err}`);
+    throw err;
+  }
+}

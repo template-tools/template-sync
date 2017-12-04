@@ -3,7 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
 import pkg from './package.json';
 
-const external = ['github-repository-provider'];
+const external = ['github-repository-provider', 'expression-expander'];
 
 export default [
   {
@@ -13,6 +13,15 @@ export default [
       banner: '#!/usr/bin/env node'
     },
     plugins: [nodeResolve(), commonjs(), json()],
+    external,
+    input: 'src/npm-template-sync-cli.js'
+  },
+  {
+    output: {
+      file: pkg.main,
+      format: 'cjs'
+    },
+    plugins: [],
     external,
     input: pkg.module
   },
