@@ -24,15 +24,5 @@ export default [
     plugins: [],
     external,
     input: pkg.module
-  },
-  {
-    output: {
-      file: pkg.bin['github-webhook'],
-      format: 'cjs',
-      banner: '#!/usr/bin/env node'
-    },
-    plugins: [nodeResolve(), commonjs()],
-    external,
-    input: 'webhook/github-webhook.js'
   }
 ];
