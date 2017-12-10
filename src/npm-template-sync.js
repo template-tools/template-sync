@@ -189,7 +189,13 @@ export async function npmTemplateSync(
         spinner.fail(err);
       }
     } else {
+      const pullRequest = new targetBranch.provider.constructor.pullRequestClass(
+        targetBranch.repository,
+        'old'
+      );
+
       spinner.succeed(`${targetRepo}: update PR`);
+      return pullRequest;
     }
   } catch (err) {
     spinner.fail(`${user}/${repo}: ${err}`);
