@@ -84,29 +84,13 @@ export async function npmTemplateSync(
   spinner.text = targetRepo;
   const [user, repo, branch = 'master'] = targetRepo.split(/[\/#]/);
 
-  let newBranch;
+  let targetBranch;
 
   try {
     const provider = new GithubProvider({ auth: token });
     const repository = await provider.repository(targetRepo);
 
-    const maxBranchId = Array.from((await repository.branches()).keys()).reduce(
-      (prev, current) => {
-        const m = current.match(/template-sync-(\d+)/);
-        if (m) {
-          const r = parseInt(m[1], 10);
-          if (r > prev) {
-            return r;
-          }
-        }
-
-        return prev;
-      },
-      0
-    );
-
     const sourceBranch = await repository.branch(branch);
-    const newBrachName = `template-sync-${maxBranchId + 1}`;
 
     const context = new Context(repository, undefined, {
       'github.user': user,
@@ -165,37 +149,47 @@ export async function npmTemplateSync(
       return;
     }
 
-    newBranch = await repository.createBranch(newBrachName, sourceBranch);
+    let newPullRequestRequired = false;
+    const targetBranchName = `template-sync-1`;
+    targetBranch = (await repository.branches()).get(targetBranchName);
+
+    if (targetBranch === undefined) {
+      newPullRequestRequired = true;
+      targetBranch = await repository.createBranch(
+        targetBranchName,
+        sourceBranch
+      );
+    }
 
     const messages = merges.reduce((result, merge) => {
       merge.messages.forEach(m => result.push(m));
       return result;
     }, []);
 
-    await newBranch.commit(messages.join('\n'), merges);
+    await targetBranch.commit(messages.join('\n'), merges);
 
-    try {
-      const pullRequest = await sourceBranch.createPullRequest(newBranch, {
-        title: `merge package template from ${context.templateRepo.name}`,
-        body: merges
-          .map(
-            m =>
-              `${m.path}
+    if (newPullRequestRequired) {
+      try {
+        const pullRequest = await sourceBranch.createPullRequest(targetBranch, {
+          title: `merge package template from ${context.templateRepo.name}`,
+          body: merges
+            .map(
+              m =>
+                `${m.path}
 ---
 - ${m.messages.join('\n- ')}
 `
-          )
-          .join('\n')
-      });
-      spinner.succeed(`${targetRepo}: ${pullRequest.name}`);
+            )
+            .join('\n')
+        });
+        spinner.succeed(`${targetRepo}: ${pullRequest.name}`);
 
-      return pullRequest;
-    } catch (err) {
-      if (newBranch !== undefined) {
-        newBranch.delete();
+        return pullRequest;
+      } catch (err) {
+        spinner.fail(err);
       }
-
-      spinner.fail(err);
+    } else {
+      spinner.succeed(`${targetRepo}: update PR`);
     }
   } catch (err) {
     spinner.fail(`${user}/${repo}: ${err}`);
