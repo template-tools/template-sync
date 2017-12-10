@@ -35,6 +35,18 @@ ${targetVersions
   return merger.merge(context);
 }
 
+test('travis node versions merge', async t => {
+  const merged = await mockYmlVersions(['8.9.3', '9'], ['8.9.3']);
+
+  t.deepEqual(
+    merged.content,
+    `node_js:
+  - 8.9.3
+  - 9
+`
+  );
+});
+
 test('travis node versions none numeric', async t => {
   const merged = await mockYmlVersions(['7.7.2'], ['7.7.1', 'iojs']);
 

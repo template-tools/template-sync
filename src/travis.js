@@ -95,6 +95,8 @@ export default class Travis extends File {
       yml.node_js = yml.node_js.filter(
         v => !removeVersions.find(rv => diffVersion(rv, v) === 0)
       );
+
+      yml.node_js = Array.from(new Set(yml.node_js));
     }
 
     if (email !== undefined) {
