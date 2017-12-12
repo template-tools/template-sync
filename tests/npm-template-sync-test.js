@@ -34,7 +34,7 @@ test('npmTemplateSync', async t => {
   //console.log(pullRequest.name);
   t.truthy(pullRequest.name);
 
-  await pullRequest.delete();
+  //await pullRequest.delete();
 
   //t.pass('worker done');
 });
