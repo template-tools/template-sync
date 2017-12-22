@@ -40,6 +40,8 @@ Some templates
 - [Kronos-Tools npm-package-template](https://github.com/Kronos-Tools/npm-package-template) _mocha_
 - [Kronos-Tools npm-package-template-minimal](https://github.com/Kronos-Tools/npm-package-template-minimal)
 
+# API
+
 # install
 
 With [npm](http://npmjs.org) do:
