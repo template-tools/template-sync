@@ -21,6 +21,36 @@ function moduleNames(object) {
   return modules;
 }
 
+/**
+ * order in which json keys are written
+ */
+const sortedKeys = [
+  'name',
+  'version',
+  'main',
+  'module',
+  'description',
+  'keywords',
+  'author',
+  'contributors',
+  'license',
+  'bin',
+  'scripts',
+  'dependencies',
+  'devDependencies',
+  'peerDependencies',
+  'optionalDependencies',
+  'engines',
+  'repository',
+  'bugs',
+  'homepage',
+  'release',
+  'ava',
+  'nyc',
+  'xo',
+  'template'
+];
+
 export default class Package extends File {
   static matchesFileName(name) {
     return name.match(/^package\.json$/);
@@ -111,9 +141,9 @@ export default class Package extends File {
       messages.push(`chore(package): correct bugs url`);
     }
 
-    const homepageURL = `https://github.com/${properties.user}/${
-      repoName
-    }#readme`;
+    const homepageURL = `https://github.com/${
+      properties.user
+    }/${repoName}#readme`;
 
     if (target.homepage === undefined || target.homepage !== homepageURL) {
       target.homepage = homepageURL;
@@ -304,7 +334,22 @@ export default class Package extends File {
       messages.push('chore: update package.json from template');
     }
 
-    let newContent = JSON.stringify(context.expand(target), undefined, 2);
+    target = context.expand(target);
+    const sortedTarget = {};
+
+    sortedKeys.forEach(key => {
+      if (target[key] !== undefined) {
+        sortedTarget[key] = target[key];
+      }
+    });
+
+    Object.keys(target).forEach(key => {
+      if (sortedTarget[key] === undefined) {
+        sortedTarget[key] = target[key];
+      }
+    });
+
+    let newContent = JSON.stringify(sortedTarget, undefined, 2);
     const lastChar = newContent[newContent.length - 1];
 
     // keep trailing newline
