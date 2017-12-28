@@ -1,9 +1,23 @@
 {
   "name": "npm-template-sync",
   "version": "0.0.0-semantic-release",
-  "description": "Keep npm package in sync with its template",
   "main": "dist/npm-template-sync.js",
   "module": "src/npm-template-sync.js",
+  "description": "Keep npm package in sync with its template",
+  "keywords": [
+    "npm",
+    "template"
+  ],
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
+  "license": "BSD-2-Clause",
+  "bin": {
+    "npm-template-sync": "bin/npm-template-sync"
+  },
   "scripts": {
     "cover": "nyc --temp-directory build/nyc ava",
     "test": "ava",
@@ -14,16 +28,6 @@
     "semantic-release": "semantic-release",
     "prepare": "rollup -c && chmod +x bin/npm-template-sync",
     "lint": "documentation lint src/npm-template-sync.js"
-  },
-  "bin": {
-    "npm-template-sync": "bin/npm-template-sync"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/arlac77/npm-template-sync.git"
-  },
-  "engines": {
-    "node": ">=8.9.3"
   },
   "dependencies": {
     "caporal": "^0.8.0",
@@ -57,22 +61,18 @@
     "xo": "^0.19.0",
     "documentation": "^5.3.5"
   },
-  "release": {},
-  "keywords": [
-    "npm",
-    "template"
-  ],
-  "license": "BSD-2-Clause",
+  "engines": {
+    "node": ">=8.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arlac77/npm-template-sync.git"
+  },
   "bugs": {
     "url": "https://github.com/arlac77/npm-template-sync/issues"
   },
   "homepage": "https://github.com/arlac77/npm-template-sync#readme",
-  "contributors": [
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ],
+  "release": {},
   "ava": {
     "files": [
       "build/*-test.js"
@@ -91,12 +91,12 @@
     ],
     "report-dir": "./build/coverage"
   },
+  "xo": {
+    "space": true
+  },
   "template": {
     "repository": {
       "url": "https://github.com/arlac77/npm-package-template.git"
     }
-  },
-  "xo": {
-    "space": true
   }
 }
