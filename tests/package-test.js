@@ -269,6 +269,33 @@ test('add xo/space=true', async t => {
   //t.true(merged.messages.includes('chore: update package.json from template'));
 });
 
+test('jsonpath', async t => {
+  const context = await createContext(
+    {
+      nyc: {
+        'report-dir': './build/coverage'
+      }
+    },
+    {
+      nyc: {
+        'report-dir': './coverage'
+      }
+    }
+  );
+
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
+
+  t.deepEqual(JSON.parse(merged.content).nyc, {
+    'report-dir': './build/coverage'
+  });
+  t.true(
+    merged.messages.includes(
+      "chore(package): set $.nyc['report-dir']='./build/coverage' as in template"
+    )
+  );
+});
+
 test('start fresh', async t => {
   const context = await createContext({});
   const pkg = new Package('package.json');

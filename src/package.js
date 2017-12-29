@@ -1,4 +1,5 @@
 import File from './file';
+const jp = require('jsonpath');
 
 function moduleNames(object) {
   if (object === undefined) return new Set();
@@ -330,8 +331,23 @@ export default class Package extends File {
 
     removeKeyword(target, ['null', null, undefined], messages);
 
+    const expressions = ["$.nyc['report-dir']"];
+
+    expressions.forEach(expression => {
+      const value = jp.value(template, expression);
+      if (value !== undefined) {
+        const oldValue = jp.value(target, expression);
+        if (oldValue !== value) {
+          jp.value(target, expression, value);
+          messages.push(
+            `chore(package): set ${expression}='${value}' as in template`
+          );
+        }
+      }
+    });
+
     if (messages.length === 0) {
-      messages.push('chore: update package.json from template');
+      messages.push('chore(package): update package.json from template');
     }
 
     target = context.expand(target);
