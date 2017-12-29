@@ -283,7 +283,9 @@ test('jsonpath', async t => {
     }
   );
 
-  const pkg = new Package('package.json');
+  const pkg = new Package('package.json', {
+    actions: [{ path: "$.nyc['report-dir']", op: 'replace' }]
+  });
   const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).nyc, {

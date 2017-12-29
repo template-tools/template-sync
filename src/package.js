@@ -331,20 +331,25 @@ export default class Package extends File {
 
     removeKeyword(target, ['null', null, undefined], messages);
 
-    const expressions = ["$.nyc['report-dir']"];
-
-    expressions.forEach(expression => {
-      const value = jp.value(template, expression);
-      if (value !== undefined) {
-        const oldValue = jp.value(target, expression);
-        if (oldValue !== value) {
-          jp.value(target, expression, value);
-          messages.push(
-            `chore(package): set ${expression}='${value}' as in template`
-          );
-        }
+    if (this.options !== undefined) {
+      const actions = this.options.actions;
+      if (actions !== undefined) {
+        actions.forEach(action => {
+          if (action.op === 'replace') {
+            const value = jp.value(template, action.path);
+            if (value !== undefined) {
+              const oldValue = jp.value(target, action.path);
+              if (oldValue !== value) {
+                jp.value(target, action.path, value);
+                messages.push(
+                  `chore(package): set ${action.path}='${value}' as in template`
+                );
+              }
+            }
+          }
+        });
       }
-    });
+    }
 
     if (messages.length === 0) {
       messages.push('chore(package): update package.json from template');
