@@ -69,17 +69,36 @@ export default class Package extends File {
     return moduleNames(pkg.release);
   }
 
-  async templateRepo(context) {
+  /**
+   * Deliver some key properties
+   * @return {Object}
+   */
+  async properties(context) {
     const content = await this.originalContent(context, {
       ignoreMissing: true
     });
+
     const pkg = JSON.parse(content);
-    if (pkg.template !== undefined && pkg.template.repository !== undefined) {
-      const m = pkg.template.repository.url.match(/github.com\/(.*)\.git$/);
-      return m[1];
+
+    const properties = {
+      'npm.fullName': pkg.name,
+      'npm.name': pkg.name
+    };
+
+    const m = pkg.name.match(/^(\@[^\/]+)\/(.*)/);
+    if (m) {
+      properties['npm.organization'] = m[1];
+      properties['npm.name'] = m[2];
     }
 
-    return undefined;
+    if (pkg.template !== undefined && pkg.template.repository !== undefined) {
+      const m = pkg.template.repository.url.match(/github.com\/(.*)\.git$/);
+      if (m) {
+        properties.templateRepo = m[1];
+      }
+    }
+
+    return properties;
   }
 
   async mergeContent(context, original, templateContent) {

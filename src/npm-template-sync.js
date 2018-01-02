@@ -95,6 +95,8 @@ export async function npmTemplateSync(
     const context = new Context(repository, undefined, {
       'github.user': user,
       'github.repo': repo,
+      'npm.name': repo,
+      'npm.fullName': repo,
       name: repo,
       user,
       'date.year': new Date().getFullYear(),
@@ -106,15 +108,21 @@ export async function npmTemplateSync(
     context.spiner = spinner;
 
     const pkg = new Package('package.json');
+    const properties = await pkg.properties(context);
+
+    Object.keys(properties).forEach(
+      name => (context.properties[name] = properties[name])
+    );
+
+    //console.log(JSON.stringify(context.properties));
 
     if (templateRepo === undefined) {
-      templateRepo = await pkg.templateRepo(context);
-
-      if (templateRepo === undefined) {
+      if (properties.templateRepo === undefined) {
         throw new Error(
           `Unable to extract template repo url from ${targetRepo} ${pkg.path}`
         );
       }
+      templateRepo = properties.templateRepo;
     }
 
     context.templateRepo = await provider.repository(templateRepo);
