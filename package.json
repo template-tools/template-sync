@@ -59,7 +59,6 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "semantic-release": "^11.1.0",
     "tempy": "^0.2.1",
-    "xo": "^0.19.0",
     "documentation": "^5.3.5"
   },
   "engines": {
