@@ -74,31 +74,33 @@ export default class Package extends File {
    * @return {Object}
    */
   async properties(context) {
-    const content = await this.originalContent(context, {
-      ignoreMissing: true
-    });
+    try {
+      const content = await this.originalContent(context);
 
-    const pkg = JSON.parse(content);
+      const pkg = JSON.parse(content);
 
-    const properties = {
-      'npm.fullName': pkg.name,
-      'npm.name': pkg.name
-    };
+      const properties = {
+        'npm.fullName': pkg.name,
+        'npm.name': pkg.name
+      };
 
-    const m = pkg.name.match(/^(\@[^\/]+)\/(.*)/);
-    if (m) {
-      properties['npm.organization'] = m[1];
-      properties['npm.name'] = m[2];
-    }
-
-    if (pkg.template !== undefined && pkg.template.repository !== undefined) {
-      const m = pkg.template.repository.url.match(/github.com\/(.*)\.git$/);
+      const m = pkg.name.match(/^(\@[^\/]+)\/(.*)/);
       if (m) {
-        properties.templateRepo = m[1];
+        properties['npm.organization'] = m[1];
+        properties['npm.name'] = m[2];
       }
-    }
 
-    return properties;
+      if (pkg.template !== undefined && pkg.template.repository !== undefined) {
+        const m = pkg.template.repository.url.match(/github.com\/(.*)\.git$/);
+        if (m) {
+          properties.templateRepo = m[1];
+        }
+      }
+
+      return properties;
+    } catch (e) {}
+
+    return {};
   }
 
   async mergeContent(context, original, templateContent) {
