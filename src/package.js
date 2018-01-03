@@ -52,6 +52,9 @@ const sortedKeys = [
   'template'
 ];
 
+/**
+ * Merger for package.json
+ */
 export default class Package extends File {
   static matchesFileName(name) {
     return name.match(/^package\.json$/);
