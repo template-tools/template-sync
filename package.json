@@ -43,7 +43,6 @@
     "p-queue": "^2.3.0",
     "prompt": "^1.0.0",
     "recast": "^0.13.0",
-    "semver-diff": "^2.1.0",
     "set-getter": "^0.1.0"
   },
   "devDependencies": {

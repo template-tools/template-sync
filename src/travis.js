@@ -1,8 +1,7 @@
 import File from './file';
 
 const yaml = require('js-yaml'),
-  deepExtend = require('deep-extend'),
-  semverDiff = require('semver-diff');
+  deepExtend = require('deep-extend');
 
 function diffVersion(a, b) {
   const aa = String(a)
@@ -28,24 +27,8 @@ function diffVersion(a, b) {
   return 0;
 }
 
-function isValidVersion(version) {
-  version = String(version);
-
-  const m = version.match(/^(\d+)(\.(\d+))*$/);
-
-  return m ? true : false;
-}
-
-function normalizeVersion(version) {
-  version = String(version);
-
-  const m = version.match(/^(\d+)(\.(\d+))?$/);
-
-  if (m) {
-    return m[3] ? m[1] + m[2] + '.0' : m[1] + '.0.0';
-  }
-
-  return version;
+function difference(a, b) {
+  return new Set([...a].filter(x => !b.has(x)));
 }
 
 export default class Travis extends File {
@@ -58,45 +41,56 @@ export default class Travis extends File {
     const tyml = yaml.safeLoad(context.expand(template));
     const before_script = yml.before_script;
     const email = yml.notifications ? yml.notifications.email : undefined;
-    const formerNodeVersions = yml.node_js;
     const messages = [];
 
-    let removeVersions = [];
+    const oldVersions = new Set(
+      yml.node_js ? [...yml.node_js.map(s => String(s))] : []
+    );
+    const templateVersions = new Set(
+      tyml.node_js ? [...tyml.node_js.map(s => String(s))] : []
+    );
+    const versions = new Set([...oldVersions, ...templateVersions]);
+    const newVersions = new Set(versions);
 
-    if (tyml.node_js) {
-      removeVersions = tyml.node_js.filter(v => v < 0).map(v => -v);
-      tyml.node_js = tyml.node_js.filter(v => (v < 0 ? false : true));
+    versions.forEach(v => {
+      if (v.startsWith('-')) {
+        const d = v.replace(/^\-\s*/, '');
+
+        versions.forEach(v => {
+          const x = v.replace(/^\-\s*/, '');
+          //console.log(`${d}<>${v} => ${diffVersion(d, x) === 0 || x != v}`);
+          if (diffVersion(d, x) === 0 || x != v) {
+            if (templateVersions.has(x)) {
+              return;
+            }
+
+            newVersions.delete(x);
+            newVersions.delete(v);
+          }
+        });
+      }
+    });
+
+    const r = difference(oldVersions, newVersions);
+    if (r.size > 0) {
+      messages.push(
+        `chore(travis): remove node versions ${Array.from(new Set(r)).sort()}`
+      );
+    }
+
+    const a = difference(newVersions, oldVersions);
+    if (a.size > 0) {
+      messages.push(
+        `chore(travis): add node versions ${Array.from(new Set(a)).sort()}`
+      );
     }
 
     deepExtend(yml, tyml);
 
-    if (formerNodeVersions !== undefined) {
-      formerNodeVersions.forEach(ov => {
-        if (
-          isValidVersion(ov) &&
-          yml.node_js.find(
-            nv =>
-              semverDiff(normalizeVersion(ov), normalizeVersion(nv)) === 'major'
-          )
-        ) {
-          yml.node_js.push(ov);
-        }
-      });
-
-      const toBeRemoved = yml.node_js.filter(v =>
-        removeVersions.find(rv => diffVersion(rv, v) === 0)
-      );
-      if (toBeRemoved.length > 0) {
-        messages.push(
-          `chore(travis): remove node version(s) ${toBeRemoved.join(' ')}`
-        );
-      }
-
-      yml.node_js = yml.node_js.filter(
-        v => !removeVersions.find(rv => diffVersion(rv, v) === 0)
-      );
-
-      yml.node_js = Array.from(new Set(yml.node_js));
+    if (newVersions.size > 0) {
+      yml.node_js = Array.from(new Set(newVersions))
+        .sort()
+        .map(s => (parseFloat(s) == s ? parseFloat(s) : s));
     }
 
     if (email !== undefined) {

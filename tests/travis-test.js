@@ -48,7 +48,7 @@ test('travis node versions merge', async t => {
 });
 
 test('travis node versions none numeric', async t => {
-  const merged = await mockYmlVersions(['7.7.2'], ['7.7.1', 'iojs']);
+  const merged = await mockYmlVersions(['7.7.2', '-iojs'], ['7.7.1', 'iojs']);
 
   t.deepEqual(
     merged.content,
@@ -64,6 +64,7 @@ test('travis node versions simple', async t => {
   t.deepEqual(
     merged.content,
     `node_js:
+  - 7.7.1
   - 7.7.2
 `
   );
@@ -75,8 +76,9 @@ test('travis node versions complex', async t => {
   t.deepEqual(
     merged.content,
     `node_js:
-  - 7.7.2
   - 6.10.1
+  - 7.7.1
+  - 7.7.2
 `
   );
 });
@@ -87,20 +89,25 @@ test('travis node semver mayor only', async t => {
   t.deepEqual(
     merged.content,
     `node_js:
-  - 7.7.2
   - 5
   - 6.2
+  - 7.7.2
 `
   );
 });
 
 test('travis node semver remove', async t => {
-  const merged = await mockYmlVersions(['-4', '7.7.2'], ['4.2', '4.2.3']);
+  const merged = await mockYmlVersions(
+    ['-4', '-5', '-7', '7.7.2'],
+    ['4.2', '4.2.3', '5.1', '7.7.1', '9.3']
+  );
+  console.log(merged.content);
 
   t.deepEqual(
     merged.content,
     `node_js:
   - 7.7.2
+  - 9.3
 `
   );
 });
