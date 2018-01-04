@@ -93,10 +93,8 @@ export async function npmTemplateSync(
     const sourceBranch = await repository.branch(branch);
 
     const context = new Context(repository, undefined, {
-      'github.user': user,
-      'github.repo': repo,
-      'npm.name': repo,
-      'npm.fullName': repo,
+      github: { user, repo },
+      npm: { name: repo, fullName: repo },
       name: repo,
       user,
       'date.year': new Date().getFullYear(),

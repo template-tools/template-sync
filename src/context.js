@@ -1,4 +1,5 @@
 import { createContext } from 'expression-expander';
+const jp = require('jsonpath');
 
 export default class Context {
   constructor(targetRepo, templateRepo, properties) {
@@ -6,7 +7,12 @@ export default class Context {
       keepUndefinedValues: true,
       leftMarker: '{{',
       rightMarker: '}}',
-      markerRegexp: '{{([^}]+)}}'
+      markerRegexp: '{{([^}]+)}}',
+      evaluate(expression, context, path) {
+        const value = jp.value(properties, expression);
+        //console.log(`evaluate: '${expression}' -> '${value}'`);
+        return value;
+      }
     });
 
     this.ctx.properties = properties;

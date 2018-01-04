@@ -19,8 +19,10 @@ async function createContext(template, target) {
     await provider.repository('tragetUser/targetRepo'),
     await provider.repository('templateRepo'),
     {
-      'github.repo': 'the-repo-name',
-      'github.user': 'the-user-name',
+      github: {
+        repo: 'the-repo-name',
+        user: 'the-user-name'
+      },
       user: 'x-user'
     }
   );
@@ -305,13 +307,13 @@ test('start fresh', async t => {
 
   t.deepEqual(JSON.parse(merged.content), {
     name: 'targetRepo',
-    homepage: 'https://github.com/x-user/targetRepo#readme',
+    homepage: 'https://github.com/the-user-name/the-repo-name#readme',
     bugs: {
-      url: 'https://github.com/x-user/targetRepo/issues'
+      url: 'https://github.com/the-user-name/the-repo-name/issues'
     },
     repository: {
       type: 'git',
-      url: 'git+https://github.com/x-user/targetRepo.git'
+      url: 'git+https://github.com/the-user-name/the-repo-name.git'
     },
     template: {
       repository: {

@@ -79,18 +79,16 @@ export default class Package extends File {
   async properties(context) {
     try {
       const content = await this.originalContent(context);
-
       const pkg = JSON.parse(content);
 
       const properties = {
-        'npm.fullName': pkg.name,
-        'npm.name': pkg.name
+        npm: { name: pkg.name, fullName: pkg.name }
       };
 
       const m = pkg.name.match(/^(\@[^\/]+)\/(.*)/);
       if (m) {
-        properties['npm.organization'] = m[1];
-        properties['npm.name'] = m[2];
+        properties.npm.organization = m[1];
+        properties.npm.name = m[2];
       }
 
       if (pkg.template !== undefined && pkg.template.repository !== undefined) {
@@ -129,19 +127,13 @@ export default class Package extends File {
         ? target.main
         : 'dist/index.js';
 
-    const githubURL = `git+https://github.com/${properties.user}/${
-      target.name
+    const githubURL = `git+https://github.com/${properties.github.user}/${
+      properties.github.repo
     }.git`;
-    const githubURLAlternative = `git+https://github.com/${
-      properties.user
-    }/node-${target.name}.git`;
-
-    let repoName = target.name;
 
     if (
       target.repository === undefined ||
-      (target.repository.url !== githubURL &&
-        target.repository.url !== githubURLAlternative)
+      target.repository.url !== githubURL
     ) {
       target.repository = {
         type: 'git',
@@ -150,14 +142,9 @@ export default class Package extends File {
       messages.push(`chore(package): correct github url`);
     }
 
-    if (
-      target.repository !== undefined &&
-      githubURLAlternative === target.repository.url
-    ) {
-      repoName = `node-${target.name}`;
-    }
-
-    const bugsURL = `https://github.com/${properties.user}/${repoName}/issues`;
+    const bugsURL = `https://github.com/${properties.github.user}/${
+      properties.github.repo
+    }/issues`;
 
     if (target.bugs === undefined || target.bugs.url !== bugsURL) {
       target.bugs = {
@@ -166,9 +153,9 @@ export default class Package extends File {
       messages.push(`chore(package): correct bugs url`);
     }
 
-    const homepageURL = `https://github.com/${
-      properties.user
-    }/${repoName}#readme`;
+    const homepageURL = `https://github.com/${properties.github.user}/${
+      properties.github.repo
+    }#readme`;
 
     if (target.homepage === undefined || target.homepage !== homepageURL) {
       target.homepage = homepageURL;
