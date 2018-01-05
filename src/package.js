@@ -28,6 +28,7 @@ function moduleNames(object) {
 const sortedKeys = [
   'name',
   'version',
+  'publishConfig',
   'main',
   'module',
   'description',
