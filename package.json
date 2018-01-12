@@ -27,7 +27,8 @@
     "docs": "documentation readme src/npm-template-sync.js --section=API",
     "semantic-release": "semantic-release",
     "prepare": "rollup -c && chmod +x bin/npm-template-sync",
-    "lint": "documentation lint src/npm-template-sync.js"
+    "lint": "documentation lint src/npm-template-sync.js",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "dependencies": {
     "caporal": "^0.9.0",
@@ -50,15 +51,16 @@
     "markdown-doctest": "^0.9.1",
     "mock-repository-provider": "^1.0.0",
     "nyc": "^11.4.1",
-    "rollup": "^0.53.4",
+    "rollup": "^0.54.0",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-multi-entry": "^2.0.2",
     "rollup-plugin-node-resolve": "^3.0.2",
-    "semantic-release": "^11.1.0",
+    "semantic-release": "^12.2.0",
     "tempy": "^0.2.1",
-    "documentation": "^5.3.5"
+    "documentation": "^5.3.5",
+    "travis-deploy-once": "^4.3.0"
   },
   "engines": {
     "node": ">=8.9.4"
