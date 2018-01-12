@@ -96,7 +96,7 @@ test('travis node semver mayor only', async t => {
   );
 });
 
-test.only('travis node semver remove', async t => {
+test('travis node semver remove', async t => {
   const merged = await mockYmlVersions(
     ['-4', '-5', '-7', '7.7.2'],
     ['4.2', '4.2.3', '5.1', '7.7.0', '7.7.1', '9.3']
