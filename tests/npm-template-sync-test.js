@@ -23,12 +23,14 @@ test('npmTemplateSync files', async t => {
 test('npmTemplateSync', async t => {
   const spinner = ora('args');
 
+  const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
+
   const pullRequest = await npmTemplateSync(
-    spinner,
-    console,
-    process.env.GH_TOKEN,
+    provider,
     REPOSITORY_NAME,
-    TEMPLATE_REPO
+    TEMPLATE_REPO,
+    spinner,
+    console
   );
 
   //console.log(pullRequest.name);

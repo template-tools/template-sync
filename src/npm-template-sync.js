@@ -10,7 +10,6 @@ import ReplaceIfEmpty from './replace-if-empty';
 import Replace from './replace';
 import JSONFile from './json-file';
 import JSDoc from './jsdoc';
-import { GithubProvider } from 'github-repository-provider';
 
 const mm = require('micromatch');
 
@@ -74,11 +73,11 @@ export async function createFiles(branch, mapping = defaultMapping) {
 }
 
 export async function npmTemplateSync(
-  spinner,
-  logger,
-  token,
+  provider,
   targetRepo,
   templateRepo,
+  spinner,
+  logger,
   dry = false
 ) {
   spinner.text = targetRepo;
@@ -87,9 +86,7 @@ export async function npmTemplateSync(
   let targetBranch;
 
   try {
-    const provider = new GithubProvider({ auth: token });
     const repository = await provider.repository(targetRepo);
-
     const sourceBranch = await repository.branch(branch);
 
     const context = new Context(repository, undefined, {
@@ -195,7 +192,7 @@ export async function npmTemplateSync(
         spinner.fail(err);
       }
     } else {
-      const pullRequest = new targetBranch.provider.constructor.pullRequestClass(
+      const pullRequest = new targetBranch.provider.pullRequestClass(
         targetBranch.repository,
         'old'
       );

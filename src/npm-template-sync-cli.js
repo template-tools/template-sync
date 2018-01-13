@@ -1,6 +1,7 @@
 import { npmTemplateSync } from './npm-template-sync';
 import { setPassword, getPassword } from './util';
 import { version } from '../package.json';
+import { GithubProvider } from 'github-repository-provider';
 
 const program = require('caporal'),
   path = require('path'),
@@ -68,16 +69,17 @@ program
     try {
       const pass = await getPassword(options);
       const queue = new PQueue({ concurrency: options.concurrency });
+      const provider = new GithubProvider({ auth: pass });
 
       await queue.addAll(
         args.repos.map(repo => {
           return () =>
             npmTemplateSync(
-              spinner,
-              logger,
-              pass,
+              provider,
               repo,
               options.template,
+              spinner,
+              logger,
               options.dry
             );
         })
