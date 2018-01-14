@@ -2,6 +2,8 @@ import { npmTemplateSync } from './npm-template-sync';
 import { setPassword, getPassword } from './util';
 import { version } from '../package.json';
 import { GithubProvider } from 'github-repository-provider';
+import { BitbucketProvider } from 'bitbucket-repository-provider';
+import { AggregationProvider } from 'aggregation-repository-provider';
 
 const program = require('caporal'),
   path = require('path'),
@@ -69,7 +71,10 @@ program
     try {
       const pass = await getPassword(options);
       const queue = new PQueue({ concurrency: options.concurrency });
-      const provider = new GithubProvider({ auth: pass });
+      const provider = new AggregationProvider([
+        new GithubProvider({ auth: pass }),
+        new BitbucketProvider()
+      ]);
 
       await queue.addAll(
         args.repos.map(repo => {
