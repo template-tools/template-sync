@@ -28,9 +28,9 @@ program
   )
   .option('-s, --save', 'save keystore')
   .option(
-    '-t, --template <user/repo>',
+    '-t, --template <identifier>',
     'template repository',
-    /^[\w\-]+\/[\w\-]+$/
+    /^([\w\-]+\/[\w\-]+)|(https?:\/\/.*)$/
   )
   .option(
     '--concurrency <number>',
@@ -72,8 +72,14 @@ program
       const pass = await getPassword(options);
       const queue = new PQueue({ concurrency: options.concurrency });
       const provider = new AggregationProvider([
-        new GithubProvider({ auth: pass }),
-        new BitbucketProvider()
+        new GithubProvider({ auth: pass || process.env.GH_TOKEN }),
+        new BitbucketProvider({
+          auth: {
+            type: 'basic',
+            username: process.env.BITBUCKET_USERNAME,
+            password: process.env.BITBUCKET_PASSWORD
+          }
+        })
       ]);
 
       await queue.addAll(

@@ -3,7 +3,11 @@ import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
 import pkg from './package.json';
 
-const external = ['github-repository-provider', 'expression-expander'];
+const external = [
+  'github-repository-provider',
+  'bitbucket-repository-provider',
+  'expression-expander'
+];
 
 export default [
   {
