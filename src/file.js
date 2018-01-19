@@ -30,11 +30,11 @@ export default class File {
   }
 
   templateContent(context, options) {
-    return this.content(context.templateRepo, this.path, options);
+    return this.content(context.templateBranch, this.path, options);
   }
 
   originalContent(context, options) {
-    return this.content(context.targetRepo, this.path, options);
+    return this.content(context.targetBranch, this.path, options);
   }
 
   async mergeContent(context, original, template) {
@@ -73,7 +73,7 @@ export default class File {
 
       return result;
     } catch (err) {
-      context.fail(`${context.targetRepo.name},${this.path}: ${err}`);
+      context.fail(`${context.targetBranch.name},${this.path}: ${err}`);
       return {
         path: this.path,
         changed: false
@@ -81,7 +81,7 @@ export default class File {
     }
   }
 
-  async content(repository, path, options) {
-    return repository.content(path, options);
+  async content(branch, ...args) {
+    return branch.content(...args);
   }
 }

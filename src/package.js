@@ -115,8 +115,8 @@ export default class Package extends File {
     const properties = context.properties;
 
     if (target.name === undefined || target.name === '') {
-      const m = context.targetRepo.name.match(/^([^\/]+)\/(.*)/);
-      target.name = m ? m[2] : context.targetRepo.name;
+      const m = context.targetBranch.name.match(/^([^\/]+)\/(.*)/);
+      target.name = m ? m[2] : context.targetBranch.name;
     }
 
     if (target.module !== undefined && !target.module.match(/\{\{module\}\}/)) {
@@ -293,14 +293,13 @@ export default class Package extends File {
     if (
       target.template === undefined ||
       target.template.repository === undefined ||
-      target.template.repository.url !==
-        `https://github.com/${context.templateRepo.name}.git`
+      target.template.repository.url !== context.templateBranch.url
     ) {
       messages.push('chore(package): set template repo');
 
       target.template = {
         repository: {
-          url: `https://github.com/${context.templateRepo.name}.git`
+          url: context.templateBranch.url
         }
       };
     }

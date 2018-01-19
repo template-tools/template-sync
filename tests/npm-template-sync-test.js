@@ -9,8 +9,7 @@ const TEMPLATE_REPO = 'Kronos-Tools/npm-package-template';
 
 test('npmTemplateSync files', async t => {
   const provider = new GithubProvider(process.env.GH_TOKEN);
-  const repo = await provider.repository(TEMPLATE_REPO);
-  const branch = await repo.branch('master');
+  const branch = await provider.branch(TEMPLATE_REPO);
 
   const files = await createFiles(branch);
 
@@ -22,13 +21,12 @@ test('npmTemplateSync files', async t => {
 
 test('npmTemplateSync', async t => {
   const spinner = ora('args');
-
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
 
   const pullRequest = await npmTemplateSync(
     provider,
-    REPOSITORY_NAME,
-    TEMPLATE_REPO,
+    await provider.branch(REPOSITORY_NAME),
+    await provider.branch(TEMPLATE_REPO),
     spinner,
     console
   );

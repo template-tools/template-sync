@@ -2,7 +2,7 @@ import { createContext } from 'expression-expander';
 const jp = require('jsonpath');
 
 export default class Context {
-  constructor(targetRepo, templateRepo, properties) {
+  constructor(targetBranch, templateBranch, properties) {
     this.ctx = createContext({
       keepUndefinedValues: true,
       leftMarker: '{{',
@@ -25,11 +25,11 @@ export default class Context {
       value: new Map()
     });
 
-    Object.defineProperty(this, 'targetRepo', {
-      value: targetRepo
+    Object.defineProperty(this, 'targetBranch', {
+      value: targetBranch
     });
-    Object.defineProperty(this, 'templateRepo', {
-      value: templateRepo,
+    Object.defineProperty(this, 'templateBranch', {
+      value: templateBranch,
       writable: true
     });
 

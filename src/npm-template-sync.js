@@ -74,28 +74,23 @@ export async function createFiles(branch, mapping = defaultMapping) {
 
 export async function npmTemplateSync(
   provider,
-  targetRepo,
-  templateRepo,
+  targetBranch,
+  templateBranch,
   spinner,
   logger,
   dry = false
 ) {
-  spinner.text = targetRepo;
-  const [user, repo, branch = 'master'] = targetRepo.split(/[\/#]/);
-
-  let targetBranch;
+  spinner.text = targetBranch.fullName;
+  const repoName = targetBranch.repository.name.split(/\//)[1];
 
   try {
-    const repository = await provider.repository(targetRepo);
-    const sourceBranch = await repository.branch(branch);
-
-    const context = new Context(repository, undefined, {
-      github: { user, repo },
-      npm: { name: repo, fullName: repo },
-      name: repo,
-      user,
+    const context = new Context(targetBranch, undefined, {
+      github: { user: targetBranch.owner, repo: repoName },
+      npm: { name: repoName, fullName: repoName },
+      name: repoName,
+      user: targetBranch.owner,
       'date.year': new Date().getFullYear(),
-      'license.owner': user
+      'license.owner': targetBranch.owner
     });
 
     context.logger = logger;
@@ -111,24 +106,25 @@ export async function npmTemplateSync(
 
     //console.log(JSON.stringify(context.properties));
 
-    if (templateRepo === undefined) {
+    if (templateBranch === undefined) {
       if (properties.templateRepo === undefined) {
         throw new Error(
-          `Unable to extract template repo url from ${targetRepo} ${pkg.path}`
+          `Unable to extract template repo url from ${targetBranch.name} ${
+            pkg.path
+          }`
         );
       }
-      templateRepo = properties.templateRepo;
+      templateBranch = await provider.branch(properties.templateRepo);
     }
 
-    context.templateRepo = await provider.repository(templateRepo);
-    const templateBranch = await context.templateRepo.branch('master');
+    context.templateBranch = templateBranch;
 
     const json = JSON.parse(
       await pkg.templateContent(context, { ignoreMissing: true })
     );
 
     const files = await createFiles(
-      templateBranch,
+      context.templateBranch,
       json.template && json.template.files
     );
 
@@ -141,26 +137,28 @@ export async function npmTemplateSync(
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      spinner.succeed(`${targetRepo}: nothing changed`);
+      spinner.succeed(`${targetBranch.fullName}: nothing changed`);
       return;
     }
 
-    spinner.text = merges.map(m => `${targetRepo}: ${m.messages[0]}`).join(',');
+    spinner.text = merges
+      .map(m => `${targetBranch.fullName}: ${m.messages[0]}`)
+      .join(',');
 
     if (dry) {
-      spinner.succeed(`${targetRepo}: dry run`);
+      spinner.succeed(`${targetBranch.fullName}: dry run`);
       return;
     }
 
     let newPullRequestRequired = false;
-    const targetBranchName = `template-sync-1`;
-    targetBranch = (await repository.branches()).get(targetBranchName);
+    const prBranchName = 'template-sync-1';
+    let prBranch = (await targetBranch.repository.branches()).get(prBranchName);
 
-    if (targetBranch === undefined) {
+    if (prBranch === undefined) {
       newPullRequestRequired = true;
-      targetBranch = await repository.createBranch(
-        targetBranchName,
-        sourceBranch
+      prBranch = await targetBranch.repository.createBranch(
+        prBranchName,
+        targetBranch
       );
     }
 
@@ -169,12 +167,14 @@ export async function npmTemplateSync(
       return result;
     }, []);
 
-    await targetBranch.commit(messages.join('\n'), merges);
+    await prBranch.commit(messages.join('\n'), merges);
 
     if (newPullRequestRequired) {
       try {
-        const pullRequest = await sourceBranch.createPullRequest(targetBranch, {
-          title: `merge package template from ${context.templateRepo.name}`,
+        const pullRequest = await targetBranch.createPullRequest(prBranch, {
+          title: `merge package template from ${
+            context.templateBranch.fullName
+          }`,
           body: merges
             .map(
               m =>
@@ -185,7 +185,7 @@ export async function npmTemplateSync(
             )
             .join('\n')
         });
-        spinner.succeed(`${targetRepo}: ${pullRequest.name}`);
+        spinner.succeed(`${targetBranch.fullName}: ${pullRequest.name}`);
 
         return pullRequest;
       } catch (err) {
@@ -197,11 +197,11 @@ export async function npmTemplateSync(
         'old'
       );
 
-      spinner.succeed(`${targetRepo}: update PR`);
+      spinner.succeed(`${targetBranch.fullName}: update PR`);
       return pullRequest;
     }
   } catch (err) {
-    spinner.fail(`${user}/${repo}: ${err}`);
+    spinner.fail(`${targetBranch.fullName}: ${err}`);
     throw err;
   }
 }

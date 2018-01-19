@@ -72,23 +72,32 @@ program
       const pass = await getPassword(options);
       const queue = new PQueue({ concurrency: options.concurrency });
       const provider = new AggregationProvider([
-        new GithubProvider({ auth: pass || process.env.GH_TOKEN }),
-        new BitbucketProvider({
-          auth: {
-            type: 'basic',
-            username: process.env.BITBUCKET_USERNAME,
-            password: process.env.BITBUCKET_PASSWORD
-          }
-        })
+        new GithubProvider({ auth: pass || process.env.GH_TOKEN })
       ]);
+
+      if (process.env.BITBUCKET_USERNAME && process.env.BITBUCKET_PASSWORD) {
+        provider.providers.push(
+          new BitbucketProvider({
+            auth: {
+              type: 'basic',
+              username: process.env.BITBUCKET_USERNAME,
+              password: process.env.BITBUCKET_PASSWORD
+            }
+          })
+        );
+      }
+
+      const templateBranch = options.template
+        ? await provider.branch(options.template)
+        : undefined;
 
       await queue.addAll(
         args.repos.map(repo => {
-          return () =>
+          return async () =>
             npmTemplateSync(
               provider,
-              repo,
-              options.template,
+              await provider.branch(repo),
+              templateBranch,
               spinner,
               logger,
               options.dry

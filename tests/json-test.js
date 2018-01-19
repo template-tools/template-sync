@@ -7,16 +7,22 @@ const FILE_NAME = 'a.json';
 
 async function createContext(template, target) {
   const provider = new MockProvider({
-    [FILE_NAME]: {
-      templateRepo:
-        template !== undefined ? JSON.stringify(template) : undefined,
-      targetRepo: target !== undefined ? JSON.stringify(target) : undefined
+    templateRepo: {
+      master: {
+        [FILE_NAME]:
+          template !== undefined ? JSON.stringify(template) : undefined
+      }
+    },
+    targetRepo: {
+      master: {
+        [FILE_NAME]: target !== undefined ? JSON.stringify(target) : undefined
+      }
     }
   });
 
   return new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo'),
     {}
   );
 }

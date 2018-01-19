@@ -7,17 +7,22 @@ const FILE_NAME = 'package.json';
 
 async function createContext(template, target) {
   const provider = new MockProvider({
-    [FILE_NAME]: {
-      templateRepo:
-        template !== undefined ? JSON.stringify(template) : undefined,
-      'tragetUser/targetRepo':
-        target !== undefined ? JSON.stringify(target) : undefined
+    templateRepo: {
+      master: {
+        [FILE_NAME]:
+          template !== undefined ? JSON.stringify(template) : undefined
+      }
+    },
+    'tragetUser/targetRepo': {
+      master: {
+        [FILE_NAME]: target !== undefined ? JSON.stringify(target) : undefined
+      }
     }
   });
 
   return new Context(
-    await provider.repository('tragetUser/targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('tragetUser/targetRepo'),
+    await provider.branch('templateRepo'),
     {
       github: {
         repo: 'the-repo-name',

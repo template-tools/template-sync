@@ -5,8 +5,9 @@ import { MockProvider } from 'mock-repository-provider';
 
 test('rollup', async t => {
   const provider = new MockProvider({
-    'rollup.config.json': {
-      templateRepo: `import babel from 'rollup-plugin-babel';
+    templateRepo: {
+      master: {
+        'rollup.config.json': `import babel from 'rollup-plugin-babel';
 import pkg from './package.json';
 
 export default {
@@ -22,8 +23,12 @@ export default {
       exclude: 'node_modules/**'
     })
   ]
-};`,
-      targetRepo: `'use strict';
+};`
+      }
+    },
+    targetRepo: {
+      master: {
+        'rollup.config.json': `'use strict';
 import babel from 'rollup-plugin-babel';
 export default {
   banner: '#!/usr/bin/env node',
@@ -43,12 +48,13 @@ export default {
   sourceMap: true,
   dest: 'build/test-bundle.js'
 };`
+      }
     }
   });
 
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo'),
     {}
   );
 
@@ -82,9 +88,10 @@ export default {
 
 test('rollup empty template', async t => {
   const provider = new MockProvider({
-    'rollup.config.json': {
-      templateRepo: '',
-      targetRepo: `import pkg from './package.json';
+    templateRepo: { master: { 'rollup.config.json': '' } },
+    targetRepo: {
+      master: {
+        'rollup.config.json': `import pkg from './package.json';
 import babel from 'rollup-plugin-babel';
 
 export default {
@@ -101,11 +108,12 @@ export default {
   }],
   external: ['url-resolver-fs']
 };`
+      }
     }
   });
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo'),
     {}
   );
 
@@ -135,16 +143,21 @@ export default {
 
 test('rollup without imports and complex target expression', async t => {
   const provider = new MockProvider({
-    'rollup.config.json': {
-      templateRepo: `
+    templateRepo: {
+      master: {
+        'rollup.config.json': `
 export default {
   input: "input.js",
   output: {
     file: "output.js",
     format: 'cjs'
   }
-};`,
-      targetRepo: `export default ['base'].map(name => {
+};`
+      }
+    },
+    targetRepo: {
+      master: {
+        'rollup.config.json': `export default ['base'].map(name => {
   return {
     input: 'tests/xx-test.js',
     output: {
@@ -152,6 +165,7 @@ export default {
       format: 'cjs'
     }
   };`
+      }
     }
   });
 

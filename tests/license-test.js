@@ -5,15 +5,15 @@ import { MockProvider } from 'mock-repository-provider';
 
 test('modify one year', async t => {
   const provider = new MockProvider({
-    aFile: {
-      templateRepo: 'Copyright (c) {{date.year}} by {{owner}}',
-      targetRepo: 'Copyright (c) 1999 by xyz'
-    }
+    templateRepo: {
+      master: { aFile: 'Copyright (c) {{date.year}} by {{owner}}' }
+    },
+    targetRepo: { master: { aFile: 'Copyright (c) 1999 by xyz' } }
   });
 
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo'),
     {
       'date.year': 2099,
       'license.owner': 'xyz'
@@ -28,15 +28,17 @@ test('modify one year', async t => {
 
 test('modify year list', async t => {
   const provider = new MockProvider({
-    aFile: {
-      templateRepo: 'Copyright (c) {{date.year}} by {{owner}}',
-      targetRepo: 'Copyright (c) 2001,1999,2000,2001,2007 by xyz'
+    templateRepo: {
+      master: { aFile: 'Copyright (c) {{date.year}} by {{owner}}' }
+    },
+    targetRepo: {
+      master: { aFile: 'Copyright (c) 2001,1999,2000,2001,2007 by xyz' }
     }
   });
 
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo'),
     {
       'date.year': 2099,
       'license.owner': 'xyz'

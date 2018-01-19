@@ -5,29 +5,35 @@ import { MockProvider } from 'mock-repository-provider';
 
 async function mockYmlVersions(templateVersions, targetVersions) {
   const provider = new MockProvider({
-    aFile: {
-      templateRepo: `node_js:
+    templateRepo: {
+      master: {
+        aFile: `node_js:
 ${templateVersions
-        .map(
-          v => `  - ${v}
+          .map(
+            v => `  - ${v}
 `
-        )
-        .join('')}
-`,
-      targetRepo: `node_js:
+          )
+          .join('')}
+`
+      }
+    },
+    targetRepo: {
+      master: {
+        aFile: `node_js:
 ${targetVersions
-        .map(
-          v => `  - ${v}
+          .map(
+            v => `  - ${v}
 `
-        )
-        .join('')}
+          )
+          .join('')}
 `
+      }
     }
   });
 
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo'),
     {}
   );
 
@@ -114,20 +120,26 @@ test('travis node semver remove', async t => {
 
 test('travis remove before_script', async t => {
   const provider = new MockProvider({
-    aFile: {
-      templateRepo: `before_script:
+    templateRepo: {
+      master: {
+        aFile: `before_script:
   - npm prune
   - -npm install -g codecov
-`,
-      targetRepo: `before_script:
+`
+      }
+    },
+    targetRepo: {
+      master: {
+        aFile: `before_script:
   - npm prune
   - npm install -g codecov
 `
+      }
     }
   });
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo'),
     {}
   );
 
@@ -143,14 +155,20 @@ test('travis remove before_script', async t => {
 
 test('start fresh', async t => {
   const provider = new MockProvider({
-    aFile: {
-      templateRepo: `node_js:
+    templateRepo: {
+      master: {
+        aFile: `node_js:
   - 7.7.2
 before_script:
   - npm prune
   - -npm install -g codecov
-`,
-      targetRepo: ''
+`
+      }
+    },
+    targetRepo: {
+      master: {
+        aFile: ''
+      }
     }
   });
 

@@ -5,15 +5,13 @@ import { MockProvider } from 'mock-repository-provider';
 
 test('merge lines', async t => {
   const provider = new MockProvider({
-    aFile: {
-      templateRepo: ['- Line 1', 'Line 2'].join('\n'),
-      targetRepo: ['Line 1', 'Line 3'].join('\n')
-    }
+    templateRepo: { master: { aFile: ['- Line 1', 'Line 2'].join('\n') } },
+    targetRepo: { master: { aFile: ['Line 1', 'Line 3'].join('\n') } }
   });
 
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo'),
     {}
   );
 

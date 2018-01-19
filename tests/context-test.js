@@ -24,19 +24,23 @@ const PACKAGE_FILE_CONTENT = `{
 
 test('context used dev modules', async t => {
   const provider = new MockProvider({
-    'rollup.config.js': {
-      templateRepo: ROLLUP_FILE_CONTENT,
-      targetRepo: ROLLUP_FILE_CONTENT
+    templateRepo: {
+      master: {
+        'rollup.config.js': ROLLUP_FILE_CONTENT,
+        'package.json': PACKAGE_FILE_CONTENT
+      }
     },
-    'package.json': {
-      templateRepo: PACKAGE_FILE_CONTENT,
-      targetRepo: PACKAGE_FILE_CONTENT
+    targetRepo: {
+      master: {
+        'rollup.config.js': ROLLUP_FILE_CONTENT,
+        'package.json': PACKAGE_FILE_CONTENT
+      }
     }
   });
 
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo')
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
   );
 
   context.addFile(new Rollup('rollup.config.js'));
@@ -50,15 +54,17 @@ test('context used dev modules', async t => {
 
 test('context optional dev modules', async t => {
   const provider = new MockProvider({
-    'rollup.config.js': {
-      templateRepo: ROLLUP_FILE_CONTENT,
-      targetRepo: ROLLUP_FILE_CONTENT
+    templateRepo: { master: { 'rollup.config.js': ROLLUP_FILE_CONTENT } },
+    targetRepo: {
+      master: {
+        'rollup.config.js': ROLLUP_FILE_CONTENT
+      }
     }
   });
 
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo')
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
   );
 
   context.addFile(new Rollup('rollup.config.js'));

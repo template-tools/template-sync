@@ -5,17 +5,23 @@ import { MockProvider } from 'mock-repository-provider';
 
 test('replace', async t => {
   const provider = new MockProvider({
-    aFile: {
-      templateRepo: `Line 1x
-Line 2x`,
-      targetRepo: `Line 1
+    templateRepo: {
+      master: {
+        aFile: `Line 1x
+Line 2x`
+      }
+    },
+    targetRepo: {
+      master: {
+        aFile: `Line 1
 Line 2`
+      }
     }
   });
 
   const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo'),
     {}
   );
 
