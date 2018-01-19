@@ -322,7 +322,7 @@ test('start fresh', async t => {
     },
     template: {
       repository: {
-        url: 'https://github.com/templateRepo.git'
+        url: 'http://mock-provider.com/templateRepo'
       }
     }
   });

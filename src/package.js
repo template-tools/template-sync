@@ -115,7 +115,7 @@ export default class Package extends File {
     const properties = context.properties;
 
     if (target.name === undefined || target.name === '') {
-      const m = context.targetBranch.name.match(/^([^\/]+)\/(.*)/);
+      const m = context.targetBranch.repository.name.match(/^([^\/]+)\/(.*)/);
       target.name = m ? m[2] : context.targetBranch.name;
     }
 
