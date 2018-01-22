@@ -80,7 +80,7 @@ export async function npmTemplateSync(
   logger,
   dry = false
 ) {
-  spinner.text = targetBranch.fullName;
+  spinner.text = targetBranch.fullCondensedName;
   const repoName = targetBranch.repository.name.split(/\//)[1];
 
   try {
@@ -137,16 +137,16 @@ export async function npmTemplateSync(
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      spinner.succeed(`${targetBranch.fullName}: nothing changed`);
+      spinner.succeed(`${targetBranch.fullCondensedName}: nothing changed`);
       return;
     }
 
     spinner.text = merges
-      .map(m => `${targetBranch.fullName}: ${m.messages[0]}`)
+      .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
       .join(',');
 
     if (dry) {
-      spinner.succeed(`${targetBranch.fullName}: dry run`);
+      spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
       return;
     }
 
@@ -173,7 +173,7 @@ export async function npmTemplateSync(
       try {
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
           title: `merge package template from ${
-            context.templateBranch.fullName
+            context.templateBranch.fullCondensedName
           }`,
           body: merges
             .map(
@@ -185,7 +185,9 @@ export async function npmTemplateSync(
             )
             .join('\n')
         });
-        spinner.succeed(`${targetBranch.fullName}: ${pullRequest.name}`);
+        spinner.succeed(
+          `${targetBranch.fullCondensedName}: ${pullRequest.name}`
+        );
 
         return pullRequest;
       } catch (err) {
@@ -197,11 +199,11 @@ export async function npmTemplateSync(
         'old'
       );
 
-      spinner.succeed(`${targetBranch.fullName}: update PR`);
+      spinner.succeed(`${targetBranch.fullCondensedName}: update PR`);
       return pullRequest;
     }
   } catch (err) {
-    spinner.fail(`${targetBranch.fullName}: ${err}`);
+    spinner.fail(`${targetBranch.fullCondensedName}: ${err}`);
     throw err;
   }
 }
