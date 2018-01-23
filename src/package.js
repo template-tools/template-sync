@@ -130,6 +130,14 @@ export default class Package extends File {
 
     const targetRepository = context.targetBranch.repository;
 
+    /*
+    const repositoryProperties = {
+      repository : { property: 'url' },
+      bugs : { property: 'issuesURL' },
+      homepage : { property: 'homePageURL' }
+    };
+    */
+
     if (
       target.repository === undefined ||
       target.repository.url !== targetRepository.url
@@ -206,7 +214,8 @@ export default class Package extends File {
     Object.keys(deepProperties).forEach(category => {
       if (template[category] !== undefined) {
         Object.keys(template[category]).forEach(d => {
-          if (template[category][d] === '-') {
+          const tp = context.expand(template[category][d]);
+          if (tp === '-') {
             if (
               target[category] !== undefined &&
               target[category][d] !== undefined
@@ -217,8 +226,6 @@ export default class Package extends File {
               delete target[category][d];
             }
           } else {
-            const tp = context.expand(template[category][d]);
-
             if (
               category === 'devDependencies' &&
               target.dependencies !== undefined &&
@@ -244,7 +251,7 @@ export default class Package extends File {
     });
 
     Object.keys(template).forEach(p => {
-      if (p !== 'template') {
+      if (p !== 'template' && p !== 'devDependencies') {
         if (target[p] === undefined) {
           target[p] = template[p];
         }
