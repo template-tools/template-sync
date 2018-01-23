@@ -312,13 +312,13 @@ test('start fresh', async t => {
 
   t.deepEqual(JSON.parse(merged.content), {
     name: 'targetRepo',
-    homepage: 'https://github.com/the-user-name/the-repo-name#readme',
+    homepage: 'http://mock-provider.com/tragetUser/targetRepo#readme',
     bugs: {
-      url: 'https://github.com/the-user-name/the-repo-name/issues'
+      url: 'http://mock-provider.com/tragetUser/targetRepo/issues'
     },
     repository: {
       type: 'git',
-      url: 'git+https://github.com/the-user-name/the-repo-name.git'
+      url: 'http://mock-provider.com/tragetUser/targetRepo'
     },
     template: {
       repository: {

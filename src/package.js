@@ -128,38 +128,34 @@ export default class Package extends File {
         ? target.main
         : 'dist/index.js';
 
-    const githubURL = `git+https://github.com/${properties.github.user}/${
-      properties.github.repo
-    }.git`;
+    const targetRepository = context.targetBranch.repository;
 
     if (
       target.repository === undefined ||
-      target.repository.url !== githubURL
+      target.repository.url !== targetRepository.url
     ) {
       target.repository = {
-        type: 'git',
-        url: githubURL
+        type: targetRepository.type,
+        url: targetRepository.url
       };
-      messages.push(`chore(package): correct github url`);
+      messages.push(`chore(package): correct repository url`);
     }
 
-    const bugsURL = `https://github.com/${properties.github.user}/${
-      properties.github.repo
-    }/issues`;
-
-    if (target.bugs === undefined || target.bugs.url !== bugsURL) {
+    if (
+      target.bugs === undefined ||
+      target.bugs.url !== context.targetBranch.issuesURL
+    ) {
       target.bugs = {
-        url: bugsURL
+        url: context.targetBranch.issuesURL
       };
       messages.push(`chore(package): correct bugs url`);
     }
 
-    const homepageURL = `https://github.com/${properties.github.user}/${
-      properties.github.repo
-    }#readme`;
-
-    if (target.homepage === undefined || target.homepage !== homepageURL) {
-      target.homepage = homepageURL;
+    if (
+      target.homepage === undefined ||
+      target.homepage !== context.targetBranch.homePageURL
+    ) {
+      target.homepage = context.targetBranch.homePageURL;
       messages.push(`chore(package): correct hompage url`);
     }
 
