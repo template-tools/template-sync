@@ -251,7 +251,7 @@ export default class Package extends File {
     });
 
     Object.keys(template).forEach(p => {
-      if (p !== 'template' && p !== 'devDependencies') {
+      if (p !== 'template') {
         if (target[p] === undefined) {
           target[p] = template[p];
         }
