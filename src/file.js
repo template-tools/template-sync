@@ -82,6 +82,7 @@ export default class File {
   }
 
   async content(branch, ...args) {
-    return branch.content(...args);
+    const content = await branch.content(...args);
+    return content.content;
   }
 }
