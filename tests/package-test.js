@@ -127,8 +127,6 @@ test('package devDependencies keep cracks', async t => {
 
   const merged = await pkg.merge(context);
 
-  //console.log(merged.messages);
-
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
     cracks: '3.1.2'
   });
@@ -150,8 +148,6 @@ test('package devDependencies remove cracks', async t => {
   const pkg = new Package('package.json');
   context.addFile(pkg);
   const merged = await pkg.merge(context);
-
-  console.log(merged.messages);
 
   t.deepEqual(JSON.parse(merged.content).devDependencies, {});
   //t.true(merged.messages.includes('chore(devDependencies): remove cracks'));
