@@ -132,9 +132,14 @@ export default class Package extends File {
 
     /*
     const repositoryProperties = {
-      repository : { property: 'url' },
-      bugs : { property: 'issuesURL' },
-      homepage : { property: 'homePageURL' }
+      repository : {
+        type: targetRepository.type,
+        url: targetRepository.url
+      },
+      bugs : {
+        url: context.targetBranch.issuesURL
+      },
+      homepage : context.targetBranch.homePageURL
     };
     */
 
