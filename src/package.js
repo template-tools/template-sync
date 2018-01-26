@@ -1,4 +1,5 @@
 import File from './file';
+const { diff } = require('deep-object-diff');
 const jp = require('jsonpath');
 
 function moduleNames(object) {
@@ -107,15 +108,31 @@ export default class Package extends File {
 
   async mergeContent(context, original, templateContent) {
     const originalLastChar = original[original.length - 1];
+    const targetRepository = context.targetBranch.repository;
 
     let target =
       original === undefined || original === '' ? {} : JSON.parse(original);
-    const template = JSON.parse(templateContent);
+    const template = Object.assign(JSON.parse(templateContent), {
+      repository: {
+        type: targetRepository.type,
+        url: targetRepository.url
+      },
+      bugs: {
+        url: context.targetBranch.issuesURL
+      },
+      homepage: context.targetBranch.homePageURL,
+      template: {
+        repository: {
+          url: context.templateBranch.url
+        }
+      }
+    });
+
     let messages = [];
     const properties = context.properties;
 
     if (target.name === undefined || target.name === '') {
-      const m = context.targetBranch.repository.name.match(/^([^\/]+)\/(.*)/);
+      const m = targetRepository.name.match(/^([^\/]+)\/(.*)/);
       target.name = m ? m[2] : context.targetBranch.name;
     }
 
@@ -128,49 +145,18 @@ export default class Package extends File {
         ? target.main
         : 'dist/index.js';
 
-    const targetRepository = context.targetBranch.repository;
-
-    /*
-    const repositoryProperties = {
-      repository : {
-        type: targetRepository.type,
-        url: targetRepository.url
-      },
-      bugs : {
-        url: context.targetBranch.issuesURL
-      },
-      homepage : context.targetBranch.homePageURL
+    const slots = {
+      repository: 'chore(package): correct repository url',
+      bugs: 'chore(package): correct bugs url',
+      homepage: 'chore(package): correct bugs url',
+      template: 'chore(package): set template repo'
     };
-    */
-
-    if (
-      target.repository === undefined ||
-      target.repository.url !== targetRepository.url
-    ) {
-      target.repository = {
-        type: targetRepository.type,
-        url: targetRepository.url
-      };
-      messages.push(`chore(package): correct repository url`);
-    }
-
-    if (
-      target.bugs === undefined ||
-      target.bugs.url !== context.targetBranch.issuesURL
-    ) {
-      target.bugs = {
-        url: context.targetBranch.issuesURL
-      };
-      messages.push(`chore(package): correct bugs url`);
-    }
-
-    if (
-      target.homepage === undefined ||
-      target.homepage !== context.targetBranch.homePageURL
-    ) {
-      target.homepage = context.targetBranch.homePageURL;
-      messages.push(`chore(package): correct hompage url`);
-    }
+    Object.keys(slots).forEach(key => {
+      if (diff(target[key], template[key])) {
+        messages.push(slots[key]);
+        target[key] = template[key];
+      }
+    });
 
     let buildOutput;
     const extraBuilds = {};
@@ -296,20 +282,6 @@ export default class Package extends File {
           delete target.author;
         }
       }
-    }
-
-    if (
-      target.template === undefined ||
-      target.template.repository === undefined ||
-      target.template.repository.url !== context.templateBranch.url
-    ) {
-      messages.push('chore(package): set template repo');
-
-      target.template = {
-        repository: {
-          url: context.templateBranch.url
-        }
-      };
     }
 
     const toBeDeletedModules =
