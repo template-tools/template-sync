@@ -112,7 +112,9 @@ export default class Package extends File {
 
     let target =
       original === undefined || original === '' ? {} : JSON.parse(original);
-    const template = Object.assign(JSON.parse(templateContent), {
+    const originalTemplate = JSON.parse(templateContent);
+
+    const template = Object.assign(originalTemplate, {
       repository: {
         type: targetRepository.type,
         url: targetRepository.url
@@ -242,11 +244,11 @@ export default class Package extends File {
     });
 
     Object.keys(template).forEach(p => {
-      if (p !== 'template') {
-        if (target[p] === undefined) {
-          target[p] = template[p];
-        }
+      //  if (p !== 'template') {
+      if (target[p] === undefined) {
+        target[p] = template[p];
       }
+      //  }
     });
 
     if (target.scripts !== undefined && target.scripts.prepare) {
@@ -307,14 +309,14 @@ export default class Package extends File {
     }
 
     if (
-      template.template !== undefined &&
-      template.template.keywords !== undefined
+      originalTemplate.template !== undefined &&
+      originalTemplate.template.keywords !== undefined
     ) {
-      Object.keys(template.template.keywords).forEach(r =>
+      Object.keys(originalTemplate.template.keywords).forEach(r =>
         addKeyword(
           target,
           new RegExp(r),
-          template.template.keywords[r],
+          originalTemplate.template.keywords[r],
           messages
         )
       );
