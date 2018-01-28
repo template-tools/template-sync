@@ -76,6 +76,7 @@ export default class Package extends File {
 
   /**
    * Deliver some key properties
+   * @param {Context} context
    * @return {Object}
    */
   async properties(context) {
@@ -108,13 +109,14 @@ export default class Package extends File {
 
   async mergeContent(context, original, templateContent) {
     const originalLastChar = original[original.length - 1];
+    const originalTemplate = JSON.parse(templateContent);
+
     const targetRepository = context.targetBranch.repository;
 
     let target =
       original === undefined || original === '' ? {} : JSON.parse(original);
-    const originalTemplate = JSON.parse(templateContent);
 
-    const template = Object.assign(originalTemplate, {
+    const template = Object.assign({}, originalTemplate, {
       repository: {
         type: targetRepository.type,
         url: targetRepository.url
@@ -244,11 +246,9 @@ export default class Package extends File {
     });
 
     Object.keys(template).forEach(p => {
-      //  if (p !== 'template') {
       if (target[p] === undefined) {
         target[p] = template[p];
       }
-      //  }
     });
 
     if (target.scripts !== undefined && target.scripts.prepare) {

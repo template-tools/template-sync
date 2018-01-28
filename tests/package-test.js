@@ -188,7 +188,7 @@ test('package keywords', async t => {
     {
       template: {
         keywords: {
-          _xxx_: 'XXX'
+          _xxx_: 'X'
         }
       }
     },
@@ -199,15 +199,15 @@ test('package keywords', async t => {
           url: `https://github.com/.git`
         }
       },
-      keywords: ['YYY']
+      keywords: ['A', 'B']
     }
   );
 
   const pkg = new Package('package.json');
   const merged = await pkg.merge(context);
 
-  t.deepEqual(JSON.parse(merged.content).keywords, ['YYY', 'XXX']);
-  t.true(merged.messages.includes('docs(package): add keyword XXX'));
+  t.deepEqual(JSON.parse(merged.content).keywords, ['A', 'B', 'X']);
+  t.true(merged.messages.includes('docs(package): add keyword X'));
 });
 
 test('package keywords empty', async t => {
