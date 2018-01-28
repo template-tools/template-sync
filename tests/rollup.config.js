@@ -5,6 +5,7 @@ export default {
   input: 'tests/**/*-test.js',
   external: [
     'ava',
+    'jsonpath',
     'mock-repository-provider',
     'expression-expander',
     'repository-provider',

@@ -1,5 +1,5 @@
 import { createContext } from 'expression-expander';
-const jp = require('jsonpath');
+import { value } from 'jsonpath';
 
 export default class Context {
   constructor(targetBranch, templateBranch, properties) {
@@ -8,29 +8,25 @@ export default class Context {
       leftMarker: '{{',
       rightMarker: '}}',
       markerRegexp: '{{([^}]+)}}',
-      evaluate(expression, context, path) {
-        const value = jp.value(properties, expression);
-        //console.log(`evaluate: '${expression}' -> '${value}'`);
-        return value;
-      }
+      evaluate: (expression, context, path) => value(properties, expression)
     });
 
     this.ctx.properties = properties;
 
-    Object.defineProperty(this, 'properties', {
-      value: properties
-    });
-
-    Object.defineProperty(this, 'files', {
-      value: new Map()
-    });
-
-    Object.defineProperty(this, 'targetBranch', {
-      value: targetBranch
-    });
-    Object.defineProperty(this, 'templateBranch', {
-      value: templateBranch,
-      writable: true
+    Object.defineProperties(this, {
+      properties: {
+        value: properties
+      },
+      files: {
+        value: new Map()
+      },
+      targetBranch: {
+        value: targetBranch
+      },
+      templateBranch: {
+        value: templateBranch,
+        writable: true
+      }
     });
 
     this.logger = console;

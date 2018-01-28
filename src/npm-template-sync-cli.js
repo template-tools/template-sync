@@ -6,7 +6,6 @@ import { BitbucketProvider } from 'bitbucket-repository-provider';
 import { AggregationProvider } from 'aggregation-repository-provider';
 
 const program = require('caporal'),
-  path = require('path'),
   prompt = require('prompt'),
   ora = require('ora'),
   PQueue = require('p-queue');

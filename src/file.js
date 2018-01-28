@@ -4,12 +4,13 @@ export default class File {
   }
 
   constructor(path, options = {}) {
-    Object.defineProperty(this, 'path', {
-      value: path
-    });
-
-    Object.defineProperty(this, 'options', {
-      value: options
+    Object.defineProperties(this, {
+      path: {
+        value: path
+      },
+      options: {
+        value: options
+      }
     });
   }
 

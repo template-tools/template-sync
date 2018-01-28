@@ -4,6 +4,7 @@ import json from 'rollup-plugin-json';
 import pkg from './package.json';
 
 const external = [
+  'jsonpath',
   'github-repository-provider',
   'bitbucket-repository-provider',
   'expression-expander'
