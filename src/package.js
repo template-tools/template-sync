@@ -131,6 +131,7 @@ export default class Package extends File {
         }
       }
     });
+    template.template = Object.assign({}, target.template, template.template);
 
     let messages = [];
     const properties = context.properties;
