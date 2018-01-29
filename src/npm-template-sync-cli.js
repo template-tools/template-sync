@@ -3,7 +3,9 @@ import { setPassword, getPassword } from './util';
 import { version } from '../package.json';
 import { GithubProvider } from 'github-repository-provider';
 import { BitbucketProvider } from 'bitbucket-repository-provider';
+import { LocalProvider } from 'local-repository-provider';
 import { AggregationProvider } from 'aggregation-repository-provider';
+import { directory } from 'tempy';
 
 const program = require('caporal'),
   prompt = require('prompt'),
@@ -85,6 +87,8 @@ program
           })
         );
       }
+
+      provider.providers.push(new LocalProvider({ workspace: directory() }));
 
       const templateBranch = options.template
         ? await provider.branch(options.template)

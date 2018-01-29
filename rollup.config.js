@@ -4,7 +4,13 @@ import json from 'rollup-plugin-json';
 import pkg from './package.json';
 
 const external = [
+  'os',
+  'path',
+  'crypto',
+  'fs',
   'jsonpath',
+  'local-repository-provider',
+  'aggregation-repository-provider',
   'github-repository-provider',
   'bitbucket-repository-provider',
   'expression-expander'
