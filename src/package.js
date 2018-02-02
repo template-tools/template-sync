@@ -153,7 +153,7 @@ export default class Package extends File {
     const slots = {
       repository: 'chore(package): correct repository url',
       bugs: 'chore(package): correct bugs url',
-      homepage: 'chore(package): correct bugs url',
+      homepage: 'chore(package): homepage',
       template: 'chore(package): set template repo'
     };
     Object.keys(slots).forEach(key => {
