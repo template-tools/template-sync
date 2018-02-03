@@ -1,5 +1,5 @@
 import File from './file';
-const { diff } = require('deep-object-diff');
+const diff = require('simple-diff');
 const jp = require('jsonpath');
 
 function moduleNames(object) {
@@ -157,7 +157,7 @@ export default class Package extends File {
       template: 'chore(package): set template repo'
     };
     Object.keys(slots).forEach(key => {
-      if (diff(target[key], template[key])) {
+      if (diff(target[key], template[key]).length > 0) {
         messages.push(slots[key]);
         target[key] = template[key];
       }
