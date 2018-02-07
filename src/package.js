@@ -94,11 +94,8 @@ export default class Package extends File {
         properties.npm.name = m[2];
       }
 
-      if (pkg.template !== undefined && pkg.template.repository !== undefined) {
-        const m = pkg.template.repository.url.match(/github.com\/(.*)\.git$/);
-        if (m) {
-          properties.templateRepo = m[1];
-        }
+      if (pkg.template !== undefined) {
+        properties.templateRepo = pkg.template.repository;
       }
 
       return properties;
