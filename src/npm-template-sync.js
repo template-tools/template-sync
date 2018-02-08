@@ -81,13 +81,13 @@ export async function npmTemplateSync(
   dry = false
 ) {
   spinner.text = targetBranch.fullCondensedName;
-  const repoName = targetBranch.repository.name.split(/\//)[1];
+  const condensedName = targetBranch.repository.condensedName;
 
   try {
     const context = new Context(targetBranch, undefined, {
-      github: { user: targetBranch.owner, repo: repoName },
-      npm: { name: repoName, fullName: repoName },
-      name: repoName,
+      github: { user: targetBranch.owner, repo: condensedName },
+      npm: { name: condensedName, fullName: condensedName },
+      name: condensedName,
       user: targetBranch.owner,
       'date.year': new Date().getFullYear(),
       'license.owner': targetBranch.owner
@@ -101,13 +101,6 @@ export async function npmTemplateSync(
     const properties = await pkg.properties(context);
 
     Object.assign(context.properties, properties);
-
-    /*
-    Object.keys(properties).forEach(
-      name => (context.properties[name] = properties[name])
-    );*/
-
-    //console.log(JSON.stringify(context.properties));
 
     if (templateBranch === undefined) {
       templateBranch = await provider.branch(properties.templateRepo);
