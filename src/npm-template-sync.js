@@ -100,21 +100,25 @@ export async function npmTemplateSync(
     const pkg = new Package('package.json');
     const properties = await pkg.properties(context);
 
+    Object.assign(context.properties, properties);
+
+    /*
     Object.keys(properties).forEach(
       name => (context.properties[name] = properties[name])
-    );
+    );*/
 
     //console.log(JSON.stringify(context.properties));
 
     if (templateBranch === undefined) {
-      if (properties.templateRepo === undefined) {
+      templateBranch = await provider.branch(properties.templateRepo);
+
+      if (templateBranch === undefined) {
         throw new Error(
           `Unable to extract template repo url from ${targetBranch.name} ${
             pkg.path
           }`
         );
       }
-      templateBranch = await provider.branch(properties.templateRepo);
     }
 
     context.templateBranch = templateBranch;

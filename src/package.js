@@ -94,8 +94,8 @@ export default class Package extends File {
         properties.npm.name = m[2];
       }
 
-      if (pkg.template !== undefined) {
-        properties.templateRepo = pkg.template.repository;
+      if (pkg.template !== undefined && pkg.template.repository !== undefined) {
+        properties.templateRepo = pkg.template.repository.url;
       }
 
       return properties;
