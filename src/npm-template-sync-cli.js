@@ -31,7 +31,7 @@ program
   .option(
     '-t, --template <identifier>',
     'template repository',
-    /^([\w\-]+\/[\w\-]+)|(https?:\/\/.*)$/
+    /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
   )
   .option(
     '--concurrency <number>',
