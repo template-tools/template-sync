@@ -171,9 +171,10 @@ export default class Package extends File {
           buildOutput = ma[1];
         }
 
-        if (template.scripts !== undefined && key !== 'semantic-release') {
+        if (template.scripts !== undefined) {
           const templateScript = template.scripts[key];
           if (templateScript !== undefined) {
+            //const parts = script.split(/\s*&&\s*/);
             const mb = script.match(/&&\s*(.+)$/);
             if (mb && !templateScript.includes(mb[1])) {
               extraBuilds[key] = mb[1];
