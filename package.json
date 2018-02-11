@@ -44,7 +44,7 @@
     "ora": "^1.4.0",
     "p-queue": "^2.3.0",
     "prompt": "^1.0.0",
-    "recast": "^0.13.0",
+    "recast": "^0.13.1",
     "set-getter": "^0.1.0",
     "simple-diff": "^1.6.0"
   },
