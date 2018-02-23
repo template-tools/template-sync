@@ -62,7 +62,8 @@ export default {
   const merged = await rollup.merge(context);
   t.deepEqual(
     merged.content,
-    `import pkg from './package.json';
+    `'use strict';;
+import pkg from './package.json';
 
 import babel from 'rollup-plugin-babel';
 export default {

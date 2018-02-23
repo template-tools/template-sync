@@ -1,7 +1,7 @@
 import File from './file';
 
 const recast = require('recast');
-//const types = require('ast-types');
+const babylon = require('recast/parsers/babylon');
 
 export default class Rollup extends File {
   static matchesFileName(name) {
@@ -23,7 +23,9 @@ export default class Rollup extends File {
   usedDevModules(content) {
     const modules = new Set();
 
-    const ast = recast.parse(content);
+    const ast = recast.parse(content, {
+      parser: babylon
+    });
 
     for (const decl of ast.program.body) {
       if (decl.type === 'ImportDeclaration') {
@@ -50,8 +52,12 @@ export default class Rollup extends File {
     }
 
     try {
-      const templateAST = recast.parse(template);
-      const ast = recast.parse(original);
+      const templateAST = recast.parse(template, {
+        parser: babylon
+      });
+      const ast = recast.parse(original, {
+        parser: babylon
+      });
 
       removeUseStrict(ast);
 
