@@ -38,7 +38,7 @@
     "deep-extend": "^0.5.0",
     "expression-expander": "^6.0.1",
     "github-repository-provider": "^2.0.1",
-    "js-yaml": "^3.10.0",
+    "js-yaml": "^3.11.0",
     "jsonpath": "^1.0.0",
     "local-repository-provider": "^1.2.3",
     "micromatch": "^3.1.8",
