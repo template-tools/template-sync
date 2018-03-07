@@ -37,8 +37,10 @@ export default class Travis extends File {
   }
 
   async mergeContent(context, original, template) {
-    const yml = yaml.safeLoad(original) || {};
-    const tyml = yaml.safeLoad(context.expand(template));
+    const yml = yaml.safeLoad(original, { schema: yaml.FAILSAFE_SCHEMA }) || {};
+    const tyml = yaml.safeLoad(context.expand(template), {
+      schema: yaml.FAILSAFE_SCHEMA
+    });
     const before_script = yml.before_script;
     const email = yml.notifications ? yml.notifications.email : undefined;
     const messages = [];
@@ -90,7 +92,7 @@ export default class Travis extends File {
     if (newVersions.size > 0) {
       yml.node_js = Array.from(new Set(newVersions))
         .sort()
-        .map(s => (parseFloat(s) == s ? parseFloat(s) : s));
+        .map(s => (String(parseFloat(s)) == s ? parseFloat(s) : s));
     }
 
     if (email !== undefined) {

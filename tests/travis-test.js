@@ -117,6 +117,17 @@ test('travis node semver remove', async t => {
   );
 });
 
+test('travis node semver two digits', async t => {
+  const merged = await mockYmlVersions(["'8.10'", '-8'], ['8.9.4']);
+
+  t.deepEqual(
+    merged.content,
+    `node_js:
+  - '8.10'
+`
+  );
+});
+
 test('travis remove before_script', async t => {
   const provider = new MockProvider({
     templateRepo: {
