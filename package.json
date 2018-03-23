@@ -31,7 +31,7 @@
     "travis-deploy-once": "travis-deploy-once"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^1.0.5",
+    "aggregation-repository-provider": "^1.1.0",
     "babylon": "^6.18.0",
     "bitbucket-repository-provider": "^1.2.10",
     "caporal": "^0.10.0",
@@ -41,11 +41,11 @@
     "js-yaml": "^3.11.0",
     "jsonpath": "^1.0.0",
     "local-repository-provider": "^1.2.3",
-    "micromatch": "^3.1.8",
+    "micromatch": "^3.1.10",
     "ora": "^2.0.0",
     "p-queue": "^2.3.1",
     "prompt": "^1.0.0",
-    "recast": "^0.14.2",
+    "recast": "^0.14.7",
     "set-getter": "^0.1.0",
     "simple-diff": "^1.6.0"
   },
