@@ -53,7 +53,7 @@
     "ava": "^0.25.0",
     "documentation": "^6.1.0",
     "markdown-doctest": "^0.9.1",
-    "mock-repository-provider": "^3.0.2",
+    "mock-repository-provider": "^3.0.3",
     "nyc": "^11.6.0",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
