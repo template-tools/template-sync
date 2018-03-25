@@ -116,6 +116,8 @@ export async function npmTemplateSync(
 
     context.templateBranch = templateBranch;
 
+    logger.debug(`Using ${templateBranch.provider} as template provider`);
+
     const json = JSON.parse(
       await pkg.templateContent(context, { ignoreMissing: true })
     );
@@ -127,7 +129,7 @@ export async function npmTemplateSync(
 
     files.forEach(f => context.addFile(f));
 
-    context.logger.debug(context.files.values());
+    logger.debug(context.files.values());
 
     const merges = (await Promise.all(
       files.map(f => f.saveMerge(context, spinner))
