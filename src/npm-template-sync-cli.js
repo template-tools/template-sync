@@ -90,6 +90,12 @@ program
 
       provider.providers.push(new LocalProvider({ workspace: directory() }));
 
+      logger.debug(
+        `providers: ${Array.from(provider.providers.map(p => p.name)).join(
+          ' '
+        )}`
+      );
+
       const templateBranch = options.template
         ? await provider.branch(options.template)
         : undefined;
