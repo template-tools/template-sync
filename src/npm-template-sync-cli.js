@@ -72,9 +72,7 @@ program
     try {
       const pass = await getPassword(options);
       const queue = new PQueue({ concurrency: options.concurrency });
-      const provider = new AggregationProvider([
-        new GithubProvider({ auth: pass || process.env.GH_TOKEN })
-      ]);
+      const provider = new AggregationProvider();
 
       if (process.env.BITBUCKET_USERNAME && process.env.BITBUCKET_PASSWORD) {
         provider.providers.push(
@@ -87,6 +85,10 @@ program
           })
         );
       }
+
+      provider.providers.push(
+        new GithubProvider({ auth: pass || process.env.GH_TOKEN })
+      );
 
       provider.providers.push(new LocalProvider({ workspace: directory() }));
 
