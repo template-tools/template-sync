@@ -74,21 +74,22 @@ program
       const queue = new PQueue({ concurrency: options.concurrency });
       const provider = new AggregationProvider();
 
-      if (process.env.BITBUCKET_USERNAME && process.env.BITBUCKET_PASSWORD) {
-        provider.providers.push(
-          new BitbucketProvider({
-            auth: {
-              type: 'basic',
-              username: process.env.BITBUCKET_USERNAME,
-              password: process.env.BITBUCKET_PASSWORD
-            }
-          })
-        );
-      }
+      [BitbucketProvider, GithubProvider].forEach(p => {
+        let options = p.optionsFromEnvironment(process.env);
 
-      provider.providers.push(
-        new GithubProvider({ auth: pass || process.env.GH_TOKEN })
-      );
+        if (p === GithubProvider && pass !== undefined) {
+          options = Object.assign(
+            {
+              auth: pass
+            },
+            options
+          );
+        }
+
+        if (options !== undefined) {
+          provider.providers.push(new p(options));
+        }
+      });
 
       provider.providers.push(new LocalProvider({ workspace: directory() }));
 
