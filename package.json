@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "documentation": "^6.1.0",
+    "documentation": "^6.2.0",
     "markdown-doctest": "^0.9.1",
     "mock-repository-provider": "^3.0.3",
     "nyc": "^11.6.0",
@@ -61,7 +61,7 @@
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-multi-entry": "^2.0.2",
     "rollup-plugin-node-resolve": "^3.3.0",
-    "semantic-release": "^15.1.5",
+    "semantic-release": "^15.1.6",
     "tempy": "^0.2.1",
     "travis-deploy-once": "^4.4.1"
   },
