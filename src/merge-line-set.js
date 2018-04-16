@@ -3,7 +3,7 @@ import File from './file';
 export default class MergeLineSet extends File {
   async mergeContent(context, original, template) {
     const result = new Set(template.split(/\n/));
-    original.split(/\n/).forEach(line => result.add(line));
+    original.split(/\r?\n/).forEach(line => result.add(line));
 
     const content = Array.from(result.values()).join('\n');
 
