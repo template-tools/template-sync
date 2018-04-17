@@ -87,6 +87,7 @@ program
         }
 
         if (options !== undefined) {
+          logger.debug(`add ${p.name} with options ${Object.keys(options)}`);
           provider.providers.push(new p(options));
         }
       });
