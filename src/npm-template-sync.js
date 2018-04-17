@@ -116,7 +116,7 @@ export async function npmTemplateSync(
 
     context.templateBranch = templateBranch;
 
-    logger.debug(`Using ${templateBranch.provider} as template provider`);
+    logger.debug(`Using ${templateBranch.provider.name} as template provider`);
 
     const json = JSON.parse(
       await pkg.templateContent(context, { ignoreMissing: true })
