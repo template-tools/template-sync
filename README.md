@@ -49,6 +49,7 @@ merges contents from template repo into destination repo handling some special c
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties)
+-   [MergeAndRemoveLineSet](#mergeandremovelineset)
 
 ## sortedKeys
 
@@ -69,6 +70,10 @@ Deliver some key properties
 -   `context` **Context** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## MergeAndRemoveLineSet
+
+**Extends MergeLineSet**
 
 # install
 
