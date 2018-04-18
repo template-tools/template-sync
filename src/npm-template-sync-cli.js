@@ -72,12 +72,12 @@ program
     try {
       const pass = await getPassword(options);
       const queue = new PQueue({ concurrency: options.concurrency });
-      const provider = new AggregationProvider();
+      const aggregationProvider = new AggregationProvider();
 
-      [BitbucketProvider, GithubProvider].forEach(p => {
-        let options = p.optionsFromEnvironment(process.env);
+      [BitbucketProvider, GithubProvider].forEach(provider => {
+        let options = provider.optionsFromEnvironment(process.env);
 
-        if (p === GithubProvider && pass !== undefined) {
+        if (provider === GithubProvider && pass !== undefined) {
           options = Object.assign(
             {
               auth: pass
@@ -87,29 +87,33 @@ program
         }
 
         if (options !== undefined) {
-          logger.debug(`add ${p.name} with options ${Object.keys(options)}`);
-          provider.providers.push(new p(options));
+          logger.debug(
+            `add ${provider.name} with options ${Object.keys(options)}`
+          );
+          aggregationProvider.providers.push(new provider(options));
         }
       });
 
-      provider.providers.push(new LocalProvider({ workspace: directory() }));
+      aggregationProvider.providers.push(
+        new LocalProvider({ workspace: directory() })
+      );
 
       logger.debug(
-        `providers: ${Array.from(provider.providers.map(p => p.name)).join(
-          ' '
-        )}`
+        `providers: ${Array.from(
+          aggregationProvider.providers.map(p => p.name)
+        ).join(' ')}`
       );
 
       const templateBranch = options.template
-        ? await provider.branch(options.template)
+        ? await aggregationProvider.branch(options.template)
         : undefined;
 
       await queue.addAll(
         args.repos.map(repo => {
           return async () =>
             npmTemplateSync(
-              provider,
-              await provider.branch(repo),
+              aggregationProvider,
+              await aggregationProvider.branch(repo),
               templateBranch,
               spinner,
               logger,
