@@ -58,6 +58,19 @@ const sortedKeys = [
  * Merger for package.json
  */
 export default class Package extends File {
+  static decodeScripts(scripts) {
+    const decoded = {};
+
+    if (scripts !== undefined) {
+      Object.keys(scripts).forEach(key => {
+        const script = scripts[key];
+        decoded[key] = script.split(/\s*&&\s*/);
+      });
+    }
+
+    return decoded;
+  }
+
   static matchesFileName(name) {
     return name.match(/^package\.json$/);
   }
