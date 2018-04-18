@@ -160,16 +160,11 @@ export default class Package extends File {
       }
     });
 
-    let buildOutput;
     const extraBuilds = {};
 
     if (target.scripts !== undefined) {
       Object.keys(target.scripts).forEach(key => {
         const script = target.scripts[key];
-        const ma = script.match(/--output=([^\s]+)/);
-        if (ma) {
-          buildOutput = ma[1];
-        }
 
         if (template.scripts !== undefined) {
           const templateScript = template.scripts[key];
@@ -249,15 +244,6 @@ export default class Package extends File {
         target[p] = template[p];
       }
     });
-
-    if (target.scripts !== undefined && target.scripts.prepare) {
-      if (buildOutput !== undefined) {
-        target.scripts.prepare = target.scripts.prepare.replace(
-          /--output=([^\s]+)/,
-          `--output=${buildOutput}`
-        );
-      }
-    }
 
     Object.keys(extraBuilds).forEach(key => {
       target.scripts[key] += ` && ${extraBuilds[key]}`;
