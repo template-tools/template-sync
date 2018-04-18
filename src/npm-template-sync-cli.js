@@ -28,6 +28,7 @@ program
     'arlac77/GitHub for Mac SSH key passphrase — github.com'
   )
   .option('-s, --save', 'save keystore')
+  .option('--list-providers', 'list providers with options and exit')
   .option(
     '-t, --template <identifier>',
     'template repository',
@@ -41,8 +42,6 @@ program
   )
   .argument('[repos...]', 'repos to merge')
   .action(async (args, options, logger) => {
-    spinner.start();
-
     if (options.save) {
       prompt.start();
       const schema = {
@@ -98,11 +97,20 @@ program
         new LocalProvider({ workspace: directory() })
       );
 
-      logger.debug(
-        `providers: ${Array.from(
-          aggregationProvider.providers.map(p => p.name)
-        ).join(' ')}`
-      );
+      if (options.listProviders) {
+        logger.info(
+          Array.from(
+            aggregationProvider.providers.map(
+              p =>
+                `${p.name}: ${JSON.stringify(removeSensibleValues(p.config))}`
+            )
+          ).join('\n')
+        );
+
+        return;
+      }
+
+      spinner.start();
 
       const templateBranch = options.template
         ? await aggregationProvider.branch(options.template)
@@ -127,3 +135,25 @@ program
   });
 
 program.parse(process.argv);
+
+function removeSensibleValues(object) {
+  if (typeof object === 'string' || object instanceof String) {
+    return object;
+  }
+
+  const result = {};
+  for (const key of Object.keys(object)) {
+    const value = object[key];
+
+    if (typeof value === 'string' || value instanceof String) {
+      if (key.match(/pass|auth|key|user/)) {
+        result[key] = '...';
+        continue;
+      }
+    }
+
+    result[key] = removeSensibleValues(value);
+  }
+
+  return result;
+}
