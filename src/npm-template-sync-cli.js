@@ -17,6 +17,8 @@ const spinner = ora('args');
 process.on('uncaughtException', err => spinner.fail(err));
 process.on('unhandledRejection', reason => spinner.fail(reason));
 
+const defines = {};
+
 program
   .description('Keep npm package in sync with its template')
   .version(version)
@@ -28,6 +30,16 @@ program
     'arlac77/GitHub for Mac SSH key passphrase — github.com'
   )
   .option('-s, --save', 'save keystore')
+  .option('-d --define <key=value>', 'set provider option', values => {
+    if (!Array.isArray(values)) {
+      values = [values];
+    }
+
+    values.forEach(value => {
+      const [k, v] = value.split(/=/);
+      setOption(defines, k, v);
+    });
+  })
   .option('--list-providers', 'list providers with options and exit')
   .option(
     '-t, --template <identifier>',
@@ -73,29 +85,21 @@ program
       const queue = new PQueue({ concurrency: options.concurrency });
       const aggregationProvider = new AggregationProvider();
 
-      [BitbucketProvider, GithubProvider].forEach(provider => {
+      if (pass !== null && pass !== undefined) {
+        if (defines.GithubProvider === undefined) {
+          defines.GithubProvider = {};
+        }
+        defines.GithubProvider.auth = pass;
+      }
+
+      [BitbucketProvider, GithubProvider, LocalProvider].forEach(provider => {
         let options = provider.optionsFromEnvironment(process.env);
 
-        if (provider === GithubProvider && pass !== undefined) {
-          options = Object.assign(
-            {
-              auth: pass
-            },
-            options
-          );
-        }
-
-        if (options !== undefined) {
-          logger.debug(
-            `add ${provider.name} with options ${Object.keys(options)}`
-          );
+        if (options !== undefined || defines[provider.name] !== undefined) {
+          options = Object.assign({}, options, defines[provider.name]);
           aggregationProvider.providers.push(new provider(options));
         }
       });
-
-      aggregationProvider.providers.push(
-        new LocalProvider({ workspace: directory() })
-      );
 
       if (options.listProviders) {
         logger.info(
@@ -136,8 +140,27 @@ program
 
 program.parse(process.argv);
 
+function setOption(dest, attributePath, value) {
+  const m = attributePath.match(/^(\w+)\.(.*)/);
+
+  if (m) {
+    const key = m[1];
+    if (dest[key] === undefined) {
+      dest[key] = {};
+    }
+    setOption(dest[key], m[2], value);
+  } else {
+    dest[attributePath] = value;
+  }
+}
+
 function removeSensibleValues(object) {
-  if (typeof object === 'string' || object instanceof String) {
+  if (
+    object === undefined ||
+    object === null ||
+    typeof object === 'string' ||
+    object instanceof String
+  ) {
     return object;
   }
 
