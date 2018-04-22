@@ -1,5 +1,5 @@
 import test from 'ava';
-import Context from '../src/context';
+import { Context } from '../src/context';
 import Package from '../src/package';
 import { MockProvider } from 'mock-repository-provider';
 
@@ -302,21 +302,24 @@ test('jsonpath', async t => {
 });
 
 test('repository change only', async t => {
-  const context = await createContext({},{
-    homepage: 'http://mock-provider.com/tragetUser/targetRepo#readme',
-    bugs: {
-      url: 'http://mock-provider.com/tragetUser/targetRepo/issues'
-    },
-    template: {
-      repository: {
-        url: 'http://mock-provider.com/templateRepo'
+  const context = await createContext(
+    {},
+    {
+      homepage: 'http://mock-provider.com/tragetUser/targetRepo#readme',
+      bugs: {
+        url: 'http://mock-provider.com/tragetUser/targetRepo/issues'
+      },
+      template: {
+        repository: {
+          url: 'http://mock-provider.com/templateRepo'
+        }
       }
     }
-  });
+  );
   const pkg = new Package('package.json');
   const merged = await pkg.merge(context);
 
-  t.deepEqual(merged.messages,['chore(package): correct repository url']);
+  t.deepEqual(merged.messages, ['chore(package): correct repository url']);
 
   t.deepEqual(JSON.parse(merged.content), {
     name: 'targetRepo',

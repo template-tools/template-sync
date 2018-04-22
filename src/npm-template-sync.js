@@ -1,4 +1,4 @@
-import Context from './context';
+import { Context } from './context';
 import Travis from './travis';
 import Readme from './readme';
 import Package from './package';

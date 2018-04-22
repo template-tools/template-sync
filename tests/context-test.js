@@ -1,5 +1,5 @@
 import test from 'ava';
-import Context from '../src/context';
+import { Context } from '../src/context';
 import Rollup from '../src/rollup';
 import Package from '../src/package';
 

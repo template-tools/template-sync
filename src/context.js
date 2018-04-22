@@ -1,7 +1,10 @@
 import { createContext } from 'expression-expander';
 import { value } from 'jsonpath';
 
-export default class Context {
+/**
+ *
+ */
+export class Context {
   constructor(targetBranch, templateBranch, properties) {
     this.ctx = createContext({
       keepUndefinedValues: true,

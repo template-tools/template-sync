@@ -1,5 +1,5 @@
 import test from 'ava';
-import Context from '../src/context';
+import { Context } from '../src/context';
 import MergeLineSet from '../src/merge-line-set';
 import { MockProvider } from 'mock-repository-provider';
 

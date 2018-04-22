@@ -41,6 +41,7 @@ program
     });
   })
   .option('--list-providers', 'list providers with options and exit')
+  .option('-u, --usage', 'track template useage', program.BOOL)
   .option(
     '-t, --template <identifier>',
     'template repository',

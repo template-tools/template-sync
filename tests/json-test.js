@@ -1,5 +1,5 @@
 import test from 'ava';
-import Context from '../src/context';
+import { Context } from '../src/context';
 import JSONFile from '../src/json-file';
 import { MockProvider } from 'mock-repository-provider';
 
