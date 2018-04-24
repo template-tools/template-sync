@@ -76,26 +76,31 @@ export async function npmTemplateSync(
   provider,
   targetBranch,
   templateBranch,
-  spinner,
-  logger,
-  dry = false
+  options
 ) {
-  spinner.text = targetBranch.fullCondensedName;
+  options = Object.assign({}, options, {
+    logger: console,
+    dry: false,
+    trackUsedByModule: false
+  });
+
+  options.spinner.text = targetBranch.fullCondensedName;
   const condensedName = targetBranch.repository.condensedName;
 
   try {
-    const context = new Context(targetBranch, undefined, {
-      github: { user: targetBranch.owner, repo: condensedName },
-      npm: { name: condensedName, fullName: condensedName },
-      name: condensedName,
-      user: targetBranch.owner,
-      'date.year': new Date().getFullYear(),
-      'license.owner': targetBranch.owner
-    });
-
-    context.logger = logger;
-    context.dry = dry;
-    context.spiner = spinner;
+    const context = new Context(
+      targetBranch,
+      undefined,
+      {
+        github: { user: targetBranch.owner, repo: condensedName },
+        npm: { name: condensedName, fullName: condensedName },
+        name: condensedName,
+        user: targetBranch.owner,
+        'date.year': new Date().getFullYear(),
+        'license.owner': targetBranch.owner
+      },
+      options
+    );
 
     const pkg = new Package('package.json');
     const properties = await pkg.properties(context);
@@ -116,7 +121,9 @@ export async function npmTemplateSync(
 
     context.templateBranch = templateBranch;
 
-    logger.debug(`Using ${templateBranch.provider.name} as template provider`);
+    context.logger.debug(
+      `Using ${templateBranch.provider.name} as template provider`
+    );
 
     const json = JSON.parse(
       await pkg.templateContent(context, { ignoreMissing: true })
@@ -129,23 +136,25 @@ export async function npmTemplateSync(
 
     files.forEach(f => context.addFile(f));
 
-    logger.debug(context.files.values());
+    context.logger.debug(context.files.values());
 
     const merges = (await Promise.all(
-      files.map(f => f.saveMerge(context, spinner))
+      files.map(f => f.saveMerge(context))
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      spinner.succeed(`${targetBranch.fullCondensedName}: nothing changed`);
+      context.spinner.succeed(
+        `${targetBranch.fullCondensedName}: nothing changed`
+      );
       return;
     }
 
-    spinner.text = merges
+    context.spinner.text = merges
       .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
       .join(',');
 
-    if (dry) {
-      spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
+    if (context.dry) {
+      context.spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
       return;
     }
 
@@ -184,13 +193,13 @@ export async function npmTemplateSync(
             )
             .join('\n')
         });
-        spinner.succeed(
+        context.spinner.succeed(
           `${targetBranch.fullCondensedName}: ${pullRequest.name}`
         );
 
         return pullRequest;
       } catch (err) {
-        spinner.fail(err);
+        context.spinner.fail(err);
       }
     } else {
       const pullRequest = new targetBranch.provider.pullRequestClass(
@@ -198,11 +207,11 @@ export async function npmTemplateSync(
         'old'
       );
 
-      spinner.succeed(`${targetBranch.fullCondensedName}: update PR`);
+      context.spinner.succeed(`${targetBranch.fullCondensedName}: update PR`);
       return pullRequest;
     }
   } catch (err) {
-    spinner.fail(`${targetBranch.fullCondensedName}: ${err}`);
+    options.spinner.fail(`${targetBranch.fullCondensedName}: ${err}`);
     throw err;
   }
 }

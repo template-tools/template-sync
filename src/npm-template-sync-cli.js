@@ -41,11 +41,16 @@ program
     });
   })
   .option('--list-providers', 'list providers with options and exit')
-  .option('-u, --usage', 'track template useage', program.BOOL)
   .option(
     '-t, --template <identifier>',
     'template repository',
     /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
+  )
+  .option(
+    '--usage',
+    'track packages using template in template',
+    program.BOOL,
+    false
   )
   .option(
     '--concurrency <number>',
@@ -128,9 +133,12 @@ program
               aggregationProvider,
               await aggregationProvider.branch(repo),
               templateBranch,
-              spinner,
-              logger,
-              options.dry
+              {
+                logger,
+                spinner,
+                dry: options.dry,
+                trackUsedByModule: options.usage
+              }
             );
         })
       );

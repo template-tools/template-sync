@@ -27,8 +27,10 @@ test('npmTemplateSync', async t => {
     provider,
     await provider.branch(REPOSITORY_NAME),
     await provider.branch(TEMPLATE_REPO),
-    spinner,
-    console
+    {
+      spinner,
+      console
+    }
   );
 
   //console.log(pullRequest.name);

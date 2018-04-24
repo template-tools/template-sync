@@ -2,10 +2,19 @@ import { createContext } from 'expression-expander';
 import { value } from 'jsonpath';
 
 /**
- *
+ * @param {Branch} targetBranch
+ * @param {Branch} templateBranch
+ * @param {Object} properties
+ * @param {Object} options
  */
 export class Context {
-  constructor(targetBranch, templateBranch, properties) {
+  constructor(targetBranch, templateBranch, properties, options) {
+    options = Object.assign({}, options, {
+      logger: console,
+      dry: false,
+      trackUsedByModule: false
+    });
+
     this.ctx = createContext({
       keepUndefinedValues: true,
       leftMarker: '{{',
@@ -32,7 +41,7 @@ export class Context {
       }
     });
 
-    this.logger = console;
+    Object.assign(this, options);
   }
 
   expand(...args) {
