@@ -48,7 +48,7 @@ program
   )
   .option(
     '--usage',
-    'track packages using template in template',
+    'track packages using template in package.json',
     program.BOOL,
     false
   )

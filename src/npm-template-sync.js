@@ -85,11 +85,14 @@ export async function npmTemplateSync(
   templateBranch,
   options
 ) {
-  options = Object.assign({}, options, {
-    logger: console,
-    dry: false,
-    trackUsedByModule: false
-  });
+  options = Object.assign(
+    {
+      logger: console,
+      dry: false,
+      trackUsedByModule: false
+    },
+    options
+  );
 
   options.spinner.text = targetBranch.fullCondensedName;
   const condensedName = targetBranch.repository.condensedName;
@@ -136,6 +139,8 @@ export async function npmTemplateSync(
     );
 
     if (options.trackUsedByModule) {
+      const name = targetBranch.fullCondensedName;
+
       if (json.template === undefined) {
         json.template = {};
       }
@@ -143,16 +148,24 @@ export async function npmTemplateSync(
         json.template.usedBy = [];
       }
 
-      if (!json.template.usedBy.find(targetBranch.name)) {
-        json.template.usedBy.push(targetBranch.name);
+      if (!json.template.usedBy.find(n => n === name)) {
+        json.template.usedBy.push(name);
 
         const prBranch = await templateBranch.repository.createBranch(
           'template-add-used-1',
           context.templateBranch
         );
-        await prBranch.commit(`fix: add ${targetBranch.name}`, [
-          { path: 'package.json', content: JSON.stringify(json, undefined, 2) }
+        await prBranch.commit(`fix: add ${name}`, [
+          {
+            path: 'package.json',
+            content: JSON.stringify(json, undefined, 2)
+          }
         ]);
+
+        const pullRequest = await templateBranch.createPullRequest(prBranch, {
+          title: `add ${name}`,
+          body: `add tracking info for ${name}`
+        });
       }
     }
 
