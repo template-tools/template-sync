@@ -72,6 +72,13 @@ export async function createFiles(branch, mapping = defaultMapping) {
     .reduce((last, current) => Array.from([...last, ...current]), []);
 }
 
+/**
+ * @param {RepositoryProvider} provider
+ * @param {Branch} targetBranch
+ * @param {Branch} templateBranch
+ * @param {object} options
+ * @return {Promise<PullRequest>}
+ */
 export async function npmTemplateSync(
   provider,
   targetBranch,
@@ -103,12 +110,11 @@ export async function npmTemplateSync(
     );
 
     const pkg = new Package('package.json');
-    const properties = await pkg.properties(context);
 
-    Object.assign(context.properties, properties);
+    Object.assign(context.properties, await pkg.properties(context));
 
     if (templateBranch === undefined) {
-      templateBranch = await provider.branch(properties.templateRepo);
+      templateBranch = await provider.branch(context.properties.templateRepo);
 
       if (templateBranch === undefined) {
         throw new Error(
@@ -128,6 +134,27 @@ export async function npmTemplateSync(
     const json = JSON.parse(
       await pkg.templateContent(context, { ignoreMissing: true })
     );
+
+    if (options.trackUsedByModule) {
+      if (json.template === undefined) {
+        json.template = {};
+      }
+      if (!Array.isArray(json.template.usedBy)) {
+        json.template.usedBy = [];
+      }
+
+      if (!json.template.usedBy.find(targetBranch.name)) {
+        json.template.usedBy.push(targetBranch.name);
+
+        const prBranch = await templateBranch.repository.createBranch(
+          'template-add-used-1',
+          context.templateBranch
+        );
+        await prBranch.commit(`fix: add ${targetBranch.name}`, [
+          { path: 'package.json', content: JSON.stringify(json, undefined, 2) }
+        ]);
+      }
+    }
 
     const files = await createFiles(
       context.templateBranch,

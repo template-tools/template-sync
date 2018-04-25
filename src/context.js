@@ -52,6 +52,10 @@ export class Context {
     this.files.set(file.path, file);
   }
 
+  /**
+   * all used dev modules
+   * @return {Set<string>}
+   */
   async usedDevModules() {
     const usedModuleSets = await Promise.all(
       Array.from(this.files.values()).map(async file => {
