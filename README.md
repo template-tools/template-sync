@@ -46,10 +46,39 @@ merges contents from template repo into destination repo handling some special c
 
 ### Table of Contents
 
+-   [npmTemplateSync](#npmtemplatesync)
+-   [Context](#context)
+    -   [usedDevModules](#useddevmodules)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
+
+## npmTemplateSync
+
+**Parameters**
+
+-   `provider` **RepositoryProvider** 
+-   `targetBranch` **Branch** 
+-   `templateBranch` **Branch** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
+
+## Context
+
+**Parameters**
+
+-   `targetBranch` **Branch** 
+-   `templateBranch` **Branch** 
+-   `properties` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### usedDevModules
+
+all used dev modules
+
+Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 ## sortedKeys
 
@@ -67,7 +96,7 @@ Deliver some key properties
 
 **Parameters**
 
--   `context` **Context** 
+-   `context` **[Context](#context)** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 

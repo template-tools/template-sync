@@ -76,7 +76,7 @@ export async function createFiles(branch, mapping = defaultMapping) {
  * @param {RepositoryProvider} provider
  * @param {Branch} targetBranch
  * @param {Branch} templateBranch
- * @param {object} options
+ * @param {Object} options
  * @return {Promise<PullRequest>}
  */
 export async function npmTemplateSync(
