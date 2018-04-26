@@ -1,6 +1,6 @@
-import File from './file';
+import { File } from './file';
 
-export default class License extends File {
+export class License extends File {
   static matchesFileName(name) {
     return name.match(/^LICENSE/);
   }

@@ -1,6 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
-import MergeLineSet from '../src/merge-line-set';
+import { MergeLineSet } from '../src/merge-line-set';
 import { MockProvider } from 'mock-repository-provider';
 
 test('merge lines', async t => {

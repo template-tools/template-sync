@@ -1,9 +1,9 @@
-import MergeLineSet from './merge-line-set';
+import { MergeLineSet } from './merge-line-set';
 
 /**
  *
  */
-export default class MergeAndRemoveLineSet extends MergeLineSet {
+export class MergeAndRemoveLineSet extends MergeLineSet {
   async mergeContent(context, original, template) {
     const toBeRemoved = new Set(
       template

@@ -1,5 +1,5 @@
 import test from 'ava';
-import Package from '../src/package';
+import { Package } from '../src/package';
 
 test('decode scripts', t => {
   const d = Package.decodeScripts({

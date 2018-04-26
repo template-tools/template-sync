@@ -1,6 +1,6 @@
-import File from './file';
+import { File } from './file';
 
-export default class Readme extends File {
+export class Readme extends File {
   static matchesFileName(name) {
     return name.match(/README\./);
   }

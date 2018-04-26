@@ -1,4 +1,4 @@
-import File from './file';
+import { File } from './file';
 const diff = require('simple-diff');
 const jp = require('jsonpath');
 
@@ -57,7 +57,7 @@ const sortedKeys = [
 /**
  * Merger for package.json
  */
-export default class Package extends File {
+export class Package extends File {
   static decodeScripts(scripts) {
     const decoded = {};
 

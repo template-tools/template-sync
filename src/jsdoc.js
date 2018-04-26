@@ -1,6 +1,6 @@
-import JSONFile from './json-file';
+import { JSONFile } from './json-file';
 
-export default class JSDoc extends JSONFile {
+export class JSDoc extends JSONFile {
   optionalDevModules(modules) {
     return new Set(Array.from(modules).filter(m => m.match(/babel-preset/)));
   }

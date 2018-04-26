@@ -1,6 +1,6 @@
-import File from './file';
+import { File } from './file';
 
-export default class MergeLineSet extends File {
+export class MergeLineSet extends File {
   async mergeContent(context, original, template) {
     const result = new Set(template.split(/\n/));
     original.split(/\r?\n/).forEach(line => result.add(line));

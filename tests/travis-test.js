@@ -1,6 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
-import Travis from '../src/travis';
+import { Travis } from '../src/travis';
 import { MockProvider } from 'mock-repository-provider';
 
 async function mockYmlVersions(templateVersions, targetVersions) {

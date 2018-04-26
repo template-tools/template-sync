@@ -1,6 +1,6 @@
-import File from './file';
+import { File } from './file';
 
-export default class JSONFile extends File {
+export class JSONFile extends File {
   static matchesFileName(name) {
     return name.match(/\.json$/);
   }

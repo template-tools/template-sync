@@ -1,5 +1,5 @@
 import test from 'ava';
-import Package from '../src/package';
+import { Package } from '../src/package';
 
 test('optional dev modules', t => {
   const pkg = new Package('package.json');

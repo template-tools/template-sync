@@ -1,6 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
-import License from '../src/license';
+import { License } from '../src/license';
 import { MockProvider } from 'mock-repository-provider';
 
 test('modify one year', async t => {

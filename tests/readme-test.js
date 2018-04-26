@@ -1,7 +1,7 @@
 import test from 'ava';
 import { Context } from '../src/context';
-import Readme from '../src/readme';
-import Package from '../src/package';
+import { Readme } from '../src/readme';
+import { Package } from '../src/package';
 import { MockProvider } from 'mock-repository-provider';
 
 test('readme', async t => {

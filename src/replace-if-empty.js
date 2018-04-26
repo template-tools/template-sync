@@ -1,6 +1,6 @@
-import File from './file';
+import { File } from './file';
 
-export default class ReplaceIfEmpty extends File {
+export class ReplaceIfEmpty extends File {
   get needsTemplate() {
     return false;
   }

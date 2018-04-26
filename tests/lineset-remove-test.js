@@ -1,6 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
-import MergeAndRemoveLineSet from '../src/merge-and-remove-line-set';
+import { MergeAndRemoveLineSet } from '../src/merge-and-remove-line-set';
 import { MockProvider } from 'mock-repository-provider';
 
 test('merge lines', async t => {

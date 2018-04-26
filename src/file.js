@@ -1,4 +1,11 @@
-export default class File {
+/**
+ * @param {string} path
+ * @param {Object} options
+ *
+ * @property {string} path
+ * @property {Object} options
+ */
+export class File {
   static matchesFileName(name) {
     return false;
   }

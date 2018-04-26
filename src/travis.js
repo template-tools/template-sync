@@ -1,4 +1,4 @@
-import File from './file';
+import { File } from './file';
 
 const yaml = require('js-yaml'),
   deepExtend = require('deep-extend');
@@ -31,7 +31,7 @@ function difference(a, b) {
   return new Set([...a].filter(x => !b.has(x)));
 }
 
-export default class Travis extends File {
+export class Travis extends File {
   static matchesFileName(name) {
     return name === '.travis.yml';
   }

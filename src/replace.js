@@ -1,6 +1,6 @@
-import File from './file';
+import { File } from './file';
 
-export default class Replace extends File {
+export class Replace extends File {
   async mergeContent(context, original, template) {
     const content = context.expand(template);
 

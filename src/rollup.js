@@ -1,9 +1,9 @@
-import File from './file';
+import { File } from './file';
 
 const recast = require('recast');
 const babylon = require('recast/parsers/babylon');
 
-export default class Rollup extends File {
+export class Rollup extends File {
   static matchesFileName(name) {
     return name.match(/rollup\.config\.js/);
   }

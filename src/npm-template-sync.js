@@ -1,15 +1,15 @@
 import { Context } from './context';
-import Travis from './travis';
-import Readme from './readme';
-import Package from './package';
-import Rollup from './rollup';
-import License from './license';
-import MergeAndRemoveLineSet from './merge-and-remove-line-set';
-import MergeLineSet from './merge-line-set';
-import ReplaceIfEmpty from './replace-if-empty';
-import Replace from './replace';
-import JSONFile from './json-file';
-import JSDoc from './jsdoc';
+import { Travis } from './travis';
+import { Readme } from './readme';
+import { Package } from './package';
+import { Rollup } from './rollup';
+import { License } from './license';
+import { MergeAndRemoveLineSet } from './merge-and-remove-line-set';
+import { MergeLineSet } from './merge-line-set';
+import { ReplaceIfEmpty } from './replace-if-empty';
+import { Replace } from './replace';
+import { JSONFile } from './json-file';
+import { JSDoc } from './jsdoc';
 
 const mm = require('micromatch');
 
