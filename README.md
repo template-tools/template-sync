@@ -49,6 +49,7 @@ merges contents from template repo into destination repo handling some special c
 -   [npmTemplateSync](#npmtemplatesync)
 -   [Context](#context)
     -   [usedDevModules](#useddevmodules)
+-   [File](#file)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties)
@@ -79,6 +80,18 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 all used dev modules
 
 Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+## File
+
+**Parameters**
+
+-   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
+
+**Properties**
+
+-   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ## sortedKeys
 
