@@ -33,6 +33,18 @@ async function createContext(template, target) {
   );
 }
 
+test('default options', t => {
+  const pkg = new Package('package.json');
+  t.deepEqual(pkg.options.actions, []);
+
+  const pkg2 = new Package('package.json', {
+    actions: [{ path: "$.nyc['report-dir']", op: 'replace' }]
+  });
+  t.deepEqual(pkg2.options.actions, [
+    { path: "$.nyc['report-dir']", op: 'replace' }
+  ]);
+});
+
 test('delete entries', async t => {
   const context = await createContext(
     {

@@ -10,15 +10,23 @@ export class File {
     return false;
   }
 
+  static get defaultOptions() {
+    return {};
+  }
+
   constructor(path, options = {}) {
     Object.defineProperties(this, {
       path: {
         value: path
       },
       options: {
-        value: options
+        value: Object.assign({}, this.defaultOptions, options)
       }
     });
+  }
+
+  get defaultOptions() {
+    return this.constructor.defaultOptions;
   }
 
   get needsTemplate() {

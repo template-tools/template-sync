@@ -5,6 +5,12 @@ export class Readme extends File {
     return name.match(/README\./);
   }
 
+  static get defaultOptions() {
+    return {
+      badges: []
+    };
+  }
+
   async mergeContent(context, original, template) {
     const pkgTemplate = await context.files
       .get('package.json')

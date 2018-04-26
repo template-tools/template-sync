@@ -71,6 +71,12 @@ export class Package extends File {
     return decoded;
   }
 
+  static get defaultOptions() {
+    return {
+      actions: []
+    };
+  }
+
   static matchesFileName(name) {
     return name.match(/^package\.json$/);
   }
@@ -322,25 +328,20 @@ export class Package extends File {
 
     removeKeyword(target, ['null', null, undefined], messages);
 
-    if (this.options !== undefined) {
-      const actions = this.options.actions;
-      if (actions !== undefined) {
-        actions.forEach(action => {
-          if (action.op === 'replace') {
-            const value = jp.value(template, action.path);
-            if (value !== undefined) {
-              const oldValue = jp.value(target, action.path);
-              if (oldValue !== value) {
-                jp.value(target, action.path, value);
-                messages.push(
-                  `chore(package): set ${action.path}='${value}' as in template`
-                );
-              }
-            }
+    this.options.actions.forEach(action => {
+      if (action.op === 'replace') {
+        const value = jp.value(template, action.path);
+        if (value !== undefined) {
+          const oldValue = jp.value(target, action.path);
+          if (oldValue !== value) {
+            jp.value(target, action.path, value);
+            messages.push(
+              `chore(package): set ${action.path}='${value}' as in template`
+            );
           }
-        });
+        }
       }
-    }
+    });
 
     if (messages.length === 0) {
       messages.push('chore(package): update package.json from template');

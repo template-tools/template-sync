@@ -4,6 +4,11 @@ import { Readme } from '../src/readme';
 import { Package } from '../src/package';
 import { MockProvider } from 'mock-repository-provider';
 
+test('readme default options', t => {
+  const readme = new Readme('aFile');
+  t.deepEqual(readme.options.badges, []);
+});
+
 test('readme', async t => {
   const provider = new MockProvider({
     templateRepo: {

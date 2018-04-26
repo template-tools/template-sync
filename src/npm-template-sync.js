@@ -64,9 +64,9 @@ export async function createFiles(branch, mapping = defaultMapping) {
       alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
 
       return notAlreadyProcessed.map(f => {
-        const merger = mergers.find(merger => merger.name === m.merger);
-
-        return new (merger ? merger : ReplaceIfEmpty)(f, m.options);
+        const merger =
+          mergers.find(merger => merger.name === m.merger) || ReplaceIfEmpty;
+        return new merger(f, m.options);
       });
     })
     .reduce((last, current) => Array.from([...last, ...current]), []);
