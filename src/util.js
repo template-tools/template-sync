@@ -17,3 +17,13 @@ export async function setPassword(pasword, options) {
 
   return password;
 }
+
+export function templateOptions(json, name) {
+  if (json.template !== undefined && json.template.files !== undefined) {
+    const m = p.template.files.find(f => f.merger === name);
+    if (m !== undefined) {
+      return m.options;
+    }
+  }
+  return undefined;
+}

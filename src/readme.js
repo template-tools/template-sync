@@ -1,4 +1,5 @@
 import { File } from './file';
+import { templateOptions } from './util';
 
 export class Readme extends File {
   static matchesFileName(name) {
@@ -22,24 +23,25 @@ export class Readme extends File {
     const p = JSON.parse(pkg);
     const pTemplate = JSON.parse(pkgTemplate);
 
-    const badges =
-      pTemplate.template && pTemplate.template.badges
-        ? pTemplate.template.badges
-            .map(b => {
-              // TODO do not alter global properties use private layer here
-              if (p.template !== undefined && p.template.badges !== undefined) {
-                Object.assign(context.properties, p.template.badges[b.name]);
-              }
+    const badges = this.options.badges
+      /*pTemplate.template && pTemplate.template.badges
+        ? pTemplate.template.badges*/
+      .map(b => {
+        const m = templateOptions(p, 'Readme');
 
-              const r = context.expand(`[![${b.name}](${b.icon})](${b.url})`);
+        // TODO do not alter global properties use private layer here
+        if (m !== undefined) {
+          Object.assign(context.properties, m.options.badges[b.name]);
+        }
 
-              if (r.match(/\{\{/)) {
-                return '';
-              }
-              return r;
-            })
-            .filter(b => b.length > 0)
-        : [];
+        const r = context.expand(`[![${b.name}](${b.icon})](${b.url})`);
+
+        if (r.match(/\{\{/)) {
+          return '';
+        }
+        return r;
+      })
+      .filter(b => b.length > 0);
 
     let body = original.split(/\n/);
 

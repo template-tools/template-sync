@@ -197,13 +197,7 @@ test('package devDependencies', async t => {
 
 test('package keywords', async t => {
   const context = await createContext(
-    {
-      template: {
-        keywords: {
-          _xxx_: 'X'
-        }
-      }
-    },
+    {},
     {
       name: 'abc_xxx_1',
       template: {
@@ -215,7 +209,11 @@ test('package keywords', async t => {
     }
   );
 
-  const pkg = new Package('package.json');
+  const pkg = new Package('package.json', {
+    keywords: {
+      _xxx_: 'X'
+    }
+  });
   const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).keywords, ['A', 'B', 'X']);
@@ -224,19 +222,17 @@ test('package keywords', async t => {
 
 test('package keywords empty', async t => {
   const context = await createContext(
-    {
-      template: {
-        keywords: {
-          _xxx_: 'XXX'
-        }
-      }
-    },
+    {},
     {
       name: 'abc_xxx_1'
     }
   );
 
-  const pkg = new Package('package.json');
+  const pkg = new Package('package.json', {
+    keywords: {
+      _xxx_: 'XXX'
+    }
+  });
   const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).keywords, ['XXX']);

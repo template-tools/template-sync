@@ -15,15 +15,7 @@ test('readme', async t => {
       master: {
         aFile: ``,
         'package.json': JSON.stringify({
-          template: {
-            badges: [
-              {
-                name: 'Badge 1',
-                icon: 'http://domain.net/somewhere1.svg',
-                url: 'http://domain.net/somewhere1'
-              }
-            ]
-          }
+          template: {}
         })
       }
     },
@@ -49,7 +41,16 @@ body`,
 
   context.addFile(new Package('package.json'));
 
-  const readme = new Readme('aFile');
+  const readme = new Readme('aFile', {
+    badges: [
+      {
+        name: 'Badge 1',
+        icon: 'http://domain.net/somewhere1.svg',
+        url: 'http://domain.net/somewhere1'
+      }
+    ]
+  });
+
   const merged = await readme.merge(context);
 
   t.deepEqual(

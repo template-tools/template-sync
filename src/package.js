@@ -73,7 +73,8 @@ export class Package extends File {
 
   static get defaultOptions() {
     return {
-      actions: []
+      actions: [],
+      keywords: []
     };
   }
 
@@ -312,19 +313,9 @@ export class Package extends File {
       delete target.keywords['npm-package-template'];
     }
 
-    if (
-      originalTemplate.template !== undefined &&
-      originalTemplate.template.keywords !== undefined
-    ) {
-      Object.keys(originalTemplate.template.keywords).forEach(r =>
-        addKeyword(
-          target,
-          new RegExp(r),
-          originalTemplate.template.keywords[r],
-          messages
-        )
-      );
-    }
+    Object.keys(this.options.keywords).forEach(r =>
+      addKeyword(target, new RegExp(r), this.options.keywords[r], messages)
+    );
 
     removeKeyword(target, ['null', null, undefined], messages);
 
