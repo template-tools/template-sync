@@ -50,6 +50,7 @@ merges contents from template repo into destination repo handling some special c
 -   [Context](#context)
     -   [usedDevModules](#useddevmodules)
 -   [File](#file)
+-   [templateOptions](#templateoptions)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties)
@@ -92,6 +93,17 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 
 -   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## templateOptions
+
+find merger options in the template section of a package.json
+
+**Parameters**
+
+-   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ## sortedKeys
 
