@@ -27,9 +27,9 @@ export async function setPassword(pasword, options) {
 export function templateOptions(json, name) {
   if (json.template !== undefined && json.template.files !== undefined) {
     const m = json.template.files.find(f => f.merger === name);
-    if (m !== undefined) {
+    if (m !== undefined && m.options !== undefined) {
       return m.options;
     }
   }
-  return undefined;
+  return {};
 }

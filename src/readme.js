@@ -30,8 +30,8 @@ export class Readme extends File {
         const m = templateOptions(p, 'Readme');
 
         // TODO do not alter global properties use private layer here
-        if (m !== undefined) {
-          Object.assign(context.properties, m.options.badges[b.name]);
+        if (m.badges !== undefined) {
+          Object.assign(context.properties, m.badges[b.name]);
         }
 
         const r = context.expand(`[![${b.name}](${b.icon})](${b.url})`);
