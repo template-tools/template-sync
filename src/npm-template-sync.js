@@ -150,11 +150,21 @@ export async function npmTemplateSync(
 
       if (!json.template.usedBy.find(n => n === name)) {
         json.template.usedBy.push(name);
+        json.template.usedBy = json.template.usedBy.sort();
 
-        const prBranch = await templateBranch.repository.createBranch(
-          'template-add-used-1',
-          context.templateBranch
+        let newPullRequest = false;
+        let prBranch = await templateBranch.repository.branch(
+          'template-add-used-1'
         );
+
+        if (prBranch === undefined) {
+          prBranch = await templateBranch.repository.createBranch(
+            'template-add-used-1',
+            context.templateBranch
+          );
+          newPullRequest = true;
+        }
+
         await prBranch.commit(`fix: add ${name}`, [
           {
             path: 'package.json',
@@ -162,10 +172,12 @@ export async function npmTemplateSync(
           }
         ]);
 
-        const pullRequest = await templateBranch.createPullRequest(prBranch, {
-          title: `add ${name}`,
-          body: `add tracking info for ${name}`
-        });
+        if (newPullRequest) {
+          const pullRequest = await templateBranch.createPullRequest(prBranch, {
+            title: `add ${name}`,
+            body: `add tracking info for ${name}`
+          });
+        }
       }
     }
 
