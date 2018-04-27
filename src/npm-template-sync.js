@@ -85,15 +85,6 @@ export async function npmTemplateSync(
   templateBranch,
   options
 ) {
-  options = Object.assign(
-    {
-      logger: console,
-      dry: false,
-      trackUsedByModule: false
-    },
-    options
-  );
-
   options.spinner.text = targetBranch.fullCondensedName;
   const condensedName = targetBranch.repository.condensedName;
 

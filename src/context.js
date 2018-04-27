@@ -6,14 +6,23 @@ import { value } from 'jsonpath';
  * @param {Branch} templateBranch
  * @param {Object} properties
  * @param {Object} options
+ *
+ * @property {Branch} targetBranch
+ * @property {Branch} templateBranch
+ * @property {Object} properties
+ * @property {Object} options
  */
 export class Context {
   constructor(targetBranch, templateBranch, properties, options) {
-    options = Object.assign({}, options, {
-      logger: console,
-      dry: false,
-      trackUsedByModule: false
-    });
+    options = Object.assign(
+      {},
+      {
+        logger: console,
+        dry: false,
+        trackUsedByModule: false
+      },
+      options
+    );
 
     this.ctx = createContext({
       keepUndefinedValues: true,

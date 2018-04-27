@@ -49,8 +49,7 @@ program
   .option(
     '--usage',
     'track packages using template in package.json',
-    program.BOOL,
-    false
+    program.BOOL
   )
   .option(
     '--concurrency <number>',
