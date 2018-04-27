@@ -76,6 +76,7 @@ export class File {
   async saveMerge(context) {
     try {
       const result = await this.merge(context);
+
       if (result === undefined) {
         return {
           path: this.path,
@@ -89,7 +90,9 @@ export class File {
 
       return result;
     } catch (err) {
-      context.fail(`${context.targetBranch.name},${this.path}: ${err}`);
+      context.fail(
+        `${context.targetBranch.fullCondensedName},${this.path}: ${err}`
+      );
       return {
         path: this.path,
         changed: false
