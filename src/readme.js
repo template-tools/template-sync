@@ -1,6 +1,9 @@
 import { File } from './file';
 import { templateOptions } from './util';
 
+/**
+ * injects badges into REAMDE.md
+ */
 export class Readme extends File {
   static matchesFileName(name) {
     return name.match(/README\./);
@@ -18,14 +21,14 @@ export class Readme extends File {
       .templateContent(context);
     const pkg = await context.files
       .get('package.json')
-      .originalContent(context);
+      .originalContent(context, {
+        ignoreMissing: true
+      });
 
-    const p = JSON.parse(pkg);
+    const p = pkg.length === 0 ? {} : JSON.parse(pkg);
     const pTemplate = JSON.parse(pkgTemplate);
 
     const badges = this.options.badges
-      /*pTemplate.template && pTemplate.template.badges
-        ? pTemplate.template.badges*/
       .map(b => {
         const m = templateOptions(p, 'Readme');
 
