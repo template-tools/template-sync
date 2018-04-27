@@ -108,7 +108,9 @@ export async function npmTemplateSync(
     Object.assign(context.properties, await pkg.properties(context));
 
     if (templateBranch === undefined) {
-      templateBranch = await provider.branch(context.properties.templateRepo);
+      try {
+        templateBranch = await provider.branch(context.properties.templateRepo);
+      } catch (e) {}
 
       if (templateBranch === undefined) {
         throw new Error(
