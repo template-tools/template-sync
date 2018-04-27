@@ -1,5 +1,8 @@
 import { File } from './file';
 
+/**
+ * Overwrites none existing file from template
+ */
 export class ReplaceIfEmpty extends File {
   get needsTemplate() {
     return false;

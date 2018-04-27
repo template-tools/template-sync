@@ -49,12 +49,15 @@ merges contents from template repo into destination repo handling some special c
 -   [npmTemplateSync](#npmtemplatesync)
 -   [Context](#context)
     -   [usedDevModules](#useddevmodules)
+-   [Readme](#readme)
 -   [File](#file)
 -   [templateOptions](#templateoptions)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
+-   [ReplaceIfEmpty](#replaceifempty)
+-   [Replace](#replace)
 
 ## npmTemplateSync
 
@@ -76,11 +79,24 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 -   `properties` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
+**Properties**
+
+-   `targetBranch` **Branch** 
+-   `templateBranch` **Branch** 
+-   `properties` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
 ### usedDevModules
 
 all used dev modules
 
 Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+## Readme
+
+**Extends File**
+
+injects badges into REAMDE.md
 
 ## File
 
@@ -128,6 +144,18 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 ## MergeAndRemoveLineSet
 
 **Extends MergeLineSet**
+
+## ReplaceIfEmpty
+
+**Extends File**
+
+Overwrites none existing file from template
+
+## Replace
+
+**Extends File**
+
+Replace file from template (always)
 
 # install
 
