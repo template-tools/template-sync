@@ -225,7 +225,7 @@ export async function npmTemplateSync(
     if (newPullRequestRequired) {
       try {
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
-          title: `merge package template from ${
+          title: `merge package from ${
             context.templateBranch.fullCondensedName
           }`,
           body: merges
@@ -252,7 +252,9 @@ export async function npmTemplateSync(
         'old'
       );
 
-      context.spinner.succeed(`${targetBranch.fullCondensedName}: update PR`);
+      context.spinner.succeed(
+        `${targetBranch.fullCondensedName}: update PR ${pullRequest.name}`
+      );
       return pullRequest;
     }
   } catch (err) {
