@@ -1,35 +1,46 @@
-import babel from 'rollup-plugin-babel';
 import multiEntry from 'rollup-plugin-multi-entry';
+import nodeResolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import executable from 'rollup-plugin-executable';
+import json from 'rollup-plugin-json';
+import pkg from '../package.json';
 
-export default {
-  input: 'tests/**/*-test.js',
-  external: [
-    'ava',
-    'mock-repository-provider',
-    'execa',
-    'os',
-    'path',
-    'crypto',
-    'fs',
-    'jsonpath',
-    'local-repository-provider',
-    'aggregation-repository-provider',
-    'github-repository-provider',
-    'bitbucket-repository-provider',
-    'expression-expander'
-  ],
+const external = [
+  'ava',
+  'mock-repository-provider',
+  'execa',
+  'os',
+  'path',
+  'crypto',
+  'fs',
+  'jsonpath',
+  'local-repository-provider',
+  'aggregation-repository-provider',
+  'github-repository-provider',
+  'bitbucket-repository-provider',
+  'expression-expander'
+];
 
-  plugins: [
-    babel({
-      babelrc: false,
-      exclude: 'node_modules/**'
-    }),
-    multiEntry()
-  ],
+export default [
+  {
+    output: {
+      file: pkg.bin['npm-template-sync'],
+      format: 'cjs',
+      banner: '#!/usr/bin/env node'
+    },
+    plugins: [nodeResolve(), commonjs(), json(), executable()],
+    external,
+    input: 'src/npm-template-sync-cli.js'
+  },
+  {
+    input: 'tests/**/*-test.js',
+    external,
+    plugins: [multiEntry()],
 
-  output: {
-    file: 'build/bundle-test.js',
-    format: 'cjs',
-    sourcemap: true
+    output: {
+      file: 'build/bundle-test.js',
+      format: 'cjs',
+      sourcemap: true
+    }
   }
-};
+];
