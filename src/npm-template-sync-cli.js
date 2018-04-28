@@ -41,6 +41,7 @@ program
     });
   })
   .option('--list-providers', 'list providers with options and exit')
+  .option('--list-options', 'list all options and exit')
   .option(
     '-t, --template <identifier>',
     'template repository',
@@ -119,6 +120,11 @@ program
         return;
       }
 
+      if (options.listOptions) {
+        logger.info(JSON.stringify(removeSensibleValues(defines)));
+        return;
+      }
+
       spinner.start();
 
       const templateBranch = options.template
@@ -137,7 +143,8 @@ program
                 spinner,
                 dry: options.dry,
                 trackUsedByModule: options.usage
-              }
+              },
+              defines
             );
         })
       );

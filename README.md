@@ -24,6 +24,12 @@ Keep npm package in sync with its template
 npm-template-sync --template aTemplateGithubUser/aRepo myGithubUser/myRepo
 ```
 
+define (initial) properties to be used in the template
+
+```shell
+npm-template-sync --define "description=a very new fantastic module" -t myUser/myTemplate myUser/newModule
+```
+
 merges contents from template repo into destination repo handling some special cases for:
 
 -   Licenses - rewriting license years
@@ -49,8 +55,8 @@ merges contents from template repo into destination repo handling some special c
 -   [npmTemplateSync](#npmtemplatesync)
 -   [Context](#context)
     -   [usedDevModules](#useddevmodules)
--   [Readme](#readme)
 -   [File](#file)
+-   [Readme](#readme)
 -   [templateOptions](#templateoptions)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
@@ -67,6 +73,7 @@ merges contents from template repo into destination repo handling some special c
 -   `targetBranch` **Branch** 
 -   `templateBranch` **Branch** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `defines` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
 
@@ -92,12 +99,6 @@ all used dev modules
 
 Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
-## Readme
-
-**Extends File**
-
-injects badges into REAMDE.md
-
 ## File
 
 **Parameters**
@@ -109,6 +110,12 @@ injects badges into REAMDE.md
 
 -   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## Readme
+
+**Extends File**
+
+injects badges into REAMDE.md
 
 ## templateOptions
 

@@ -21,8 +21,8 @@
   "scripts": {
     "cover": "nyc --temp-directory build/nyc ava",
     "test": "ava",
-    "pretest": "rollup -c tests/rollup.config.js",
-    "precover": "rollup -c tests/rollup.config.js",
+    "pretest": "rollup -c tests/rollup.config.js && rollup -c",
+    "precover": "rollup -c tests/rollup.config.js && rollup -c",
     "posttest": "npm run prepare && markdown-doctest",
     "docs": "documentation readme src/npm-template-sync.js --section=API",
     "semantic-release": "semantic-release",
@@ -52,6 +52,7 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "documentation": "^6.3.2",
+    "execa": "^0.10.0",
     "markdown-doctest": "^0.9.1",
     "mock-repository-provider": "^3.0.3",
     "nyc": "^11.7.1",

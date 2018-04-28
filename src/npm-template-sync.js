@@ -77,13 +77,15 @@ export async function createFiles(branch, mapping = defaultMapping) {
  * @param {Branch} targetBranch
  * @param {Branch} templateBranch
  * @param {Object} options
+ * @param {Object} defines
  * @return {Promise<PullRequest>}
  */
 export async function npmTemplateSync(
   provider,
   targetBranch,
   templateBranch,
-  options
+  options,
+  defines
 ) {
   options.spinner.text = targetBranch.fullCondensedName;
   const condensedName = targetBranch.repository.condensedName;
@@ -92,14 +94,17 @@ export async function npmTemplateSync(
     const context = new Context(
       targetBranch,
       undefined,
-      {
-        github: { user: targetBranch.owner, repo: condensedName },
-        npm: { name: condensedName, fullName: condensedName },
-        name: condensedName,
-        user: targetBranch.owner,
-        'date.year': new Date().getFullYear(),
-        'license.owner': targetBranch.owner
-      },
+      Object.assign(
+        {
+          github: { user: targetBranch.owner, repo: condensedName },
+          npm: { name: condensedName, fullName: condensedName },
+          name: condensedName,
+          user: targetBranch.owner,
+          'date.year': new Date().getFullYear(),
+          'license.owner': targetBranch.owner
+        },
+        defines
+      ),
       options
     );
 

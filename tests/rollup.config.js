@@ -5,11 +5,18 @@ export default {
   input: 'tests/**/*-test.js',
   external: [
     'ava',
-    'jsonpath',
     'mock-repository-provider',
-    'expression-expander',
-    'repository-provider',
-    'github-repository-provider'
+    'execa',
+    'os',
+    'path',
+    'crypto',
+    'fs',
+    'jsonpath',
+    'local-repository-provider',
+    'aggregation-repository-provider',
+    'github-repository-provider',
+    'bitbucket-repository-provider',
+    'expression-expander'
   ],
 
   plugins: [
