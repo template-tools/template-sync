@@ -223,12 +223,13 @@ export class Package extends File {
     Object.keys(deepProperties).forEach(category => {
       if (template[category] !== undefined) {
         Object.keys(template[category]).forEach(d => {
+          if (target[category] === undefined) {
+            target[category] = {};
+          }
+
           const tp = context.expand(template[category][d]);
           if (tp === '-') {
-            if (
-              target[category] !== undefined &&
-              target[category][d] !== undefined
-            ) {
+            if (target[category][d] !== undefined) {
               messages.push(
                 `chore(${category}): remove ${d}@${target[category][d]}`
               );
@@ -242,10 +243,7 @@ export class Package extends File {
             ) {
               // do not include dev dependency if regular dependency is already present
             } else {
-              if (
-                target[category] !== undefined &&
-                tp !== target[category][d]
-              ) {
+              if (tp !== target[category][d]) {
                 messages.push(
                   target[category][d] === undefined
                     ? `chore(${category}): add ${d}@${tp} from template`
