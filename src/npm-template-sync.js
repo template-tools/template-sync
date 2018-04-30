@@ -176,10 +176,13 @@ export async function npmTemplateSync(
         ]);
 
         if (newTemplatePullRequest) {
-          const pullRequest = await templateBranch.createPullRequest(prBranch, {
-            title: `add ${name}`,
-            body: `add tracking info for ${name}`
-          });
+          const pullRequest = await templateBranch.createPullRequest(
+            templatePRBranch,
+            {
+              title: `add ${name}`,
+              body: `add tracking info for ${name}`
+            }
+          );
         }
       }
     }
