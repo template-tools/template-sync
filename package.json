@@ -57,7 +57,7 @@
     "mock-repository-provider": "^3.0.4",
     "nyc": "^11.7.1",
     "rollup": "^0.58.2",
-    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-commonjs": "^9.1.1",
     "rollup-plugin-executable": "^1.2.0",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-multi-entry": "^2.0.2",
