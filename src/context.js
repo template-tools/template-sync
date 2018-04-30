@@ -1,6 +1,20 @@
 import { createContext } from 'expression-expander';
 import { value } from 'jsonpath';
 
+import { Travis } from './travis';
+import { Readme } from './readme';
+import { Package } from './package';
+import { Rollup } from './rollup';
+import { License } from './license';
+import { MergeAndRemoveLineSet } from './merge-and-remove-line-set';
+import { MergeLineSet } from './merge-line-set';
+import { ReplaceIfEmpty } from './replace-if-empty';
+import { Replace } from './replace';
+import { JSONFile } from './json-file';
+import { JSDoc } from './jsdoc';
+
+const mm = require('micromatch');
+
 /**
  * @param {Branch} targetBranch
  * @param {Branch} templateBranch
@@ -13,6 +27,45 @@ import { value } from 'jsonpath';
  * @property {Object} options
  */
 export class Context {
+  static get merges() {
+    return [
+      Rollup,
+      Travis,
+      Readme,
+      Package,
+      JSONFile,
+      JSDoc,
+      Travis,
+      MergeAndRemoveLineSet,
+      MergeLineSet,
+      License,
+      ReplaceIfEmpty,
+      Replace
+    ];
+  }
+
+  static get defaultMapping() {
+    return [
+      { merger: 'Package', pattern: '**/package.json' },
+      { merger: 'Travis', pattern: '.travis.yml' },
+      { merger: 'Readme', pattern: '**/README.*' },
+      { merger: 'JSDoc', pattern: '**/jsdoc.json' },
+      { merger: 'Rollup', pattern: '**/rollup.config.js' },
+      { merger: 'License', pattern: 'LICENSE' },
+      {
+        merger: 'MergeAndRemoveLineSet',
+        pattern: '.gitignore',
+        options: { message: 'chore(git): update {{path}} from template' }
+      },
+      {
+        merger: 'MergeAndRemoveLineSet',
+        pattern: '.npmignore',
+        options: { message: 'chore(npm): update {{path}} from template' }
+      },
+      { merger: 'ReplaceIfEmpty', pattern: '**/*' }
+    ];
+  }
+
   constructor(targetBranch, templateBranch, properties, options) {
     options = Object.assign(
       {},
@@ -51,6 +104,34 @@ export class Context {
     });
 
     Object.assign(this, options);
+  }
+
+  get defaultMapping() {
+    return this.constructor.defaultMapping;
+  }
+
+  async createFiles(branch, mapping = this.defaultMapping) {
+    const files = await branch.list();
+    let alreadyPresent = new Set();
+
+    return mapping
+      .map(m => {
+        const found = mm(
+          files.filter(f => f.type === 'blob').map(f => f.path),
+          m.pattern
+        );
+
+        const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
+
+        alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
+
+        return notAlreadyProcessed.map(f => {
+          const merger =
+            mergers.find(merger => merger.name === m.merger) || ReplaceIfEmpty;
+          return new merger(f, m.options);
+        });
+      })
+      .reduce((last, current) => Array.from([...last, ...current]), []);
   }
 
   expand(...args) {
@@ -121,5 +202,11 @@ export class Context {
     } else {
       this.spinner.fail(...args);
     }
+  }
+
+
+  await execute()
+  {
+    
   }
 }
