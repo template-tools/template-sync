@@ -132,8 +132,18 @@ export async function npmTemplateSync(
       `Using ${templateBranch.provider.name} as template provider`
     );
 
+    let newTemplatePullRequest = false;
+    let templatePRBranch = await templateBranch.repository.branch(
+      'template-add-used-1'
+    );
+
     const json = JSON.parse(
-      await pkg.templateContent(context, { ignoreMissing: true })
+      await pkg.content(
+        templatePRBranch ? templatePRBranch : context.templateBranch,
+        pkg.path,
+        { ignoreMissing: true }
+      )
+      //await pkg.templateContent(context, { ignoreMissing: true })
     );
 
     if (options.trackUsedByModule) {
@@ -150,27 +160,22 @@ export async function npmTemplateSync(
         json.template.usedBy.push(name);
         json.template.usedBy = json.template.usedBy.sort();
 
-        let newPullRequest = false;
-        let prBranch = await templateBranch.repository.branch(
-          'template-add-used-1'
-        );
-
-        if (prBranch === undefined) {
-          prBranch = await templateBranch.repository.createBranch(
+        if (templatePRBranch === undefined) {
+          templatePRBranch = await templateBranch.repository.createBranch(
             'template-add-used-1',
             context.templateBranch
           );
-          newPullRequest = true;
+          newTemplatePullRequest = true;
         }
 
-        await prBranch.commit(`fix: add ${name}`, [
+        await templatePRBranch.commit(`fix: add ${name}`, [
           {
             path: 'package.json',
             content: JSON.stringify(json, undefined, 2)
           }
         ]);
 
-        if (newPullRequest) {
+        if (newTemplatePullRequest) {
           const pullRequest = await templateBranch.createPullRequest(prBranch, {
             title: `add ${name}`,
             body: `add tracking info for ${name}`
