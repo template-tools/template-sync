@@ -60,6 +60,7 @@ merges contents from template repo into destination repo handling some special c
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties)
+-   [defaultMerge](#defaultmerge)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
@@ -146,6 +147,17 @@ Deliver some key properties
 -   `context` **[Context](#context)** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## defaultMerge
+
+**Parameters**
+
+-   `destination`  
+-   `target`  
+-   `template`  
+-   `category`  
+-   `name`  
+-   `messages`  
 
 ## MergeAndRemoveLineSet
 
