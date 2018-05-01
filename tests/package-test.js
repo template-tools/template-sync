@@ -210,7 +210,8 @@ test('package devDependencies', async t => {
     {
       devDependencies: {
         a: '-',
-        c: '1'
+        c: '1',
+        d: '-'
       }
     },
     {

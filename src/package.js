@@ -458,8 +458,9 @@ function defaultMerge(destination, target, template, category, name, messages) {
     if (target !== undefined) {
       messages.push(`chore(${category}): remove ${name}:${target}`);
       delete destination[name];
-      return;
     }
+
+    return;
   }
 
   if (target === undefined) {
