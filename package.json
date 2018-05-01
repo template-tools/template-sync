@@ -4,7 +4,10 @@
   "main": "dist/npm-template-sync.js",
   "module": "src/npm-template-sync.js",
   "description": "Keep npm package in sync with its template",
-  "keywords": ["npm", "template"],
+  "keywords": [
+    "npm",
+    "template"
+  ],
   "contributors": [
     {
       "name": "Markus Felten",
@@ -59,7 +62,7 @@
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-multi-entry": "^2.0.2",
     "rollup-plugin-node-resolve": "^3.3.0",
-    "semantic-release": "^15.1.8",
+    "semantic-release": "^15.1.11",
     "tempy": "^0.2.1",
     "travis-deploy-once": "^5.0.0"
   },
@@ -79,12 +82,21 @@
   "homepage": "https://github.com/arlac77/npm-template-sync#readme",
   "release": {},
   "ava": {
-    "files": ["build/*-test.js"],
-    "require": ["babel-register"]
+    "files": [
+      "build/*-test.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
   },
   "nyc": {
-    "include": ["build/*-test.js", "src/**/*.js"],
-    "reporter": ["lcov"],
+    "include": [
+      "build/*-test.js",
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
     "report-dir": "./build/coverage"
   },
   "xo": {
