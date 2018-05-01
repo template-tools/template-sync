@@ -45,6 +45,24 @@ test('default options', t => {
   ]);
 });
 
+test('package extract properties', async t => {
+  const context = await createContext(
+    {},
+    {
+      name: 'aName',
+      description: 'a description'
+    }
+  );
+
+  const pkg = new Package('package.json');
+  const properties = await pkg.properties(context);
+
+  t.deepEqual(properties, {
+    npm: { name: 'aName', fullName: 'aName' },
+    description: 'a description'
+  });
+});
+
 test('delete entries', async t => {
   const context = await createContext(
     {

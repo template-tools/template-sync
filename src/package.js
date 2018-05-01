@@ -104,19 +104,28 @@ export class Package extends File {
       const content = await this.originalContent(context);
       const pkg = JSON.parse(content);
 
+      console.log(pkg);
       const properties = {
         npm: { name: pkg.name, fullName: pkg.name }
       };
 
-      const m = pkg.name.match(/^(\@[^\/]+)\/(.*)/);
-      if (m) {
-        properties.npm.organization = m[1];
-        properties.npm.name = m[2];
+      if (pkg.name !== undefined) {
+        const m = pkg.name.match(/^(\@[^\/]+)\/(.*)/);
+        if (m) {
+          properties.npm.organization = m[1];
+          properties.npm.name = m[2];
+        }
       }
 
       if (pkg.template !== undefined && pkg.template.repository !== undefined) {
         properties.templateRepo = pkg.template.repository.url;
       }
+
+      ['description'].forEach(key => {
+        if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
+          properties[key] = pkg[key];
+        }
+      });
 
       return properties;
     } catch (e) {}
