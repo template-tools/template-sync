@@ -26,7 +26,6 @@ export async function npmTemplateSync(
           npm: { name: condensedName, fullName: condensedName },
           name: condensedName,
           user: targetBranch.owner,
-          'date.year': new Date().getFullYear(),
           'license.owner': targetBranch.owner
         },
         defines

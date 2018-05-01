@@ -17,7 +17,7 @@ const spinner = ora('args');
 process.on('uncaughtException', err => spinner.fail(err));
 process.on('unhandledRejection', reason => spinner.fail(reason));
 
-const defines = {};
+const properties = {};
 
 program
   .description('Keep npm package in sync with its template')
@@ -37,7 +37,7 @@ program
 
     values.forEach(value => {
       const [k, v] = value.split(/=/);
-      setOption(defines, k, v);
+      setOption(properties, k, v);
     });
   })
   .option('--list-providers', 'list providers with options and exit')
@@ -92,17 +92,17 @@ program
       const aggregationProvider = new AggregationProvider();
 
       if (pass !== null && pass !== undefined) {
-        if (defines.GithubProvider === undefined) {
-          defines.GithubProvider = {};
+        if (properties.GithubProvider === undefined) {
+          properties.GithubProvider = {};
         }
-        defines.GithubProvider.auth = pass;
+        properties.GithubProvider.auth = pass;
       }
 
       [BitbucketProvider, GithubProvider, LocalProvider].forEach(provider => {
         let options = provider.optionsFromEnvironment(process.env);
 
-        if (options !== undefined || defines[provider.name] !== undefined) {
-          options = Object.assign({}, options, defines[provider.name]);
+        if (options !== undefined || properties[provider.name] !== undefined) {
+          options = Object.assign({}, options, properties[provider.name]);
           aggregationProvider.providers.push(new provider(options));
         }
       });
@@ -120,37 +120,23 @@ program
         return;
       }
 
+      const context = new Context(aggregationProvider, {
+        templateBranchName: options.template,
+        dry: options.dry,
+        trackUsedByModule: options.usage,
+        logger,
+        spinner,
+        properties
+      });
+
       if (options.listOptions) {
-        logger.info(JSON.stringify(removeSensibleValues(defines)));
+        logger.info(JSON.stringify(removeSensibleValues(context.properties)));
         return;
       }
 
       spinner.start();
 
-      const templateBranch = options.template
-        ? await aggregationProvider.branch(options.template)
-        : undefined;
-
-      await queue.addAll(
-        args.repos.map(repo => {
-          return async () => {
-            const context = new Context(
-              aggregationProvider,
-              await aggregationProvider.branch(repo),
-              templateBranch,
-              {
-                logger,
-                spinner,
-                dry: options.dry,
-                trackUsedByModule: options.usage
-              },
-              defines
-            );
-
-            return context.execute();
-          };
-        })
-      );
+      await queue.addAll(args.repos.map(repo => context.execute(repo)));
     } catch (err) {
       spinner.fail(err);
     }
