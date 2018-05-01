@@ -211,13 +211,15 @@ test('package devDependencies', async t => {
       devDependencies: {
         a: '-',
         c: '1',
-        d: '-'
+        d: '-',
+        e: '1'
       }
     },
     {
       devDependencies: {
         a: '1',
-        b: '1'
+        b: '1',
+        e: '2'
       }
     }
   );
@@ -227,7 +229,8 @@ test('package devDependencies', async t => {
 
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
     b: '1',
-    c: '1'
+    c: '1',
+    e: '2'
   });
 
   t.true(

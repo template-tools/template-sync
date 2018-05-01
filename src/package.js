@@ -467,7 +467,7 @@ function defaultMerge(destination, target, template, category, name, messages) {
     messages.push(`chore(${category}): add ${name}:${template} from template`);
     destination[name] = template;
   } else if (template !== target) {
-    if (category === 'engines') {
+    if (category === 'engines' || category === 'devDependencies') {
       if (getVersion(target) > getVersion(template)) {
         return;
       }
