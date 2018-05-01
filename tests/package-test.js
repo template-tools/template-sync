@@ -63,6 +63,28 @@ test('package extract properties', async t => {
   });
 });
 
+test('package merge engines (skip lower versions in template)', async t => {
+  const context = await createContext(
+    {
+      engines: {
+        node: '>=8'
+      }
+    },
+    {
+      engines: {
+        node: '>=10'
+      }
+    }
+  );
+
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
+
+  t.deepEqual(JSON.parse(merged.content).engines, {
+    node: '>=10'
+  });
+});
+
 test('delete entries', async t => {
   const context = await createContext(
     {
@@ -208,8 +230,8 @@ test('package devDependencies', async t => {
   });
 
   t.true(
-    merged.messages.includes('chore(devDependencies): remove a@1') &&
-      merged.messages.includes('chore(devDependencies): add c@1 from template')
+    merged.messages.includes('chore(devDependencies): remove a:1') &&
+      merged.messages.includes('chore(devDependencies): add c:1 from template')
   );
 });
 

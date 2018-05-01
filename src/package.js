@@ -220,12 +220,12 @@ export class Package extends File {
     );
 
     const deepProperties = {
-      devDependencies: {},
-      dependencies: {},
-      peerDependencies: {},
-      optionalDependencies: {},
-      scripts: {},
-      engines: {}
+      devDependencies: { merge: defaultMerge },
+      dependencies: { merge: defaultMerge },
+      peerDependencies: { merge: defaultMerge },
+      optionalDependencies: { merge: defaultMerge },
+      scripts: { merge: defaultMerge },
+      engines: { merge: defaultMerge }
     };
 
     Object.keys(deepProperties).forEach(category => {
@@ -236,30 +236,21 @@ export class Package extends File {
           }
 
           const tp = context.expand(template[category][d]);
-          if (tp === '-') {
-            if (target[category][d] !== undefined) {
-              messages.push(
-                `chore(${category}): remove ${d}@${target[category][d]}`
-              );
-              delete target[category][d];
-            }
+          if (
+            category === 'devDependencies' &&
+            target.dependencies !== undefined &&
+            target.dependencies[d] === tp
+          ) {
+            // do not include dev dependency if regular dependency is already present
           } else {
-            if (
-              category === 'devDependencies' &&
-              target.dependencies !== undefined &&
-              target.dependencies[d] === tp
-            ) {
-              // do not include dev dependency if regular dependency is already present
-            } else {
-              if (tp !== target[category][d]) {
-                messages.push(
-                  target[category][d] === undefined
-                    ? `chore(${category}): add ${d}@${tp} from template`
-                    : `chore(${category}): update ${d}@${tp} from template`
-                );
-                target[category][d] = tp;
-              }
-            }
+            deepProperties[category].merge(
+              target[category],
+              target[category][d],
+              tp,
+              category,
+              d,
+              messages
+            );
           }
         });
       }
@@ -451,5 +442,40 @@ function addKeyword(pkg, regex, keyword, messages) {
       messages.push(`docs(package): add keyword ${keyword}`);
       pkg.keywords.push(keyword);
     }
+  }
+}
+
+function getVersion(e) {
+  const m = e.match(/([\d\.]+)/);
+  return m ? Number(m[1]) : undefined;
+}
+
+/**
+ *
+ */
+function defaultMerge(destination, target, template, category, name, messages) {
+  if (template === '-') {
+    if (target !== undefined) {
+      messages.push(`chore(${category}): remove ${name}:${target}`);
+      delete destination[name];
+      return;
+    }
+  }
+
+  if (target === undefined) {
+    messages.push(`chore(${category}): add ${name}:${template} from template`);
+    destination[name] = template;
+  } else if (template !== target) {
+    if (category === 'engines') {
+      if (getVersion(target) > getVersion(template)) {
+        return;
+      }
+    }
+
+    messages.push(
+      `chore(${category}): update ${name}:${template} from template`
+    );
+
+    destination[name] = template;
   }
 }
