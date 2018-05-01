@@ -104,7 +104,6 @@ export class Package extends File {
       const content = await this.originalContent(context);
       const pkg = JSON.parse(content);
 
-      console.log(pkg);
       const properties = {
         npm: { name: pkg.name, fullName: pkg.name }
       };
