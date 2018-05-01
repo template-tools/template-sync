@@ -1,4 +1,4 @@
-import { npmTemplateSync } from './npm-template-sync';
+import { Context } from './context';
 import { setPassword, getPassword } from './util';
 import { version } from '../package.json';
 import { GithubProvider } from 'github-repository-provider';
@@ -133,7 +133,11 @@ program
 
       await queue.addAll(
         args.repos.map(repo => {
-          return async () =>
+          return async () => {
+            const context = new Context();
+
+            return context.execute();
+            /*
             npmTemplateSync(
               aggregationProvider,
               await aggregationProvider.branch(repo),
@@ -146,6 +150,8 @@ program
               },
               defines
             );
+            */
+          };
         })
       );
     } catch (err) {

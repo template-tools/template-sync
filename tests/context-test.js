@@ -39,6 +39,7 @@ test('context used dev modules', async t => {
   });
 
   const context = new Context(
+    provider,
     await provider.branch('targetRepo'),
     await provider.branch('templateRepo')
   );
@@ -63,6 +64,7 @@ test('context optional dev modules', async t => {
   });
 
   const context = new Context(
+    provider,
     await provider.branch('targetRepo'),
     await provider.branch('templateRepo')
   );
