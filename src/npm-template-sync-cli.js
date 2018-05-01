@@ -134,11 +134,7 @@ program
       await queue.addAll(
         args.repos.map(repo => {
           return async () => {
-            const context = new Context();
-
-            return context.execute();
-            /*
-            npmTemplateSync(
+            const context = new Context(
               aggregationProvider,
               await aggregationProvider.branch(repo),
               templateBranch,
@@ -150,7 +146,8 @@ program
               },
               defines
             );
-            */
+
+            return context.execute();
           };
         })
       );
