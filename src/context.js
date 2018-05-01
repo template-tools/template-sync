@@ -17,15 +17,9 @@ const mm = require('micromatch');
 
 /**
  * @param {RepositoryProvider} provider
- * @param {Branch} targetBranch
- * @param {Branch} templateBranch
- * @param {Object} properties
  * @param {Object} options
  *
  * @property {RepositoryProvider} provider
- * @property {Branch} targetBranch
- * @property {Branch} templateBranch
- * @property {Object} properties
  * @property {Object} options
  */
 export class Context {
@@ -68,13 +62,16 @@ export class Context {
     ];
   }
 
-  constructor(provider, targetBranch, templateBranch, properties, options) {
+  constructor(provider, options) {
     options = Object.assign(
       {},
       {
         logger: console,
         dry: false,
-        trackUsedByModule: false
+        trackUsedByModule: false,
+        properties: {
+          'date.year': new Date().getFullYear()
+        }
       },
       options
     );
@@ -87,28 +84,29 @@ export class Context {
       evaluate: (expression, context, path) => value(properties, expression)
     });
 
-    this.ctx.properties = properties;
+    this.ctx.properties = options.properties;
 
     Object.defineProperties(this, {
-      properties: {
-        value: properties
+      trackUsedByModule: {
+        value: options.trackUsedByModule
+      },
+      dry: {
+        value: options.dry
+      },
+      logger: {
+        value: options.logger
       },
       files: {
         value: new Map()
       },
       provider: {
         value: provider
-      },
-      targetBranch: {
-        value: targetBranch
-      },
-      templateBranch: {
-        value: templateBranch,
-        writable: true
       }
     });
+  }
 
-    Object.assign(this, options);
+  get properties() {
+    return this.ctx.properties;
   }
 
   get defaultMapping() {
@@ -210,9 +208,10 @@ export class Context {
   }
 
   /**
+   * @param {String} targetBranchName
    * @return {Promise<PullRequest>}
    */
-  async execute() {
+  async execute(targetBranchName) {
     const pkg = new Package('package.json');
 
     Object.assign(this.properties, await pkg.properties(context));
