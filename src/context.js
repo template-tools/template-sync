@@ -16,7 +16,7 @@ import { JSDoc } from './jsdoc';
 const mm = require('micromatch');
 
 /**
- *  @param {RepositoryProvider} provider
+ * @param {RepositoryProvider} provider
  * @param {Branch} targetBranch
  * @param {Branch} templateBranch
  * @param {Object} properties
