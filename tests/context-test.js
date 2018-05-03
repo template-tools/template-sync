@@ -23,6 +23,22 @@ test('context create', t => {
   t.deepEqual(context.properties, {});
 });
 
+test.only('context files', async t => {
+  const provider = new MockProvider({
+    templateRepo: {
+      master: { 'package.json': '{"name":"a"}' }
+    },
+    targetRepo: {
+      master: { 'package.json': '{"name":"b"}' }
+    }
+  });
+
+  const context = new Context(provider);
+  const f = new Package('package.json');
+
+  t.is(await f.originalContent(context), '{"name":"b"}');
+});
+
 const ROLLUP_FILE_CONTENT = `import babel from 'rollup-plugin-babel';
 
 export default {
