@@ -50,7 +50,8 @@ test('package extract properties', async t => {
     {},
     {
       name: 'aName',
-      description: 'a description'
+      description: 'a description',
+      module: 'a module'
     }
   );
 
@@ -59,7 +60,8 @@ test('package extract properties', async t => {
 
   t.deepEqual(properties, {
     npm: { name: 'aName', fullName: 'aName' },
-    description: 'a description'
+    description: 'a description',
+    module: 'a module'
   });
 });
 

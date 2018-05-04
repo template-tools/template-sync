@@ -20,10 +20,10 @@ test('context create', t => {
   t.is(context.provider, provider);
   t.is(context.dry, false);
   t.is(context.trackUsedByModule, false);
-  t.deepEqual(context.properties, {});
+  t.deepEqual(context.properties, { 'date.year': new Date().getFullYear() });
 });
 
-test.only('context files', async t => {
+test('context files', async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: { 'package.json': '{"name":"a"}' }
@@ -33,7 +33,10 @@ test.only('context files', async t => {
     }
   });
 
-  const context = new Context(provider);
+  const context = new Context(provider, {});
+
+  context.targetBranch = await provider.branch('targetRepo');
+
   const f = new Package('package.json');
 
   t.is(await f.originalContent(context), '{"name":"b"}');
@@ -74,6 +77,8 @@ test('context used dev modules', async t => {
 
   const context = new Context(provider, { templateBranchName: 'templateRepo' });
 
+  context.targetBranch = await provider.branch('targetRepo');
+
   context.addFile(new Rollup('rollup.config.js'));
   context.addFile(new Package('package.json'));
 
@@ -94,6 +99,8 @@ test('context optional dev modules', async t => {
   });
 
   const context = new Context(provider, { templateBranchName: 'templateRepo' });
+
+  context.targetBranch = await provider.branch('targetRepo');
 
   context.addFile(new Rollup('rollup.config.js'));
 

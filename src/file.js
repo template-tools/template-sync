@@ -45,6 +45,15 @@ export class File {
     return new Set();
   }
 
+  /**
+   * Deliver some key properties
+   * @param {Context} context
+   * @return {Object}
+   */
+  async properties(context) {
+    return {};
+  }
+
   templateContent(context, options) {
     return this.content(context.templateBranch, this.path, options);
   }

@@ -76,17 +76,16 @@ export class Context {
       options
     );
 
-    this.ctx = createContext({
-      keepUndefinedValues: true,
-      leftMarker: '{{',
-      rightMarker: '}}',
-      markerRegexp: '{{([^}]+)}}',
-      evaluate: (expression, context, path) => value(properties, expression)
-    });
-
-    this.ctx.properties = options.properties;
-
     Object.defineProperties(this, {
+      ctx: {
+        value: createContext({
+          keepUndefinedValues: true,
+          leftMarker: '{{',
+          rightMarker: '}}',
+          markerRegexp: '{{([^}]+)}}',
+          evaluate: (expression, context, path) => value(properties, expression)
+        })
+      },
       trackUsedByModule: {
         value: options.trackUsedByModule
       },
@@ -103,6 +102,8 @@ export class Context {
         value: provider
       }
     });
+
+    this.ctx.properties = options.properties;
   }
 
   get properties() {
