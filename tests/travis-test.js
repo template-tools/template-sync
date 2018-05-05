@@ -31,11 +31,10 @@ ${targetVersions
     }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
-  );
+  const context = new Context({});
+
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const merger = new Travis('aFile');
   return merger.merge(context);
@@ -147,11 +146,10 @@ test('travis remove before_script', async t => {
       }
     }
   });
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
-  );
+
+  const context = new Context({});
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const merger = new Travis('aFile');
   const merged = await merger.merge(context);
@@ -182,11 +180,9 @@ before_script:
     }
   });
 
-  const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
-    {}
-  );
+  const context = new Context({});
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const merger = new Travis('aFile');
   const merged = await merger.merge(context);

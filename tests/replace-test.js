@@ -19,11 +19,9 @@ Line 2`
     }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
-  );
+  const context = new Context({});
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const replace = new Replace('aFile');
   const merged = await replace.merge(context);

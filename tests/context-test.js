@@ -78,6 +78,7 @@ test('context used dev modules', async t => {
   const context = new Context(provider, { templateBranchName: 'templateRepo' });
 
   context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   context.addFile(new Rollup('rollup.config.js'));
   context.addFile(new Package('package.json'));

@@ -79,6 +79,7 @@ export class Context {
     Object.defineProperties(this, {
       ctx: {
         value: createContext({
+          properties: options.properties,
           keepUndefinedValues: true,
           leftMarker: '{{',
           rightMarker: '}}',
@@ -102,8 +103,6 @@ export class Context {
         value: provider
       }
     });
-
-    this.ctx.properties = options.properties;
   }
 
   get properties() {

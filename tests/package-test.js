@@ -20,17 +20,17 @@ async function createContext(template, target) {
     }
   });
 
-  return new Context(
-    await provider.branch('tragetUser/targetRepo'),
-    await provider.branch('templateRepo'),
-    {
-      github: {
-        repo: 'the-repo-name',
-        user: 'the-user-name'
-      },
-      user: 'x-user'
-    }
-  );
+  const context = new Context({
+    github: {
+      repo: 'the-repo-name',
+      user: 'the-user-name'
+    },
+    user: 'x-user'
+  });
+
+  context.targetBranch = await provider.branch('tragetUser/targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
+  return context;
 }
 
 test('default options', t => {
