@@ -212,14 +212,16 @@ export class Context {
    * @return {Promise<PullRequest>}
    */
   async execute(targetBranchName) {
+    //const condensedName = targetBranch.repository.condensedName;
+
     const pkg = new Package('package.json');
 
-    Object.assign(this.properties, await pkg.properties(context));
+    Object.assign(this.properties, await pkg.properties(this));
 
     if (templateBranch === undefined) {
       try {
         templateBranch = await this.provider.branch(
-          context.properties.templateRepo
+          this.properties.templateRepo
         );
       } catch (e) {}
 
@@ -245,7 +247,7 @@ export class Context {
 
     const json = JSON.parse(
       await pkg.content(
-        templatePRBranch ? templatePRBranch : context.templateBranch,
+        templatePRBranch ? templatePRBranch : this.templateBranch,
         pkg.path,
         { ignoreMissing: true }
       )
@@ -268,7 +270,7 @@ export class Context {
         if (templatePRBranch === undefined) {
           templatePRBranch = await templateBranch.repository.createBranch(
             'template-add-used-1',
-            context.templateBranch
+            this.templateBranch
           );
           newTemplatePullRequest = true;
         }
@@ -292,32 +294,32 @@ export class Context {
       }
     }
 
-    const files = await createFiles(
-      context.templateBranch,
+    const files = await this.createFiles(
+      this.templateBranch,
       json.template && json.template.files
     );
 
-    files.forEach(f => context.addFile(f));
+    files.forEach(f => this.addFile(f));
 
-    context.logger.debug(context.files.values());
+    this.logger.debug(this.files.values());
 
     const merges = (await Promise.all(
-      files.map(f => f.saveMerge(context))
+      files.map(f => f.saveMerge(this))
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      context.spinner.succeed(
+      this.spinner.succeed(
         `${targetBranch.fullCondensedName}: nothing changed`
       );
       return;
     }
 
-    context.spinner.text = merges
+    this.spinner.text = merges
       .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
       .join(',');
 
-    if (context.dry) {
-      context.spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
+    if (this.dry) {
+      this.spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
       return;
     }
 
@@ -343,9 +345,7 @@ export class Context {
     if (newPullRequestRequired) {
       try {
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
-          title: `merge package from ${
-            context.templateBranch.fullCondensedName
-          }`,
+          title: `merge package from ${this.templateBranch.fullCondensedName}`,
           body: merges
             .map(
               m =>
@@ -356,13 +356,13 @@ export class Context {
             )
             .join('\n')
         });
-        context.spinner.succeed(
+        this.spinner.succeed(
           `${targetBranch.fullCondensedName}: ${pullRequest.name}`
         );
 
         return pullRequest;
       } catch (err) {
-        context.spinner.fail(err);
+        this.spinner.fail(err);
       }
     } else {
       const pullRequest = new targetBranch.provider.pullRequestClass(
@@ -370,7 +370,7 @@ export class Context {
         'old'
       );
 
-      context.spinner.succeed(
+      this.spinner.succeed(
         `${targetBranch.fullCondensedName}: update PR ${pullRequest.name}`
       );
       return pullRequest;

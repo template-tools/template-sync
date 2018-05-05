@@ -61,7 +61,8 @@ test('package extract properties', async t => {
   t.deepEqual(properties, {
     npm: { name: 'aName', fullName: 'aName' },
     description: 'a description',
-    module: 'a module'
+    module: 'a module',
+    name: 'aName'
   });
 });
 

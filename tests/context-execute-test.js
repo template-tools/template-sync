@@ -1,5 +1,5 @@
 import test from 'ava';
-import { npmTemplateSync } from '../src/npm-template-sync';
+import { Context } from '../src/context';
 import { GithubProvider } from 'github-repository-provider';
 
 const ora = require('ora');
@@ -23,15 +23,15 @@ test('npmTemplateSync', async t => {
   const spinner = ora('args');
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
 
-  const pullRequest = await npmTemplateSync(
-    provider,
-    await provider.branch(REPOSITORY_NAME),
-    await provider.branch(TEMPLATE_REPO),
-    {
-      spinner,
-      console
-    }
-  );
+  const context = new Context(provider, {
+    spinner,
+    console
+  });
+
+  context.targetBranch = await provider.branch(REPOSITORY_NAME);
+  context.templateBranch = await provider.branch(TEMPLATE_REPO);
+
+  const pullRequest = context.execute();
 
   //console.log(pullRequest.name);
   t.truthy(pullRequest.name);
