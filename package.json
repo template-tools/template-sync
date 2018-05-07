@@ -1,8 +1,8 @@
 {
   "name": "npm-template-sync",
   "version": "0.0.0-semantic-release",
-  "main": "dist/npm-template-sync.js",
-  "module": "src/npm-template-sync.js",
+  "main": "dist/context.js",
+  "module": "src/context.js",
   "description": "Keep npm package in sync with its template",
   "keywords": [
     "npm",
@@ -24,10 +24,10 @@
     "pretest": "rollup -c tests/rollup.config.js",
     "precover": "rollup -c tests/rollup.config.js",
     "posttest": "npm run prepare && markdown-doctest",
-    "docs": "documentation readme src/npm-template-sync.js --section=API",
+    "docs": "documentation readme src/context.js --section=API",
     "semantic-release": "semantic-release",
     "prepare": "rollup -c",
-    "lint": "documentation lint src/npm-template-sync.js",
+    "lint": "documentation lint src/context.js",
     "travis-deploy-once": "travis-deploy-once"
   },
   "dependencies": {

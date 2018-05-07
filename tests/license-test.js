@@ -11,9 +11,11 @@ test('modify one year', async t => {
     targetRepo: { master: { aFile: 'Copyright (c) 1999 by xyz' } }
   });
 
-  const context = new Context({
-    'date.year': 2099,
-    'license.owner': 'xyz'
+  const context = new Context(provider, {
+    properties: {
+      'date.year': 2099,
+      'license.owner': 'xyz'
+    }
   });
   context.targetBranch = await provider.branch('targetRepo');
   context.templateBranch = await provider.branch('templateRepo');
@@ -34,9 +36,11 @@ test('modify year list', async t => {
     }
   });
 
-  const context = new Context({
-    'date.year': 2099,
-    'license.owner': 'xyz'
+  const context = new Context(provider, {
+    properties: {
+      'date.year': 2099,
+      'license.owner': 'xyz'
+    }
   });
   context.targetBranch = await provider.branch('targetRepo');
   context.templateBranch = await provider.branch('templateRepo');
