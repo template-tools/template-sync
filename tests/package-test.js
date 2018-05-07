@@ -56,7 +56,7 @@ test('package extract properties', async t => {
   );
 
   const pkg = new Package('package.json');
-  const properties = await pkg.properties(context);
+  const properties = await pkg.properties(context.targetBranch);
 
   t.deepEqual(properties, {
     npm: { name: 'aName', fullName: 'aName' },

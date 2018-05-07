@@ -19,19 +19,20 @@ test('npmTemplateSync files', async t => {
 });
 */
 
-test('npmTemplateSync', async t => {
+test.only('context execute', async t => {
   const spinner = ora('args');
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
 
   const context = new Context(provider, {
     spinner,
-    console
+    console,
+    templateBranch: TEMPLATE_REPO
   });
 
-  context.targetBranch = await provider.branch(REPOSITORY_NAME);
-  context.templateBranch = await provider.branch(TEMPLATE_REPO);
+  //context.targetBranch = await provider.branch(REPOSITORY_NAME);
+  //context.templateBranch = await provider.branch(TEMPLATE_REPO);
 
-  const pullRequest = context.execute();
+  const pullRequest = context.execute(REPOSITORY_NAME);
 
   //console.log(pullRequest.name);
   t.truthy(pullRequest.name);

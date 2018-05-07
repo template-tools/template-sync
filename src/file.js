@@ -47,10 +47,10 @@ export class File {
 
   /**
    * Deliver some key properties
-   * @param {Context} context
+   * @param {Branch} branch
    * @return {Object}
    */
-  async properties(context) {
+  async properties(branch) {
     return {};
   }
 

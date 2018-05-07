@@ -105,6 +105,9 @@ export class Context {
       },
       provider: {
         value: provider
+      },
+      templateBranchName: {
+        value: options.templateBranchName
       }
     });
   }
@@ -211,20 +214,26 @@ export class Context {
     }
   }
 
-  async prepareExecute(targetBranchName) {}
+  async prepareExecute(targetBranchName) {
+    console.log(targetBranchName);
 
-  /**
-   * @param {String} targetBranchName
-   * @return {Promise<PullRequest>}
-   */
-  async execute(targetBranchName) {
-    //const condensedName = targetBranch.repository.condensedName;
+    let targetBranch;
+    try {
+      console.log('*** 1 ***');
+      targetBranch = await this.provider.branch(targetBranchName);
+      console.log('*** 2 ***');
+    } catch (e) {
+      console.log(e);
+    }
+    let templateBranch;
+
+    console.log(targetBranch);
 
     const pkg = new Package('package.json');
 
-    Object.assign(this.properties, await pkg.properties(this));
+    Object.assign(this.properties, await pkg.properties(targetBranch));
 
-    if (templateBranch === undefined) {
+    if (this.templateBranchName === undefined) {
       try {
         templateBranch = await this.provider.branch(
           this.properties.templateRepo
@@ -238,18 +247,30 @@ export class Context {
           }`
         );
       }
+    } else {
+      templateBranch = await this.provider.branch(this.templateBranchName);
     }
-
-    this.templateBranch = templateBranch;
 
     this.logger.debug(
       `Using ${templateBranch.provider.name} as template provider`
     );
 
+    return { templateBranch, targetBranch };
+  }
+
+  /**
+   * @param {String} targetBranchName
+   * @return {Promise<PullRequest>}
+   */
+  async execute(targetBranchName) {
+    const { templateBranch } = await this.prepareExecute(targetBranchName);
+
     let newTemplatePullRequest = false;
     let templatePRBranch = await templateBranch.repository.branch(
       'template-add-used-1'
     );
+
+    const pkg = new Package('package.json');
 
     const json = JSON.parse(
       await pkg.content(
