@@ -8,7 +8,7 @@ test('cli defines', async t => {
   const c = await execa(nts, [
     '-d',
     'description=a new module',
-    '--list-options'
+    '--list-properties'
   ]);
   t.truthy(c.stdout.match(/a new module/));
 });

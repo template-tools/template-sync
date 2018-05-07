@@ -1,5 +1,10 @@
 import { Context } from './context';
-import { setPassword, getPassword } from './util';
+import {
+  setPassword,
+  getPassword,
+  setProperty,
+  removeSensibleValues
+} from './util';
 import { version } from '../package.json';
 import { GithubProvider } from 'github-repository-provider';
 import { BitbucketProvider } from 'bitbucket-repository-provider';
@@ -37,11 +42,11 @@ program
 
     values.forEach(value => {
       const [k, v] = value.split(/=/);
-      setOption(properties, k, v);
+      setProperty(properties, k, v);
     });
   })
   .option('--list-providers', 'list providers with options and exit')
-  .option('--list-options', 'list all options and exit')
+  .option('--list-properties', 'list all properties and exit')
   .option(
     '-t, --template <identifier>',
     'template repository',
@@ -129,7 +134,7 @@ program
         properties
       });
 
-      if (options.listOptions) {
+      if (options.listProperties) {
         logger.info(JSON.stringify(removeSensibleValues(context.properties)));
         return;
       }
@@ -143,44 +148,3 @@ program
   });
 
 program.parse(process.argv);
-
-function setOption(dest, attributePath, value) {
-  const m = attributePath.match(/^(\w+)\.(.*)/);
-
-  if (m) {
-    const key = m[1];
-    if (dest[key] === undefined) {
-      dest[key] = {};
-    }
-    setOption(dest[key], m[2], value);
-  } else {
-    dest[attributePath] = value;
-  }
-}
-
-function removeSensibleValues(object) {
-  if (
-    object === undefined ||
-    object === null ||
-    typeof object === 'string' ||
-    object instanceof String
-  ) {
-    return object;
-  }
-
-  const result = {};
-  for (const key of Object.keys(object)) {
-    const value = object[key];
-
-    if (typeof value === 'string' || value instanceof String) {
-      if (key.match(/pass|auth|key|user/)) {
-        result[key] = '...';
-        continue;
-      }
-    }
-
-    result[key] = removeSensibleValues(value);
-  }
-
-  return result;
-}

@@ -68,12 +68,16 @@ export class Context {
       {
         logger: console,
         dry: false,
-        trackUsedByModule: false,
-        properties: {
-          'date.year': new Date().getFullYear()
-        }
+        trackUsedByModule: false
       },
       options
+    );
+
+    options.properties = Object.assign(
+      {
+        'date.year': new Date().getFullYear()
+      },
+      options.properties
     );
 
     Object.defineProperties(this, {
@@ -206,6 +210,8 @@ export class Context {
       this.spinner.fail(...args);
     }
   }
+
+  async prepareExecute(targetBranchName) {}
 
   /**
    * @param {String} targetBranchName
