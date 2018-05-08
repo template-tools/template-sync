@@ -215,23 +215,14 @@ export class Context {
   }
 
   async prepareExecute(targetBranchName) {
-    console.log(targetBranchName);
-
-    let targetBranch;
-    try {
-      console.log('*** 1 ***');
-      targetBranch = await this.provider.branch(targetBranchName);
-      console.log('*** 2 ***');
-    } catch (e) {
-      console.log(e);
-    }
-    let templateBranch;
-
-    console.log(targetBranch);
+    let targetBranch = await this.provider.branch(targetBranchName);
 
     const pkg = new Package('package.json');
 
-    Object.assign(this.properties, await pkg.properties(targetBranch));
+    const properties = {};
+    Object.assign(properties, await pkg.properties(targetBranch));
+
+    let templateBranch;
 
     if (this.templateBranchName === undefined) {
       try {
@@ -255,7 +246,7 @@ export class Context {
       `Using ${templateBranch.provider.name} as template provider`
     );
 
-    return { templateBranch, targetBranch };
+    return { properties, templateBranch, targetBranch };
   }
 
   /**
@@ -272,7 +263,7 @@ export class Context {
 
     const pkg = new Package('package.json');
 
-    const json = JSON.parse(
+    const templatePackageJson = JSON.parse(
       await pkg.content(
         templatePRBranch ? templatePRBranch : this.templateBranch,
         pkg.path,
@@ -283,16 +274,16 @@ export class Context {
     if (options.trackUsedByModule) {
       const name = targetBranch.fullCondensedName;
 
-      if (json.template === undefined) {
-        json.template = {};
+      if (templatePackageJson.template === undefined) {
+        templatePackageJson.template = {};
       }
-      if (!Array.isArray(json.template.usedBy)) {
-        json.template.usedBy = [];
+      if (!Array.isArray(templatePackageJson.template.usedBy)) {
+        templatePackageJson.template.usedBy = [];
       }
 
-      if (!json.template.usedBy.find(n => n === name)) {
-        json.template.usedBy.push(name);
-        json.template.usedBy = json.template.usedBy.sort();
+      if (!templatePackageJson.template.usedBy.find(n => n === name)) {
+        templatePackageJson.template.usedBy.push(name);
+        templatePackageJson.template.usedBy = templatePackageJson.template.usedBy.sort();
 
         if (templatePRBranch === undefined) {
           templatePRBranch = await templateBranch.repository.createBranch(
@@ -305,7 +296,7 @@ export class Context {
         await templatePRBranch.commit(`fix: add ${name}`, [
           {
             path: 'package.json',
-            content: JSON.stringify(json, undefined, 2)
+            content: JSON.stringify(templatePackageJson, undefined, 2)
           }
         ]);
 
@@ -323,7 +314,7 @@ export class Context {
 
     const files = await this.createFiles(
       this.templateBranch,
-      json.template && json.template.files
+      templatePackageJson.template && templatePackageJson.template.files
     );
 
     files.forEach(f => this.addFile(f));

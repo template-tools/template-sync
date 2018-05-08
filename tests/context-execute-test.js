@@ -18,15 +18,31 @@ test('npmTemplateSync files', async t => {
   t.is(files.find(f => f.path === 'package.json').constructor.name, 'Package');
 });
 */
+test.only('context prepare', async t => {
+  const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
+  const context = new Context(provider, {
+    templateBranchName: TEMPLATE_REPO
+  });
 
-test.only('context execute', async t => {
+  const {
+    targetBranch,
+    templateBranch,
+    properties
+  } = await context.prepareExecute(REPOSITORY_NAME);
+
+  t.is(templateBranch.fullCondensedName, TEMPLATE_REPO);
+  t.is(targetBranch.fullCondensedName, REPOSITORY_NAME);
+  t.is(properties.name, 'sync-test-repository');
+});
+
+test('context execute', async t => {
   const spinner = ora('args');
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
 
   const context = new Context(provider, {
     spinner,
     console,
-    templateBranch: TEMPLATE_REPO
+    templateBranchName: TEMPLATE_REPO
   });
 
   //context.targetBranch = await provider.branch(REPOSITORY_NAME);
