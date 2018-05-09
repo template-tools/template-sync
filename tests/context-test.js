@@ -5,6 +5,43 @@ import { Package } from '../src/package';
 
 import { MockProvider } from 'mock-repository-provider';
 
+test('context create', t => {
+  const provider = new MockProvider({
+    templateRepo: {
+      master: {}
+    },
+    targetRepo: {
+      master: {}
+    }
+  });
+
+  const context = new Context(provider);
+
+  t.is(context.provider, provider);
+  t.is(context.dry, false);
+  t.is(context.trackUsedByModule, false);
+  t.deepEqual(context.properties, { 'date.year': new Date().getFullYear() });
+});
+
+test('context files', async t => {
+  const provider = new MockProvider({
+    templateRepo: {
+      master: { 'package.json': '{"name":"a"}' }
+    },
+    targetRepo: {
+      master: { 'package.json': '{"name":"b"}' }
+    }
+  });
+
+  const context = new Context(provider, {});
+
+  context.targetBranch = await provider.branch('targetRepo');
+
+  const f = new Package('package.json');
+
+  t.is(await f.originalContent(context), '{"name":"b"}');
+});
+
 const ROLLUP_FILE_CONTENT = `import babel from 'rollup-plugin-babel';
 
 export default {
@@ -38,10 +75,10 @@ test('context used dev modules', async t => {
     }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo')
-  );
+  const context = new Context(provider, { templateBranchName: 'templateRepo' });
+
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   context.addFile(new Rollup('rollup.config.js'));
   context.addFile(new Package('package.json'));
@@ -62,10 +99,9 @@ test('context optional dev modules', async t => {
     }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo')
-  );
+  const context = new Context(provider, { templateBranchName: 'templateRepo' });
+
+  context.targetBranch = await provider.branch('targetRepo');
 
   context.addFile(new Rollup('rollup.config.js'));
 

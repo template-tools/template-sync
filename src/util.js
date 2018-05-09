@@ -33,3 +33,44 @@ export function templateOptions(json, name) {
   }
   return {};
 }
+
+export function setProperty(properties, attributePath, value) {
+  const m = attributePath.match(/^(\w+)\.(.*)/);
+
+  if (m) {
+    const key = m[1];
+    if (properties[key] === undefined) {
+      properties[key] = {};
+    }
+    setProperty(properties[key], m[2], value);
+  } else {
+    properties[attributePath] = value;
+  }
+}
+
+export function removeSensibleValues(object) {
+  if (
+    object === undefined ||
+    object === null ||
+    typeof object === 'string' ||
+    object instanceof String
+  ) {
+    return object;
+  }
+
+  const result = {};
+  for (const key of Object.keys(object)) {
+    const value = object[key];
+
+    if (typeof value === 'string' || value instanceof String) {
+      if (key.match(/pass|auth|key|user/)) {
+        result[key] = '...';
+        continue;
+      }
+    }
+
+    result[key] = removeSensibleValues(value);
+  }
+
+  return result;
+}

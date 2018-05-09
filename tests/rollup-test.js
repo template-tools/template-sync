@@ -52,11 +52,10 @@ export default {
     }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
-  );
+  const context = new Context(provider);
+
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const rollup = new Rollup('rollup.config.json');
   const merged = await rollup.merge(context);
@@ -112,11 +111,11 @@ export default {
       }
     }
   });
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
-  );
+
+  const context = new Context(provider);
+
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const rollup = new Rollup('rollup.config.json');
   const merged = await rollup.merge(context);
@@ -170,11 +169,10 @@ export default {
     }
   });
 
-  const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
-    {}
-  );
+  const context = new Context(provider);
+
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const rollup = new Rollup('rollup.config.json');
   const merged = await rollup.merge(context);

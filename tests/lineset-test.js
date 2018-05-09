@@ -9,11 +9,10 @@ test('merge lines', async t => {
     targetRepo: { master: { aFile: ['Line 1', 'Line 3'].join('\n') } }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
-  );
+  const context = new Context({});
+
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const merger = new MergeLineSet('aFile');
   const merged = await merger.merge(context);

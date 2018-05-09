@@ -20,11 +20,11 @@ async function createContext(template, target) {
     }
   });
 
-  return new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
-  );
+  const context = new Context({});
+
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
+  return context;
 }
 
 test('json merge', async t => {

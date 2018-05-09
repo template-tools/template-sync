@@ -98,13 +98,13 @@ export class Package extends File {
 
   /**
    * Deliver some key properties
-   * @param {Context} context
+   * @param {Branch} branch
    * @return {Object}
    */
-  async properties(context) {
+  async properties(branch) {
     try {
-      const content = await this.originalContent(context);
-      const pkg = JSON.parse(content);
+      const content = await branch.content(this.path);
+      const pkg = JSON.parse(content.content);
 
       const properties = {
         npm: { name: pkg.name, fullName: pkg.name }
@@ -122,7 +122,7 @@ export class Package extends File {
         properties.templateRepo = pkg.template.repository.url;
       }
 
-      ['description'].forEach(key => {
+      ['description', 'name', 'module'].forEach(key => {
         if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
           properties[key] = pkg[key];
         }

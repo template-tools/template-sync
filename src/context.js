@@ -1,19 +1,68 @@
 import { createContext } from 'expression-expander';
 import { value } from 'jsonpath';
 
+import { Travis } from './travis';
+import { Readme } from './readme';
+import { Package } from './package';
+import { Rollup } from './rollup';
+import { License } from './license';
+import { MergeAndRemoveLineSet } from './merge-and-remove-line-set';
+import { MergeLineSet } from './merge-line-set';
+import { ReplaceIfEmpty } from './replace-if-empty';
+import { Replace } from './replace';
+import { JSONFile } from './json-file';
+import { JSDoc } from './jsdoc';
+
+const mm = require('micromatch');
+
 /**
- * @param {Branch} targetBranch
- * @param {Branch} templateBranch
- * @param {Object} properties
+ * @param {RepositoryProvider} provider
  * @param {Object} options
  *
- * @property {Branch} targetBranch
- * @property {Branch} templateBranch
- * @property {Object} properties
+ * @property {RepositoryProvider} provider
  * @property {Object} options
  */
 export class Context {
-  constructor(targetBranch, templateBranch, properties, options) {
+  static get merges() {
+    return [
+      Rollup,
+      Travis,
+      Readme,
+      Package,
+      JSONFile,
+      JSDoc,
+      Travis,
+      MergeAndRemoveLineSet,
+      MergeLineSet,
+      License,
+      ReplaceIfEmpty,
+      Replace
+    ];
+  }
+
+  static get defaultMapping() {
+    return [
+      { merger: 'Package', pattern: '**/package.json' },
+      { merger: 'Travis', pattern: '.travis.yml' },
+      { merger: 'Readme', pattern: '**/README.*' },
+      { merger: 'JSDoc', pattern: '**/jsdoc.json' },
+      { merger: 'Rollup', pattern: '**/rollup.config.js' },
+      { merger: 'License', pattern: 'LICENSE' },
+      {
+        merger: 'MergeAndRemoveLineSet',
+        pattern: '.gitignore',
+        options: { message: 'chore(git): update {{path}} from template' }
+      },
+      {
+        merger: 'MergeAndRemoveLineSet',
+        pattern: '.npmignore',
+        options: { message: 'chore(npm): update {{path}} from template' }
+      },
+      { merger: 'ReplaceIfEmpty', pattern: '**/*' }
+    ];
+  }
+
+  constructor(provider, options) {
     options = Object.assign(
       {},
       {
@@ -24,33 +73,75 @@ export class Context {
       options
     );
 
-    this.ctx = createContext({
-      keepUndefinedValues: true,
-      leftMarker: '{{',
-      rightMarker: '}}',
-      markerRegexp: '{{([^}]+)}}',
-      evaluate: (expression, context, path) => value(properties, expression)
-    });
-
-    this.ctx.properties = properties;
+    options.properties = Object.assign(
+      {
+        'date.year': new Date().getFullYear()
+      },
+      options.properties
+    );
 
     Object.defineProperties(this, {
-      properties: {
-        value: properties
+      ctx: {
+        value: createContext({
+          properties: options.properties,
+          keepUndefinedValues: true,
+          leftMarker: '{{',
+          rightMarker: '}}',
+          markerRegexp: '{{([^}]+)}}',
+          evaluate: (expression, context, path) => value(properties, expression)
+        })
+      },
+      trackUsedByModule: {
+        value: options.trackUsedByModule
+      },
+      dry: {
+        value: options.dry
+      },
+      logger: {
+        value: options.logger
       },
       files: {
         value: new Map()
       },
-      targetBranch: {
-        value: targetBranch
+      provider: {
+        value: provider
       },
-      templateBranch: {
-        value: templateBranch,
-        writable: true
+      templateBranchName: {
+        value: options.templateBranchName
       }
     });
+  }
 
-    Object.assign(this, options);
+  get properties() {
+    return this.ctx.properties;
+  }
+
+  get defaultMapping() {
+    return this.constructor.defaultMapping;
+  }
+
+  async createFiles(branch, mapping = this.defaultMapping) {
+    const files = await branch.list();
+    let alreadyPresent = new Set();
+
+    return mapping
+      .map(m => {
+        const found = mm(
+          files.filter(f => f.type === 'blob').map(f => f.path),
+          m.pattern
+        );
+
+        const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
+
+        alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
+
+        return notAlreadyProcessed.map(f => {
+          const merger =
+            mergers.find(merger => merger.name === m.merger) || ReplaceIfEmpty;
+          return new merger(f, m.options);
+        });
+      })
+      .reduce((last, current) => Array.from([...last, ...current]), []);
   }
 
   expand(...args) {
@@ -120,6 +211,187 @@ export class Context {
       console.log(...args);
     } else {
       this.spinner.fail(...args);
+    }
+  }
+
+  async prepareExecute(targetBranchName) {
+    let targetBranch = await this.provider.branch(targetBranchName);
+
+    const pkg = new Package('package.json');
+
+    const properties = {};
+    Object.assign(properties, await pkg.properties(targetBranch));
+
+    let templateBranch;
+
+    if (this.templateBranchName === undefined) {
+      try {
+        templateBranch = await this.provider.branch(
+          this.properties.templateRepo
+        );
+      } catch (e) {}
+
+      if (templateBranch === undefined) {
+        throw new Error(
+          `Unable to extract template repo url from ${targetBranch.name} ${
+            pkg.path
+          }`
+        );
+      }
+    } else {
+      templateBranch = await this.provider.branch(this.templateBranchName);
+    }
+
+    this.logger.debug(
+      `Using ${templateBranch.provider.name} as template provider`
+    );
+
+    return { properties, templateBranch, targetBranch };
+  }
+
+  /**
+   * @param {String} targetBranchName
+   * @return {Promise<PullRequest>}
+   */
+  async execute(targetBranchName) {
+    const { templateBranch } = await this.prepareExecute(targetBranchName);
+
+    let newTemplatePullRequest = false;
+    let templatePRBranch = await templateBranch.repository.branch(
+      'template-add-used-1'
+    );
+
+    const pkg = new Package('package.json');
+
+    const templatePackageJson = JSON.parse(
+      await pkg.content(
+        templatePRBranch ? templatePRBranch : this.templateBranch,
+        pkg.path,
+        { ignoreMissing: true }
+      )
+    );
+
+    if (options.trackUsedByModule) {
+      const name = targetBranch.fullCondensedName;
+
+      if (templatePackageJson.template === undefined) {
+        templatePackageJson.template = {};
+      }
+      if (!Array.isArray(templatePackageJson.template.usedBy)) {
+        templatePackageJson.template.usedBy = [];
+      }
+
+      if (!templatePackageJson.template.usedBy.find(n => n === name)) {
+        templatePackageJson.template.usedBy.push(name);
+        templatePackageJson.template.usedBy = templatePackageJson.template.usedBy.sort();
+
+        if (templatePRBranch === undefined) {
+          templatePRBranch = await templateBranch.repository.createBranch(
+            'template-add-used-1',
+            this.templateBranch
+          );
+          newTemplatePullRequest = true;
+        }
+
+        await templatePRBranch.commit(`fix: add ${name}`, [
+          {
+            path: 'package.json',
+            content: JSON.stringify(templatePackageJson, undefined, 2)
+          }
+        ]);
+
+        if (newTemplatePullRequest) {
+          const pullRequest = await templateBranch.createPullRequest(
+            templatePRBranch,
+            {
+              title: `add ${name}`,
+              body: `add tracking info for ${name}`
+            }
+          );
+        }
+      }
+    }
+
+    const files = await this.createFiles(
+      this.templateBranch,
+      templatePackageJson.template && templatePackageJson.template.files
+    );
+
+    files.forEach(f => this.addFile(f));
+
+    this.logger.debug(this.files.values());
+
+    const merges = (await Promise.all(
+      files.map(f => f.saveMerge(this))
+    )).filter(m => m !== undefined && m.changed);
+
+    if (merges.length === 0) {
+      this.spinner.succeed(
+        `${targetBranch.fullCondensedName}: nothing changed`
+      );
+      return;
+    }
+
+    this.spinner.text = merges
+      .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
+      .join(',');
+
+    if (this.dry) {
+      this.spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
+      return;
+    }
+
+    let newPullRequestRequired = false;
+    const prBranchName = 'template-sync-1';
+    let prBranch = (await targetBranch.repository.branches()).get(prBranchName);
+
+    if (prBranch === undefined) {
+      newPullRequestRequired = true;
+      prBranch = await targetBranch.repository.createBranch(
+        prBranchName,
+        targetBranch
+      );
+    }
+
+    const messages = merges.reduce((result, merge) => {
+      merge.messages.forEach(m => result.push(m));
+      return result;
+    }, []);
+
+    await prBranch.commit(messages.join('\n'), merges);
+
+    if (newPullRequestRequired) {
+      try {
+        const pullRequest = await targetBranch.createPullRequest(prBranch, {
+          title: `merge package from ${this.templateBranch.fullCondensedName}`,
+          body: merges
+            .map(
+              m =>
+                `${m.path}
+---
+- ${m.messages.join('\n- ')}
+`
+            )
+            .join('\n')
+        });
+        this.spinner.succeed(
+          `${targetBranch.fullCondensedName}: ${pullRequest.name}`
+        );
+
+        return pullRequest;
+      } catch (err) {
+        this.spinner.fail(err);
+      }
+    } else {
+      const pullRequest = new targetBranch.provider.pullRequestClass(
+        targetBranch.repository,
+        'old'
+      );
+
+      this.spinner.succeed(
+        `${targetBranch.fullCondensedName}: update PR ${pullRequest.name}`
+      );
+      return pullRequest;
     }
   }
 }

@@ -20,17 +20,17 @@ async function createContext(template, target) {
     }
   });
 
-  return new Context(
-    await provider.branch('tragetUser/targetRepo'),
-    await provider.branch('templateRepo'),
-    {
-      github: {
-        repo: 'the-repo-name',
-        user: 'the-user-name'
-      },
-      user: 'x-user'
-    }
-  );
+  const context = new Context({
+    github: {
+      repo: 'the-repo-name',
+      user: 'the-user-name'
+    },
+    user: 'x-user'
+  });
+
+  context.targetBranch = await provider.branch('tragetUser/targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
+  return context;
 }
 
 test('default options', t => {
@@ -50,16 +50,19 @@ test('package extract properties', async t => {
     {},
     {
       name: 'aName',
-      description: 'a description'
+      description: 'a description',
+      module: 'a module'
     }
   );
 
   const pkg = new Package('package.json');
-  const properties = await pkg.properties(context);
+  const properties = await pkg.properties(context.targetBranch);
 
   t.deepEqual(properties, {
     npm: { name: 'aName', fullName: 'aName' },
-    description: 'a description'
+    description: 'a description',
+    module: 'a module',
+    name: 'aName'
   });
 });
 

@@ -11,14 +11,14 @@ test('modify one year', async t => {
     targetRepo: { master: { aFile: 'Copyright (c) 1999 by xyz' } }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {
+  const context = new Context(provider, {
+    properties: {
       'date.year': 2099,
       'license.owner': 'xyz'
     }
-  );
+  });
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const license = new License('aFile');
   const merged = await license.merge(context);
@@ -36,14 +36,14 @@ test('modify year list', async t => {
     }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {
+  const context = new Context(provider, {
+    properties: {
       'date.year': 2099,
       'license.owner': 'xyz'
     }
-  );
+  });
+  context.targetBranch = await provider.branch('targetRepo');
+  context.templateBranch = await provider.branch('templateRepo');
 
   const license = new License('aFile');
   const merged = await license.merge(context);

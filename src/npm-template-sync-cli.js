@@ -1,5 +1,10 @@
-import { npmTemplateSync } from './npm-template-sync';
-import { setPassword, getPassword } from './util';
+import { Context } from './context';
+import {
+  setPassword,
+  getPassword,
+  setProperty,
+  removeSensibleValues
+} from './util';
 import { version } from '../package.json';
 import { GithubProvider } from 'github-repository-provider';
 import { BitbucketProvider } from 'bitbucket-repository-provider';
@@ -17,7 +22,7 @@ const spinner = ora('args');
 process.on('uncaughtException', err => spinner.fail(err));
 process.on('unhandledRejection', reason => spinner.fail(reason));
 
-const defines = {};
+const properties = {};
 
 program
   .description('Keep npm package in sync with its template')
@@ -37,11 +42,11 @@ program
 
     values.forEach(value => {
       const [k, v] = value.split(/=/);
-      setOption(defines, k, v);
+      setProperty(properties, k, v);
     });
   })
   .option('--list-providers', 'list providers with options and exit')
-  .option('--list-options', 'list all options and exit')
+  .option('--list-properties', 'list all properties and exit')
   .option(
     '-t, --template <identifier>',
     'template repository',
@@ -92,17 +97,17 @@ program
       const aggregationProvider = new AggregationProvider();
 
       if (pass !== null && pass !== undefined) {
-        if (defines.GithubProvider === undefined) {
-          defines.GithubProvider = {};
+        if (properties.GithubProvider === undefined) {
+          properties.GithubProvider = {};
         }
-        defines.GithubProvider.auth = pass;
+        properties.GithubProvider.auth = pass;
       }
 
       [BitbucketProvider, GithubProvider, LocalProvider].forEach(provider => {
         let options = provider.optionsFromEnvironment(process.env);
 
-        if (options !== undefined || defines[provider.name] !== undefined) {
-          options = Object.assign({}, options, defines[provider.name]);
+        if (options !== undefined || properties[provider.name] !== undefined) {
+          options = Object.assign({}, options, properties[provider.name]);
           aggregationProvider.providers.push(new provider(options));
         }
       });
@@ -120,78 +125,26 @@ program
         return;
       }
 
-      if (options.listOptions) {
-        logger.info(JSON.stringify(removeSensibleValues(defines)));
+      const context = new Context(aggregationProvider, {
+        templateBranchName: options.template,
+        dry: options.dry,
+        trackUsedByModule: options.usage,
+        logger,
+        spinner,
+        properties
+      });
+
+      if (options.listProperties) {
+        logger.info(JSON.stringify(removeSensibleValues(context.properties)));
         return;
       }
 
       spinner.start();
 
-      const templateBranch = options.template
-        ? await aggregationProvider.branch(options.template)
-        : undefined;
-
-      await queue.addAll(
-        args.repos.map(repo => {
-          return async () =>
-            npmTemplateSync(
-              aggregationProvider,
-              await aggregationProvider.branch(repo),
-              templateBranch,
-              {
-                logger,
-                spinner,
-                dry: options.dry,
-                trackUsedByModule: options.usage
-              },
-              defines
-            );
-        })
-      );
+      await queue.addAll(args.repos.map(repo => context.execute(repo)));
     } catch (err) {
       spinner.fail(err);
     }
   });
 
 program.parse(process.argv);
-
-function setOption(dest, attributePath, value) {
-  const m = attributePath.match(/^(\w+)\.(.*)/);
-
-  if (m) {
-    const key = m[1];
-    if (dest[key] === undefined) {
-      dest[key] = {};
-    }
-    setOption(dest[key], m[2], value);
-  } else {
-    dest[attributePath] = value;
-  }
-}
-
-function removeSensibleValues(object) {
-  if (
-    object === undefined ||
-    object === null ||
-    typeof object === 'string' ||
-    object instanceof String
-  ) {
-    return object;
-  }
-
-  const result = {};
-  for (const key of Object.keys(object)) {
-    const value = object[key];
-
-    if (typeof value === 'string' || value instanceof String) {
-      if (key.match(/pass|auth|key|user/)) {
-        result[key] = '...';
-        continue;
-      }
-    }
-
-    result[key] = removeSensibleValues(value);
-  }
-
-  return result;
-}
