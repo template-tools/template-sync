@@ -54,7 +54,8 @@ test('package extract properties', async t => {
   );
 
   const pkg = new Package('package.json');
-  const properties = await pkg.properties(context.targetBranch);
+  const targetBranch = await context.provider.branch('tragetUser/targetRepo');
+  const properties = await pkg.properties(targetBranch);
 
   t.deepEqual(properties, {
     npm: { name: 'aName', fullName: 'aName' },
@@ -141,7 +142,11 @@ test('package preserve extra prepare', async t => {
   );
 
   const pkg = new Package('package.json');
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).scripts, {
     prepare: 'rollup x y z && chmod +x bin/xx',
@@ -160,7 +165,11 @@ test('package handle missing scripts in template', async t => {
   );
 
   const pkg = new Package('package.json');
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).scripts, {
     prepare: 'rollup'
@@ -186,7 +195,11 @@ test('package devDependencies keep cracks', async t => {
   const pkg = new Package('package.json');
   context.addFile(pkg);
 
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
     cracks: '3.1.2'
@@ -208,7 +221,11 @@ test('package devDependencies remove cracks', async t => {
 
   const pkg = new Package('package.json');
   context.addFile(pkg);
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).devDependencies, {});
   //t.true(merged.messages.includes('chore(devDependencies): remove cracks'));
@@ -234,7 +251,11 @@ test('package devDependencies', async t => {
   );
 
   const pkg = new Package('package.json');
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
     b: '1',
@@ -267,7 +288,11 @@ test('package keywords', async t => {
       _xxx_: 'X'
     }
   });
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).keywords, ['A', 'B', 'X']);
   t.true(merged.messages.includes('docs(package): add keyword X'));
@@ -286,7 +311,11 @@ test('package keywords empty', async t => {
       _xxx_: 'XXX'
     }
   });
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).keywords, ['XXX']);
   t.true(merged.messages.includes('docs(package): add keyword XXX'));
@@ -304,7 +333,11 @@ test('package remove null keyword', async t => {
   );
 
   const pkg = new Package('package.json');
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).keywords, []);
   t.true(merged.messages.includes('docs(package): remove keyword null'));
@@ -325,7 +358,11 @@ test('add xo/space=true', async t => {
   );
 
   const pkg = new Package('package.json');
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).xo, {
     space: true
@@ -350,7 +387,11 @@ test('jsonpath', async t => {
   const pkg = new Package('package.json', {
     actions: [{ path: "$.nyc['report-dir']", op: 'replace' }]
   });
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).nyc, {
     'report-dir': './build/coverage'
@@ -378,7 +419,11 @@ test('repository change only', async t => {
     }
   );
   const pkg = new Package('package.json');
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(merged.messages, ['chore(package): correct repository url']);
 
@@ -403,7 +448,11 @@ test('repository change only', async t => {
 test('start fresh', async t => {
   const context = await createContext({});
   const pkg = new Package('package.json');
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content), {
     name: 'targetRepo',

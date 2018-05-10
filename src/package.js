@@ -122,7 +122,7 @@ export class Package extends File {
         properties.templateRepo = pkg.template.repository.url;
       }
 
-      ['description', 'name', 'module'].forEach(key => {
+      ['description', 'name', 'module', 'browser'].forEach(key => {
         if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
           properties[key] = pkg[key];
         }

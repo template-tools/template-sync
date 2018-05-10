@@ -72,6 +72,10 @@ export class File {
         })
       ])).map(c => c.content);
 
+      // TODO
+      context.targetBranch = targetBranch;
+      context.templateBranch = templateBranch;
+
       const result = this.mergeContent(context, original, template);
 
       if (result === undefined) {
@@ -93,10 +97,5 @@ export class File {
         changed: false
       };
     }
-  }
-
-  async content(branch, ...args) {
-    const content = await branch.content(...args);
-    return content.content;
   }
 }
