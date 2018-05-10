@@ -10,13 +10,15 @@ test('merge lines', async t => {
   });
 
   const context = new Context({});
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
 
   const merger = new MergeAndRemoveLineSet('aFile', {
     message: 'chore(something): updated from template'
   });
-  const merged = await merger.merge(context);
+  const merged = await merger.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
   t.deepEqual(merged.content, ['Line 2', 'Line 3'].join('\n'));
   t.true(merged.messages.includes('chore(something): updated from template'));
 });

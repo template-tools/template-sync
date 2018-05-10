@@ -20,7 +20,7 @@ async function createContext(template, target) {
     }
   });
 
-  const context = new Context({
+  const context = new Context(provider, {
     github: {
       repo: 'the-repo-name',
       user: 'the-user-name'
@@ -28,8 +28,6 @@ async function createContext(template, target) {
     user: 'x-user'
   });
 
-  context.targetBranch = await provider.branch('tragetUser/targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
   return context;
 }
 
@@ -81,7 +79,11 @@ test('package merge engines (skip lower versions in template)', async t => {
   );
 
   const pkg = new Package('package.json');
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).engines, {
     node: '>=10'
@@ -108,7 +110,11 @@ test('delete entries', async t => {
   );
 
   const pkg = new Package('package.json');
-  const merged = await pkg.merge(context);
+  const merged = await pkg.merge(
+    context,
+    await context.provider.branch('tragetUser/targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content).slot, {
     preserve: 3

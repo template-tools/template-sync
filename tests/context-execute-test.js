@@ -18,7 +18,7 @@ test('npmTemplateSync files', async t => {
   t.is(files.find(f => f.path === 'package.json').constructor.name, 'Package');
 });
 */
-test.only('context prepare', async t => {
+test('context prepare', async t => {
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
   const context = new Context(provider, {
     templateBranchName: TEMPLATE_REPO

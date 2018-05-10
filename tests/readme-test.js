@@ -33,9 +33,7 @@ body`,
     }
   });
 
-  const context = new Context({});
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
+  const context = new Context(provider);
 
   context.addFile(new Package('package.json'));
 
@@ -49,7 +47,11 @@ body`,
     ]
   });
 
-  const merged = await readme.merge(context);
+  const merged = await readme.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
 
   t.deepEqual(
     merged.content,

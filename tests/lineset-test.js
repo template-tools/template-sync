@@ -9,13 +9,14 @@ test('merge lines', async t => {
     targetRepo: { master: { aFile: ['Line 1', 'Line 3'].join('\n') } }
   });
 
-  const context = new Context({});
-
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
+  const context = new Context(provider);
 
   const merger = new MergeLineSet('aFile');
-  const merged = await merger.merge(context);
+  const merged = await merger.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
   t.deepEqual(merged.content, ['Line 1', 'Line 2', 'Line 3'].join('\n'));
   t.true(merged.messages.includes('fix: updated from template'));
 });

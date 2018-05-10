@@ -31,13 +31,13 @@ ${targetVersions
     }
   });
 
-  const context = new Context({});
-
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
-
+  const context = new Context(provider);
   const merger = new Travis('aFile');
-  return merger.merge(context);
+  return merger.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
 }
 
 test('travis node versions merge', async t => {

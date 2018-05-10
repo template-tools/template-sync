@@ -254,7 +254,11 @@ export class Context {
    * @return {Promise<PullRequest>}
    */
   async execute(targetBranchName) {
-    const { templateBranch } = await this.prepareExecute(targetBranchName);
+    const {
+      properties,
+      templateBranch,
+      targetBranch
+    } = await this.prepareExecute(targetBranchName);
 
     let newTemplatePullRequest = false;
     let templatePRBranch = await templateBranch.repository.branch(
@@ -265,7 +269,7 @@ export class Context {
 
     const templatePackageJson = JSON.parse(
       await pkg.content(
-        templatePRBranch ? templatePRBranch : this.templateBranch,
+        templatePRBranch ? templatePRBranch : templateBranch,
         pkg.path,
         { ignoreMissing: true }
       )
@@ -288,7 +292,7 @@ export class Context {
         if (templatePRBranch === undefined) {
           templatePRBranch = await templateBranch.repository.createBranch(
             'template-add-used-1',
-            this.templateBranch
+            templateBranch
           );
           newTemplatePullRequest = true;
         }
@@ -313,7 +317,7 @@ export class Context {
     }
 
     const files = await this.createFiles(
-      this.templateBranch,
+      templateBranch,
       templatePackageJson.template && templatePackageJson.template.files
     );
 
@@ -322,7 +326,7 @@ export class Context {
     this.logger.debug(this.files.values());
 
     const merges = (await Promise.all(
-      files.map(f => f.saveMerge(this))
+      files.map(f => f.merge(this, targetBranch, templateBranch))
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
@@ -363,7 +367,7 @@ export class Context {
     if (newPullRequestRequired) {
       try {
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
-          title: `merge package from ${this.templateBranch.fullCondensedName}`,
+          title: `merge package from ${templateBranch.fullCondensedName}`,
           body: merges
             .map(
               m =>

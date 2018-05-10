@@ -54,14 +54,6 @@ export class File {
     return {};
   }
 
-  templateContent(context, options) {
-    return this.content(context.templateBranch, this.path, options);
-  }
-
-  originalContent(context, options) {
-    return this.content(context.targetBranch, this.path, options);
-  }
-
   async mergeContent(context, original, template) {
     return {
       changed: false,
@@ -69,22 +61,18 @@ export class File {
     };
   }
 
-  async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: !this.needsOriginal
-      }),
-      this.templateContent(context, {
-        ignoreMissing: !this.needsTemplate
-      })
-    ]);
-
-    return this.mergeContent(context, original, template);
-  }
-
-  async saveMerge(context) {
+  async merge(context, targetBranch, templateBranch) {
     try {
-      const result = await this.merge(context);
+      const [original, template] = (await Promise.all([
+        targetBranch.content(this.path, {
+          ignoreMissing: !this.needsOriginal
+        }),
+        templateBranch.content(this.path, {
+          ignoreMissing: !this.needsTemplate
+        })
+      ])).map(c => c.content);
+
+      const result = this.mergeContent(context, original, template);
 
       if (result === undefined) {
         return {
@@ -99,9 +87,7 @@ export class File {
 
       return result;
     } catch (err) {
-      context.fail(
-        `${context.targetBranch.fullCondensedName},${this.path}: ${err}`
-      );
+      context.fail(`${targetBranch.fullCondensedName},${this.path}: ${err}`);
       return {
         path: this.path,
         changed: false

@@ -20,11 +20,7 @@ async function createContext(template, target) {
     }
   });
 
-  const context = new Context({});
-
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
-  return context;
+  return new Context(provider);
 }
 
 test('json merge', async t => {
@@ -38,7 +34,11 @@ test('json merge', async t => {
   );
 
   const json = new JSONFile(FILE_NAME);
-  const merged = await json.merge(context);
+  const merged = await json.merge(
+    context,
+    await context.provider.branch('targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content), {
     key: 'value',
@@ -52,7 +52,11 @@ test('json empty template', async t => {
   });
 
   const json = new JSONFile(FILE_NAME);
-  const merged = await json.merge(context);
+  const merged = await json.merge(
+    context,
+    await context.provider.branch('targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.is(merged, undefined);
 });
@@ -66,7 +70,11 @@ test('json empty target', async t => {
   );
 
   const json = new JSONFile(FILE_NAME);
-  const merged = await json.merge(context);
+  const merged = await json.merge(
+    context,
+    await context.provider.branch('targetRepo'),
+    await context.provider.branch('templateRepo')
+  );
 
   t.deepEqual(JSON.parse(merged.content), {
     key: 'value'

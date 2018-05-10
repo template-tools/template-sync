@@ -17,11 +17,13 @@ test('modify one year', async t => {
       'license.owner': 'xyz'
     }
   });
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
 
   const license = new License('aFile');
-  const merged = await license.merge(context);
+  const merged = await license.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
   t.deepEqual(merged.messages, ['chore(license): add current year 2099']);
   t.deepEqual(merged.content, 'Copyright (c) 1999,2099 by xyz');
 });
@@ -42,11 +44,13 @@ test('modify year list', async t => {
       'license.owner': 'xyz'
     }
   });
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
 
   const license = new License('aFile');
-  const merged = await license.merge(context);
+  const merged = await license.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
   t.deepEqual(merged.messages, ['chore(license): add current year 2099']);
   t.deepEqual(merged.content, 'Copyright (c) 1999,2000,2001,2007,2099 by xyz');
 });

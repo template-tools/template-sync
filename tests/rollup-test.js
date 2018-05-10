@@ -54,11 +54,12 @@ export default {
 
   const context = new Context(provider);
 
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
-
   const rollup = new Rollup('rollup.config.json');
-  const merged = await rollup.merge(context);
+  const merged = await rollup.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
   t.deepEqual(
     merged.content,
     `'use strict';;
@@ -114,11 +115,12 @@ export default {
 
   const context = new Context(provider);
 
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
-
   const rollup = new Rollup('rollup.config.json');
-  const merged = await rollup.merge(context);
+  const merged = await rollup.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
   t.deepEqual(
     merged.content,
     `import pkg from './package.json';
@@ -171,11 +173,12 @@ export default {
 
   const context = new Context(provider);
 
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
-
   const rollup = new Rollup('rollup.config.json');
-  const merged = await rollup.merge(context);
+  const merged = await rollup.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
   t.deepEqual(
     merged.content,
     `export default ['base'].map(name => {

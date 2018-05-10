@@ -19,12 +19,14 @@ Line 2`
     }
   });
 
-  const context = new Context({});
-  context.targetBranch = await provider.branch('targetRepo');
-  context.templateBranch = await provider.branch('templateRepo');
+  const context = new Context(provider);
 
   const replace = new Replace('aFile');
-  const merged = await replace.merge(context);
+  const merged = await replace.merge(
+    context,
+    await provider.branch('targetRepo'),
+    await provider.branch('templateRepo')
+  );
   t.deepEqual(
     merged.content,
     `Line 1x
