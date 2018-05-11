@@ -174,14 +174,15 @@ export default {
     }
   });
 
-  const context = new Context(provider);
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
+  );
 
   const rollup = new Rollup('rollup.config.json');
-  const merged = await rollup.merge(
-    context,
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo')
-  );
+  const merged = await rollup.merge(context);
   t.deepEqual(
     merged.content,
     `export default ['base'].map(name => {

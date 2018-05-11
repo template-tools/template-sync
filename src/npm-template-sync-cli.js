@@ -1,4 +1,6 @@
 import { Context } from './context';
+import { PreparedContext } from './prepared-context';
+
 import {
   setPassword,
   getPassword,
@@ -141,7 +143,9 @@ program
 
       spinner.start();
 
-      await queue.addAll(args.repos.map(repo => context.execute(repo)));
+      await queue.addAll(
+        args.repos.map(repo => PreparedContext.execute(context, repo))
+      );
     } catch (err) {
       spinner.fail(err);
     }

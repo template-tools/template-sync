@@ -23,7 +23,8 @@ test('npmTemplateSync files', async t => {
 test('context prepare', async t => {
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
   const context = new Context(provider, {
-    templateBranchName: TEMPLATE_REPO
+    templateBranchName: TEMPLATE_REPO,
+    properties: { mySpecialKey: 'mySpecialValue' }
   });
 
   const pc = await PreparedContext.from(context, REPOSITORY_NAME);
@@ -31,22 +32,23 @@ test('context prepare', async t => {
   t.is(pc.templateBranch.fullCondensedName, TEMPLATE_REPO);
   t.is(pc.targetBranch.fullCondensedName, REPOSITORY_NAME);
   t.is(pc.properties.name, 'sync-test-repository');
+  t.is(pc.properties.mySpecialKey, 'mySpecialValue');
 });
 
 test('context execute', async t => {
   const spinner = ora('args');
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
 
-  const context = new Context(provider, {
-    spinner,
-    console,
-    templateBranchName: TEMPLATE_REPO
-  });
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      spinner,
+      console,
+      templateBranchName: TEMPLATE_REPO
+    }),
+    REPOSITORY_NAME
+  );
 
-  //context.targetBranch = await provider.branch(REPOSITORY_NAME);
-  //context.templateBranch = await provider.branch(TEMPLATE_REPO);
-
-  const pullRequest = context.execute(REPOSITORY_NAME);
+  const pullRequest = context.execute();
 
   //console.log(pullRequest.name);
   t.truthy(pullRequest.name);
