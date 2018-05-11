@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
+import { PreparedContext } from '../src/prepared-context';
 import { Rollup } from '../src/rollup';
 import { MockProvider } from 'mock-repository-provider';
 
@@ -52,14 +53,15 @@ export default {
     }
   });
 
-  const context = new Context(provider);
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
+  );
 
   const rollup = new Rollup('rollup.config.json');
-  const merged = await rollup.merge(
-    context,
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo')
-  );
+  const merged = await rollup.merge(context);
   t.deepEqual(
     merged.content,
     `'use strict';;
@@ -113,14 +115,15 @@ export default {
     }
   });
 
-  const context = new Context(provider);
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
+  );
 
   const rollup = new Rollup('rollup.config.json');
-  const merged = await rollup.merge(
-    context,
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo')
-  );
+  const merged = await rollup.merge(context);
   t.deepEqual(
     merged.content,
     `import pkg from './package.json';

@@ -1,4 +1,8 @@
+import { createContext } from 'expression-expander';
+import { value } from 'jsonpath';
+
 import { Package } from './package';
+const mm = require('micromatch');
 
 /**
  * context prepared to execute one package
@@ -12,6 +16,19 @@ export class PreparedContext {
 
   constructor(context, targetBranchName) {
     Object.defineProperties(this, {
+      ctx: {
+        value: createContext({
+          properties: Object.assign({}, context.properties),
+          keepUndefinedValues: true,
+          leftMarker: '{{',
+          rightMarker: '}}',
+          markerRegexp: '{{([^}]+)}}',
+          evaluate: (expression, context, path) => value(properties, expression)
+        })
+      },
+      files: {
+        value: new Map()
+      },
       context: { value: context },
       targetBranchName: { value: targetBranchName }
     });
@@ -27,6 +44,14 @@ export class PreparedContext {
 
   get templateBranchName() {
     return this.context.templateBranchName;
+  }
+
+  expand(...args) {
+    return this.ctx.expand(...args);
+  }
+
+  fail(...args) {
+    return this.context.fail(...args);
   }
 
   async initialize() {
@@ -59,14 +84,68 @@ export class PreparedContext {
       templateBranch = await context.provider.branch(this.templateBranchName);
     }
 
-    context.logger.debug(
-      `Using ${templateBranch.provider.name} as template provider`
-    );
-
     Object.defineProperties(this, {
       templateBranch: { value: templateBranch },
       targetBranch: { value: targetBranch },
       properties: { value: properties }
     });
+  }
+
+  async createFiles(branch, mapping = this.context.defaultMapping) {
+    const files = await branch.list();
+    let alreadyPresent = new Set();
+
+    return mapping
+      .map(m => {
+        const found = mm(
+          files.filter(f => f.type === 'blob').map(f => f.path),
+          m.pattern
+        );
+
+        const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
+
+        alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
+
+        return notAlreadyProcessed.map(f => {
+          const merger =
+            mergers.find(merger => merger.name === m.merger) || ReplaceIfEmpty;
+          return new merger(f, m.options);
+        });
+      })
+      .reduce((last, current) => Array.from([...last, ...current]), []);
+  }
+
+  addFile(file) {
+    this.files.set(file.path, file);
+  }
+
+  /**
+   * all used dev modules
+   * @return {Set<string>}
+   */
+  async usedDevModules() {
+    const usedModuleSets = await Promise.all(
+      Array.from(this.files.values()).map(async file => {
+        if (file.path === 'package.json') {
+          return file.usedDevModules(
+            file.targetContent(this, { ignoreMissing: true })
+          );
+        } else {
+          const m = await file.merge(this);
+          return file.usedDevModules(m.content);
+        }
+      })
+    );
+
+    return usedModuleSets.reduce(
+      (sum, current) => new Set([...sum, ...current]),
+      new Set()
+    );
+  }
+
+  optionalDevModules(modules) {
+    return Array.from(this.files.values())
+      .map(file => file.optionalDevModules(modules))
+      .reduce((sum, current) => new Set([...sum, ...current]), new Set());
   }
 }

@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
+import { PreparedContext } from '../src/prepared-context';
 import { JSONFile } from '../src/json-file';
 import { MockProvider } from 'mock-repository-provider';
 
@@ -20,7 +21,10 @@ async function createContext(template, target) {
     }
   });
 
-  return new Context(provider);
+  return PreparedContext.from(
+    new Context(provider, { templateBranchName: 'templateRepo' }),
+    'targetRepo'
+  );
 }
 
 test('json merge', async t => {
@@ -34,11 +38,7 @@ test('json merge', async t => {
   );
 
   const json = new JSONFile(FILE_NAME);
-  const merged = await json.merge(
-    context,
-    await context.provider.branch('targetRepo'),
-    await context.provider.branch('templateRepo')
-  );
+  const merged = await json.merge(context);
 
   t.deepEqual(JSON.parse(merged.content), {
     key: 'value',
@@ -52,11 +52,7 @@ test('json empty template', async t => {
   });
 
   const json = new JSONFile(FILE_NAME);
-  const merged = await json.merge(
-    context,
-    await context.provider.branch('targetRepo'),
-    await context.provider.branch('templateRepo')
-  );
+  const merged = await json.merge(context);
 
   t.is(merged, undefined);
 });
@@ -70,11 +66,7 @@ test('json empty target', async t => {
   );
 
   const json = new JSONFile(FILE_NAME);
-  const merged = await json.merge(
-    context,
-    await context.provider.branch('targetRepo'),
-    await context.provider.branch('templateRepo')
-  );
+  const merged = await json.merge(context);
 
   t.deepEqual(JSON.parse(merged.content), {
     key: 'value'

@@ -9,6 +9,7 @@ export class License extends File {
     const properties = context.properties;
     const messages = [];
 
+    console.log(JSON.stringify(properties, undefined, 2));
     let year = properties['date.year'];
 
     const m = original.match(

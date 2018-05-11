@@ -1,6 +1,3 @@
-import { createContext } from 'expression-expander';
-import { value } from 'jsonpath';
-
 import { Travis } from './travis';
 import { Readme } from './readme';
 import { Package } from './package';
@@ -12,8 +9,7 @@ import { ReplaceIfEmpty } from './replace-if-empty';
 import { Replace } from './replace';
 import { JSONFile } from './json-file';
 import { JSDoc } from './jsdoc';
-
-const mm = require('micromatch');
+import { PreparedContext } from './prepared-context';
 
 /**
  * @param {RepositoryProvider} provider
@@ -21,6 +17,7 @@ const mm = require('micromatch');
  *
  * @property {RepositoryProvider} provider
  * @property {Object} options
+ * @property {String} options.templateBranchName
  */
 export class Context {
   static get merges() {
@@ -81,16 +78,6 @@ export class Context {
     );
 
     Object.defineProperties(this, {
-      ctx: {
-        value: createContext({
-          properties: options.properties,
-          keepUndefinedValues: true,
-          leftMarker: '{{',
-          rightMarker: '}}',
-          markerRegexp: '{{([^}]+)}}',
-          evaluate: (expression, context, path) => value(properties, expression)
-        })
-      },
       trackUsedByModule: {
         value: options.trackUsedByModule
       },
@@ -100,11 +87,11 @@ export class Context {
       logger: {
         value: options.logger
       },
-      files: {
-        value: new Map()
-      },
       provider: {
         value: provider
+      },
+      properties: {
+        value: options.properties
       },
       templateBranchName: {
         value: options.templateBranchName
@@ -112,74 +99,8 @@ export class Context {
     });
   }
 
-  get properties() {
-    return this.ctx.properties;
-  }
-
   get defaultMapping() {
     return this.constructor.defaultMapping;
-  }
-
-  async createFiles(branch, mapping = this.defaultMapping) {
-    const files = await branch.list();
-    let alreadyPresent = new Set();
-
-    return mapping
-      .map(m => {
-        const found = mm(
-          files.filter(f => f.type === 'blob').map(f => f.path),
-          m.pattern
-        );
-
-        const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
-
-        alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
-
-        return notAlreadyProcessed.map(f => {
-          const merger =
-            mergers.find(merger => merger.name === m.merger) || ReplaceIfEmpty;
-          return new merger(f, m.options);
-        });
-      })
-      .reduce((last, current) => Array.from([...last, ...current]), []);
-  }
-
-  expand(...args) {
-    return this.ctx.expand(...args);
-  }
-
-  addFile(file) {
-    this.files.set(file.path, file);
-  }
-
-  /**
-   * all used dev modules
-   * @return {Set<string>}
-   */
-  async usedDevModules() {
-    const usedModuleSets = await Promise.all(
-      Array.from(this.files.values()).map(async file => {
-        if (file.path === 'package.json') {
-          return file.usedDevModules(
-            file.originalContent(this, { ignoreMissing: true })
-          );
-        } else {
-          const m = await file.merge(this);
-          return file.usedDevModules(m.content);
-        }
-      })
-    );
-
-    return usedModuleSets.reduce(
-      (sum, current) => new Set([...sum, ...current]),
-      new Set()
-    );
-  }
-
-  optionalDevModules(modules) {
-    return Array.from(this.files.values())
-      .map(file => file.optionalDevModules(modules))
-      .reduce((sum, current) => new Set([...sum, ...current]), new Set());
   }
 
   set text(value) {

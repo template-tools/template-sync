@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
+import { PreparedContext } from '../src/prepared-context';
 import { Readme } from '../src/readme';
 import { Package } from '../src/package';
 import { MockProvider } from 'mock-repository-provider';
@@ -33,7 +34,12 @@ body`,
     }
   });
 
-  const context = new Context(provider);
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
+  );
 
   context.addFile(new Package('package.json'));
 
@@ -47,11 +53,7 @@ body`,
     ]
   });
 
-  const merged = await readme.merge(
-    context,
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo')
-  );
+  const merged = await readme.merge(context);
 
   t.deepEqual(
     merged.content,
