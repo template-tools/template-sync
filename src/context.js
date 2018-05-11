@@ -214,51 +214,12 @@ export class Context {
     }
   }
 
-  async prepareExecute(targetBranchName) {
-    let targetBranch = await this.provider.branch(targetBranchName);
-
-    const pkg = new Package('package.json');
-
-    const properties = {};
-    Object.assign(properties, await pkg.properties(targetBranch));
-
-    let templateBranch;
-
-    if (this.templateBranchName === undefined) {
-      try {
-        templateBranch = await this.provider.branch(
-          this.properties.templateRepo
-        );
-      } catch (e) {}
-
-      if (templateBranch === undefined) {
-        throw new Error(
-          `Unable to extract template repo url from ${targetBranch.name} ${
-            pkg.path
-          }`
-        );
-      }
-    } else {
-      templateBranch = await this.provider.branch(this.templateBranchName);
-    }
-
-    this.logger.debug(
-      `Using ${templateBranch.provider.name} as template provider`
-    );
-
-    return { properties, templateBranch, targetBranch };
-  }
-
   /**
    * @param {String} targetBranchName
    * @return {Promise<PullRequest>}
    */
   async execute(targetBranchName) {
-    const {
-      properties,
-      templateBranch,
-      targetBranch
-    } = await this.prepareExecute(targetBranchName);
+    const pc = PreparedContext.from(this, targetBranchName);
 
     let newTemplatePullRequest = false;
     let templatePRBranch = await templateBranch.repository.branch(
