@@ -12,6 +12,7 @@ import { ReplaceIfEmpty } from './replace-if-empty';
 import { Replace } from './replace';
 import { JSONFile } from './json-file';
 import { JSDoc } from './jsdoc';
+import { Context } from './context';
 
 const mm = require('micromatch');
 
@@ -136,11 +137,12 @@ export class PreparedContext {
     });
   }
 
-  async createFiles(branch, mapping = this.context.defaultMapping) {
+  static async createFiles(branch, mapping = Context.defaultMapping) {
     const files = await branch.list();
+
     let alreadyPresent = new Set();
 
-    return mapping
+    const y = mapping
       .map(m => {
         const found = mm(
           files.filter(f => f.type === 'blob').map(f => f.path),
@@ -151,14 +153,20 @@ export class PreparedContext {
 
         alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
 
-        return notAlreadyProcessed.map(f => {
+        const x = notAlreadyProcessed.map(f => {
           const merger =
             this.mergers.find(merger => merger.name === m.merger) ||
             ReplaceIfEmpty;
           return new merger(f, m.options);
         });
+
+        return x;
       })
       .reduce((last, current) => Array.from([...last, ...current]), []);
+
+    console.log(`*** 4.5 ${y} ***`);
+
+    return y;
   }
 
   addFile(file) {
@@ -215,14 +223,10 @@ export class PreparedContext {
       : templateBranch
     ).content(pkg.path, { ignoreMissing: true }).content;
 
-    console.log(`*** 2 ${templatePackageContent} ***`);
-
     const templatePackageJson =
       templatePackageContent === undefined || templatePackageContent === ''
         ? {}
         : JSON.parse(templatePackageContent);
-
-    console.log(`*** 3 ***`);
 
     if (this.context.trackUsedByModule) {
       const name = targetBranch.fullCondensedName;
@@ -265,12 +269,21 @@ export class PreparedContext {
       }
     }
 
-    const files = await this.createFiles(
-      templateBranch,
-      templatePackageJson.template && templatePackageJson.template.files
-    );
+    console.log(`*** 4 ***`);
 
-    files.forEach(f => this.addFile(f));
+    try {
+      const files = await PreparedContext.createFiles(
+        templateBranch,
+        templatePackageJson.template && templatePackageJson.template.files
+      );
+
+      console.log(`*** 5 ***`);
+
+      files.forEach(f => this.addFile(f));
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(`*** 6 ***`);
 
     this.logger.debug(this.files.values());
 

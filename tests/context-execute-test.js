@@ -8,18 +8,6 @@ const ora = require('ora');
 const REPOSITORY_NAME = 'arlac77/sync-test-repository';
 const TEMPLATE_REPO = 'Kronos-Tools/npm-package-template';
 
-/*
-test('npmTemplateSync files', async t => {
-  const provider = new GithubProvider(process.env.GH_TOKEN);
-  const branch = await provider.branch(TEMPLATE_REPO);
-
-  const files = await createFiles(branch);
-
-  t.is(files.find(f => f.path === 'package.json').path, 'package.json');
-  t.is(files.find(f => f.path === 'package.json').constructor.name, 'Package');
-});
-*/
-
 test('context prepare', async t => {
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
   const context = new Context(provider, {
@@ -35,7 +23,7 @@ test('context prepare', async t => {
   t.is(pc.properties.mySpecialKey, 'mySpecialValue');
 });
 
-test('context execute', async t => {
+test.only('context execute', async t => {
   const spinner = ora('args');
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
 
