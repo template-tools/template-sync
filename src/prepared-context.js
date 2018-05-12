@@ -269,9 +269,9 @@ export class PreparedContext {
       }
     }
 
-    console.log(`*** 4 ***`);
-
     try {
+      console.log(`*** 4 ***`);
+
       const files = await PreparedContext.createFiles(
         templateBranch,
         templatePackageJson.template && templatePackageJson.template.files
@@ -287,14 +287,13 @@ export class PreparedContext {
 
     this.logger.debug(this.files.values());
 
-    const merges = (await Promise.all(
-      files.map(f => f.merge(this, targetBranch, templateBranch))
-    )).filter(m => m !== undefined && m.changed);
+    /*
+    const merges = (await Promise.all(files.map(f => f.merge(this)))).filter(
+      m => m !== undefined && m.changed
+    );
 
     if (merges.length === 0) {
-      this.spinner.succeed(
-        `${targetBranch.fullCondensedName}: nothing changed`
-      );
+      this.spinner.succeed(`${targetBranch.fullCondensedName}: -`);
       return;
     }
 
@@ -361,5 +360,6 @@ export class PreparedContext {
       );
       return pullRequest;
     }
+    */
   }
 }
