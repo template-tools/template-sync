@@ -142,7 +142,7 @@ export class PreparedContext {
 
     let alreadyPresent = new Set();
 
-    const y = mapping
+    return mapping
       .map(m => {
         const found = mm(
           files.filter(f => f.type === 'blob').map(f => f.path),
@@ -153,20 +153,14 @@ export class PreparedContext {
 
         alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
 
-        const x = notAlreadyProcessed.map(f => {
+        return notAlreadyProcessed.map(f => {
           const merger =
             this.mergers.find(merger => merger.name === m.merger) ||
             ReplaceIfEmpty;
           return new merger(f, m.options);
         });
-
-        return x;
       })
       .reduce((last, current) => Array.from([...last, ...current]), []);
-
-    console.log(`*** 4.5 ${y} ***`);
-
-    return y;
   }
 
   addFile(file) {
@@ -203,14 +197,10 @@ export class PreparedContext {
       .reduce((sum, current) => new Set([...sum, ...current]), new Set());
   }
 
-  /**
-   * @param {String} targetBranchName
-   * @return {Promise<PullRequest>}
-   */
-  async execute() {
+  async trackUsedModule() {
     const templateBranch = this.templateBranch;
-    const targetBranch = this.targetBranch;
 
+    let templatePullRequest;
     let newTemplatePullRequest = false;
     let templatePRBranch = await templateBranch.repository.branch(
       'template-add-used-1'
@@ -258,7 +248,7 @@ export class PreparedContext {
         ]);
 
         if (newTemplatePullRequest) {
-          const pullRequest = await templateBranch.createPullRequest(
+          templatePullRequest = await templateBranch.createPullRequest(
             templatePRBranch,
             {
               title: `add ${name}`,
@@ -268,6 +258,25 @@ export class PreparedContext {
         }
       }
     }
+
+    return { templatePackageJson, templatePRBranch, templatePullRequest };
+  }
+
+  /**
+   * @param {String} targetBranchName
+   * @return {Promise<PullRequest>}
+   */
+  async execute() {
+    const templateBranch = this.templateBranch;
+    const targetBranch = this.targetBranch;
+
+    const {
+      templatePackageJson,
+      templatePRBranch,
+      templatePullRequest
+    } = await this.trackUsedModule();
+
+    console.log(templatePackageJson);
 
     try {
       console.log(`*** 4 ***`);
@@ -284,8 +293,6 @@ export class PreparedContext {
       console.log(e);
     }
     console.log(`*** 6 ***`);
-
-    this.logger.debug(this.files.values());
 
     /*
     const merges = (await Promise.all(files.map(f => f.merge(this)))).filter(
