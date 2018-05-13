@@ -276,23 +276,18 @@ export class PreparedContext {
       templatePullRequest
     } = await this.trackUsedModule();
 
-    console.log(templatePackageJson);
+    /*
+    const files = await PreparedContext.createFiles(
+      templateBranch,
+      templatePackageJson.template && templatePackageJson.template.files
+    );
 
-    try {
-      console.log(`*** 4 ***`);
+    files.forEach(f => this.addFile(f));
+*/
 
-      const files = await PreparedContext.createFiles(
-        templateBranch,
-        templatePackageJson.template && templatePackageJson.template.files
-      );
+    console.log('*** 3 ***');
 
-      console.log(`*** 5 ***`);
-
-      files.forEach(f => this.addFile(f));
-    } catch (e) {
-      console.log(e);
-    }
-    console.log(`*** 6 ***`);
+    const merges = []; //[await new Package('package.json').merge(this)];
 
     /*
     const merges = (await Promise.all(files.map(f => f.merge(this)))).filter(
@@ -307,6 +302,7 @@ export class PreparedContext {
     this.spinner.text = merges
       .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
       .join(',');
+*/
 
     if (this.dry) {
       this.spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
@@ -332,9 +328,15 @@ export class PreparedContext {
       return result;
     }, []);
 
+    console.log(`*** 4 *** ${newPullRequestRequired}`);
+
     await prBranch.commit(messages.join('\n'), merges);
 
+    console.log(`*** 4.1 ***`);
+
     if (newPullRequestRequired) {
+      console.log(`*** 5a ***`);
+
       try {
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
           title: `merge package from ${templateBranch.fullCondensedName}`,
@@ -357,6 +359,8 @@ export class PreparedContext {
         this.spinner.fail(err);
       }
     } else {
+      console.log(`*** 5b ***`);
+
       const pullRequest = new targetBranch.provider.pullRequestClass(
         targetBranch.repository,
         'old'
@@ -367,6 +371,5 @@ export class PreparedContext {
       );
       return pullRequest;
     }
-    */
   }
 }
