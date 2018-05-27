@@ -35,7 +35,7 @@
     "babylon": "^6.18.0",
     "bitbucket-repository-provider": "^1.4.0",
     "caporal": "^0.10.0",
-    "deep-extend": "^0.5.1",
+    "deep-extend": "^0.6.0",
     "expression-expander": "^6.1.0",
     "github-repository-provider": "^2.1.1",
     "js-yaml": "^3.11.0",
