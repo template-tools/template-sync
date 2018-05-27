@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
+import { PreparedContext } from '../src/prepared-context';
 import { JSONFile } from '../src/json-file';
 import { MockProvider } from 'mock-repository-provider';
 
@@ -20,10 +21,9 @@ async function createContext(template, target) {
     }
   });
 
-  return new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
+  return PreparedContext.from(
+    new Context(provider, { templateBranchName: 'templateRepo' }),
+    'targetRepo'
   );
 }
 

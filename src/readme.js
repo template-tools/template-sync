@@ -16,14 +16,9 @@ export class Readme extends File {
   }
 
   async mergeContent(context, original, template) {
-    const pkgTemplate = await context.files
+    const [pkg, pkgTemplate] = await context.files
       .get('package.json')
-      .templateContent(context);
-    const pkg = await context.files
-      .get('package.json')
-      .originalContent(context, {
-        ignoreMissing: true
-      });
+      .content(context);
 
     const p = pkg.length === 0 ? {} : JSON.parse(pkg);
     const pTemplate = JSON.parse(pkgTemplate);

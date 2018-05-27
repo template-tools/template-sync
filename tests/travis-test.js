@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
+import { PreparedContext } from '../src/prepared-context';
 import { Travis } from '../src/travis';
 import { MockProvider } from 'mock-repository-provider';
 
@@ -31,12 +32,12 @@ ${targetVersions
     }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
   );
-
   const merger = new Travis('aFile');
   return merger.merge(context);
 }
@@ -147,10 +148,12 @@ test('travis remove before_script', async t => {
       }
     }
   });
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
+
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
   );
 
   const merger = new Travis('aFile');
@@ -182,10 +185,11 @@ before_script:
     }
   });
 
-  const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
-    {}
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
   );
 
   const merger = new Travis('aFile');

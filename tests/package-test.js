@@ -1,5 +1,7 @@
 import test from 'ava';
 import { Context } from '../src/context';
+import { PreparedContext } from '../src/prepared-context';
+
 import { Package } from '../src/package';
 import { MockProvider } from 'mock-repository-provider';
 
@@ -20,16 +22,16 @@ async function createContext(template, target) {
     }
   });
 
-  return new Context(
-    await provider.branch('tragetUser/targetRepo'),
-    await provider.branch('templateRepo'),
-    {
+  return await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo',
       github: {
         repo: 'the-repo-name',
         user: 'the-user-name'
       },
       user: 'x-user'
-    }
+    }),
+    'tragetUser/targetRepo'
   );
 }
 
@@ -50,16 +52,20 @@ test('package extract properties', async t => {
     {},
     {
       name: 'aName',
-      description: 'a description'
+      description: 'a description',
+      module: 'a module'
     }
   );
 
   const pkg = new Package('package.json');
-  const properties = await pkg.properties(context);
+  const targetBranch = await context.provider.branch('tragetUser/targetRepo');
+  const properties = await pkg.properties(targetBranch);
 
   t.deepEqual(properties, {
     npm: { name: 'aName', fullName: 'aName' },
-    description: 'a description'
+    description: 'a description',
+    module: 'a module',
+    name: 'aName'
   });
 });
 

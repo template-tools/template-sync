@@ -45,12 +45,13 @@ export class File {
     return new Set();
   }
 
-  templateContent(context, options) {
-    return this.content(context.templateBranch, this.path, options);
-  }
-
-  originalContent(context, options) {
-    return this.content(context.targetBranch, this.path, options);
+  /**
+   * Deliver some key properties
+   * @param {Branch} branch
+   * @return {Object}
+   */
+  async properties(branch) {
+    return {};
   }
 
   async mergeContent(context, original, template) {
@@ -60,22 +61,29 @@ export class File {
     };
   }
 
-  async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: !this.needsOriginal
-      }),
-      this.templateContent(context, {
-        ignoreMissing: !this.needsTemplate
-      })
-    ]);
-
-    return this.mergeContent(context, original, template);
+  async targetContent(context, options) {
+    return (await context.targetBranch.content(this.path, options)).content;
   }
 
-  async saveMerge(context) {
+  async content(context) {
+    return (await Promise.all([
+      context.targetBranch.content(this.path, {
+        ignoreMissing: !this.needsOriginal
+      }),
+      context.templateBranch.content(this.path, {
+        ignoreMissing: !this.needsTemplate
+      })
+    ])).map(c => c.content);
+  }
+
+  /**
+   * @param {PreparedContect} context
+   */
+  async merge(context) {
     try {
-      const result = await this.merge(context);
+      const [original, template] = await this.content(context);
+
+      const result = this.mergeContent(context, original, template);
 
       if (result === undefined) {
         return {
@@ -91,17 +99,16 @@ export class File {
       return result;
     } catch (err) {
       context.fail(
-        `${context.targetBranch.fullCondensedName},${this.path}: ${err}`
+        `${
+          context.targetBranch
+            ? context.targetBranch.fullCondensedName
+            : 'unknown'
+        },${this.path}: ${err}`
       );
       return {
         path: this.path,
         changed: false
       };
     }
-  }
-
-  async content(branch, ...args) {
-    const content = await branch.content(...args);
-    return content.content;
   }
 }

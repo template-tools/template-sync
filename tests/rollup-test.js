@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
+import { PreparedContext } from '../src/prepared-context';
 import { Rollup } from '../src/rollup';
 import { MockProvider } from 'mock-repository-provider';
 
@@ -52,10 +53,11 @@ export default {
     }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
   );
 
   const rollup = new Rollup('rollup.config.json');
@@ -112,10 +114,12 @@ export default {
       }
     }
   });
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
+
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
   );
 
   const rollup = new Rollup('rollup.config.json');
@@ -170,10 +174,11 @@ export default {
     }
   });
 
-  const context = new Context(
-    await provider.repository('targetRepo'),
-    await provider.repository('templateRepo'),
-    {}
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
   );
 
   const rollup = new Rollup('rollup.config.json');

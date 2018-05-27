@@ -1,19 +1,37 @@
-import { createContext } from 'expression-expander';
-import { value } from 'jsonpath';
+import { PreparedContext } from './prepared-context';
 
 /**
- * @param {Branch} targetBranch
- * @param {Branch} templateBranch
- * @param {Object} properties
+ * @param {RepositoryProvider} provider
  * @param {Object} options
  *
- * @property {Branch} targetBranch
- * @property {Branch} templateBranch
- * @property {Object} properties
+ * @property {RepositoryProvider} provider
  * @property {Object} options
+ * @property {String} options.templateBranchName
  */
 export class Context {
-  constructor(targetBranch, templateBranch, properties, options) {
+  static get defaultMapping() {
+    return [
+      { merger: 'Package', pattern: '**/package.json' },
+      { merger: 'Travis', pattern: '.travis.yml' },
+      { merger: 'Readme', pattern: '**/README.*' },
+      { merger: 'JSDoc', pattern: '**/jsdoc.json' },
+      { merger: 'Rollup', pattern: '**/rollup.config.js' },
+      { merger: 'License', pattern: 'LICENSE' },
+      {
+        merger: 'MergeAndRemoveLineSet',
+        pattern: '.gitignore',
+        options: { message: 'chore(git): update {{path}} from template' }
+      },
+      {
+        merger: 'MergeAndRemoveLineSet',
+        pattern: '.npmignore',
+        options: { message: 'chore(npm): update {{path}} from template' }
+      },
+      { merger: 'ReplaceIfEmpty', pattern: '**/*' }
+    ];
+  }
+
+  constructor(provider, options) {
     options = Object.assign(
       {},
       {
@@ -24,71 +42,37 @@ export class Context {
       options
     );
 
-    this.ctx = createContext({
-      keepUndefinedValues: true,
-      leftMarker: '{{',
-      rightMarker: '}}',
-      markerRegexp: '{{([^}]+)}}',
-      evaluate: (expression, context, path) => value(properties, expression)
-    });
-
-    this.ctx.properties = properties;
+    options.properties = Object.assign(
+      {
+        'date.year': new Date().getFullYear()
+      },
+      options.properties
+    );
 
     Object.defineProperties(this, {
+      trackUsedByModule: {
+        value: options.trackUsedByModule
+      },
+      dry: {
+        value: options.dry
+      },
+      logger: {
+        value: options.logger
+      },
+      provider: {
+        value: provider
+      },
       properties: {
-        value: properties
+        value: options.properties
       },
-      files: {
-        value: new Map()
-      },
-      targetBranch: {
-        value: targetBranch
-      },
-      templateBranch: {
-        value: templateBranch,
-        writable: true
+      templateBranchName: {
+        value: options.templateBranchName
       }
     });
-
-    Object.assign(this, options);
   }
 
-  expand(...args) {
-    return this.ctx.expand(...args);
-  }
-
-  addFile(file) {
-    this.files.set(file.path, file);
-  }
-
-  /**
-   * all used dev modules
-   * @return {Set<string>}
-   */
-  async usedDevModules() {
-    const usedModuleSets = await Promise.all(
-      Array.from(this.files.values()).map(async file => {
-        if (file.path === 'package.json') {
-          return file.usedDevModules(
-            file.originalContent(this, { ignoreMissing: true })
-          );
-        } else {
-          const m = await file.merge(this);
-          return file.usedDevModules(m.content);
-        }
-      })
-    );
-
-    return usedModuleSets.reduce(
-      (sum, current) => new Set([...sum, ...current]),
-      new Set()
-    );
-  }
-
-  optionalDevModules(modules) {
-    return Array.from(this.files.values())
-      .map(file => file.optionalDevModules(modules))
-      .reduce((sum, current) => new Set([...sum, ...current]), new Set());
+  get defaultMapping() {
+    return this.constructor.defaultMapping;
   }
 
   set text(value) {
