@@ -286,8 +286,13 @@ export class PreparedContext {
 */
 
     console.log('*** 3 ***');
-
-    const merges = []; //[await new Package('package.json').merge(this)];
+    let m1;
+    try {
+      m1 = await new MergeAndRemoveLineSet('.npmignore').merge(this);
+    } catch (e) {
+      console.log(e);
+    }
+    const merges = [m1];
 
     /*
     const merges = (await Promise.all(files.map(f => f.merge(this)))).filter(
