@@ -36,9 +36,9 @@ test.only('context execute', async t => {
     REPOSITORY_NAME
   );
 
-  const pullRequest = context.execute();
+  const pullRequest = await context.execute();
 
-  //console.log(pullRequest.name);
+  console.log(pullRequest.name);
   t.truthy(pullRequest.name);
 
   //await pullRequest.delete();

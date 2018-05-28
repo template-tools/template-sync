@@ -276,41 +276,28 @@ export class PreparedContext {
       templatePullRequest
     } = await this.trackUsedModule();
 
-    /*
     const files = await PreparedContext.createFiles(
       templateBranch,
       templatePackageJson.template && templatePackageJson.template.files
     );
 
     files.forEach(f => this.addFile(f));
-*/
 
-    console.log('*** 3 ***');
-    let m1;
-    try {
-      m1 = await new MergeAndRemoveLineSet('.npmignore').merge(this);
-    } catch (e) {
-      console.log(e);
-    }
-    const merges = [m1];
-
-    /*
-    const merges = (await Promise.all(files.map(f => f.merge(this)))).filter(
-      m => m !== undefined && m.changed
-    );
+    const merges = (await Promise.all(
+      files.map(async f => f.merge(this))
+    )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      this.spinner.succeed(`${targetBranch.fullCondensedName}: -`);
+      //this.spinner.succeed(`${targetBranch.fullCondensedName}: -`);
       return;
     }
 
-    this.spinner.text = merges
+    /*this.text = merges
       .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
-      .join(',');
-*/
+      .join(',');*/
 
     if (this.dry) {
-      this.spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
+      //this.spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
       return;
     }
 
@@ -333,15 +320,9 @@ export class PreparedContext {
       return result;
     }, []);
 
-    console.log(`*** 4 *** ${newPullRequestRequired}`);
-
     await prBranch.commit(messages.join('\n'), merges);
 
-    console.log(`*** 4.1 ***`);
-
     if (newPullRequestRequired) {
-      console.log(`*** 5a ***`);
-
       try {
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
           title: `merge package from ${templateBranch.fullCondensedName}`,
@@ -355,25 +336,23 @@ export class PreparedContext {
             )
             .join('\n')
         });
-        this.spinner.succeed(
+        /*this.spinner.succeed(
           `${targetBranch.fullCondensedName}: ${pullRequest.name}`
-        );
+        );*/
 
         return pullRequest;
       } catch (err) {
         this.spinner.fail(err);
       }
     } else {
-      console.log(`*** 5b ***`);
-
       const pullRequest = new targetBranch.provider.pullRequestClass(
         targetBranch.repository,
         'old'
       );
 
-      this.spinner.succeed(
+      /*this.spinner.succeed(
         `${targetBranch.fullCondensedName}: update PR ${pullRequest.name}`
-      );
+      );*/
       return pullRequest;
     }
   }
