@@ -23,8 +23,6 @@ export class Readme extends File {
     const p = pkg.length === 0 ? {} : JSON.parse(pkg);
     const pTemplate = JSON.parse(pkgTemplate);
 
-    console.log(this.options);
-
     const badges = this.options.badges
       .map(b => {
         const m = templateOptions(p, 'Readme');

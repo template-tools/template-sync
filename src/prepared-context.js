@@ -208,10 +208,12 @@ export class PreparedContext {
 
     const pkg = new Package('package.json');
 
-    const templatePackageContent = await (templatePRBranch
+    const templatePackage = await (templatePRBranch
       ? templatePRBranch
       : templateBranch
-    ).content(pkg.path, { ignoreMissing: true }).content;
+    ).content(pkg.path, { ignoreMissing: true });
+
+    const templatePackageContent = templatePackage.content;
 
     const templatePackageJson =
       templatePackageContent === undefined || templatePackageContent === ''
