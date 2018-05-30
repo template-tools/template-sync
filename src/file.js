@@ -78,6 +78,7 @@ export class File {
 
   /**
    * @param {PreparedContect} context
+   * @return
    */
   async merge(context) {
     try {
@@ -96,7 +97,6 @@ export class File {
 
       return result;
     } catch (err) {
-      console.log(err);
       context.fail(
         `${
           context.targetBranch

@@ -53,8 +53,8 @@ test('json empty template', async t => {
 
   const json = new JSONFile(FILE_NAME);
   const merged = await json.merge(context);
-
-  t.is(merged, undefined);
+  t.is(merged.changed, false);
+  //t.is(merged, undefined);
 });
 
 test('json empty target', async t => {

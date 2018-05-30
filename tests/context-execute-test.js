@@ -23,7 +23,7 @@ test('context prepare', async t => {
   t.is(pc.properties.mySpecialKey, 'mySpecialValue');
 });
 
-test.only('context execute', async t => {
+test('context execute', async t => {
   const spinner = ora('args');
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
 
