@@ -74,10 +74,6 @@ export class PreparedContext {
     return this.constructor.mergers;
   }
 
-  get logger() {
-    return this.context.logger;
-  }
-
   get provider() {
     return this.context.provider;
   }
@@ -92,6 +88,10 @@ export class PreparedContext {
 
   expand(...args) {
     return this.ctx.expand(...args);
+  }
+
+  get logger() {
+    return this.context.logger;
   }
 
   fail(...args) {

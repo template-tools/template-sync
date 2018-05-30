@@ -1,6 +1,7 @@
 /**
- * @param {string} path
- * @param {Object} options
+ * Mergable File
+ * @param {string} path location in the repository
+ * @param {Object} options mergin options
  *
  * @property {string} path
  * @property {Object} options
@@ -54,13 +55,6 @@ export class File {
     return {};
   }
 
-  async mergeContent(context, original, template) {
-    return {
-      changed: false,
-      content: original
-    };
-  }
-
   async targetContent(context, options) {
     return (await context.targetBranch.content(this.path, options)).content;
   }
@@ -74,6 +68,13 @@ export class File {
         ignoreMissing: !this.needsTemplate
       })
     ])).map(c => c.content);
+  }
+
+  async mergeContent(context, original, template) {
+    return {
+      changed: false,
+      content: original
+    };
   }
 
   /**
