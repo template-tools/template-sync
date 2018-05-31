@@ -107,6 +107,14 @@ export class PreparedContext {
 
     const targetBranch = await context.provider.branch(this.targetBranchName);
 
+    // TODO
+    this.properties.github = {
+      user: targetBranch.repository.owner,
+      repo: targetBranch.repository.condensedName
+    };
+
+    console.log(this.properties);
+
     const pkg = new Package('package.json');
 
     Object.assign(this.properties, await pkg.properties(targetBranch));
