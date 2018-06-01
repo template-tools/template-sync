@@ -104,7 +104,6 @@ export class PreparedContext {
 
   async initialize() {
     const context = this.context;
-
     const targetBranch = await context.provider.branch(this.targetBranchName);
 
     if (targetBranch.provider.name === 'GithubProvider') {
@@ -204,7 +203,7 @@ export class PreparedContext {
       .reduce((sum, current) => new Set([...sum, ...current]), new Set());
   }
 
-  async trackUsedModule() {
+  async trackUsedModule(targetBranch) {
     const templateBranch = this.templateBranch;
 
     let templatePullRequest;
@@ -283,7 +282,7 @@ export class PreparedContext {
       templatePackageJson,
       templatePRBranch,
       templatePullRequest
-    } = await this.trackUsedModule();
+    } = await this.trackUsedModule(targetBranch);
 
     const files = await PreparedContext.createFiles(
       templateBranch,
