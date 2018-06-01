@@ -211,13 +211,11 @@ export class Package extends File {
 
     const usedDevModules = await context.usedDevModules();
 
-    context.logger.debug(
-      `usedDevModules: ${Array.from(usedDevModules).join(',')}`
-    );
+    context.debug(`usedDevModules: ${Array.from(usedDevModules).join(',')}`);
 
     const optionalDevModules = context.optionalDevModules(usedDevModules);
 
-    context.logger.debug(
+    context.debug(
       `optionalDevModules: ${Array.from(optionalDevModules).join(',')}`
     );
 

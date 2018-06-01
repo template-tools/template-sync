@@ -99,6 +99,14 @@ export class Context {
     }
   }
 
+  info(...args) {
+    if (this.spinner === undefined) {
+      console.log(...args);
+    } else {
+      this.info.warn(...args);
+    }
+  }
+
   fail(...args) {
     if (this.spinner === undefined) {
       console.log(...args);

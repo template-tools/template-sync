@@ -90,16 +90,24 @@ export class PreparedContext {
     return this.ctx.expand(...args);
   }
 
-  get logger() {
-    return this.context.logger;
-  }
-
   fail(...args) {
     return this.context.fail(...args);
   }
 
   warn(...args) {
-    return this.context.fail(...args);
+    return this.context.warn(...args);
+  }
+
+  debug(...args) {
+    return this.context.warn(...args);
+  }
+
+  succeed(...args) {
+    return this.context.succeed(...args);
+  }
+
+  set text(value) {
+    this.context.text = value;
   }
 
   async initialize() {
@@ -296,16 +304,16 @@ export class PreparedContext {
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      //this.spinner.succeed(`${targetBranch.fullCondensedName}: -`);
+      this.succeed(`${targetBranch.fullCondensedName}: -`);
       return;
     }
 
-    /*this.text = merges
+    this.text = merges
       .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
-      .join(',');*/
+      .join(',');
 
     if (this.dry) {
-      //this.spinner.succeed(`${targetBranch.fullCondensedName}: dry run`);
+      this.succeed(`${targetBranch.fullCondensedName}: dry run`);
       return;
     }
 
@@ -344,9 +352,7 @@ export class PreparedContext {
             )
             .join('\n')
         });
-        /*this.spinner.succeed(
-          `${targetBranch.fullCondensedName}: ${pullRequest.name}`
-        );*/
+        this.succeed(`${targetBranch.fullCondensedName}: ${pullRequest.name}`);
 
         return pullRequest;
       } catch (err) {
@@ -358,9 +364,9 @@ export class PreparedContext {
         'old'
       );
 
-      /*this.spinner.succeed(
+      this.succeed(
         `${targetBranch.fullCondensedName}: update PR ${pullRequest.name}`
-      );*/
+      );
       return pullRequest;
     }
   }
