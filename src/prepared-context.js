@@ -107,13 +107,12 @@ export class PreparedContext {
 
     const targetBranch = await context.provider.branch(this.targetBranchName);
 
-    // TODO
-    this.properties.github = {
-      user: targetBranch.repository.owner,
-      repo: targetBranch.repository.condensedName
-    };
-
-    console.log(this.properties);
+    if (targetBranch.provider.name === 'GithubProvider') {
+      this.properties.github = {
+        user: targetBranch.repository.owner,
+        repo: targetBranch.repository.condensedName
+      };
+    }
 
     const pkg = new Package('package.json');
 
