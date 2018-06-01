@@ -75,6 +75,14 @@ export class Context {
     return this.constructor.defaultMapping;
   }
 
+  debug(...args) {
+    if (this.logger === undefined) {
+      console.log(...args);
+    } else {
+      this.logger.debug(...args);
+    }
+  }
+
   set text(value) {
     if (this.spinner === undefined) {
       console.log(value);
@@ -103,7 +111,7 @@ export class Context {
     if (this.spinner === undefined) {
       console.log(...args);
     } else {
-      this.info.warn(...args);
+      this.spinner.info(...args);
     }
   }
 

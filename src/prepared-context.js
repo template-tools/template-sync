@@ -99,7 +99,7 @@ export class PreparedContext {
   }
 
   debug(...args) {
-    return this.context.warn(...args);
+    return this.context.debug(...args);
   }
 
   succeed(...args) {
