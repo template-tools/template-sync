@@ -464,7 +464,7 @@ function defaultMerge(destination, target, template, category, name, messages) {
   }
 
   if (target === undefined) {
-    messages.push(`chore(${category}): add ${name}:${template} from template`);
+    messages.push(`chore(${category}): add ${name}@${template} from template`);
     destination[name] = template;
   } else if (template !== target) {
     if (category === 'engines' || category === 'devDependencies') {
@@ -474,7 +474,7 @@ function defaultMerge(destination, target, template, category, name, messages) {
     }
 
     messages.push(
-      `chore(${category}): update ${name}:${template} from template`
+      `chore(${category}): update ${name}@${template} from template`
     );
 
     destination[name] = template;
