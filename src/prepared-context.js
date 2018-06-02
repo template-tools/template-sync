@@ -355,7 +355,7 @@ export class PreparedContext {
 
         return pullRequest;
       } catch (err) {
-        this.spinner.fail(err);
+        this.fail(err);
       }
     } else {
       const pullRequest = new targetBranch.provider.pullRequestClass(
