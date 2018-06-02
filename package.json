@@ -1,6 +1,9 @@
 {
   "name": "npm-template-sync",
   "version": "0.0.0-semantic-release",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/context.js",
   "module": "src/context.js",
   "description": "Keep npm package in sync with its template",
