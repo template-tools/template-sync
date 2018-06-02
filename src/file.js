@@ -79,7 +79,7 @@ export class File {
 
   /**
    * @param {PreparedContect} context
-   * @return
+   * @return {Object} merged content
    */
   async merge(context) {
     try {

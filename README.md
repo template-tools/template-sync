@@ -51,47 +51,44 @@ merges contents from template repo into destination repo handling some special c
 
 ### Table of Contents
 
--   [npmTemplateSync](#npmtemplatesync)
 -   [Context](#context)
+-   [PreparedContext](#preparedcontext)
     -   [usedDevModules](#useddevmodules)
+    -   [execute](#execute)
 -   [File](#file)
+    -   [properties](#properties)
+    -   [merge](#merge)
 -   [Readme](#readme)
 -   [templateOptions](#templateoptions)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
-    -   [properties](#properties)
+    -   [properties](#properties-1)
 -   [defaultMerge](#defaultmerge)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
 
-## npmTemplateSync
-
-**Parameters**
-
--   `provider` **RepositoryProvider** 
--   `targetBranch` **Branch** 
--   `templateBranch` **Branch** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
--   `defines` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
-
 ## Context
 
 **Parameters**
 
--   `targetBranch` **Branch** 
--   `templateBranch` **Branch** 
--   `properties` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `provider` **RepositoryProvider** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 **Properties**
 
--   `targetBranch` **Branch** 
--   `templateBranch` **Branch** 
--   `properties` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `provider` **RepositoryProvider** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+    -   `options.templateBranchName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+## PreparedContext
+
+context prepared to execute one package
+
+**Parameters**
+
+-   `context`  
+-   `targetBranchName`  
 
 ### usedDevModules
 
@@ -99,17 +96,41 @@ all used dev modules
 
 Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
+### execute
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
+
 ## File
+
+Mergable File
 
 **Parameters**
 
--   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
+-   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
 
 **Properties**
 
 -   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### properties
+
+Deliver some key properties
+
+**Parameters**
+
+-   `branch` **Branch** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### merge
+
+**Parameters**
+
+-   `context` **PreparedContect** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
 
 ## Readme
 
@@ -144,7 +165,7 @@ Deliver some key properties
 
 **Parameters**
 
--   `context` **[Context](#context)** 
+-   `branch` **Branch** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 

@@ -279,7 +279,6 @@ export class PreparedContext {
   }
 
   /**
-   * @param {String} targetBranchName
    * @return {Promise<PullRequest>}
    */
   async execute() {

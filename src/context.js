@@ -6,7 +6,7 @@ import { PreparedContext } from './prepared-context';
  *
  * @property {RepositoryProvider} provider
  * @property {Object} options
- * @property {String} options.templateBranchName
+ * @property {string} options.templateBranchName
  */
 export class Context {
   static get defaultMapping() {
