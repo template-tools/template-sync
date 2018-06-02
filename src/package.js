@@ -259,6 +259,7 @@ export class Package extends File {
     Object.keys(template).forEach(p => {
       if (target[p] === undefined) {
         target[p] = template[p];
+        messages.push(`chore(package): add ${p} from template`);
       }
     });
 
