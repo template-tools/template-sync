@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
+import { PreparedContext } from '../src/prepared-context';
 import { License } from '../src/license';
 import { MockProvider } from 'mock-repository-provider';
 
@@ -11,13 +12,15 @@ test('modify one year', async t => {
     targetRepo: { master: { aFile: 'Copyright (c) 1999 by xyz' } }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {
-      'date.year': 2099,
-      'license.owner': 'xyz'
-    }
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo',
+      properties: {
+        'date.year': 2099,
+        'license.owner': 'xyz'
+      }
+    }),
+    'targetRepo'
   );
 
   const license = new License('aFile');
@@ -36,13 +39,15 @@ test('modify year list', async t => {
     }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {
-      'date.year': 2099,
-      'license.owner': 'xyz'
-    }
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo',
+      properties: {
+        'date.year': 2099,
+        'license.owner': 'xyz'
+      }
+    }),
+    'targetRepo'
   );
 
   const license = new License('aFile');

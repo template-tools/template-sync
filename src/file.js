@@ -1,6 +1,7 @@
 /**
- * @param {string} path
- * @param {Object} options
+ * Mergable File
+ * @param {string} path location in the repository
+ * @param {Object} options mergin options
  *
  * @property {string} path
  * @property {Object} options
@@ -45,12 +46,28 @@ export class File {
     return new Set();
   }
 
-  templateContent(context, options) {
-    return this.content(context.templateBranch, this.path, options);
+  /**
+   * Deliver some key properties
+   * @param {Branch} branch
+   * @return {Object}
+   */
+  async properties(branch) {
+    return {};
   }
 
-  originalContent(context, options) {
-    return this.content(context.targetBranch, this.path, options);
+  async targetContent(context, options) {
+    return (await context.targetBranch.content(this.path, options)).content;
+  }
+
+  async content(context) {
+    return (await Promise.all([
+      context.targetBranch.content(this.path, {
+        ignoreMissing: !this.needsOriginal
+      }),
+      context.templateBranch.content(this.path, {
+        ignoreMissing: !this.needsTemplate
+      })
+    ])).map(c => c.content);
   }
 
   async mergeContent(context, original, template) {
@@ -60,23 +77,14 @@ export class File {
     };
   }
 
+  /**
+   * @param {PreparedContect} context
+   * @return {Object} merged content
+   */
   async merge(context) {
-    const [original, template] = await Promise.all([
-      this.originalContent(context, {
-        ignoreMissing: !this.needsOriginal
-      }),
-      this.templateContent(context, {
-        ignoreMissing: !this.needsTemplate
-      })
-    ]);
-
-    return this.mergeContent(context, original, template);
-  }
-
-  async saveMerge(context) {
     try {
-      const result = await this.merge(context);
-
+      const [original, template] = await this.content(context);
+      const result = await this.mergeContent(context, original, template);
       if (result === undefined) {
         return {
           path: this.path,
@@ -91,17 +99,16 @@ export class File {
       return result;
     } catch (err) {
       context.fail(
-        `${context.targetBranch.fullCondensedName},${this.path}: ${err}`
+        `${
+          context.targetBranch
+            ? context.targetBranch.fullCondensedName
+            : 'unknown'
+        },${this.path}: ${err}`
       );
       return {
         path: this.path,
         changed: false
       };
     }
-  }
-
-  async content(branch, ...args) {
-    const content = await branch.content(...args);
-    return content.content;
   }
 }

@@ -98,13 +98,13 @@ export class Package extends File {
 
   /**
    * Deliver some key properties
-   * @param {Context} context
+   * @param {Branch} branch
    * @return {Object}
    */
-  async properties(context) {
+  async properties(branch) {
     try {
-      const content = await this.originalContent(context);
-      const pkg = JSON.parse(content);
+      const content = await branch.content(this.path);
+      const pkg = JSON.parse(content.content);
 
       const properties = {
         npm: { name: pkg.name, fullName: pkg.name }
@@ -122,7 +122,7 @@ export class Package extends File {
         properties.templateRepo = pkg.template.repository.url;
       }
 
-      ['description'].forEach(key => {
+      ['description', 'name', 'module', 'browser'].forEach(key => {
         if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
           properties[key] = pkg[key];
         }
@@ -211,13 +211,11 @@ export class Package extends File {
 
     const usedDevModules = await context.usedDevModules();
 
-    context.logger.debug(
-      `usedDevModules: ${Array.from(usedDevModules).join(',')}`
-    );
+    context.debug(`usedDevModules: ${Array.from(usedDevModules).join(',')}`);
 
     const optionalDevModules = context.optionalDevModules(usedDevModules);
 
-    context.logger.debug(
+    context.debug(
       `optionalDevModules: ${Array.from(optionalDevModules).join(',')}`
     );
 
@@ -261,6 +259,7 @@ export class Package extends File {
     Object.keys(template).forEach(p => {
       if (target[p] === undefined) {
         target[p] = template[p];
+        messages.push(`chore(package): add ${p} from template`);
       }
     });
 
@@ -458,7 +457,7 @@ function getVersion(e) {
 function defaultMerge(destination, target, template, category, name, messages) {
   if (template === '-') {
     if (target !== undefined) {
-      messages.push(`chore(${category}): remove ${name}:${target}`);
+      messages.push(`chore(${category}): remove ${name}@${target}`);
       delete destination[name];
     }
 
@@ -466,7 +465,7 @@ function defaultMerge(destination, target, template, category, name, messages) {
   }
 
   if (target === undefined) {
-    messages.push(`chore(${category}): add ${name}:${template} from template`);
+    messages.push(`chore(${category}): add ${name}@${template} from template`);
     destination[name] = template;
   } else if (template !== target) {
     if (category === 'engines' || category === 'devDependencies') {
@@ -476,7 +475,7 @@ function defaultMerge(destination, target, template, category, name, messages) {
     }
 
     messages.push(
-      `chore(${category}): update ${name}:${template} from template`
+      `chore(${category}): update ${name}@${template} from template`
     );
 
     destination[name] = template;

@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Context } from '../src/context';
+import { PreparedContext } from '../src/prepared-context';
 import { MergeAndRemoveLineSet } from '../src/merge-and-remove-line-set';
 import { MockProvider } from 'mock-repository-provider';
 
@@ -9,10 +10,11 @@ test('merge lines', async t => {
     targetRepo: { master: { aFile: ['Line 1', 'Line 3'].join('\n') } }
   });
 
-  const context = new Context(
-    await provider.branch('targetRepo'),
-    await provider.branch('templateRepo'),
-    {}
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
   );
 
   const merger = new MergeAndRemoveLineSet('aFile', {
