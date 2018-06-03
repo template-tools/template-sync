@@ -7,10 +7,7 @@
   "main": "dist/context.js",
   "module": "src/context.js",
   "description": "Keep npm package in sync with its template",
-  "keywords": [
-    "npm",
-    "template"
-  ],
+  "keywords": ["npm", "template"],
   "contributors": [
     {
       "name": "Markus Felten",
@@ -73,7 +70,7 @@
     "keytar": "^4.1.0"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=10.3"
   },
   "repository": {
     "type": "git",
@@ -85,21 +82,12 @@
   "homepage": "https://github.com/arlac77/npm-template-sync#readme",
   "release": {},
   "ava": {
-    "files": [
-      "build/*-test.js"
-    ],
-    "require": [
-      "babel-register"
-    ]
+    "files": ["build/*-test.js"],
+    "require": ["babel-register"]
   },
   "nyc": {
-    "include": [
-      "build/*-test.js",
-      "src/**/*.js"
-    ],
-    "reporter": [
-      "lcov"
-    ],
+    "include": ["build/*-test.js", "src/**/*.js"],
+    "reporter": ["lcov"],
     "report-dir": "./build/coverage"
   },
   "xo": {
