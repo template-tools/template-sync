@@ -77,7 +77,7 @@ export class Context {
 
   debug(...args) {
     if (this.logger === undefined) {
-      console.log(...args);
+      console.debug(...args);
     } else {
       this.logger.debug(...args);
     }
@@ -101,7 +101,7 @@ export class Context {
 
   warn(...args) {
     if (this.spinner === undefined) {
-      console.log(...args);
+      console.warn(...args);
     } else {
       this.spinner.warn(...args);
     }
@@ -109,7 +109,7 @@ export class Context {
 
   info(...args) {
     if (this.spinner === undefined) {
-      console.log(...args);
+      console.info(...args);
     } else {
       this.spinner.info(...args);
     }
@@ -117,7 +117,7 @@ export class Context {
 
   fail(...args) {
     if (this.spinner === undefined) {
-      console.log(...args);
+      console.error(...args);
     } else {
       this.spinner.fail(...args);
     }
