@@ -122,9 +122,11 @@ export class Package extends File {
         properties.templateRepo = pkg.template.repository.url;
       }
 
-      ['description', 'name', 'module', 'browser'].forEach(key => {
+      ['description', 'name', 'module', 'browser', 'version'].forEach(key => {
         if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
-          properties[key] = pkg[key];
+          if (!(key === 'version' && pkg[key] === '0.0.0-semantic-release')) {
+            properties[key] = pkg[key];
+          }
         }
       });
 

@@ -52,6 +52,7 @@ test('package extract properties', async t => {
     {},
     {
       name: 'aName',
+      version: '1.2.3',
       description: 'a description',
       module: 'a module'
     }
@@ -65,6 +66,26 @@ test('package extract properties', async t => {
     npm: { name: 'aName', fullName: 'aName' },
     description: 'a description',
     module: 'a module',
+    name: 'aName',
+    version: '1.2.3'
+  });
+});
+
+test('package extract properties not 0.0.0-semantic-release', async t => {
+  const context = await createContext(
+    {},
+    {
+      name: 'aName',
+      version: '0.0.0-semantic-release'
+    }
+  );
+
+  const pkg = new Package('package.json');
+  const targetBranch = await context.provider.branch('tragetUser/targetRepo');
+  const properties = await pkg.properties(targetBranch);
+
+  t.deepEqual(properties, {
+    npm: { name: 'aName', fullName: 'aName' },
     name: 'aName'
   });
 });
