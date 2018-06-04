@@ -52,30 +52,41 @@ merges contents from template repo into destination repo handling some special c
 ### Table of Contents
 
 -   [Context](#context)
+    -   [Parameters](#parameters)
+    -   [Properties](#properties)
 -   [PreparedContext](#preparedcontext)
+    -   [Parameters](#parameters-1)
+    -   [Properties](#properties-1)
     -   [usedDevModules](#useddevmodules)
     -   [execute](#execute)
 -   [File](#file)
-    -   [properties](#properties)
+    -   [Parameters](#parameters-2)
+    -   [Properties](#properties-2)
+    -   [properties](#properties-3)
+        -   [Parameters](#parameters-3)
     -   [merge](#merge)
+        -   [Parameters](#parameters-4)
 -   [Readme](#readme)
 -   [templateOptions](#templateoptions)
+    -   [Parameters](#parameters-5)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
-    -   [properties](#properties-1)
+    -   [properties](#properties-4)
+        -   [Parameters](#parameters-6)
 -   [defaultMerge](#defaultmerge)
+    -   [Parameters](#parameters-7)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
 
 ## Context
 
-**Parameters**
+### Parameters
 
 -   `provider` **RepositoryProvider** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
-**Properties**
+### Properties
 
 -   `provider` **RepositoryProvider** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
@@ -85,12 +96,12 @@ merges contents from template repo into destination repo handling some special c
 
 context prepared to execute one package
 
-**Parameters**
+### Parameters
 
 -   `context` **[Context](#context)** 
 -   `targetBranchName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-**Properties**
+### Properties
 
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
@@ -109,12 +120,12 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Mergable File
 
-**Parameters**
+### Parameters
 
 -   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
 
-**Properties**
+### Properties
 
 -   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
@@ -123,7 +134,7 @@ Mergable File
 
 Deliver some key properties
 
-**Parameters**
+#### Parameters
 
 -   `branch` **Branch** 
 
@@ -131,7 +142,7 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ### merge
 
-**Parameters**
+#### Parameters
 
 -   `context` **PreparedContect** 
 
@@ -147,7 +158,7 @@ injects badges into REAMDE.md
 
 find merger options in the template section of a package.json
 
-**Parameters**
+### Parameters
 
 -   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
@@ -168,7 +179,7 @@ Merger for package.json
 
 Deliver some key properties
 
-**Parameters**
+#### Parameters
 
 -   `branch` **Branch** 
 
@@ -176,7 +187,7 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ## defaultMerge
 
-**Parameters**
+### Parameters
 
 -   `destination`  
 -   `target`  
