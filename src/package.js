@@ -222,13 +222,20 @@ export class Package extends File {
     );
 
     const deepProperties = {
-      devDependencies: { merge: defaultMerge },
-      dependencies: { merge: defaultMerge },
-      peerDependencies: { merge: defaultMerge },
-      optionalDependencies: { merge: defaultMerge },
-      scripts: { merge: defaultMerge },
-      engines: { merge: defaultMerge }
+      devDependencies: { type: 'chore', scope: 'package', merge: defaultMerge },
+      dependencies: { type: 'fix', scope: 'package', merge: defaultMerge },
+      peerDependencies: { type: 'fix', scope: 'package', merge: defaultMerge },
+      optionalDependencies: {
+        type: 'fix',
+        scope: 'package',
+        merge: defaultMerge
+      },
+      scripts: { type: 'chore', scope: 'scripts', merge: defaultMerge },
+      engines: { type: 'chore', scope: 'engines', merge: defaultMerge }
     };
+    Object.keys(deepProperties).forEach(
+      name => (deepProperties[name].name = name)
+    );
 
     Object.keys(deepProperties).forEach(category => {
       if (template[category] !== undefined) {
@@ -249,7 +256,7 @@ export class Package extends File {
               target[category],
               target[category][d],
               tp,
-              category,
+              deepProperties[category],
               d,
               messages
             );
@@ -456,10 +463,10 @@ function getVersion(e) {
 /**
  *
  */
-function defaultMerge(destination, target, template, category, name, messages) {
+function defaultMerge(destination, target, template, dp, name, messages) {
   if (template === '-') {
     if (target !== undefined) {
-      messages.push(`chore(${category}): remove ${name}@${target}`);
+      messages.push(`${dp.type}(${dp.scope}): remove ${name}@${target}`);
       delete destination[name];
     }
 
@@ -467,17 +474,19 @@ function defaultMerge(destination, target, template, category, name, messages) {
   }
 
   if (target === undefined) {
-    messages.push(`chore(${category}): add ${name}@${template} from template`);
+    messages.push(
+      `${dp.type}(${dp.scope}): add ${name}@${template} from template`
+    );
     destination[name] = template;
   } else if (template !== target) {
-    if (category === 'engines' || category === 'devDependencies') {
+    if (dp.name === 'engines' || dp.name === 'devDependencies') {
       if (getVersion(target) > getVersion(template)) {
         return;
       }
     }
 
     messages.push(
-      `chore(${category}): update ${name}@${template} from template`
+      `${dp.type}(${dp.scope}): update ${name}@${template} from template`
     );
 
     destination[name] = template;

@@ -261,8 +261,8 @@ test('package devDependencies', async t => {
   });
 
   t.true(
-    merged.messages.includes('chore(devDependencies): remove a@1') &&
-      merged.messages.includes('chore(devDependencies): add c@1 from template')
+    merged.messages.includes('chore(package): remove a@1') &&
+      merged.messages.includes('chore(package): add c@1 from template')
   );
 });
 
