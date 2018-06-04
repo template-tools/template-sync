@@ -176,7 +176,7 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 -   `destination`  
 -   `target`  
 -   `template`  
--   `category`  
+-   `dp`  
 -   `name`  
 -   `messages`  
 
