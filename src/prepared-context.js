@@ -18,6 +18,11 @@ const mm = require('micromatch');
 
 /**
  * context prepared to execute one package
+ * @param {Context} context
+ * @param {string} targetBranchName
+ *
+ * @property {Object} ctx
+ * @property {Map<string,Object>} files
  */
 export class PreparedContext {
   static get mergers() {
