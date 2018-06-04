@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "documentation": "^7.1.0",
+    "documentation": "^8.0.0",
     "execa": "^0.10.0",
     "markdown-doctest": "^0.9.1",
     "mock-repository-provider": "^3.0.4",
