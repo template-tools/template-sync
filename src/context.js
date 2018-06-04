@@ -77,7 +77,7 @@ export class Context {
 
   debug(...args) {
     if (this.logger === undefined) {
-      console.debug(...args);
+      this.logger.debug(...args);
     } else {
       this.logger.debug(...args);
     }
@@ -85,7 +85,7 @@ export class Context {
 
   set text(value) {
     if (this.spinner === undefined) {
-      console.log(value);
+      this.logger.log(value);
     } else {
       this.spinner.text = value;
     }
@@ -93,7 +93,7 @@ export class Context {
 
   succeed(...args) {
     if (this.spinner === undefined) {
-      console.log(...args);
+      this.logger.log(...args);
     } else {
       this.spinner.succeed(...args);
     }
@@ -101,7 +101,7 @@ export class Context {
 
   warn(...args) {
     if (this.spinner === undefined) {
-      console.warn(...args);
+      this.logger.warn(...args);
     } else {
       this.spinner.warn(...args);
     }
@@ -109,7 +109,7 @@ export class Context {
 
   info(...args) {
     if (this.spinner === undefined) {
-      console.info(...args);
+      this.logger.info(...args);
     } else {
       this.spinner.info(...args);
     }
@@ -117,7 +117,7 @@ export class Context {
 
   fail(...args) {
     if (this.spinner === undefined) {
-      console.error(...args);
+      this.logger.error(...args);
     } else {
       this.spinner.fail(...args);
     }
