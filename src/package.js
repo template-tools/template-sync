@@ -309,7 +309,7 @@ export class Package extends File {
 
     toBeDeletedModules.forEach(d => {
       messages = messages.filter(
-        m => !m.startsWith(`chore(devDependencies): add ${d}@`)
+        m => !m.startsWith(`chore(package): add ${d}@`)
       );
       delete target.devDependencies[d];
     });
