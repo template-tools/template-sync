@@ -1,5 +1,6 @@
 import { File } from './file';
 import { templateOptions } from './util';
+import { parse } from '@textlint/markdown-to-ast';
 
 /**
  * injects badges into REAMDE.md
@@ -22,6 +23,9 @@ export class Readme extends File {
 
     const p = pkg.length === 0 ? {} : JSON.parse(pkg);
     const pTemplate = JSON.parse(pkgTemplate);
+
+    const AST = parse(original);
+    console.log(AST);
 
     const badges = this.options.badges
       .map(b => {
