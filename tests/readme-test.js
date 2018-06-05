@@ -10,6 +10,50 @@ test('readme default options', t => {
   t.deepEqual(readme.options.badges, []);
 });
 
+test.only('readme AST', async t => {
+  const provider = new MockProvider({
+    templateRepo: {
+      master: {
+        aFile: ``,
+        'package.json': JSON.stringify({
+          template: {}
+        })
+      }
+    },
+    targetRepo: {
+      master: {
+        aFile: `
+# name
+a description
+
+# usage`,
+        'package.json': '{}'
+      }
+    }
+  });
+
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: 'templateRepo'
+    }),
+    'targetRepo'
+  );
+
+  context.addFile(new Package('package.json'));
+
+  const readme = new Readme('aFile', {
+    badges: [
+      {
+        name: 'Badge 1',
+        icon: 'http://domain.net/somewhere1.svg',
+        url: 'http://domain.net/somewhere1'
+      }
+    ]
+  });
+
+  const merged = await readme.merge(context);
+});
+
 test('readme', async t => {
   const provider = new MockProvider({
     templateRepo: {
