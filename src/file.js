@@ -98,7 +98,7 @@ export class File {
 
       return result;
     } catch (err) {
-      context.fail(
+      context.error(
         `${
           context.targetBranch
             ? context.targetBranch.fullCondensedName

@@ -3,8 +3,6 @@ import { Context } from '../src/context';
 import { PreparedContext } from '../src/prepared-context';
 import { GithubProvider } from 'github-repository-provider';
 
-const ora = require('ora');
-
 const REPOSITORY_NAME = 'arlac77/sync-test-repository';
 const TEMPLATE_REPO = 'Kronos-Tools/npm-package-template';
 
@@ -24,12 +22,10 @@ test('context prepare', async t => {
 });
 
 test('context execute', async t => {
-  const spinner = ora('args');
   const provider = new GithubProvider({ auth: process.env.GH_TOKEN });
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      spinner,
       console,
       templateBranchName: TEMPLATE_REPO
     }),

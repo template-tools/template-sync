@@ -95,8 +95,8 @@ export class PreparedContext {
     return this.ctx.expand(...args);
   }
 
-  fail(...args) {
-    return this.context.fail(...args);
+  error(...args) {
+    return this.context.error(...args);
   }
 
   warn(...args) {
@@ -107,12 +107,8 @@ export class PreparedContext {
     return this.context.debug(...args);
   }
 
-  succeed(...args) {
-    return this.context.succeed(...args);
-  }
-
-  set text(value) {
-    this.context.text = value;
+  info(...args) {
+    return this.context.info(...args);
   }
 
   async initialize() {
@@ -308,16 +304,18 @@ export class PreparedContext {
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      this.succeed(`${targetBranch.fullCondensedName}: -`);
+      this.info(`${targetBranch.fullCondensedName}: -`);
       return;
     }
 
-    this.text = merges
-      .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
-      .join(',');
+    this.info(
+      merges
+        .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
+        .join(',')
+    );
 
     if (this.dry) {
-      this.succeed(`${targetBranch.fullCondensedName}: dry run`);
+      this.info(`${targetBranch.fullCondensedName}: dry run`);
       return;
     }
 
@@ -356,11 +354,11 @@ export class PreparedContext {
             )
             .join('\n')
         });
-        this.succeed(`${targetBranch.fullCondensedName}: ${pullRequest.name}`);
+        this.info(`${targetBranch.fullCondensedName}: ${pullRequest.name}`);
 
         return pullRequest;
       } catch (err) {
-        this.fail(err);
+        this.error(err);
       }
     } else {
       const pullRequest = new targetBranch.provider.pullRequestClass(
@@ -368,7 +366,7 @@ export class PreparedContext {
         'old'
       );
 
-      this.succeed(
+      this.info(
         `${targetBranch.fullCondensedName}: update PR ${pullRequest.name}`
       );
       return pullRequest;

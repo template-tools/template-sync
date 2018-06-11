@@ -76,50 +76,18 @@ export class Context {
   }
 
   debug(...args) {
-    if (this.logger === undefined) {
-      this.logger.debug(...args);
-    } else {
-      this.logger.debug(...args);
-    }
-  }
-
-  set text(value) {
-    if (this.spinner === undefined) {
-      this.logger.log(value);
-    } else {
-      this.spinner.text = value;
-    }
-  }
-
-  succeed(...args) {
-    if (this.spinner === undefined) {
-      this.logger.log(...args);
-    } else {
-      this.spinner.succeed(...args);
-    }
+    this.logger.debug(...args);
   }
 
   warn(...args) {
-    if (this.spinner === undefined) {
-      this.logger.warn(...args);
-    } else {
-      this.spinner.warn(...args);
-    }
+    this.logger.warn(...args);
   }
 
   info(...args) {
-    if (this.spinner === undefined) {
-      this.logger.info(...args);
-    } else {
-      this.spinner.info(...args);
-    }
+    this.logger.info(...args);
   }
 
-  fail(...args) {
-    if (this.spinner === undefined) {
-      this.logger.error(...args);
-    } else {
-      this.spinner.fail(...args);
-    }
+  error(...args) {
+    this.logger.error(...args);
   }
 }

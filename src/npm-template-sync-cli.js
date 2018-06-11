@@ -15,14 +15,10 @@ import { AggregationProvider } from 'aggregation-repository-provider';
 import { directory } from 'tempy';
 
 const program = require('caporal'),
-  prompt = require('prompt'),
-  ora = require('ora'),
-  PQueue = require('p-queue');
+  prompt = require('prompt');
 
-const spinner = ora('args');
-
-process.on('uncaughtException', err => spinner.fail(err));
-process.on('unhandledRejection', reason => spinner.fail(reason));
+process.on('uncaughtException', err => console.error(err));
+process.on('unhandledRejection', reason => console.error(reason));
 
 const properties = {};
 
@@ -59,12 +55,6 @@ program
     'track packages using template in package.json',
     program.BOOL
   )
-  .option(
-    '--concurrency <number>',
-    'number of concurrent repository request',
-    program.INT,
-    1
-  )
   .argument('[repos...]', 'repos to merge')
   .action(async (args, options, logger) => {
     if (options.save) {
@@ -79,23 +69,22 @@ program
       };
       prompt.get(schema, async (err, result) => {
         if (err) {
-          spinner.fail(err);
+          logger.error(err);
           return;
         }
 
         try {
           await setPassword(result.password, options);
         } catch (e) {
-          spinner.fail(err);
+          logger.error(err);
           return;
         }
-        spinner.succeed('password set');
+        logger.info('password set');
       });
     }
 
     try {
       const pass = await getPassword(options);
-      const queue = new PQueue({ concurrency: options.concurrency });
       const aggregationProvider = new AggregationProvider();
 
       if (pass !== null && pass !== undefined) {
@@ -132,7 +121,6 @@ program
         dry: options.dry,
         trackUsedByModule: options.usage,
         logger,
-        spinner,
         properties
       });
 
@@ -141,13 +129,11 @@ program
         return;
       }
 
-      spinner.start();
-
-      await queue.addAll(
-        args.repos.map(repo => PreparedContext.execute(context, repo))
-      );
+      for (const repo of args.repos) {
+        await PreparedContext.execute(context, repo);
+      }
     } catch (err) {
-      spinner.fail(err);
+      logger.error(err);
     }
   });
 
