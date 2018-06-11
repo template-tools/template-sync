@@ -1,5 +1,7 @@
 import { PreparedContext } from './prepared-context';
 
+export { PreparedContext };
+
 /**
  * @param {RepositoryProvider} provider
  * @param {Object} options
