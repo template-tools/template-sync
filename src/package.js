@@ -1,4 +1,5 @@
 import { File } from './file';
+import { diffVersion } from './util';
 const diff = require('simple-diff');
 const jp = require('jsonpath');
 
@@ -480,8 +481,13 @@ function defaultMerge(destination, target, template, dp, name, messages) {
     messages.push(`${dp.type}(${dp.scope}): add ${name}@${template}`);
     destination[name] = template;
   } else if (template !== target) {
-    if (dp.name === 'engines' || dp.name === 'devDependencies') {
+    if (dp.name === 'engines') {
       if (getVersion(target) > getVersion(template)) {
+        return;
+      }
+    }
+    if (dp.name === 'devDependencies') {
+      if (diffVersion(target, template) > 0) {
         return;
       }
     }

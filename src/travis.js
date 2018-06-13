@@ -1,31 +1,8 @@
 import { File } from './file';
+import { diffVersion } from './util';
 
 const yaml = require('js-yaml'),
   deepExtend = require('deep-extend');
-
-function diffVersion(a, b) {
-  const aa = String(a)
-    .split(/\./)
-    .map(x => parseInt(x, 10));
-  const bb = String(b)
-    .split(/\./)
-    .map(x => parseInt(x, 10));
-
-  for (const i in aa) {
-    if (i >= bb.length) {
-      break;
-    }
-
-    if (aa[i] < bb[i]) {
-      return -1;
-    }
-    if (aa[i] > bb[i]) {
-      return 1;
-    }
-  }
-
-  return 0;
-}
 
 function difference(a, b) {
   return new Set([...a].filter(x => !b.has(x)));

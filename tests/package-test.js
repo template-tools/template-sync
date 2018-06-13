@@ -266,6 +266,34 @@ test('package devDependencies', async t => {
   );
 });
 
+test('package dependencies only increase', async t => {
+  const context = await createContext(
+    {
+      devDependencies: {
+        a: '0.25.0',
+        b: '0.25.0',
+        c: '0.25.0'
+      }
+    },
+    {
+      devDependencies: {
+        a: '0.25.1',
+        b: '1.0.0-beta.5.1',
+        c: '0.24.9'
+      }
+    }
+  );
+
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
+
+  t.deepEqual(JSON.parse(merged.content).devDependencies, {
+    a: '0.25.1',
+    b: '1.0.0-beta.5.1',
+    c: '0.25.0'
+  });
+});
+
 test('package keywords', async t => {
   const context = await createContext(
     {},

@@ -74,3 +74,31 @@ export function removeSensibleValues(object) {
 
   return result;
 }
+
+/**
+ * @param {string} a
+ * @param {string} b
+ */
+export function diffVersion(a, b) {
+  const aa = String(a)
+    .split(/\./)
+    .map(x => parseInt(x, 10));
+  const bb = String(b)
+    .split(/\./)
+    .map(x => parseInt(x, 10));
+
+  for (const i in aa) {
+    if (i >= bb.length) {
+      break;
+    }
+
+    if (aa[i] < bb[i]) {
+      return -1;
+    }
+    if (aa[i] > bb[i]) {
+      return 1;
+    }
+  }
+
+  return 0;
+}
