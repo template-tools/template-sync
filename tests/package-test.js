@@ -418,6 +418,33 @@ test('repository change only', async t => {
   });
 });
 
+test('empty bugs results in no change', async t => {
+  const context = await createContext(
+    {},
+    {
+      name: 'targetRepo',
+      homepage: 'http://mock-provider.com/tragetUser/targetRepo#readme',
+      repository: {
+        type: 'git',
+        url: 'http://mock-provider.com/tragetUser/targetRepo'
+      },
+      bugs: { url: 'http://mock-provider.com/tragetUser/targetRepo/issues' },
+      template: {
+        repository: {
+          url: 'http://mock-provider.com/templateRepo'
+        }
+      }
+    }
+  );
+  const pkg = new Package('package.json');
+  const merged = await pkg.merge(context);
+  // TODO merged.changed should be false
+  //console.log(merged);
+  t.deepEqual(merged.messages, [
+    'chore(package): update package.json from template'
+  ]);
+});
+
 test('start fresh', async t => {
   const context = await createContext({});
   const pkg = new Package('package.json');

@@ -186,7 +186,10 @@ export class Package extends File {
       template: 'chore(package): set template repo'
     };
     Object.keys(slots).forEach(key => {
-      if (diff(target[key], template[key]).length > 0) {
+      if (
+        template[key] !== undefined &&
+        diff(target[key], template[key]).length > 0
+      ) {
         messages.push(slots[key]);
         target[key] = template[key];
       }
