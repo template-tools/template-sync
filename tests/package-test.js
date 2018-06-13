@@ -262,7 +262,7 @@ test('package devDependencies', async t => {
 
   t.true(
     merged.messages.includes('chore(package): remove a@1') &&
-      merged.messages.includes('chore(package): add c@1 from template')
+      merged.messages.includes('chore(package): add c@1')
   );
 });
 
@@ -348,7 +348,7 @@ test('add xo/space=true', async t => {
   t.deepEqual(JSON.parse(merged.content).xo, {
     space: true
   });
-  //t.true(merged.messages.includes('chore: update package.json from template'));
+  //t.true(merged.messages.includes('chore: update package.json'));
 });
 
 test('jsonpath', async t => {

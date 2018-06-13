@@ -474,9 +474,7 @@ function defaultMerge(destination, target, template, dp, name, messages) {
   }
 
   if (target === undefined) {
-    messages.push(
-      `${dp.type}(${dp.scope}): add ${name}@${template} from template`
-    );
+    messages.push(`${dp.type}(${dp.scope}): add ${name}@${template}`);
     destination[name] = template;
   } else if (template !== target) {
     if (dp.name === 'engines' || dp.name === 'devDependencies') {
@@ -485,9 +483,7 @@ function defaultMerge(destination, target, template, dp, name, messages) {
       }
     }
 
-    messages.push(
-      `${dp.type}(${dp.scope}): update ${name}@${template} from template`
-    );
+    messages.push(`${dp.type}(${dp.scope}): update ${name}@${template}`);
 
     destination[name] = template;
   }
