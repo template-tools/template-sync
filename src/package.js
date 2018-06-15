@@ -492,7 +492,7 @@ function defaultMerge(destination, target, template, dp, name, messages) {
       }
     }
 
-    messages.push(`${dp.type}(${dp.scope}): update ${name}@${template}`);
+    messages.push(`${dp.type}(${dp.scope}): ${name}@${template}`);
 
     destination[name] = template;
   }
