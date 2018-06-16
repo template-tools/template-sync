@@ -266,7 +266,7 @@ test('package devDependencies', async t => {
   );
 });
 
-test.only('package dependencies only increase', async t => {
+test('package dependencies only increase', async t => {
   const context = await createContext(
     {
       devDependencies: {
