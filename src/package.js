@@ -464,6 +464,10 @@ function getVersion(e) {
   return m ? Number(m[1]) : undefined;
 }
 
+function normalizeVersion(e) {
+  return e.replace(/^[\^\$]/, '');
+}
+
 /**
  *
  */
@@ -487,7 +491,9 @@ function defaultMerge(destination, target, template, dp, name, messages) {
       }
     }
     if (dp.name === 'devDependencies') {
-      if (diffVersion(target, template) > 0) {
+      if (
+        diffVersion(normalizeVersion(target), normalizeVersion(template)) >= 0
+      ) {
         return;
       }
     }

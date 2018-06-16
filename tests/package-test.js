@@ -266,7 +266,7 @@ test('package devDependencies', async t => {
   );
 });
 
-test('package dependencies only increase', async t => {
+test.only('package dependencies only increase', async t => {
   const context = await createContext(
     {
       devDependencies: {
@@ -277,9 +277,10 @@ test('package dependencies only increase', async t => {
     },
     {
       devDependencies: {
-        a: '0.25.1',
-        b: '1.0.0-beta.5.1',
-        c: '0.24.9'
+        a: '^0.25.1',
+        b: '^1.0.0-beta.5.1',
+        c: '^0.24.9',
+        d: '~0.24.9'
       }
     }
   );
@@ -288,9 +289,10 @@ test('package dependencies only increase', async t => {
   const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).devDependencies, {
-    a: '0.25.1',
-    b: '1.0.0-beta.5.1',
-    c: '0.25.0'
+    a: '^0.25.1',
+    b: '^1.0.0-beta.5.1',
+    c: '0.25.0',
+    d: '~0.24.9'
   });
 });
 
