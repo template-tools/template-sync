@@ -4,6 +4,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import executable from 'rollup-plugin-executable';
 import json from 'rollup-plugin-json';
 import pkg from '../package.json';
+import baseRollup from '../rollup.config.js';
 
 const external = [
   'ava',
@@ -14,6 +15,7 @@ const external = [
   'crypto',
   'fs',
   'jsonpath',
+  'deep-extend',
   'local-repository-provider',
   'aggregation-repository-provider',
   'github-repository-provider',
@@ -22,16 +24,7 @@ const external = [
 ];
 
 export default [
-  {
-    output: {
-      file: pkg.bin['npm-template-sync'],
-      format: 'cjs',
-      banner: '#!/usr/bin/env node'
-    },
-    plugins: [nodeResolve(), commonjs(), json(), executable()],
-    external,
-    input: 'src/npm-template-sync-cli.js'
-  },
+  ...baseRollup,
   {
     input: 'tests/**/*-test.js',
     external,
@@ -40,7 +33,8 @@ export default [
     output: {
       file: 'build/bundle-test.js',
       format: 'cjs',
-      sourcemap: true
+      sourcemap: true,
+      interop: false
     }
   }
 ];

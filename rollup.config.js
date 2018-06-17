@@ -10,6 +10,7 @@ const external = [
   'crypto',
   'fs',
   'jsonpath',
+  'deep-extend',
   'local-repository-provider',
   'aggregation-repository-provider',
   'github-repository-provider',
@@ -22,7 +23,8 @@ export default [
     output: {
       file: pkg.bin['npm-template-sync'],
       format: 'cjs',
-      banner: '#!/usr/bin/env node'
+      banner: '#!/usr/bin/env node',
+      interop: false
     },
     plugins: [nodeResolve(), commonjs(), json(), executable()],
     external,
@@ -31,7 +33,8 @@ export default [
   {
     output: {
       file: pkg.main,
-      format: 'cjs'
+      format: 'cjs',
+      interop: false
     },
     plugins: [],
     external,
