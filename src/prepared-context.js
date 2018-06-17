@@ -1,5 +1,6 @@
 import { createContext } from 'expression-expander';
 import { value } from 'jsonpath';
+import micromatch from 'micromatch';
 
 import { Travis } from './travis';
 import { Readme } from './readme';
@@ -13,8 +14,6 @@ import { Replace } from './replace';
 import { JSONFile } from './json-file';
 import { JSDoc } from './jsdoc';
 import { Context } from './context';
-
-const mm = require('micromatch');
 
 /**
  * context prepared to execute one package
@@ -159,7 +158,7 @@ export class PreparedContext {
 
     return mapping
       .map(m => {
-        const found = mm(
+        const found = micromatch(
           files.filter(f => f.type === 'blob').map(f => f.path),
           m.pattern
         );

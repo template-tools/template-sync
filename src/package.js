@@ -1,7 +1,7 @@
 import { File } from './file';
 import { diffVersion } from './util';
-const diff = require('simple-diff');
-const jp = require('jsonpath');
+import { value } from 'jsonpath';
+import diff from 'simple-diff';
 
 function moduleNames(object) {
   if (object === undefined) return new Set();
@@ -332,13 +332,13 @@ export class Package extends File {
 
     this.options.actions.forEach(action => {
       if (action.op === 'replace') {
-        const value = jp.value(template, action.path);
-        if (value !== undefined) {
-          const oldValue = jp.value(target, action.path);
-          if (oldValue !== value) {
-            jp.value(target, action.path, value);
+        const v = value(template, action.path);
+        if (v !== undefined) {
+          const oldValue = value(target, action.path);
+          if (oldValue !== v) {
+            value(target, action.path, v);
             messages.push(
-              `chore(package): set ${action.path}='${value}' as in template`
+              `chore(package): set ${action.path}='${v}' as in template`
             );
           }
         }

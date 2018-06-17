@@ -2,8 +2,7 @@ import { File } from './file';
 import { diffVersion } from './util';
 import deepExtend from 'deep-extend';
 
-const yaml = require('js-yaml') /*,
-  deepExtend = require('deep-extend')*/;
+const yaml = require('js-yaml');
 
 function difference(a, b) {
   return new Set([...a].filter(x => !b.has(x)));
