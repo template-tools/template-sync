@@ -9,6 +9,7 @@ import { Rollup } from './rollup';
 import { License } from './license';
 import { MergeAndRemoveLineSet } from './merge-and-remove-line-set';
 import { MergeLineSet } from './merge-line-set';
+import { NpmIgnore } from './npm-ignore';
 import { ReplaceIfEmpty } from './replace-if-empty';
 import { Replace } from './replace';
 import { JSONFile } from './json-file';
@@ -35,6 +36,7 @@ export class PreparedContext {
       Travis,
       MergeAndRemoveLineSet,
       MergeLineSet,
+      NpmIgnore,
       License,
       ReplaceIfEmpty,
       Replace

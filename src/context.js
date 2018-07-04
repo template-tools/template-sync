@@ -25,7 +25,7 @@ export class Context {
         options: { message: 'chore(git): update {{path}} from template' }
       },
       {
-        merger: 'MergeAndRemoveLineSet',
+        merger: 'NpmIgnore',
         pattern: '.npmignore',
         options: { message: 'chore(npm): update {{path}} from template' }
       },
