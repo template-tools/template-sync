@@ -78,7 +78,8 @@ merges contents from template repo into destination repo handling some special c
 -   [defaultMerge](#defaultmerge)
     -   [Parameters](#parameters-8)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
--   [defaultIgnoreSet](#defaultignoreset)
+-   [MergeLineSet](#mergelineset)
+    -   [defaultIgnoreSet](#defaultignoreset)
 -   [NpmIgnore](#npmignore)
     -   [defaultIgnoreSet](#defaultignoreset-1)
 -   [ReplaceIfEmpty](#replaceifempty)
@@ -212,7 +213,13 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 **Extends MergeLineSet**
 
-## defaultIgnoreSet
+## MergeLineSet
+
+**Extends File**
+
+File where every line is a key
+
+### defaultIgnoreSet
 
 entries to be skipped from result
 

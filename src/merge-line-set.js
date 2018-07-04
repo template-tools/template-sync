@@ -1,5 +1,8 @@
 import { File } from './file';
 
+/**
+ * File where every line is a key
+ */
 export class MergeLineSet extends File {
   /**
    * entries to be skipped from result
