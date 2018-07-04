@@ -47,7 +47,7 @@ const sortedKeys = [
   'devDependencies',
   'peerDependencies',
   'optionalDependencies',
-  'bundleDependencies',
+  'bundledDependencies',
   'engines',
   'repository',
   'files',
@@ -238,9 +238,15 @@ export class Package extends File {
         scope: 'package',
         merge: defaultMerge
       },
+      bundeledDependencies: {
+        type: 'fix',
+        scope: 'package',
+        merge: defaultMerge
+      },
       scripts: { type: 'chore', scope: 'scripts', merge: defaultMerge },
       engines: { type: 'chore', scope: 'engines', merge: defaultMerge }
     };
+
     Object.keys(deepProperties).forEach(
       name => (deepProperties[name].name = name)
     );
