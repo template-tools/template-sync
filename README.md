@@ -78,6 +78,9 @@ merges contents from template repo into destination repo handling some special c
 -   [defaultMerge](#defaultmerge)
     -   [Parameters](#parameters-8)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
+-   [defaultIgnoreSet](#defaultignoreset)
+-   [NpmIgnore](#npmignore)
+    -   [defaultIgnoreSet](#defaultignoreset-1)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
 
@@ -208,6 +211,24 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 ## MergeAndRemoveLineSet
 
 **Extends MergeLineSet**
+
+## defaultIgnoreSet
+
+entries to be skipped from result
+
+Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+## NpmIgnore
+
+**Extends MergeAndRemoveLineSet**
+
+### defaultIgnoreSet
+
+-   **See: <https://docs.npmjs.com/misc/developers>**
+
+entries to be skipped from result
+
+Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 ## ReplaceIfEmpty
 
