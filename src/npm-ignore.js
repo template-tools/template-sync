@@ -19,6 +19,7 @@ export class NpmIgnore extends MergeAndRemoveLineSet {
       '._*',
       '.DS_Store',
       '.git',
+      '.github',
       '.hg',
       '.npmrc',
       '.lock-wscript',
