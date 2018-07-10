@@ -14,10 +14,10 @@ export class Travis extends File {
   }
 
   async mergeContent(context, original, template) {
-    const yml = yaml.safeLoad(original, { schema: yaml.FAILSAFE_SCHEMA }) || {};
-    const tyml = yaml.safeLoad(context.expand(template), {
-      schema: yaml.FAILSAFE_SCHEMA
-    });
+    const ymlOptions = { schema: yaml.FAILSAFE_SCHEMA };
+
+    const yml = yaml.safeLoad(original, ymlOptions) || {};
+    const tyml = yaml.safeLoad(context.expand(template), ymlOptions);
     const before_script = yml.before_script;
     const email = yml.notifications ? yml.notifications.email : undefined;
     const messages = [];
