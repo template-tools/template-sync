@@ -52,12 +52,12 @@ export class Rollup extends File {
     }
 
     try {
-      const templateAST = recast.parse(template, {
+      const recastOptions = {
         parser: babylon
-      });
-      const ast = recast.parse(original, {
-        parser: babylon
-      });
+      };
+
+      const templateAST = recast.parse(template, recastOptions);
+      const ast = recast.parse(original, recastOptions);
 
       removeUseStrict(ast);
 
