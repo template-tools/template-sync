@@ -51,6 +51,8 @@ export class Rollup extends File {
       };
     }
 
+    const messages = [];
+
     try {
       const recastOptions = {
         parser: babylon
@@ -116,20 +118,43 @@ export class Rollup extends File {
         removePropertiesKey(exp.properties, 'dest');
       }
 
-      let pkg = importDeclaration(ast, 'pkg');
-      if (pkg === undefined) {
-        pkg = importDeclaration(templateAST, 'pkg');
-        if (pkg !== undefined) {
-          ast.program.body = [pkg, ...ast.program.body];
+      const originalImports = importDeclarationsByLocalName(ast);
+      const templateImports = importDeclarationsByLocalName(templateAST);
+
+      templateImports.forEach((value, key) => {
+        if (originalImports.get(key) === undefined) {
+          ast.program.body = [value, ...ast.program.body];
+          messages.push(`chore(rollup): import ${key}`);
         }
-      }
+      });
+
+      const originalPlugins = pluginsFromExpression(exp);
+      const templatePlugins = pluginsFromExpression(templateExp);
+
+      templatePlugins.forEach(templatePlugin => {
+        if (
+          originalPlugins.find(
+            op => op.callee.name === templatePlugin.callee.name
+          ) === undefined
+        ) {
+          originalPlugins.push(templatePlugin);
+          messages.push(
+            `chore(rollup): add ${templatePlugin.callee.name} to plugins`
+          );
+        }
+      });
 
       const content = recast.print(ast).code;
+      const changed = content !== original;
+
+      if (changed && messages.length === 0) {
+        messages.push('chore(rollup): update from template');
+      }
 
       return {
         content,
-        changed: content !== original,
-        messages: ['chore(rollup): update from template']
+        changed,
+        messages
       };
     } catch (e) {
       context.warn(`unable to parse ${this.path}`);
@@ -157,17 +182,16 @@ function removeUseStrict(ast) {
   }
 }
 
-function importDeclaration(ast, localName) {
+function importDeclarationsByLocalName(ast) {
+  const declarations = new Map();
+
   for (const decl of ast.program.body) {
-    if (
-      decl.type === 'ImportDeclaration' &&
-      decl.specifiers[0].local.name === localName
-    ) {
-      return decl;
+    if (decl.type === 'ImportDeclaration') {
+      declarations.set(decl.specifiers[0].local.name, decl);
     }
   }
 
-  return undefined;
+  return declarations;
 }
 
 function exportDefaultDeclaration(ast) {
@@ -178,6 +202,18 @@ function exportDefaultDeclaration(ast) {
   }
 
   return undefined;
+}
+
+function pluginsFromExpression(exp) {
+  const plugins = exp.properties.find(
+    p => p !== undefined && p.key.name === 'plugins'
+  );
+
+  if (plugins !== undefined) {
+    return plugins.value.elements;
+  }
+
+  return [];
 }
 
 function removePropertiesKey(properties, name) {
