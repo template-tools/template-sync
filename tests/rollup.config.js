@@ -1,3 +1,6 @@
+import istanbul from 'rollup-plugin-istanbul';
+
+import resolve from 'rollup-plugin-node-resolve';
 import multiEntry from 'rollup-plugin-multi-entry';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
