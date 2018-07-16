@@ -157,8 +157,9 @@ export class Rollup extends File {
         messages
       };
     } catch (e) {
+      console.log(e);
       context.warn(`unable to parse ${this.path}`);
-      context.warn(e);
+      context.error(e);
     }
 
     return {
@@ -205,12 +206,14 @@ function exportDefaultDeclaration(ast) {
 }
 
 function pluginsFromExpression(exp) {
-  const plugins = exp.properties.find(
-    p => p !== undefined && p.key.name === 'plugins'
-  );
+  if (exp.properties !== undefined) {
+    const plugins = exp.properties.find(
+      p => p !== undefined && p.key.name === 'plugins'
+    );
 
-  if (plugins !== undefined) {
-    return plugins.value.elements;
+    if (plugins !== undefined) {
+      return plugins.value.elements;
+    }
   }
 
   return [];
