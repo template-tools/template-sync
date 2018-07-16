@@ -458,12 +458,12 @@ test('empty bugs results in no change', async t => {
     {},
     {
       name: 'targetRepo',
-      homepage: 'http://mock-provider.com/tragetUser/targetRepo#readme',
       repository: {
         type: 'git',
         url: 'http://mock-provider.com/tragetUser/targetRepo'
       },
       bugs: { url: 'http://mock-provider.com/tragetUser/targetRepo/issues' },
+      homepage: 'http://mock-provider.com/tragetUser/targetRepo#readme',
       template: {
         repository: {
           url: 'http://mock-provider.com/templateRepo'
@@ -474,12 +474,7 @@ test('empty bugs results in no change', async t => {
   const pkg = new Package('package.json');
   const merged = await pkg.merge(context);
 
-  // TODO merged.changed should be false
-  //console.log(merged);
-
-  t.deepEqual(merged.messages, [
-    'chore(package): update package.json from template'
-  ]);
+  t.false(merged.changed);
 });
 
 test('start fresh', async t => {

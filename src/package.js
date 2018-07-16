@@ -373,7 +373,6 @@ export class Package extends File {
     console.log(original);
     console.log(newContent);
 */
-
     const changed = original !== newContent;
 
     if (changed && messages.length === 0) {
