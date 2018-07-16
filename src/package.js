@@ -358,10 +358,6 @@ export class Package extends File {
       }
     });
 
-    if (messages.length === 0) {
-      messages.push('chore(package): update package.json from template');
-    }
-
     target = context.expand(target);
     const sortedTarget = {};
 
@@ -385,10 +381,16 @@ export class Package extends File {
       newContent += '\n';
     }
 
+    const changed = original !== newContent;
+
+    if (changed && messages.length === 0) {
+      messages.push('chore(package): update package.json from template');
+    }
+
     return {
       content: newContent,
       messages,
-      changed: original !== newContent
+      changed
     };
   }
 }
