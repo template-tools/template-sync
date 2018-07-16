@@ -77,6 +77,8 @@ merges contents from template repo into destination repo handling some special c
         -   [Parameters](#parameters-7)
 -   [defaultMerge](#defaultmerge)
     -   [Parameters](#parameters-8)
+-   [normalizePackage](#normalizepackage)
+    -   [Parameters](#parameters-9)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
     -   [defaultIgnoreSet](#defaultignoreset)
@@ -208,6 +210,16 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 -   `dp`  
 -   `name`  
 -   `messages`  
+
+## normalizePackage
+
+bring package into nomalized (sorted) form
+
+### Parameters
+
+-   `source` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** normalized source
 
 ## MergeAndRemoveLineSet
 
