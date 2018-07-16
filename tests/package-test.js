@@ -12,12 +12,17 @@ async function createContext(template, target) {
     templateRepo: {
       master: {
         [FILE_NAME]:
-          template !== undefined ? JSON.stringify(template) : undefined
+          template !== undefined
+            ? JSON.stringify(template, undefined, 2)
+            : undefined
       }
     },
     'tragetUser/targetRepo': {
       master: {
-        [FILE_NAME]: target !== undefined ? JSON.stringify(target) : undefined
+        [FILE_NAME]:
+          target !== undefined
+            ? JSON.stringify(target, undefined, 2)
+            : undefined
       }
     }
   });
@@ -468,8 +473,10 @@ test('empty bugs results in no change', async t => {
   );
   const pkg = new Package('package.json');
   const merged = await pkg.merge(context);
+
   // TODO merged.changed should be false
   //console.log(merged);
+
   t.deepEqual(merged.messages, [
     'chore(package): update package.json from template'
   ]);

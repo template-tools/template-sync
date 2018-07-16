@@ -359,19 +359,7 @@ export class Package extends File {
     });
 
     target = context.expand(target);
-    const sortedTarget = {};
-
-    sortedKeys.forEach(key => {
-      if (target[key] !== undefined) {
-        sortedTarget[key] = target[key];
-      }
-    });
-
-    Object.keys(target).forEach(key => {
-      if (sortedTarget[key] === undefined) {
-        sortedTarget[key] = target[key];
-      }
-    });
+    const sortedTarget = normalizePackage(target);
 
     let newContent = JSON.stringify(sortedTarget, undefined, 2);
     const lastChar = newContent[newContent.length - 1];
@@ -380,6 +368,11 @@ export class Package extends File {
     if (originalLastChar === '\n' && lastChar === '}') {
       newContent += '\n';
     }
+
+    /*
+    console.log(original);
+    console.log(newContent);
+*/
 
     const changed = original !== newContent;
 
@@ -517,4 +510,27 @@ function defaultMerge(destination, target, template, dp, name, messages) {
 
     destination[name] = template;
   }
+}
+
+/**
+ * bring package into nomalized (sorted) form
+ * @param {Object} source
+ * @return {Object} normalized source
+ */
+function normalizePackage(source) {
+  const normalized = {};
+
+  sortedKeys.forEach(key => {
+    if (source[key] !== undefined) {
+      normalized[key] = source[key];
+    }
+  });
+
+  Object.keys(source).forEach(key => {
+    if (normalized[key] === undefined) {
+      normalized[key] = source[key];
+    }
+  });
+
+  return normalized;
 }
