@@ -74,31 +74,29 @@ export class Rollup extends File {
         for (const p of exp.properties) {
           switch (p.key.name) {
             case 'targets':
-              p.key.name = 'output';
               dest = p.value.elements[0].properties[0]; //.find(x => x.name === 'dest');
-              p.value = templateExp.properties.find(
-                x => x.key.name === 'output'
-              ).value;
-              output = p;
+              const op = findProperty(templateExp.properties, 'output');
+              if (op !== undefined) {
+                p.key.name = 'output';
+                p.value = op.value;
+                output = p;
+              }
               break;
             case 'entry':
-              p.key.name = 'input';
-              p.value = templateExp.properties.find(
-                x => x.key.name === 'input'
-              ).value;
+              const ip = findProperty(templateExp.properties, 'input');
+              if (ip !== undefined) {
+                p.key.name = 'input';
+                p.value = ip.value;
+              }
           }
         }
 
-        if (exp.properties.find(x => x.key.name === 'input') === undefined) {
-          exp.properties.push(
-            templateExp.properties.find(x => x.key.name === 'input')
-          );
+        if (findProperty(exp.properties, 'input') === undefined) {
+          exp.properties.push(findProperty(templateExp.properties, 'input'));
         }
 
-        if (
-          exp.properties.find(x => x && x.key.name === 'output') === undefined
-        ) {
-          output = templateExp.properties.find(x => x.key.name === 'output');
+        if (findProperty(exp.properties, 'output') === undefined) {
+          output = findProperty(templateExp.properties, 'output');
           exp.properties.push(output);
         }
 
@@ -108,8 +106,10 @@ export class Rollup extends File {
           }
 
           if (dest !== undefined) {
-            output.value.properties.find(x => x.key.name === 'file').value =
-              dest.value;
+            const file = findProperty(output.value.properties, 'file');
+            if (file !== undefined) {
+              file.value = dest.value;
+            }
           }
         }
 
@@ -226,6 +226,14 @@ function pluginsFromExpression(exp) {
   }
 
   return [];
+}
+
+function findProperty(properties, name) {
+  const prop = properties.find(
+    prop => prop !== undefined && prop.key.name === name
+  );
+
+  return prop;
 }
 
 function removePropertiesKey(properties, name) {
