@@ -122,15 +122,15 @@ export class Rollup extends File {
       const templateImports = importDeclarationsByLocalName(templateAST);
 
       const addedImports = [];
-      
+
       templateImports.forEach((value, key) => {
         if (originalImports.get(key) === undefined) {
           ast.program.body = [value, ...ast.program.body];
-          addedImport.push(key);
+          addedImports.push(key);
         }
       });
 
-      if(addedImport.length > 0) {
+      if (addedImports.length > 0) {
         messages.push(`chore(rollup): import ${addedImports.join(',')}`);
       }
 
@@ -149,7 +149,7 @@ export class Rollup extends File {
         }
       });
 
-      if(addedPlugins.length > 0) {
+      if (addedPlugins.length > 0) {
         messages.push(`chore(rollup): add ${addedPlugins.join(',')}`);
       }
 
