@@ -121,13 +121,20 @@ export class Rollup extends File {
       const originalImports = importDeclarationsByLocalName(ast);
       const templateImports = importDeclarationsByLocalName(templateAST);
 
+      const addedImports = [];
+      
       templateImports.forEach((value, key) => {
         if (originalImports.get(key) === undefined) {
           ast.program.body = [value, ...ast.program.body];
-          messages.push(`chore(rollup): import ${key}`);
+          addedImport.push(key);
         }
       });
 
+      if(addedImport.length > 0) {
+        messages.push(`chore(rollup): import ${addedImports.join(',')}`);
+      }
+
+      const addedPlugins = [];
       const originalPlugins = pluginsFromExpression(exp);
       const templatePlugins = pluginsFromExpression(templateExp);
 
@@ -138,11 +145,13 @@ export class Rollup extends File {
           ) === undefined
         ) {
           originalPlugins.push(templatePlugin);
-          messages.push(
-            `chore(rollup): add ${templatePlugin.callee.name} to plugins`
-          );
+          addedPlugins.push(templatePlugin.callee.name);
         }
       });
+
+      if(addedPlugins.length > 0) {
+        messages.push(`chore(rollup): add ${addedPlugins.join(',')}`);
+      }
 
       const content = recast.print(ast).code;
       const changed = content !== original;
