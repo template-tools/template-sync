@@ -229,11 +229,14 @@ function pluginsFromExpression(exp) {
 }
 
 function findProperty(properties, name) {
-  const prop = properties.find(
-    prop => prop !== undefined && prop.key.name === name
-  );
+  if (properties !== undefined) {
+    const prop = properties.find(
+      prop => prop !== undefined && prop.key.name === name
+    );
 
-  return prop;
+    return prop;
+  }
+  return undefined;
 }
 
 function removePropertiesKey(properties, name) {
