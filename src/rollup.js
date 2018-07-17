@@ -101,16 +101,22 @@ export class Rollup extends File {
         if (originalOutput === undefined) {
           exp.properties.push(templateOutput);
         } else {
-          const originalInterop = findProperty(
-            originalOutput.value.properties,
-            'interop'
-          );
-          const templateInterop = findProperty(
-            templateOutput.value.properties,
-            'interop'
-          );
-          if (templateInterop !== undefined && originalInterop === undefined) {
-            originalOutput.value.properties.push(templateInterop);
+          if (templateOutput !== undefined) {
+            const originalInterop = findProperty(
+              originalOutput.value.properties,
+              'interop'
+            );
+            const templateInterop = findProperty(
+              templateOutput.value.properties,
+              'interop'
+            );
+
+            if (
+              templateInterop !== undefined &&
+              originalInterop === undefined
+            ) {
+              originalOutput.value.properties.push(templateInterop);
+            }
           }
         }
 
