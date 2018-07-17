@@ -15,7 +15,8 @@ export default {
   input: pkg.module,
   output: {
     file: pkg.main,
-    format: 'cjs'
+    format: 'cjs',
+    interop: false
   },
   plugins: [
     babel({
@@ -80,6 +81,7 @@ export default {
   output: {
     file: pkg.bin['a-cmd'],
     format: 'cjs',
+    interop: false,
     banner: '#!/usr/bin/env node'
   },
 
