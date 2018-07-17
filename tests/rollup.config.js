@@ -1,10 +1,7 @@
 import istanbul from 'rollup-plugin-istanbul';
-
 import resolve from 'rollup-plugin-node-resolve';
 import multiEntry from 'rollup-plugin-multi-entry';
-import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import executable from 'rollup-plugin-executable';
 import json from 'rollup-plugin-json';
 import pkg from '../package.json';
 import baseRollup from '../rollup.config.js';
@@ -37,7 +34,14 @@ export default [
   {
     input: 'tests/**/*-test.js',
     external,
-    plugins: [multiEntry()],
+    plugins: [
+      multiEntry(),
+      istanbul({
+        exclude: ['tests/**/*-test.js']
+      }),
+      resolve(),
+      commonjs()
+    ],
 
     output: {
       file: 'build/bundle-test.js',

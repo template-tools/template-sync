@@ -43,7 +43,7 @@ export default [
       format: 'cjs',
       interop: false
     },
-    plugins: [],
+    plugins: [nodeResolve(), commonjs()],
     external,
     input: pkg.module
   }
