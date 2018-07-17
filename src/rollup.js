@@ -101,8 +101,6 @@ export class Rollup extends File {
         if (originalOutput === undefined) {
           exp.properties.push(templateOutput);
         } else {
-          console.log(originalOutput.value);
-          console.log(templateOutput.value);
           const originalInterop = findProperty(
             originalOutput.value.properties,
             'interop'
