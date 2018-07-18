@@ -189,17 +189,21 @@ export class Package extends File {
 
     const slots = {
       repository: 'chore(package): correct repository url',
-      bugs: 'chore(package): correct bugs url',
-      homepage: 'chore(package): homepage',
+      bugs: 'chore(package): set bugs url from template',
+      homepage: 'chore(package): homepage from template',
       template: 'chore(package): set template repo'
     };
     Object.keys(slots).forEach(key => {
+      const templateValue = template[key];
       if (
-        template[key] !== undefined &&
-        diff(target[key], template[key]).length > 0
+        templateValue !== undefined &&
+        diff(target[key], templateValue).length > 0
       ) {
+        console.log(target[key]);
+        console.log(templateValue);
+        console.log(diff(target[key], templateValue));
         messages.push(slots[key]);
-        target[key] = template[key];
+        target[key] = templateValue;
       }
     });
 
