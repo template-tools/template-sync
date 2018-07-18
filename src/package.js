@@ -443,7 +443,10 @@ function removeKeyword(pkg, keywords, messages) {
       }
     });
 
-    if (pkg.keywords[0] === null || pkg.keywords[0] === undefined) {
+    if (
+      (pkg.keywords.length === 1 && pkg.keywords[0] === null) ||
+      pkg.keywords[0] === undefined
+    ) {
       messages.push(`docs(package): remove keyword null`);
       pkg.keywords = [];
     }
