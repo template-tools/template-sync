@@ -101,43 +101,53 @@ export class Rollup extends File {
         if (originalOutput === undefined) {
           exp.properties.push(templateOutput);
         } else {
-          if (templateOutput !== undefined) {
-            const originalInterop = findProperty(
-              originalOutput.value.properties,
-              'interop'
-            );
-            const templateInterop = findProperty(
-              templateOutput.value.properties,
-              'interop'
-            );
+          mergeKeys(
+            templateOutput,
+            originalOutput,
+            [
+              'format',
+              'file',
+              'dir',
+              'name',
+              'globals',
+              'paths',
+              'banner',
+              'footer',
+              'intro',
+              'outro',
+              'sourcemap',
+              'sourcemapFile',
+              'interop',
+              'extend',
+              'exports',
+              'amd',
+              'indent',
+              'strict',
+              'freeze',
+              'legacy',
+              'namespaceToStringTag'
+            ],
+            messages
+          );
 
-            if (
-              templateInterop !== undefined &&
-              originalInterop === undefined
-            ) {
-              originalOutput.value.properties.push(templateInterop);
+          if (output !== undefined) {
+            if (banner !== undefined) {
+              output.value.properties.push(banner);
+            }
+
+            if (dest !== undefined) {
+              const file = findProperty(output.value.properties, 'file');
+              if (file !== undefined) {
+                file.value = dest.value;
+              }
             }
           }
+
+          removePropertiesKey(exp.properties, 'format');
+          removePropertiesKey(exp.properties, 'sourceMap');
+          removePropertiesKey(exp.properties, 'dest');
         }
-
-        if (output !== undefined) {
-          if (banner !== undefined) {
-            output.value.properties.push(banner);
-          }
-
-          if (dest !== undefined) {
-            const file = findProperty(output.value.properties, 'file');
-            if (file !== undefined) {
-              file.value = dest.value;
-            }
-          }
-        }
-
-        removePropertiesKey(exp.properties, 'format');
-        removePropertiesKey(exp.properties, 'sourceMap');
-        removePropertiesKey(exp.properties, 'dest');
       }
-
       const originalImports = importDeclarationsByLocalName(ast);
       const templateImports = importDeclarationsByLocalName(templateAST);
 
@@ -272,4 +282,25 @@ function removePropertiesKey(properties, name) {
   }
 
   return undefined;
+}
+
+function mergeKeys(source, dest, knownKeys, messages) {
+  const mergedKeys = [];
+
+  if (source !== undefined) {
+    knownKeys.forEach(key => {
+      const destProp = findProperty(dest.value.properties, key);
+      const sourceProp = findProperty(source.value.properties, key);
+      if (sourceProp !== undefined && destProp === undefined) {
+        mergedKeys.push(key);
+        dest.value.properties.push(sourceProp);
+      }
+    });
+  }
+
+  if (mergedKeys.length > 0) {
+    messages.push(`chore(rollup): add to output ${mergedKeys.join(',')}`);
+  }
+
+  return mergedKeys;
 }
