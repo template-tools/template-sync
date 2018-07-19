@@ -276,11 +276,18 @@ export class Package extends File {
     };
     Object.keys(slots).forEach(key => {
       const templateValue = template[key];
+      const d = diff(target[key], templateValue);
+
       if (
         templateValue !== undefined &&
-        diff(target[key], templateValue).length > 0
+        d.length > 0 &&
+        !(
+          d[0].type === 'add' &&
+          d[0].oldValue === undefined &&
+          d[0].newValue === undefined
+        )
       ) {
-        console.log(diff(target[key], templateValue));
+        console.log(d);
         messages.push(slots[key]);
         target[key] = templateValue;
       }
