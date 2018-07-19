@@ -199,8 +199,6 @@ export class Package extends File {
         templateValue !== undefined &&
         diff(target[key], templateValue).length > 0
       ) {
-        console.log(target[key]);
-        console.log(templateValue);
         console.log(diff(target[key], templateValue));
         messages.push(slots[key]);
         target[key] = templateValue;
@@ -373,10 +371,6 @@ export class Package extends File {
       newContent += '\n';
     }
 
-    /*
-    console.log(original);
-    console.log(newContent);
-*/
     const changed = original !== newContent;
 
     if (changed && messages.length === 0) {
