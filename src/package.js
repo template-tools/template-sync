@@ -69,16 +69,97 @@ const sortedKeys = [
  */
 export class Package extends File {
   static decodeScripts(scripts) {
-    const decoded = {};
-
-    if (scripts !== undefined) {
-      Object.keys(scripts).forEach(key => {
-        const script = scripts[key];
-        decoded[key] = script.split(/\s*&&\s*/);
-      });
+    if (scripts === undefined) {
+      return undefined;
     }
 
+    const decoded = {};
+
+    Object.keys(scripts).forEach(key => {
+      const script = scripts[key];
+
+      //console.log(`${key} ${JSON.stringify(script)}`);
+      if (script.match(/&&/)) {
+        decoded[key] = { op: '&&', args: script.split(/\s*&&\s*/) };
+      } else {
+        decoded[key] = { value: script };
+      }
+    });
+
     return decoded;
+  }
+
+  static mergeScripts(source, dest) {
+    if (source === undefined) {
+      if (dest === undefined) {
+        return undefined;
+      }
+      source = {};
+    } else if (dest === undefined) {
+      dest = {};
+    }
+
+    function mergeOP(a, b) {
+      const args = x => {
+        if (x === undefined) return [];
+        return x.args === undefined ? [x.value] : x.args;
+      };
+
+      const t = args(a).concat(args(b));
+
+      return {
+        op: '&&',
+        args: t.filter((item, pos) => t.indexOf(item) == pos)
+      };
+    }
+
+    Object.keys(source).forEach(key => {
+      let d = dest[key];
+
+      const s = source[key];
+      switch (s.op) {
+        case '&&':
+          d = mergeOP(s, d);
+          break;
+
+        default:
+          if (d === undefined) {
+            d = { value: s.value };
+          } else {
+            if (d.op === '&&') {
+              d = mergeOP(s, d);
+            } else {
+              d.value = s.value;
+            }
+          }
+      }
+
+      dest[key] = d;
+    });
+
+    return dest;
+  }
+
+  static encodeScripts(encoded) {
+    if (encoded === undefined) {
+      return undefined;
+    }
+
+    const scripts = {};
+
+    Object.keys(encoded).forEach(key => {
+      const e = encoded[key];
+      switch (e.op) {
+        case '&&':
+          scripts[key] = e.args.join(' && ');
+          break;
+
+        default:
+          scripts[key] = e.value;
+      }
+    });
+
+    return scripts;
   }
 
   static get defaultOptions() {
@@ -205,24 +286,7 @@ export class Package extends File {
       }
     });
 
-    const extraBuilds = {};
-
-    if (target.scripts !== undefined) {
-      Object.keys(target.scripts).forEach(key => {
-        const script = target.scripts[key];
-
-        if (template.scripts !== undefined) {
-          const templateScript = template.scripts[key];
-          if (templateScript !== undefined) {
-            //const parts = script.split(/\s*&&\s*/);
-            const mb = script.match(/&&\s*(.+)$/);
-            if (mb && !templateScript.includes(mb[1])) {
-              extraBuilds[key] = mb[1];
-            }
-          }
-        }
-      });
-    }
+    const decodedScripts = Package.decodeScripts(target.scripts);
 
     const usedDevModules = await context.usedDevModules();
 
@@ -291,9 +355,12 @@ export class Package extends File {
       }
     });
 
-    Object.keys(extraBuilds).forEach(key => {
-      target.scripts[key] += ` && ${extraBuilds[key]}`;
-    });
+    target.scripts = Package.encodeScripts(
+      Package.mergeScripts(
+        Package.decodeScripts(template.scripts),
+        decodedScripts
+      )
+    );
 
     if (target.module === '{{module}}') {
       delete target.module;

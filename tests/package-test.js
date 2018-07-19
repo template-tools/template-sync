@@ -151,7 +151,7 @@ test('package preserve extra prepare', async t => {
   const context = await createContext(
     {
       scripts: {
-        prepare: 'rollup x y z && chmod +x bin/xx',
+        prepare: 'rollup x y && chmod +x bin/xx',
         preprocess: 'rollup a'
       }
     },
@@ -167,7 +167,7 @@ test('package preserve extra prepare', async t => {
   const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).scripts, {
-    prepare: 'rollup x y z && chmod +x bin/xx',
+    prepare: 'rollup x y && chmod +x bin/xx',
     preprocess: 'rollup a && chmod +x bin/yy'
   });
 });

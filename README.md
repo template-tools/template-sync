@@ -66,11 +66,11 @@ merges contents from template repo into destination repo handling some special c
         -   [Parameters](#parameters-3)
     -   [merge](#merge)
         -   [Parameters](#parameters-4)
+-   [Readme](#readme)
 -   [templateOptions](#templateoptions)
     -   [Parameters](#parameters-5)
 -   [diffVersion](#diffversion)
     -   [Parameters](#parameters-6)
--   [Readme](#readme)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-4)
@@ -156,6 +156,12 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
 
+## Readme
+
+**Extends File**
+
+injects badges into REAMDE.md
+
 ## templateOptions
 
 find merger options in the template section of a package.json
@@ -173,12 +179,6 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 -   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-## Readme
-
-**Extends File**
-
-injects badges into REAMDE.md
 
 ## sortedKeys
 
