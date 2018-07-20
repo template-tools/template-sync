@@ -207,8 +207,13 @@ export class Package extends File {
         }
       }
 
-      if (pkg.template !== undefined && pkg.template.repository !== undefined) {
-        properties.templateRepo = pkg.template.repository.url;
+      if (pkg.template !== undefined) {
+        if (pkg.template.repository !== undefined) {
+          properties.templateRepo = pkg.template.repository.url;
+        }
+        if (pkg.template.usedBy !== undefined) {
+          properties.usedBy = pkg.template.usedBy;
+        }
       }
 
       ['description', 'name', 'module', 'browser', 'version'].forEach(key => {

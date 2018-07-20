@@ -52,7 +52,17 @@ export class PreparedContext {
   static async execute(context, targetBranchName) {
     const pc = new PreparedContext(context, targetBranchName);
     await pc.initialize();
-    return pc.execute();
+
+    if (pc.properties.usedBy !== undefined) {
+      for (const r of pc.properties.usedBy) {
+        console.log(`sync ${r} from ${targetBranchName}`);
+
+        const pc2 = new PreparedContext(context, r);
+        await pc2.execute();
+      }
+    } else {
+      return pc.execute();
+    }
   }
 
   constructor(context, targetBranchName) {
@@ -126,6 +136,16 @@ export class PreparedContext {
     const pkg = new Package('package.json');
 
     Object.assign(this.properties, await pkg.properties(targetBranch));
+
+    if (this.properties.usedBy !== undefined) {
+      /*
+      Object.defineProperties(this, {
+        templateBranch: { value: targetBranch }
+      });
+      */
+
+      return;
+    }
 
     let templateBranch;
 
