@@ -25,7 +25,7 @@ const properties = {};
 program
   .description('Keep npm package in sync with its template')
   .version(version)
-  .option('--dry', 'do not create branch/pull request', program.BOOL)
+  .option('--dry', 'do not create branch/pull request', program.BOOL, false)
   .option(
     '-k, --keystore <account/service>',
     'keystore',
