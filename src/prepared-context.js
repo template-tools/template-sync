@@ -147,6 +147,12 @@ export class PreparedContext {
       };
     }
 
+    if (targetBranch.repository.owner !== undefined) {
+      Object.assign(this.properties.license, {
+        owner: targetBranch.repository.owner
+      });
+    }
+
     const pkg = new Package('package.json');
 
     Object.assign(this.properties, await pkg.properties(targetBranch));
