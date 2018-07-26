@@ -46,7 +46,8 @@ export class Context {
 
     options.properties = Object.assign(
       {
-        'date.year': new Date().getFullYear()
+        date: { year: new Date().getFullYear() },
+        license: {}
       },
       options.properties
     );

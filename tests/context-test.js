@@ -17,5 +17,5 @@ test('context create', t => {
   t.is(context.provider, provider);
   t.is(context.dry, false);
   t.is(context.trackUsedByModule, false);
-  t.deepEqual(context.properties, { 'date.year': new Date().getFullYear() });
+  t.deepEqual(context.properties.date, { year: new Date().getFullYear() });
 });

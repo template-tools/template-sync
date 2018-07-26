@@ -6,10 +6,9 @@ export class License extends File {
   }
 
   async mergeContent(context, original, template) {
-    const properties = context.properties;
     const messages = [];
 
-    let year = properties['date.year'];
+    let year = context.evaluate('date.year');
 
     const m = original.match(
       /opyright\s*\(c\)\s*(\d+)([,\-\d]+)*(\s*(,|by)\s*(.*))?/
@@ -28,7 +27,7 @@ export class License extends File {
       }
 
       if (m[4] !== undefined) {
-        properties['license.owner'] = m[5];
+        context.properties.license.owner = m[5];
       }
 
       if (!years.has(year)) {

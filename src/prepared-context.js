@@ -116,6 +116,10 @@ export class PreparedContext {
     return this.ctx.expand(...args);
   }
 
+  evaluate(expression) {
+    return value(this.properties, expression);
+  }
+
   error(...args) {
     return this.context.error(...args);
   }
