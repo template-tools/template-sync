@@ -54,11 +54,21 @@ export class PreparedContext {
     await pc.initialize();
 
     if (pc.properties.usedBy !== undefined) {
-      for (const r of pc.properties.usedBy) {
-        console.log(`sync ${r} from ${targetBranchName}`);
+      //console.log(pc.properties.usedBy);
 
-        const pc2 = new PreparedContext(context, r);
-        await pc2.execute();
+      for (const r of pc.properties.usedBy) {
+        console.log(`A1 sync ${r} from ${targetBranchName}`);
+
+        //this.info(`sync ${r} from ${targetBranchName}`);
+
+        try {
+          const pc2 = new PreparedContext(context, r);
+          console.log(`A2 sync ${r} from ${targetBranchName}`);
+
+          await pc2.execute();
+        } catch (e) {
+          this.error(e);
+        }
       }
     } else {
       return pc.execute();
@@ -138,11 +148,9 @@ export class PreparedContext {
     Object.assign(this.properties, await pkg.properties(targetBranch));
 
     if (this.properties.usedBy !== undefined) {
-      /*
       Object.defineProperties(this, {
         templateBranch: { value: targetBranch }
       });
-      */
 
       return;
     }
