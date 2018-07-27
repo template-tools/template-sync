@@ -7,7 +7,7 @@ test('context create', t => {
     templateRepo: {
       master: {}
     },
-    targetRepo: {
+    'owner/targetRepo': {
       master: {}
     }
   });
