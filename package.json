@@ -55,18 +55,18 @@
     "documentation": "^8.0.2",
     "execa": "^0.10.0",
     "markdown-doctest": "^0.9.1",
-    "mock-repository-provider": "^3.0.4",
+    "mock-repository-provider": "^3.0.6",
     "nyc": "^13.0.1",
     "rollup": "^0.63.4",
     "rollup-plugin-commonjs": "^9.1.4",
     "rollup-plugin-executable": "^1.2.0",
+    "rollup-plugin-istanbul": "^2.0.1",
     "rollup-plugin-json": "^3.0.0",
     "rollup-plugin-multi-entry": "^2.0.2",
     "rollup-plugin-node-resolve": "^3.3.0",
     "semantic-release": "^15.8.1",
     "tempy": "^0.2.1",
-    "travis-deploy-once": "^5.0.1",
-    "rollup-plugin-istanbul": "^2.0.1"
+    "travis-deploy-once": "^5.0.1"
   },
   "optionalDependencies": {
     "keytar": "^4.1.0"
