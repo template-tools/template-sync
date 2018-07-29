@@ -54,18 +54,9 @@ export class PreparedContext {
     await pc.initialize();
 
     if (pc.properties.usedBy !== undefined) {
-      //console.log(pc.properties.usedBy);
-
       for (const r of pc.properties.usedBy) {
-        console.log(`A1 sync ${r} from ${targetBranchName}`);
-
-        //this.info(`sync ${r} from ${targetBranchName}`);
-
         try {
-          const pc2 = new PreparedContext(context, r);
-          console.log(`A2 sync ${r} from ${targetBranchName}`);
-
-          await pc2.execute();
+          await PreparedContext.execute(context, r);
         } catch (e) {
           this.error(e);
         }
