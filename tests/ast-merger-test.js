@@ -17,6 +17,6 @@ function merger(a, b) {
   return recast.print(astA).code;
 }
 
-test.only('ast merge', t => {
+test.skip('ast merge', t => {
   t.is(merger(`{ a: 1 }`, `{ b: 2 }`), `{ a: 1, b: 2}`);
 });
