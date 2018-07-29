@@ -53,7 +53,8 @@ program
   .option(
     '--usage',
     'track packages using template in package.json',
-    program.BOOL
+    program.BOOL,
+    false
   )
   .argument('[repos...]', 'repos to merge')
   .action(async (args, options, logger) => {
