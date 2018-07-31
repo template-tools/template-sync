@@ -12,7 +12,6 @@ import { GithubProvider } from 'github-repository-provider';
 import { BitbucketProvider } from 'bitbucket-repository-provider';
 import { LocalProvider } from 'local-repository-provider';
 import { AggregationProvider } from 'aggregation-repository-provider';
-import { directory } from 'tempy';
 
 const program = require('caporal'),
   prompt = require('prompt');
