@@ -7,7 +7,10 @@
   "main": "dist/context.js",
   "module": "src/context.js",
   "description": "Keep npm package in sync with its template",
-  "keywords": ["npm", "template"],
+  "keywords": [
+    "npm",
+    "template"
+  ],
   "contributors": [
     {
       "name": "Markus Felten",
@@ -61,7 +64,7 @@
     "rollup-plugin-json": "^3.0.0",
     "rollup-plugin-multi-entry": "^2.0.2",
     "rollup-plugin-node-resolve": "^3.3.0",
-    "semantic-release": "^15.8.1",
+    "semantic-release": "^15.9.2",
     "travis-deploy-once": "^5.0.1"
   },
   "optionalDependencies": {
@@ -80,12 +83,21 @@
   "homepage": "https://github.com/arlac77/npm-template-sync#readme",
   "release": {},
   "ava": {
-    "files": ["build/*-test.js"],
-    "require": ["babel-register"]
+    "files": [
+      "build/*-test.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
   },
   "nyc": {
-    "include": ["build/*-test.js", "src/**/*.js"],
-    "reporter": ["lcov"],
+    "include": [
+      "build/*-test.js",
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
     "report-dir": "./build/coverage"
   },
   "xo": {
