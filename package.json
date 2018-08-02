@@ -71,7 +71,7 @@
     "keytar": "^4.1.0"
   },
   "engines": {
-    "node": ">=10.7"
+    "node": ">=10.8"
   },
   "repository": {
     "type": "git",
