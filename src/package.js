@@ -414,13 +414,13 @@ export class Package extends File {
 
     target = deleter(target, template, messages, []);
 
-    if (target.keywords !== undefined) {
-      delete target.keywords['npm-package-template'];
-    }
-
     Object.keys(this.options.keywords).forEach(r =>
       addKeyword(target, new RegExp(r), this.options.keywords[r], messages)
     );
+
+    if (target.keywords !== undefined) {
+      delete target.keywords['npm-package-template'];
+    }
 
     removeKeyword(target, ['null', null, undefined], messages);
 
