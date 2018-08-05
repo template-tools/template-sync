@@ -55,7 +55,7 @@
     "documentation": "^8.1.0",
     "execa": "^0.10.0",
     "markdown-doctest": "^0.9.1",
-    "mock-repository-provider": "^3.0.6",
+    "mock-repository-provider": "^3.0.7",
     "nyc": "^13.0.1",
     "rollup": "^0.63.5",
     "rollup-plugin-commonjs": "^9.1.4",
