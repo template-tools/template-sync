@@ -34,7 +34,7 @@ export default [
       banner: '#!/usr/bin/env node',
       interop: false
     },
-    plugins: [nodeResolve(), commonjs(), json(), executable()],
+    plugins: [nodeResolve(), commonjs(), json(), cleanup(), executable()],
     external,
     input: 'src/npm-template-sync-cli.js'
   },
@@ -44,7 +44,7 @@ export default [
       format: 'cjs',
       interop: false
     },
-    plugins: [nodeResolve(), commonjs()],
+    plugins: [nodeResolve(), commonjs(), cleanup()],
     external,
     input: pkg.module
   }
