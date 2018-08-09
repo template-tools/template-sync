@@ -39,7 +39,7 @@
     "bitbucket-repository-provider": "^1.5.1",
     "caporal": "^0.10.0",
     "deep-extend": "^0.6.0",
-    "expression-expander": "^6.1.1",
+    "expression-expander": "^6.1.2",
     "github-repository-provider": "^2.1.3",
     "js-yaml": "^3.12.0",
     "jsonpath": "^1.0.0",
