@@ -133,14 +133,14 @@ export class PreparedContext {
 
     if (targetBranch.provider.name === 'GithubProvider') {
       this.properties.github = {
-        user: targetBranch.repository.owner,
+        user: targetBranch.repository.owner.name,
         repo: targetBranch.repository.condensedName
       };
     }
 
     if (targetBranch.repository.owner !== undefined) {
       Object.assign(this.properties.license, {
-        owner: targetBranch.repository.owner
+        owner: targetBranch.repository.owner.name
       });
     }
 
