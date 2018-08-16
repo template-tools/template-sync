@@ -9,7 +9,7 @@ test('modify one year', async t => {
     templateRepo: {
       master: { aFile: 'Copyright (c) {{date.year}} by {{owner}}' }
     },
-    targetRepo: { master: { aFile: 'Copyright (c) 1999 by xyz' } }
+    'myOwner/targetRepo': { master: { aFile: 'Copyright (c) 1999 by xyz' } }
   });
 
   const context = await PreparedContext.from(
@@ -20,7 +20,7 @@ test('modify one year', async t => {
         license: { owner: 'xyz' }
       }
     }),
-    'targetRepo'
+    'myOwner/targetRepo'
   );
 
   const license = new License('aFile');
@@ -34,7 +34,7 @@ test('modify year list', async t => {
     templateRepo: {
       master: { aFile: 'Copyright (c) {{date.year}} by {{owner}}' }
     },
-    targetRepo: {
+    'myOwner/targetRepo': {
       master: { aFile: 'Copyright (c) 2001,1999,2000,2001,2007 by xyz' }
     }
   });
@@ -47,7 +47,7 @@ test('modify year list', async t => {
         license: { owner: 'xyz' }
       }
     }),
-    'targetRepo'
+    'myOwner/targetRepo'
   );
 
   const license = new License('aFile');
@@ -56,12 +56,12 @@ test('modify year list', async t => {
   t.deepEqual(merged.content, 'Copyright (c) 1999,2000,2001,2007,2099 by xyz');
 });
 
-test('license empty target', async t => {
+test('license with empty target', async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: { aFile: 'Copyright (c) {{date.year}} by {{license.owner}}' }
     },
-    targetRepo: {
+    'myOwner/targetRepo': {
       master: {}
     }
   });
@@ -70,15 +70,15 @@ test('license empty target', async t => {
     new Context(provider, {
       templateBranchName: 'templateRepo',
       properties: {
-        date: { year: 2099 },
-        license: { owner: 'xyz' }
+        date: { year: 2099 }
       }
     }),
-    'targetRepo'
+    'myOwner/targetRepo'
   );
 
   const license = new License('aFile');
   const merged = await license.merge(context);
+
   t.deepEqual(merged.messages, ['chore(license): add LICENSE']);
-  t.deepEqual(merged.content, 'Copyright (c) 2099 by xyz');
+  t.deepEqual(merged.content, 'Copyright (c) 2099 by myOwner');
 });
