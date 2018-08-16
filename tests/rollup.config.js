@@ -37,7 +37,7 @@ export default [
     plugins: [
       multiEntry(),
       istanbul({
-        exclude: ['tests/**/*-test.js']
+        exclude: ['tests/**/*-test.js', 'node_modules/**/*']
       }),
       resolve(),
       commonjs()
