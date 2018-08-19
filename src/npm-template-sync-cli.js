@@ -50,7 +50,7 @@ program
   )
   .option(
     '--list-properties',
-    'list all properties (if given the first repo) and exit',
+    'list all properties (if given of the first repo) and exit',
     program.BOOL,
     false
   )
