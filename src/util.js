@@ -52,6 +52,7 @@ export function removeSensibleValues(object) {
   if (
     object === undefined ||
     object === null ||
+    typeof object === 'number' ||
     typeof object === 'string' ||
     object instanceof String
   ) {
