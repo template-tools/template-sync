@@ -52,18 +52,7 @@ export class PreparedContext {
   static async execute(context, targetBranchName) {
     const pc = new PreparedContext(context, targetBranchName);
     await pc.initialize();
-
-    if (pc.properties.usedBy !== undefined) {
-      for (const r of pc.properties.usedBy) {
-        try {
-          await PreparedContext.execute(context, r);
-        } catch (e) {
-          this.error(e);
-        }
-      }
-    } else {
-      return pc.execute();
-    }
+    return pc.execute();
   }
 
   constructor(context, targetBranchName) {
@@ -316,10 +305,24 @@ export class PreparedContext {
     return { templatePackageJson, templatePRBranch, templatePullRequest };
   }
 
+  async execute() {
+    if (this.properties.usedBy !== undefined) {
+      for (const r of this.properties.usedBy) {
+        try {
+          await PreparedContext.execute(context, r);
+        } catch (e) {
+          this.error(e);
+        }
+      }
+    } else {
+      return this.executeSingleRepo();
+    }
+  }
+
   /**
    * @return {Promise<PullRequest>}
    */
-  async execute() {
+  async executeSingleRepo() {
     const templateBranch = this.templateBranch;
     const targetBranch = this.targetBranch;
 

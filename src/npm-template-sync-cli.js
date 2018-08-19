@@ -42,8 +42,18 @@ program
       setProperty(properties, k, v);
     });
   })
-  .option('--list-providers', 'list providers with options and exit')
-  .option('--list-properties', 'list all properties and exit')
+  .option(
+    '--list-providers',
+    'list providers with options and exit',
+    program.BOOL,
+    false
+  )
+  .option(
+    '--list-properties',
+    'list all properties (if given the first repo) and exit',
+    program.BOOL,
+    false
+  )
   .option(
     '-t, --template <identifier>',
     'template repository',
@@ -124,13 +134,21 @@ program
         properties
       });
 
-      if (options.listProperties) {
+      if (args.repos.length === 0 && options.listProperties) {
         logger.info(JSON.stringify(removeSensibleValues(context.properties)));
         return;
       }
 
       for (const repo of args.repos) {
-        await PreparedContext.execute(context, repo);
+        const pc = new PreparedContext(context, repo);
+        await pc.initialize();
+
+        if (options.listProperties) {
+          logger.info(JSON.stringify(removeSensibleValues(pc.properties)));
+          return;
+        }
+
+        await pc.execute();
       }
     } catch (err) {
       logger.error(err);
