@@ -144,6 +144,13 @@ export class PreparedContext {
       });
     }
 
+    if (
+      targetBranch.repository.description !== undefined &&
+      this.properties.description === undefined
+    ) {
+      this.properties.description = targetBranch.repository.description;
+    }
+
     const pkg = new Package('package.json');
 
     Object.assign(this.properties, await pkg.properties(targetBranch));
