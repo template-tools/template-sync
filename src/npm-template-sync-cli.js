@@ -1,38 +1,38 @@
-import { Context } from './context';
-import { PreparedContext } from './prepared-context';
+import { Context } from "./context";
+import { PreparedContext } from "./prepared-context";
 
 import {
   setPassword,
   getPassword,
   setProperty,
   removeSensibleValues
-} from './util';
-import { version } from '../package.json';
-import { GithubProvider } from 'github-repository-provider';
-import { BitbucketProvider } from 'bitbucket-repository-provider';
-import { LocalProvider } from 'local-repository-provider';
-import { AggregationProvider } from 'aggregation-repository-provider';
+} from "./util";
+import { version, engines } from "../package.json";
+import { GithubProvider } from "github-repository-provider";
+import { BitbucketProvider } from "bitbucket-repository-provider";
+import { LocalProvider } from "local-repository-provider";
+import { AggregationProvider } from "aggregation-repository-provider";
 
-const program = require('caporal'),
-  prompt = require('prompt');
+const program = require("caporal"),
+  prompt = require("prompt");
 
-process.on('uncaughtException', err => console.error(err));
-process.on('unhandledRejection', reason => console.error(reason));
+process.on("uncaughtException", err => console.error(err));
+process.on("unhandledRejection", reason => console.error(reason));
 
 const properties = {};
 
 program
-  .description('Keep npm package in sync with its template')
+  .description("Keep npm package in sync with its template")
   .version(version)
-  .option('--dry', 'do not create branch/pull request', program.BOOL, false)
+  .option("--dry", "do not create branch/pull request", program.BOOL, false)
   .option(
-    '-k, --keystore <account/service>',
-    'keystore',
+    "-k, --keystore <account/service>",
+    "keystore",
     /^[\w\-]+\/.*/,
-    'arlac77/GitHub for Mac SSH key passphrase — github.com'
+    "arlac77/GitHub for Mac SSH key passphrase — github.com"
   )
-  .option('-s, --save', 'save keystore')
-  .option('-d --define <key=value>', 'set provider option', values => {
+  .option("-s, --save", "save keystore")
+  .option("-d --define <key=value>", "set provider option", values => {
     if (!Array.isArray(values)) {
       values = [values];
     }
@@ -43,29 +43,29 @@ program
     });
   })
   .option(
-    '--list-providers',
-    'list providers with options and exit',
+    "--list-providers",
+    "list providers with options and exit",
     program.BOOL,
     false
   )
   .option(
-    '--list-properties',
-    'list all properties (if given of the first repo) and exit',
+    "--list-properties",
+    "list all properties (if given of the first repo) and exit",
     program.BOOL,
     false
   )
   .option(
-    '-t, --template <identifier>',
-    'template repository',
+    "-t, --template <identifier>",
+    "template repository",
     /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
   )
   .option(
-    '--usage',
-    'track packages using template in package.json',
+    "--usage",
+    "track packages using template in package.json",
     program.BOOL,
     false
   )
-  .argument('[repos...]', 'repos to merge')
+  .argument("[repos...]", "repos to merge")
   .action(async (args, options, logger) => {
     if (options.save) {
       prompt.start();
@@ -89,7 +89,7 @@ program
           logger.error(err);
           return;
         }
-        logger.info('password set');
+        logger.info("password set");
       });
     }
 
@@ -120,7 +120,7 @@ program
               p =>
                 `${p.name}: ${JSON.stringify(removeSensibleValues(p.config))}`
             )
-          ).join('\n')
+          ).join("\n")
         );
 
         return;
@@ -154,5 +154,12 @@ program
       logger.error(err);
     }
   });
+
+const requiredEngine = parseInt(engines.node.replace(/^[=><]?/, ""));
+
+if (parseInt(process.versions.node.split(/\./)[0], 10) < requiredEngine) {
+  console.error(`require node ${engines.node} (not ${process.versions.node})`);
+  process.exit(-1);
+}
 
 program.parse(process.argv);
