@@ -12,6 +12,7 @@ import { GithubProvider } from "github-repository-provider";
 import { BitbucketProvider } from "bitbucket-repository-provider";
 import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
+import { satisfies } from "semver";
 
 const program = require("caporal"),
   prompt = require("prompt");
@@ -155,9 +156,7 @@ program
     }
   });
 
-const requiredEngine = parseInt(engines.node.replace(/^[=><]?/, ""));
-
-if (parseInt(process.versions.node.split(/\./)[0], 10) < requiredEngine) {
+if (!satisfies(process.versions.node, engines.node)) {
   console.error(`require node ${engines.node} (not ${process.versions.node})`);
   process.exit(-1);
 }
