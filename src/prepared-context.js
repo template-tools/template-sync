@@ -1,20 +1,20 @@
-import { createContext } from 'expression-expander';
-import { value } from 'jsonpath';
-import micromatch from 'micromatch';
+import { createContext } from "expression-expander";
+import { value } from "jsonpath";
+import micromatch from "micromatch";
 
-import { Travis } from './travis';
-import { Readme } from './readme';
-import { Package } from './package';
-import { Rollup } from './rollup';
-import { License } from './license';
-import { MergeAndRemoveLineSet } from './merge-and-remove-line-set';
-import { MergeLineSet } from './merge-line-set';
-import { NpmIgnore } from './npm-ignore';
-import { ReplaceIfEmpty } from './replace-if-empty';
-import { Replace } from './replace';
-import { JSONFile } from './json-file';
-import { JSDoc } from './jsdoc';
-import { Context } from './context';
+import { Travis } from "./travis";
+import { Readme } from "./readme";
+import { Package } from "./package";
+import { Rollup } from "./rollup";
+import { License } from "./license";
+import { MergeAndRemoveLineSet } from "./merge-and-remove-line-set";
+import { MergeLineSet } from "./merge-line-set";
+import { NpmIgnore } from "./npm-ignore";
+import { ReplaceIfEmpty } from "./replace-if-empty";
+import { Replace } from "./replace";
+import { JSONFile } from "./json-file";
+import { JSDoc } from "./jsdoc";
+import { Context } from "./context";
 
 /**
  * context prepared to execute one package
@@ -61,9 +61,9 @@ export class PreparedContext {
         value: createContext({
           properties: Object.assign({}, context.properties),
           keepUndefinedValues: true,
-          leftMarker: '{{',
-          rightMarker: '}}',
-          markerRegexp: '{{([^}]+)}}',
+          leftMarker: "{{",
+          rightMarker: "}}",
+          markerRegexp: "{{([^}]+)}}",
           evaluate: (expression, context, path) =>
             value(this.properties, expression)
         })
@@ -120,7 +120,7 @@ export class PreparedContext {
     const context = this.context;
     const targetBranch = await context.provider.branch(this.targetBranchName);
 
-    if (targetBranch.provider.name === 'GithubProvider') {
+    if (targetBranch.provider.name === "GithubProvider") {
       this.properties.github = {
         user: targetBranch.owner.name,
         repo: targetBranch.repository.condensedName
@@ -140,7 +140,7 @@ export class PreparedContext {
       this.properties.description = targetBranch.repository.description;
     }
 
-    const pkg = new Package('package.json');
+    const pkg = new Package("package.json");
 
     Object.assign(this.properties, await pkg.properties(targetBranch));
 
@@ -186,7 +186,7 @@ export class PreparedContext {
     return mapping
       .map(m => {
         const found = micromatch(
-          files.filter(f => f.type === 'blob').map(f => f.path),
+          files.filter(f => f.type === "blob").map(f => f.path),
           m.pattern
         );
 
@@ -215,7 +215,7 @@ export class PreparedContext {
   async usedDevModules() {
     const usedModuleSets = await Promise.all(
       Array.from(this.files.values()).map(async file => {
-        if (file.path === 'package.json') {
+        if (file.path === "package.json") {
           return file.usedDevModules(
             file.targetContent(this, { ignoreMissing: true })
           );
@@ -244,10 +244,10 @@ export class PreparedContext {
     let templatePullRequest;
     let newTemplatePullRequest = false;
     let templatePRBranch = await templateBranch.repository.branch(
-      'template-add-used-1'
+      "template-add-used-1"
     );
 
-    const pkg = new Package('package.json');
+    const pkg = new Package("package.json");
 
     const templatePackage = await (templatePRBranch
       ? templatePRBranch
@@ -257,7 +257,7 @@ export class PreparedContext {
     const templatePackageContent = templatePackage.content;
 
     const templatePackageJson =
-      templatePackageContent === undefined || templatePackageContent === ''
+      templatePackageContent === undefined || templatePackageContent === ""
         ? {}
         : JSON.parse(templatePackageContent);
 
@@ -277,7 +277,7 @@ export class PreparedContext {
 
         if (templatePRBranch === undefined) {
           templatePRBranch = await templateBranch.repository.createBranch(
-            'template-add-used-1',
+            "template-add-used-1",
             templateBranch
           );
           newTemplatePullRequest = true;
@@ -285,7 +285,7 @@ export class PreparedContext {
 
         await templatePRBranch.commit(`fix: add ${name}`, [
           {
-            path: 'package.json',
+            path: "package.json",
             content: JSON.stringify(templatePackageJson, undefined, 2)
           }
         ]);
@@ -309,8 +309,10 @@ export class PreparedContext {
     if (this.properties.usedBy !== undefined) {
       for (const r of this.properties.usedBy) {
         try {
-          await PreparedContext.execute(context, r);
+          await PreparedContext.execute(this.context, r);
         } catch (e) {
+          console.log(`execute ${r} done ${e}`);
+
           this.error(e);
         }
       }
@@ -351,7 +353,7 @@ export class PreparedContext {
     this.info(
       merges
         .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
-        .join(',')
+        .join(",")
     );
 
     if (this.dry) {
@@ -360,7 +362,7 @@ export class PreparedContext {
     }
 
     let newPullRequestRequired = false;
-    const prBranchName = 'template-sync-1';
+    const prBranchName = "template-sync-1";
     let prBranch = (await this.targetBranch.repository.branches()).get(
       prBranchName
     );
@@ -378,7 +380,7 @@ export class PreparedContext {
       return result;
     }, []);
 
-    await prBranch.commit(messages.join('\n'), merges);
+    await prBranch.commit(messages.join("\n"), merges);
 
     if (newPullRequestRequired) {
       try {
@@ -389,10 +391,10 @@ export class PreparedContext {
               m =>
                 `${m.path}
 ---
-- ${m.messages.join('\n- ')}
+- ${m.messages.join("\n- ")}
 `
             )
-            .join('\n')
+            .join("\n")
         });
         this.info(`${targetBranch.fullCondensedName}: ${pullRequest.name}`);
 
@@ -403,7 +405,7 @@ export class PreparedContext {
     } else {
       const pullRequest = new targetBranch.provider.pullRequestClass(
         targetBranch.repository,
-        'old'
+        "old"
       );
 
       this.info(
