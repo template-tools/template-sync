@@ -59,29 +59,29 @@ merges contents from template repo into destination repo handling some special c
     -   [Properties](#properties-1)
     -   [usedDevModules](#useddevmodules)
     -   [executeSingleRepo](#executesinglerepo)
+-   [templateOptions](#templateoptions)
+    -   [Parameters](#parameters-2)
+-   [diffVersion](#diffversion)
+    -   [Parameters](#parameters-3)
 -   [Readme](#readme)
+-   [File](#file)
+    -   [Parameters](#parameters-4)
+    -   [Properties](#properties-2)
+    -   [properties](#properties-3)
+        -   [Parameters](#parameters-5)
+    -   [merge](#merge)
+        -   [Parameters](#parameters-6)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
-    -   [properties](#properties-2)
-        -   [Parameters](#parameters-2)
+    -   [properties](#properties-4)
+        -   [Parameters](#parameters-7)
 -   [defaultMerge](#defaultmerge)
-    -   [Parameters](#parameters-3)
+    -   [Parameters](#parameters-8)
 -   [normalizePackage](#normalizepackage)
-    -   [Parameters](#parameters-4)
--   [templateOptions](#templateoptions)
-    -   [Parameters](#parameters-5)
--   [diffVersion](#diffversion)
-    -   [Parameters](#parameters-6)
+    -   [Parameters](#parameters-9)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
     -   [defaultIgnoreSet](#defaultignoreset)
--   [File](#file)
-    -   [Parameters](#parameters-7)
-    -   [Properties](#properties-3)
-    -   [properties](#properties-4)
-        -   [Parameters](#parameters-8)
-    -   [merge](#merge)
-        -   [Parameters](#parameters-9)
 -   [NpmIgnore](#npmignore)
     -   [defaultIgnoreSet](#defaultignoreset-1)
 -   [ReplaceIfEmpty](#replaceifempty)
@@ -124,11 +124,61 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
 
+## templateOptions
+
+find merger options in the template section of a package.json
+
+### Parameters
+
+-   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## diffVersion
+
+### Parameters
+
+-   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
 ## Readme
 
 **Extends File**
 
 injects badges into REAMDE.md
+
+## File
+
+Mergable File
+
+### Parameters
+
+-   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
+
+### Properties
+
+-   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### properties
+
+Deliver some key properties
+
+#### Parameters
+
+-   `branch` **Branch** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### merge
+
+#### Parameters
+
+-   `context` **PreparedContect** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
 
 ## sortedKeys
 
@@ -171,24 +221,6 @@ bring package into nomalized (sorted) form
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** normalized source
 
-## templateOptions
-
-find merger options in the template section of a package.json
-
-### Parameters
-
--   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## diffVersion
-
-### Parameters
-
--   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
 ## MergeAndRemoveLineSet
 
 **Extends MergeLineSet**
@@ -204,38 +236,6 @@ File where every line is a key
 entries to be skipped from result
 
 Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
-
-## File
-
-Mergable File
-
-### Parameters
-
--   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
-
-### Properties
-
--   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-### properties
-
-Deliver some key properties
-
-#### Parameters
-
--   `branch` **Branch** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-### merge
-
-#### Parameters
-
--   `context` **PreparedContect** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
 
 ## NpmIgnore
 
