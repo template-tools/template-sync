@@ -136,7 +136,9 @@ program
       });
 
       if (args.repos.length === 0 && options.listProperties) {
-        logger.info(JSON.stringify(removeSensibleValues(context.properties)));
+        logger.info(
+          JSON.stringify(removeSensibleValues(context.properties), undefined, 2)
+        );
         return;
       }
 
@@ -145,7 +147,9 @@ program
         await pc.initialize();
 
         if (options.listProperties) {
-          logger.info(JSON.stringify(removeSensibleValues(pc.properties)));
+          logger.info(
+            JSON.stringify(removeSensibleValues(pc.properties), undefined, 2)
+          );
           return;
         }
 
