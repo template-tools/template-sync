@@ -123,7 +123,7 @@ export class PreparedContext {
     if (targetBranch.provider.name === "GithubProvider") {
       this.properties.github = {
         user: targetBranch.owner.name,
-        repo: targetBranch.repository.condensedName
+        repo: targetBranch.repository.name
       };
     }
 
