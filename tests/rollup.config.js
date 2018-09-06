@@ -30,17 +30,18 @@ const external = [
 ];
 
 export default [
-  ...baseRollup,
+  //  ...baseRollup,
   {
     input: 'tests/**/*-test.js',
     external,
     plugins: [
-      multiEntry(),
-      istanbul({
-        exclude: ['tests/**/*-test.js', 'node_modules/**/*']
-      }),
+      multiEntry() //,
+      //      istanbul({
+      //        exclude: ['tests/**/*-test.js', 'node_modules/**/*']
+      /*    }),
       resolve(),
       commonjs()
+      */
     ],
 
     output: {
