@@ -1,8 +1,8 @@
-import { File } from './file';
-import { templateOptions } from './util';
+import { File } from "./file";
+import { templateOptions } from "./util";
 
 /**
- * injects badges into REAMDE.md
+ * injects badges into README.md
  */
 export class Readme extends File {
   static matchesFileName(name) {
@@ -17,7 +17,7 @@ export class Readme extends File {
 
   async mergeContent(context, original, template) {
     const [pkg, pkgTemplate] = await context.files
-      .get('package.json')
+      .get("package.json")
       .content(context);
 
     const p = pkg.length === 0 ? {} : JSON.parse(pkg);
@@ -25,7 +25,7 @@ export class Readme extends File {
 
     const badges = this.options.badges
       .map(b => {
-        const m = templateOptions(p, 'Readme');
+        const m = templateOptions(p, this.constructor.name);
 
         // TODO do not alter global properties use private layer here
         if (m.badges !== undefined) {
@@ -35,7 +35,7 @@ export class Readme extends File {
         const r = context.expand(`[![${b.name}](${b.icon})](${b.url})`);
 
         if (r.match(/\{\{/)) {
-          return '';
+          return "";
         }
         return r;
       })
@@ -49,11 +49,11 @@ export class Readme extends File {
       body = body.filter(l => !l.match(/^\[\!\[.*\)$/));
     }
 
-    const content = [...badges, ...body].join('\n');
+    const content = [...badges, ...body].join("\n");
     return {
       content,
       changed: content !== original,
-      messages: ['docs(README): update from template']
+      messages: ["docs(README): update from template"]
     };
   }
 }
