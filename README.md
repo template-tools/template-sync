@@ -59,7 +59,6 @@ merges contents from template repo into destination repo handling some special c
     -   [Properties](#properties-1)
     -   [usedDevModules](#useddevmodules)
     -   [executeSingleRepo](#executesinglerepo)
--   [Readme](#readme)
 -   [File](#file)
     -   [Parameters](#parameters-2)
     -   [Properties](#properties-2)
@@ -71,6 +70,7 @@ merges contents from template repo into destination repo handling some special c
     -   [Parameters](#parameters-5)
 -   [diffVersion](#diffversion)
     -   [Parameters](#parameters-6)
+-   [Readme](#readme)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-4)
@@ -124,12 +124,6 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
 
-## Readme
-
-**Extends File**
-
-injects badges into REAMDE.md
-
 ## File
 
 Mergable File
@@ -179,6 +173,12 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 -   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 -   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+## Readme
+
+**Extends File**
+
+injects badges into README.md
 
 ## sortedKeys
 
