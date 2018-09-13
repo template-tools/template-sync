@@ -1,16 +1,30 @@
-import { File } from './file';
-import { diffVersion } from './util';
-import deepExtend from 'deep-extend';
+import { File } from "./file";
+import { diffVersion } from "./util";
+import deepExtend from "deep-extend";
 
-const yaml = require('js-yaml');
+const yaml = require("js-yaml");
 
 function difference(a, b) {
   return new Set([...a].filter(x => !b.has(x)));
 }
 
+const scriptSlots = [
+  "before_install",
+  "install",
+  "before_script",
+  "script",
+  "before_cache",
+  "after_success",
+  "after_failure",
+  "before_deploy",
+  "deploy",
+  "after_deploy",
+  "after_script"
+];
+
 export class Travis extends File {
   static matchesFileName(name) {
-    return name === '.travis.yml';
+    return name === ".travis.yml";
   }
 
   async mergeContent(context, original, template) {
@@ -18,7 +32,12 @@ export class Travis extends File {
 
     const yml = yaml.safeLoad(original, ymlOptions) || {};
     const tyml = yaml.safeLoad(context.expand(template), ymlOptions);
-    const before_script = yml.before_script;
+
+    const savedScripts = scriptSlots.reduce((a, c) => {
+      a[c] = yml[c];
+      return a;
+    }, {});
+
     const email = yml.notifications ? yml.notifications.email : undefined;
     const messages = [];
 
@@ -32,11 +51,11 @@ export class Travis extends File {
     const newVersions = new Set(versions);
 
     versions.forEach(v => {
-      if (v.startsWith('-')) {
-        const d = v.replace(/^\-\s*/, '');
+      if (v.startsWith("-")) {
+        const d = v.replace(/^\-\s*/, "");
 
         versions.forEach(v => {
-          const x = v.replace(/^\-\s*/, '');
+          const x = v.replace(/^\-\s*/, "");
           //console.log(`${d}<>${v} => ${diffVersion(d, x) === 0 || x != v}`);
           if (diffVersion(d, x) === 0 || x != v) {
             if (templateVersions.has(x)) {
@@ -76,20 +95,24 @@ export class Travis extends File {
       yml.notifications.email = email;
     }
 
-    if (before_script !== undefined) {
-      before_script.forEach(s => {
-        if (!yml.before_script.find(e => e === s)) {
-          yml.before_script.push(s);
-        }
-      });
-    }
+    scriptSlots.forEach(scriptName => {
+      const cs = savedScripts[scriptName];
 
-    if (yml.before_script) {
-      yml.before_script = yml.before_script.filter(
-        s =>
-          !tyml.before_script.find(e => e === `-${s}`) && s.indexOf('-') !== 0
-      );
-    }
+      if (cs != undefined) {
+        cs.forEach(s => {
+          if (!yml[scriptName].find(e => e === s)) {
+            yml[scriptName].push(s);
+          }
+        });
+      }
+
+      if (yml[scriptName]) {
+        yml[scriptName] = yml[scriptName].filter(
+          s =>
+            !tyml[scriptName].find(e => e === `-${s}`) && s.indexOf("-") !== 0
+        );
+      }
+    });
 
     const content = yaml.safeDump(yml, {
       lineWidth: 128

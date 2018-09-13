@@ -1,8 +1,8 @@
-import test from 'ava';
-import { Context } from '../src/context';
-import { PreparedContext } from '../src/prepared-context';
-import { Travis } from '../src/travis';
-import { MockProvider } from 'mock-repository-provider';
+import test from "ava";
+import { Context } from "../src/context";
+import { PreparedContext } from "../src/prepared-context";
+import { Travis } from "../src/travis";
+import { MockProvider } from "mock-repository-provider";
 
 async function mockYmlVersions(templateVersions, targetVersions) {
   const provider = new MockProvider({
@@ -14,7 +14,7 @@ ${templateVersions
             v => `  - ${v}
 `
           )
-          .join('')}
+          .join("")}
 `
       }
     },
@@ -26,7 +26,7 @@ ${targetVersions
             v => `  - ${v}
 `
           )
-          .join('')}
+          .join("")}
 `
       }
     }
@@ -34,16 +34,16 @@ ${targetVersions
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: 'templateRepo'
+      templateBranchName: "templateRepo"
     }),
-    'targetRepo'
+    "targetRepo"
   );
-  const merger = new Travis('aFile');
+  const merger = new Travis("aFile");
   return merger.merge(context);
 }
 
-test('travis node versions merge', async t => {
-  const merged = await mockYmlVersions(['8.9.3', '9'], ['8.9.3']);
+test("travis node versions merge", async t => {
+  const merged = await mockYmlVersions(["8.9.3", "9"], ["8.9.3"]);
 
   t.deepEqual(
     merged.content,
@@ -54,8 +54,8 @@ test('travis node versions merge', async t => {
   );
 });
 
-test('travis node versions none numeric', async t => {
-  const merged = await mockYmlVersions(['7.7.2', '-iojs'], ['7.7.1', 'iojs']);
+test("travis node versions none numeric", async t => {
+  const merged = await mockYmlVersions(["7.7.2", "-iojs"], ["7.7.1", "iojs"]);
 
   t.deepEqual(
     merged.content,
@@ -65,8 +65,8 @@ test('travis node versions none numeric', async t => {
   );
 });
 
-test('travis node versions simple', async t => {
-  const merged = await mockYmlVersions(['7.7.2'], ['7.7.1']);
+test("travis node versions simple", async t => {
+  const merged = await mockYmlVersions(["7.7.2"], ["7.7.1"]);
 
   t.deepEqual(
     merged.content,
@@ -77,8 +77,8 @@ test('travis node versions simple', async t => {
   );
 });
 
-test('travis node versions complex', async t => {
-  const merged = await mockYmlVersions(['7.7.2'], ['6.10.1', '7.7.1']);
+test("travis node versions complex", async t => {
+  const merged = await mockYmlVersions(["7.7.2"], ["6.10.1", "7.7.1"]);
 
   t.deepEqual(
     merged.content,
@@ -90,8 +90,8 @@ test('travis node versions complex', async t => {
   );
 });
 
-test('travis node semver mayor only', async t => {
-  const merged = await mockYmlVersions(['7.7.2'], ['5', '6.2']);
+test("travis node semver mayor only", async t => {
+  const merged = await mockYmlVersions(["7.7.2"], ["5", "6.2"]);
 
   t.deepEqual(
     merged.content,
@@ -103,10 +103,10 @@ test('travis node semver mayor only', async t => {
   );
 });
 
-test('travis node semver remove', async t => {
+test("travis node semver remove", async t => {
   const merged = await mockYmlVersions(
-    ['-4', '-5', '-7', '7.7.2'],
-    ['4.2', '4.2.3', '5.1', '7.7.0', '7.7.1', '9.3']
+    ["-4", "-5", "-7", "7.7.2"],
+    ["4.2", "4.2.3", "5.1", "7.7.0", "7.7.1", "9.3"]
   );
 
   t.deepEqual(
@@ -118,8 +118,8 @@ test('travis node semver remove', async t => {
   );
 });
 
-test('travis node semver two digits', async t => {
-  const merged = await mockYmlVersions(["'8.10'", '-8'], ['8.9.4']);
+test("travis node semver two digits", async t => {
+  const merged = await mockYmlVersions(["'8.10'", "-8"], ["8.9.4"]);
 
   t.deepEqual(
     merged.content,
@@ -129,7 +129,7 @@ test('travis node semver two digits', async t => {
   );
 });
 
-test('travis remove before_script', async t => {
+test("travis remove before_script", async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: {
@@ -151,12 +151,12 @@ test('travis remove before_script', async t => {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: 'templateRepo'
+      templateBranchName: "templateRepo"
     }),
-    'targetRepo'
+    "targetRepo"
   );
 
-  const merger = new Travis('aFile');
+  const merger = new Travis("aFile");
   const merged = await merger.merge(context);
   t.deepEqual(
     merged.content,
@@ -166,7 +166,7 @@ test('travis remove before_script', async t => {
   );
 });
 
-test('start fresh', async t => {
+test("start fresh", async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: {
@@ -180,19 +180,19 @@ before_script:
     },
     targetRepo: {
       master: {
-        aFile: ''
+        aFile: ""
       }
     }
   });
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: 'templateRepo'
+      templateBranchName: "templateRepo"
     }),
-    'targetRepo'
+    "targetRepo"
   );
 
-  const merger = new Travis('aFile');
+  const merger = new Travis("aFile");
   const merged = await merger.merge(context);
 
   t.deepEqual(
