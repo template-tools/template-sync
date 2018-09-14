@@ -32,7 +32,7 @@ export default [
       file: pkg.bin["npm-template-sync"],
       format: "cjs",
       banner:
-        "#!/usr/bin/env node --experimental-modules --experimental-worker",
+        "#!/usr/bin/env -S node --experimental-modules --experimental-worker",
       interop: false
     },
     plugins: [nodeResolve(), commonjs(), json(), cleanup(), executable()],
