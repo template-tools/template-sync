@@ -1,16 +1,16 @@
-import test from 'ava';
-import { Package } from '../src/package';
+import test from "ava";
+import { Package } from "../src/package";
 
-test('optional dev modules', t => {
-  const pkg = new Package('package.json');
+test("Package optional dev modules", t => {
+  const pkg = new Package("package.json");
   t.deepEqual(
-    pkg.optionalDevModules(new Set(['a', 'cracks', 'dont-crack'])),
-    new Set(['cracks', 'dont-crack'])
+    pkg.optionalDevModules(new Set(["a", "cracks", "dont-crack"])),
+    new Set(["cracks", "dont-crack"])
   );
 });
 
-test('optional dev modules empty', t => {
-  const pkg = new Package('package.json');
+test("Package optional dev modules empty", t => {
+  const pkg = new Package("package.json");
   t.deepEqual(pkg.optionalDevModules(new Set()), new Set());
 });
 
@@ -20,10 +20,10 @@ const PACKAGE_FILE_CONTENT = `{
   }
 }`;
 
-test('used dev modules', async t => {
-  const pkg = new Package('package.json');
+test("Package used dev modules", async t => {
+  const pkg = new Package("package.json");
   t.deepEqual(
     await pkg.usedDevModules(PACKAGE_FILE_CONTENT),
-    new Set(['cracks'])
+    new Set(["cracks"])
   );
 });

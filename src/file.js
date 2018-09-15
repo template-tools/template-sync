@@ -1,3 +1,5 @@
+import { Content } from "repository-provider";
+
 /**
  * Mergable File
  * @param {string} path location in the repository
@@ -60,14 +62,27 @@ export class File {
   }
 
   async content(context) {
-    return (await Promise.all([
-      context.targetBranch.content(this.path, {
-        ignoreMissing: !this.needsOriginal
-      }),
-      context.templateBranch.content(this.path, {
-        ignoreMissing: !this.needsTemplate
-      })
-    ])).map(c => c.content);
+    let target, template;
+
+    try {
+      target = await context.targetBranch.content(this.path);
+    } catch (e) {
+      if (this.needsOriginal) {
+        throw e;
+      }
+      target = new Content(this.path, "");
+    }
+
+    try {
+      template = await context.templateBranch.content(this.path);
+    } catch (e) {
+      if (this.needsTemplate) {
+        throw e;
+      }
+      template = new Content(this.path, "");
+    }
+
+    return [target.content, template.content];
   }
 
   async mergeContent(context, original, template) {
@@ -102,7 +117,7 @@ export class File {
         `${
           context.targetBranch
             ? context.targetBranch.fullCondensedName
-            : 'unknown'
+            : "unknown"
         },${this.path}: ${err}`
       );
       return {

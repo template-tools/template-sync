@@ -179,7 +179,11 @@ export class PreparedContext {
   }
 
   static async createFiles(branch, mapping = Context.defaultMapping) {
-    const files = await branch.list();
+    const files = [];
+    for await (const entry of branch.list(["**/*", "**/.*"])) {
+      files.push(entry);
+    }
+    //const files = await branch.list();
 
     let alreadyPresent = new Set();
 

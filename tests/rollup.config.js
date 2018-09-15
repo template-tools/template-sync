@@ -1,7 +1,8 @@
-import istanbul from "rollup-plugin-istanbul";
+import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
 import multiEntry from "rollup-plugin-multi-entry";
 import commonjs from "rollup-plugin-commonjs";
+import istanbul from "rollup-plugin-istanbul";
 import baseRollup from "../rollup.config.js";
 
 const external = [
@@ -33,6 +34,11 @@ export default [
     input: "tests/**/*-test.js",
     external,
     plugins: [
+      babel({
+        babelrc: false,
+        plugins: ["@babel/plugin-proposal-async-generator-functions"],
+        exclude: "node_modules/**"
+      }),
       multiEntry(),
       resolve(),
       commonjs(),

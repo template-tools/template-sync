@@ -2,6 +2,7 @@ import cleanup from "rollup-plugin-cleanup";
 import resolve from "rollup-plugin-node-resolve";
 import nodeResolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
+import babel from "rollup-plugin-babel";
 import executable from "rollup-plugin-executable";
 import json from "rollup-plugin-json";
 import pkg from "./package.json";
@@ -35,7 +36,20 @@ export default [
         "#!/usr/bin/env -S node --experimental-modules --experimental-worker",
       interop: false
     },
-    plugins: [nodeResolve(), commonjs(), json(), cleanup(), executable()],
+    plugins: [
+      babel({
+        runtimeHelpers: false,
+        externalHelpers: true,
+        babelrc: false,
+        plugins: ["@babel/plugin-proposal-async-generator-functions"],
+        exclude: "node_modules/**"
+      }),
+      nodeResolve(),
+      commonjs(),
+      json(),
+      cleanup(),
+      executable()
+    ],
     external,
     input: "src/npm-template-sync-cli.js"
   },
@@ -45,7 +59,18 @@ export default [
       format: "cjs",
       interop: false
     },
-    plugins: [nodeResolve(), commonjs(), cleanup()],
+    plugins: [
+      babel({
+        runtimeHelpers: false,
+        externalHelpers: true,
+        babelrc: false,
+        plugins: ["@babel/plugin-proposal-async-generator-functions"],
+        exclude: "node_modules/**"
+      }),
+      nodeResolve(),
+      commonjs(),
+      cleanup()
+    ],
     external,
     input: pkg.module
   }
