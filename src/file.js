@@ -1,4 +1,4 @@
-import { Content } from "repository-provider";
+import { Content, emptyContent } from "repository-provider";
 
 /**
  * Mergable File
@@ -70,7 +70,7 @@ export class File {
       if (this.needsOriginal) {
         throw e;
       }
-      target = new Content(this.path, "");
+      target = emptyContent(this.path);
     }
 
     try {
@@ -79,7 +79,7 @@ export class File {
       if (this.needsTemplate) {
         throw e;
       }
-      template = new Content(this.path, "");
+      template = emptyContent(this.path);
     }
 
     return [target.content, template.content];

@@ -183,7 +183,6 @@ export class PreparedContext {
     for await (const entry of branch.list(["**/*", "**/.*"])) {
       files.push(entry);
     }
-    //const files = await branch.list();
 
     let alreadyPresent = new Set();
 
