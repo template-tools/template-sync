@@ -1,21 +1,21 @@
-import test from 'ava';
-import { Context } from '../src/context';
-import { PreparedContext } from '../src/prepared-context';
-import { Readme } from '../src/readme';
-import { Package } from '../src/package';
-import { MockProvider } from 'mock-repository-provider';
+import test from "ava";
+import { Context } from "../src/context";
+import { PreparedContext } from "../src/prepared-context";
+import { Readme } from "../src/readme";
+import { Package } from "../src/package";
+import { MockProvider } from "mock-repository-provider";
 
-test('readme default options', t => {
-  const readme = new Readme('aFile');
+test("readme default options", t => {
+  const readme = new Readme("aFile");
   t.deepEqual(readme.options.badges, []);
 });
 
-test('readme', async t => {
+test.only("readme", async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: {
         aFile: ``,
-        'package.json': JSON.stringify({
+        "package.json": JSON.stringify({
           template: {}
         })
       }
@@ -29,26 +29,26 @@ test('readme', async t => {
 
 body
 body`,
-        'package.json': '{}'
+        "package.json": "{}"
       }
     }
   });
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: 'templateRepo'
+      templateBranchName: "templateRepo"
     }),
-    'targetRepo'
+    "targetRepo"
   );
 
-  context.addFile(new Package('package.json'));
+  context.addFile(new Package("package.json"));
 
-  const readme = new Readme('aFile', {
+  const readme = new Readme("aFile", {
     badges: [
       {
-        name: 'Badge 1',
-        icon: 'http://domain.net/somewhere1.svg',
-        url: 'http://domain.net/somewhere1'
+        name: "Badge 1",
+        icon: "http://domain.net/somewhere1.svg",
+        url: "http://domain.net/somewhere1"
       }
     ]
   });

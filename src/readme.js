@@ -1,5 +1,16 @@
 import { File } from "./file";
 import { templateOptions } from "./util";
+import remark from "remark";
+import inject from "mdast-util-inject";
+
+function plugin(options) {
+  return function transform(targetAst, file, next) {
+    if (!inject(options.section, targetAst, options.toInject)) {
+      return next(new Error(`Heading ${options.section} not found.`));
+    }
+    next();
+  };
+}
 
 /**
  * injects badges into README.md
@@ -22,6 +33,13 @@ export class Readme extends File {
 
     const p = pkg.length === 0 ? {} : JSON.parse(pkg);
     const pTemplate = JSON.parse(pkgTemplate);
+
+    remark()
+      .use(plugin, {
+        section: "badges",
+        toInject: {}
+      })
+      .process(original);
 
     const badges = this.options.badges
       .map(b => {
