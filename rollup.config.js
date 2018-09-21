@@ -1,6 +1,5 @@
 import cleanup from "rollup-plugin-cleanup";
 import resolve from "rollup-plugin-node-resolve";
-import nodeResolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import babel from "rollup-plugin-babel";
 import executable from "rollup-plugin-executable";
@@ -43,7 +42,7 @@ export default [
         plugins: ["@babel/plugin-proposal-async-generator-functions"],
         exclude: "node_modules/**"
       }),
-      nodeResolve(),
+      resolve(),
       commonjs(),
       json(),
       cleanup(),
@@ -66,7 +65,7 @@ export default [
         plugins: ["@babel/plugin-proposal-async-generator-functions"],
         exclude: "node_modules/**"
       }),
-      nodeResolve(),
+      resolve(),
       commonjs(),
       cleanup()
     ],
