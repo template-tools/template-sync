@@ -22,6 +22,8 @@ const scriptSlots = [
   "after_script"
 ];
 
+const deletableSlots = ["notifications.email"];
+
 export class Travis extends File {
   static matchesFileName(name) {
     return name === ".travis.yml";
@@ -38,7 +40,6 @@ export class Travis extends File {
       return a;
     }, {});
 
-    const email = yml.notifications ? yml.notifications.email : undefined;
     const messages = [];
 
     const oldVersions = new Set(
@@ -89,10 +90,6 @@ export class Travis extends File {
       yml.node_js = Array.from(new Set(newVersions))
         .sort()
         .map(s => (String(parseFloat(s)) == s ? parseFloat(s) : s));
-    }
-
-    if (email !== undefined) {
-      yml.notifications.email = email;
     }
 
     scriptSlots.forEach(scriptName => {
