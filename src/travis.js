@@ -84,6 +84,33 @@ export class Travis extends File {
       );
     }
 
+    deletableSlots.forEach(name => {
+      const parts = name.split(/\./);
+
+      if (tyml[parts[0]] !== undefined) {
+        const v = tyml[parts[0]][parts[1]];
+
+        //console.log(`${name} -> ${Array.isArray(v)} ${v[0]}`);
+
+        if (Array.isArray(v)) {
+          for (const vv of v) {
+            if (vv.startsWith("-")) {
+              delete tyml[parts[0]][parts[1]];
+
+              if (Object.keys(tyml[parts[0]]).length === 0) {
+                delete tyml[parts[0]];
+              }
+            }
+          }
+        }
+
+        /*if (v !== undefined && v[0] === "-") {
+          delete tyml[parts[0]][parts[1]];
+        }
+        */
+      }
+    });
+
     deepExtend(yml, tyml);
 
     if (newVersions.size > 0) {
