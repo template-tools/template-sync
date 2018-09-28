@@ -39,7 +39,16 @@ export default [
         runtimeHelpers: false,
         externalHelpers: true,
         babelrc: false,
-        plugins: ["@babel/plugin-proposal-async-generator-functions"],
+        presets: [
+          [
+            "@babel/preset-env",
+            {
+              targets: {
+                safari: "tp"
+              }
+            }
+          ]
+        ],
         exclude: "node_modules/**"
       }),
       resolve(),
