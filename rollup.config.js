@@ -44,7 +44,11 @@ export default [
       }),
       resolve(),
       commonjs(),
-      json(),
+      json({
+        include: "package.json",
+        preferConst: true,
+        compact: true
+      }),
       cleanup(),
       executable()
     ],
