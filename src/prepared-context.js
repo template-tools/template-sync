@@ -15,6 +15,7 @@ import { Replace } from "./replace";
 import { JSONFile } from "./json-file";
 import { JSDoc } from "./jsdoc";
 import { Context } from "./context";
+import { Content } from "repository-provider";
 
 /**
  * context prepared to execute one package
@@ -180,7 +181,7 @@ export class PreparedContext {
 
   static async createFiles(branch, mapping = Context.defaultMapping) {
     const files = [];
-    for await (const entry of branch.list(["**/*", "**/.*"])) {
+    for await (const entry of branch.list()) {
       files.push(entry);
     }
 
@@ -287,10 +288,10 @@ export class PreparedContext {
         }
 
         await templatePRBranch.commit(`fix: add ${name}`, [
-          {
-            path: "package.json",
-            content: JSON.stringify(templatePackageJson, undefined, 2)
-          }
+          new Content(
+            "package.json",
+            JSON.stringify(templatePackageJson, undefined, 2)
+          )
         ]);
 
         if (newTemplatePullRequest) {
