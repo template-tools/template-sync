@@ -21,11 +21,14 @@ const external = [
   "deep-extend",
   "simple-diff",
   "micromatch",
+  "repository-provider",
   "local-repository-provider",
   "aggregation-repository-provider",
   "github-repository-provider",
   "bitbucket-repository-provider",
-  "expression-expander"
+  "expression-expander",
+  "remark",
+  "mdast-util-inject"
 ];
 
 export default [
@@ -40,8 +43,8 @@ export default [
         exclude: "node_modules/**"
       }),
       multiEntry(),
-      resolve(),
-      commonjs(),
+      //  resolve(),
+      //  commonjs(),
       istanbul({
         exclude: ["tests/**/*-test.js", "node_modules/**/*"]
       })

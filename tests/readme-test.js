@@ -22,8 +22,8 @@ test.only("readme", async t => {
     },
     targetRepo: {
       master: {
-        aFile: `[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)
-
+        aFile: `# badges
+[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)
 [![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)
 [![Badge 2](http://domain.net/somewhere2.svg)](http://domain.net/somewhere2)
 

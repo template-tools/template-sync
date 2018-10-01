@@ -1,6 +1,7 @@
 import { File } from "./file";
 import { templateOptions } from "./util";
 import remark from "remark";
+//import markdown from "remark-parse";
 import inject from "mdast-util-inject";
 
 function plugin(options) {
@@ -34,10 +35,52 @@ export class Readme extends File {
     const p = pkg.length === 0 ? {} : JSON.parse(pkg);
     const pTemplate = JSON.parse(pkgTemplate);
 
-    remark()
+    const remarkOptions = {
+      settings: { commonmark: true }
+    };
+
+    remark(remarkOptions).process(
+      "[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)",
+      (err, f) => {
+        console.log(f);
+      }
+    );
+
+    remark(remarkOptions)
       .use(plugin, {
         section: "badges",
-        toInject: {}
+        toInject: {
+          type: "paragraph",
+          children: [
+            {
+              type: "image",
+              url: "http://domain.net/somewhere1.svg",
+              alt: "Badge 77"
+            }
+          ]
+        }
+        /*{
+          type: "root",
+          children: [
+            {
+              type: "paragraph",
+              children: [
+                {
+                  type: "link",
+                  url: "http://domain.net/somewhere1",
+                  children: [
+                    {
+                      type: "image",
+                      title: null,
+                      url: "http://domain.net/somewhere1.svg",
+                      alt: "Badge 77"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }*/
       })
       .process(original);
 
