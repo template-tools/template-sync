@@ -23,7 +23,10 @@ const external = [
   "aggregation-repository-provider",
   "github-repository-provider",
   "bitbucket-repository-provider",
-  "expression-expander"
+  "expression-expander",
+  "remark",
+  "mdast-util-inject",
+  "repository-provider"
 ];
 
 export default [
@@ -65,7 +68,7 @@ export default [
         plugins: ["@babel/plugin-proposal-async-generator-functions"],
         exclude: "node_modules/**"
       }),
-      resolve(),
+      //    resolve(),
       commonjs(),
       cleanup()
     ],

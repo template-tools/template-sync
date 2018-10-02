@@ -4,8 +4,8 @@ import remark from "remark";
 //import markdown from "remark-parse";
 import inject from "mdast-util-inject";
 
-function plugin(options) {
-  return function transform(targetAst, file, next) {
+function injectPlugin(options) {
+  return (targetAst, file, next) => {
     if (!inject(options.section, targetAst, options.toInject)) {
       return next(new Error(`Heading ${options.section} not found.`));
     }
@@ -39,18 +39,20 @@ export class Readme extends File {
       settings: { commonmark: true }
     };
 
+    /*
     remark(remarkOptions).process(
       "[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)",
       (err, f) => {
         console.log(f);
       }
     );
+*/
 
     remark(remarkOptions)
-      .use(plugin, {
+      .use(injectPlugin, {
         section: "badges",
         toInject: {
-          type: "paragraph",
+          type: "section",
           children: [
             {
               type: "image",
