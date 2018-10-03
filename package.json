@@ -61,7 +61,7 @@
     "markdown-doctest": "^0.9.1",
     "mock-repository-provider": "^3.0.38",
     "nyc": "^13.1.0",
-    "rollup": "^0.66.2",
+    "rollup": "^0.66.3",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-cleanup": "^3.0.0",
     "rollup-plugin-commonjs": "^9.1.8",
