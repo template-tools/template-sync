@@ -74,7 +74,7 @@
     "travis-deploy-once": "^5.0.9"
   },
   "optionalDependencies": {
-    "keytar": "^4.1.0"
+    "keytar": "^4.3.0"
   },
   "engines": {
     "node": ">=10.10"
