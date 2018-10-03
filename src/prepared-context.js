@@ -384,10 +384,11 @@ export class PreparedContext {
       return result;
     }, []);
 
-    await prBranch.commit(messages.join("\n"), merges);
+    await prBranch.commit(messages.join("\n"), merges.map(m => new Content(m.path,m.content)));
 
     if (newPullRequestRequired) {
       try {
+
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
           title: `merge package from ${templateBranch.fullCondensedName}`,
           body: merges

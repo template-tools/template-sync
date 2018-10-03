@@ -82,7 +82,7 @@ export class File {
       template = emptyContent(this.path);
     }
 
-    return [target.content, template.content];
+    return [target.toString(), template.toString()];
   }
 
   async mergeContent(context, original, template) {
