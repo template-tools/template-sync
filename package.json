@@ -46,7 +46,7 @@
     "local-repository-provider": "^3.0.7",
     "micromatch": "^3.1.10",
     "prompt": "^1.0.0",
-    "recast": "^0.15.5",
+    "recast": "^0.16.0",
     "repository-provider": "^5.2.5",
     "semver": "^5.5.1",
     "set-getter": "^0.1.0",
