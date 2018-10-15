@@ -88,13 +88,11 @@ export function diffVersion(a, b) {
 
     const slots = value.split(/\./).map(x => parseInt(x, 10));
 
-    const m = value.match(/\-(\w+)(.*)/);
+    const m = value.match(/\-(\w+)\.?(.*)/);
 
     if (m) {
-      const suffixes = { alpha: 1, beta: 2, rc: 3 };
-      //console.log(`XXX ${suffixes[m[1]]}`);
-
-      return [...slots,suffixes[m[1]],m[2]];
+      const suffixes = { alpha: 0.01, beta: 0.02, rc: 0.03 };
+      return [...slots,suffixes[m[1]],parseInt(m[2],10)];
     }
 
     return slots;
@@ -102,6 +100,8 @@ export function diffVersion(a, b) {
 
   const aa = toArray(a);
   const bb = toArray(b);
+
+  //console.log(`${aa} <> ${bb}`);
 
   for (const i in aa) {
     if (i >= bb.length) {
