@@ -578,6 +578,7 @@ function defaultMerge(destination, target, template, dp, name, messages) {
       }
     }
     if (dp.name === 'devDependencies') {
+      //console.log(`${target} <> ${template} -> ${diffVersion(normalizeVersion(target), normalizeVersion(template))}`);
       if (
         diffVersion(normalizeVersion(target), normalizeVersion(template)) >= 0
       ) {

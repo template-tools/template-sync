@@ -91,8 +91,8 @@ export function diffVersion(a, b) {
     const m = value.match(/\-(\w+)\.?(.*)/);
 
     if (m) {
-      const suffixes = { alpha: 0.01, beta: 0.02, rc: 0.03 };
-      return [...slots,suffixes[m[1]],parseInt(m[2],10)];
+      const suffixes = { alpha: -0.9, beta: -0.8, rc: -0.1 };
+      return [...slots, suffixes[m[1]], parseInt(m[2], 10)];
     }
 
     return slots;
