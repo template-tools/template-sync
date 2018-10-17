@@ -82,17 +82,18 @@ export function removeSensibleValues(object) {
  * @param {string|number} b
  * @return {number} -1 if a < b, 0 if a == b and 1 if a > b
  */
-export function diffVersion(a, b) {
+export function compareVersion(a, b) {
   const toArray = value => {
     value = String(value);
 
     const slots = value.split(/\./).map(x => parseInt(x, 10));
-
     const m = value.match(/\-(\w+)\.?(.*)/);
 
     if (m) {
-      const suffixes = { alpha: -0.9, beta: -0.8, rc: -0.1 };
-      return [...slots, suffixes[m[1]], parseInt(m[2], 10)];
+      let e = m ? slots.pop() : 0;
+      const last = slots.pop();
+      const suffixes = { alpha: 0.3, beta: 0.2, rc: 0.1 };
+      return [...slots, last - suffixes[m[1]], e];
     }
 
     return slots;

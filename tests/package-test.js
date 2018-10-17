@@ -302,7 +302,7 @@ test("package dependencies only increase", async t => {
   });
 });
 
-test.skip("package dependencies increase beta <> rc", async t => {
+test("package dependencies increase beta <> rc", async t => {
   const context = await createContext(
     {
       devDependencies: {

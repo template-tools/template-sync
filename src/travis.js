@@ -1,5 +1,5 @@
 import { File } from "./file";
-import { diffVersion } from "./util";
+import { compareVersion } from "./util";
 import deepExtend from "deep-extend";
 
 const yaml = require("js-yaml");
@@ -57,8 +57,8 @@ export class Travis extends File {
 
         versions.forEach(v => {
           const x = v.replace(/^\-\s*/, "");
-          //console.log(`${d}<>${v} => ${diffVersion(d, x) === 0 || x != v}`);
-          if (diffVersion(d, x) === 0 || x != v) {
+          //console.log(`${d}<>${v} => ${compareVersion(d, x) === 0 || x != v}`);
+          if (compareVersion(d, x) === 0 || x != v) {
             if (templateVersions.has(x)) {
               return;
             }
