@@ -15,6 +15,7 @@ const external = [
   "url",
   "net",
   "tty",
+  "stream",
   "jsonpath",
   "deep-extend",
   "simple-diff",

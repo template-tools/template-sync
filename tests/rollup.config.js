@@ -15,6 +15,7 @@ const external = [
   "url",
   "net",
   "tty",
+  "stream",
   "mock-repository-provider",
   "execa",
   "jsonpath",
