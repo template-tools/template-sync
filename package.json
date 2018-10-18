@@ -59,7 +59,7 @@
     "documentation": "^8.1.2",
     "execa": "^1.0.0",
     "markdown-doctest": "^0.9.1",
-    "mock-repository-provider": "^3.0.42",
+    "mock-repository-provider": "^3.0.43",
     "nyc": "^13.1.0",
     "rollup": "^0.66.6",
     "rollup-plugin-babel": "^4.0.3",
