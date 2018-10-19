@@ -59,8 +59,8 @@ test("compare versions alpha beta ...", t => {
   t.is(compareVersion("1.0.0-beta", "1.0.0-alpha"), 1);
   t.is(compareVersion("1.0.0-beta", "1.0.0-rc"), -1);
   t.is(compareVersion("1.0.0-rc", "1.0.0-beta"), 1);
-  t.is(compareVersion("1.0.0-beta.8", "1.0.0-rc.1"), 1);
-  t.is(compareVersion("1.0.0-rc.1", "1.0.0-beta.8"), -1);
+  t.is(compareVersion("1.0.0-beta.8", "1.0.0-rc.1"), -1);
+  t.is(compareVersion("1.0.0-rc.1", "1.0.0-beta.8"), 1);
 });
 
 test("sort versions", t => {
