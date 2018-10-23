@@ -23,7 +23,7 @@ test("context prepare", async t => {
   t.is(pc.properties.mySpecialKey, "mySpecialValue");
 });
 
-test("context execute", async t => {
+test.only("context execute", async t => {
   const provider = new GithubProvider(
     GithubProvider.optionsFromEnvironment(process.env)
   );
@@ -38,7 +38,7 @@ test("context execute", async t => {
 
   const pullRequest = await context.execute();
 
-  console.log(pullRequest.name);
+  console.log(pullRequest);
   t.truthy(pullRequest.name);
 
   //await pullRequest.merge();

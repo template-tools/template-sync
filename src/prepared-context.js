@@ -411,7 +411,8 @@ export class PreparedContext {
       }
     } else {
       const pullRequest = new targetBranch.provider.pullRequestClass(
-        targetBranch.repository,
+        targetBranch,
+        prBranch,
         "old"
       );
 

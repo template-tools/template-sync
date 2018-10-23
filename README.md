@@ -59,18 +59,18 @@ merges contents from template repo into destination repo handling some special c
     -   [Properties](#properties-1)
     -   [usedDevModules](#useddevmodules)
     -   [executeSingleRepo](#executesinglerepo)
--   [File](#file)
+-   [templateOptions](#templateoptions)
     -   [Parameters](#parameters-2)
+-   [compareVersion](#compareversion)
+    -   [Parameters](#parameters-3)
+-   [Readme](#readme)
+-   [File](#file)
+    -   [Parameters](#parameters-4)
     -   [Properties](#properties-2)
     -   [properties](#properties-3)
-        -   [Parameters](#parameters-3)
+        -   [Parameters](#parameters-5)
     -   [merge](#merge)
-        -   [Parameters](#parameters-4)
--   [templateOptions](#templateoptions)
-    -   [Parameters](#parameters-5)
--   [compareVersion](#compareversion)
-    -   [Parameters](#parameters-6)
--   [Readme](#readme)
+        -   [Parameters](#parameters-6)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-4)
@@ -124,6 +124,34 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
 
+## templateOptions
+
+find merger options in the template section of a package.json
+
+### Parameters
+
+-   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## compareVersion
+
+compare two versions
+
+### Parameters
+
+-   `a` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+-   `b` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+
+Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** \-1 if a &lt; b, 0 if a == b and 1 if a > b
+
+## Readme
+
+**Extends File**
+
+injects badges into README.md
+
 ## File
 
 Mergable File
@@ -155,34 +183,6 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 -   `context` **PreparedContect** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
-
-## templateOptions
-
-find merger options in the template section of a package.json
-
-### Parameters
-
--   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## compareVersion
-
-compare two versions
-
-### Parameters
-
--   `a` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
--   `b` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** \-1 if a &lt; b, 0 if a == b and 1 if a > b
-
-## Readme
-
-**Extends File**
-
-injects badges into README.md
 
 ## sortedKeys
 
