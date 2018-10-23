@@ -384,11 +384,13 @@ export class PreparedContext {
       return result;
     }, []);
 
-    await prBranch.commit(messages.join("\n"), merges.map(m => new Content(m.path,m.content)));
+    await prBranch.commit(
+      messages.join("\n"),
+      merges.map(m => new Content(m.path, m.content))
+    );
 
     if (newPullRequestRequired) {
       try {
-
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
           title: `merge package from ${templateBranch.fullCondensedName}`,
           body: merges
@@ -401,7 +403,7 @@ export class PreparedContext {
             )
             .join("\n")
         });
-        this.info(`${targetBranch.fullCondensedName}: ${pullRequest.name}`);
+        this.info(`${targetBranch.fullCondensedName}: ${pullRequest}`);
 
         return pullRequest;
       } catch (err) {
@@ -413,9 +415,7 @@ export class PreparedContext {
         "old"
       );
 
-      this.info(
-        `${targetBranch.fullCondensedName}: update PR ${pullRequest.name}`
-      );
+      this.info(`${targetBranch.fullCondensedName}: update PR ${pullRequest}`);
       return pullRequest;
     }
   }
