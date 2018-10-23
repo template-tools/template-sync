@@ -350,18 +350,18 @@ export class PreparedContext {
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      this.info(`${targetBranch.fullCondensedName}: -`);
+      this.info(`${targetBranch}: -`);
       return;
     }
 
     this.info(
       merges
-        .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
+        .map(m => `${targetBranch}: ${m.messages[0]}`)
         .join(",")
     );
 
     if (this.dry) {
-      this.info(`${targetBranch.fullCondensedName}: dry run`);
+      this.info(`${targetBranch}: dry run`);
       return;
     }
 
@@ -392,7 +392,7 @@ export class PreparedContext {
     if (newPullRequestRequired) {
       try {
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
-          title: `merge package from ${templateBranch.fullCondensedName}`,
+          title: `merge package from ${templateBranch}`,
           body: merges
             .map(
               m =>
@@ -403,7 +403,7 @@ export class PreparedContext {
             )
             .join("\n")
         });
-        this.info(`${targetBranch.fullCondensedName}: ${pullRequest}`);
+        this.info(`${targetBranch}: ${pullRequest}`);
 
         return pullRequest;
       } catch (err) {
@@ -416,7 +416,7 @@ export class PreparedContext {
         "old"
       );
 
-      this.info(`${targetBranch.fullCondensedName}: update PR ${pullRequest}`);
+      this.info(`${targetBranch}: update PR ${pullRequest}`);
       return pullRequest;
     }
   }
