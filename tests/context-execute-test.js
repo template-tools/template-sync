@@ -23,7 +23,7 @@ test("context prepare", async t => {
   t.is(pc.properties.mySpecialKey, "mySpecialValue");
 });
 
-test.only("context execute", async t => {
+test("context execute", async t => {
   const provider = new GithubProvider(
     GithubProvider.optionsFromEnvironment(process.env)
   );
