@@ -280,10 +280,7 @@ export class PreparedContext {
         templatePackageJson.template.usedBy = templatePackageJson.template.usedBy.sort();
 
         if (templatePRBranch === undefined) {
-          templatePRBranch = await templateBranch.repository.createBranch(
-            "template-add-used-1",
-            templateBranch
-          );
+          templatePRBranch = await templateBranch.createBranch("template-add-used-1");
           newTemplatePullRequest = true;
         }
 
@@ -354,11 +351,7 @@ export class PreparedContext {
       return;
     }
 
-    this.info(
-      merges
-        .map(m => `${targetBranch}: ${m.messages[0]}`)
-        .join(",")
-    );
+    this.info(merges.map(m => `${targetBranch}: ${m.messages[0]}`).join(","));
 
     if (this.dry) {
       this.info(`${targetBranch}: dry run`);
@@ -373,10 +366,7 @@ export class PreparedContext {
 
     if (prBranch === undefined) {
       newPullRequestRequired = true;
-      prBranch = await this.targetBranch.repository.createBranch(
-        prBranchName,
-        targetBranch
-      );
+      prBranch = await this.targetBranch.createBranch(prBranchName);
     }
 
     const messages = merges.reduce((result, merge) => {
