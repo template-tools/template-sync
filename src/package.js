@@ -1,7 +1,7 @@
-import { File } from './file';
-import { diffVersion } from './util';
-import { value } from 'jsonpath';
-import diff from 'simple-diff';
+import { File } from "./file";
+import { compareVersion } from "./util";
+import { value } from "jsonpath";
+import diff from "simple-diff";
 
 function moduleNames(object) {
   if (object === undefined) return new Set();
@@ -10,11 +10,11 @@ function moduleNames(object) {
 
   Object.keys(object).forEach(k => {
     const v = object[k];
-    if (typeof v === 'string') {
+    if (typeof v === "string") {
       modules.add(v);
     } else if (Array.isArray(v)) {
       v.forEach(e => {
-        if (typeof e === 'string') {
+        if (typeof e === "string") {
           modules.add(e);
         }
       });
@@ -28,40 +28,40 @@ function moduleNames(object) {
  * order in which json keys are written
  */
 const sortedKeys = [
-  'name',
-  'version',
-  'private',
-  'publishConfig',
-  'main',
-  'browser',
-  'module',
-  'description',
-  'keywords',
-  'author',
-  'maintainers',
-  'contributors',
-  'license',
-  'bin',
-  'scripts',
-  'dependencies',
-  'devDependencies',
-  'peerDependencies',
-  'optionalDependencies',
-  'bundledDependencies',
-  'engines',
-  'os',
-  'arch',
-  'repository',
-  'directories',
-  'files',
-  'man',
-  'bugs',
-  'homepage',
-  'release',
-  'ava',
-  'nyc',
-  'xo',
-  'template'
+  "name",
+  "version",
+  "private",
+  "publishConfig",
+  "main",
+  "browser",
+  "module",
+  "description",
+  "keywords",
+  "author",
+  "maintainers",
+  "contributors",
+  "license",
+  "bin",
+  "scripts",
+  "dependencies",
+  "devDependencies",
+  "peerDependencies",
+  "optionalDependencies",
+  "bundledDependencies",
+  "engines",
+  "os",
+  "arch",
+  "repository",
+  "directories",
+  "files",
+  "man",
+  "bugs",
+  "homepage",
+  "release",
+  "ava",
+  "nyc",
+  "xo",
+  "template"
 ];
 
 /**
@@ -80,7 +80,7 @@ export class Package extends File {
 
       //console.log(`${key} ${JSON.stringify(script)}`);
       if (script.match(/&&/)) {
-        decoded[key] = { op: '&&', args: script.split(/\s*&&\s*/) };
+        decoded[key] = { op: "&&", args: script.split(/\s*&&\s*/) };
       } else {
         decoded[key] = { value: script };
       }
@@ -108,7 +108,7 @@ export class Package extends File {
       const t = args(a).concat(args(b));
 
       return {
-        op: '&&',
+        op: "&&",
         args: t.filter((item, pos) => t.indexOf(item) == pos)
       };
     }
@@ -118,7 +118,7 @@ export class Package extends File {
 
       const s = source[key];
       switch (s.op) {
-        case '&&':
+        case "&&":
           d = mergeOP(s, d);
           break;
 
@@ -126,7 +126,7 @@ export class Package extends File {
           if (d === undefined) {
             d = { value: s.value };
           } else {
-            if (d.op === '&&') {
+            if (d.op === "&&") {
               d = mergeOP(s, d);
             } else {
               d.value = s.value;
@@ -150,8 +150,8 @@ export class Package extends File {
     Object.keys(encoded).forEach(key => {
       const e = encoded[key];
       switch (e.op) {
-        case '&&':
-          scripts[key] = e.args.join(' && ');
+        case "&&":
+          scripts[key] = e.args.join(" && ");
           break;
 
         default:
@@ -174,7 +174,7 @@ export class Package extends File {
   }
 
   optionalDevModules(modules = new Set()) {
-    return new Set(['cracks', 'dont-crack'].filter(m => modules.has(m)));
+    return new Set(["cracks", "dont-crack"].filter(m => modules.has(m)));
   }
 
   async usedDevModules(content) {
@@ -216,9 +216,9 @@ export class Package extends File {
         }
       }
 
-      ['description', 'name', 'module', 'browser', 'version'].forEach(key => {
+      ["description", "name", "module", "browser", "version"].forEach(key => {
         if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
-          if (!(key === 'version' && pkg[key] === '0.0.0-semantic-release')) {
+          if (!(key === "version" && pkg[key] === "0.0.0-semantic-release")) {
             properties[key] = pkg[key];
           }
         }
@@ -237,7 +237,7 @@ export class Package extends File {
     const targetRepository = context.targetBranch.repository;
 
     let target =
-      original === undefined || original === '' ? {} : JSON.parse(original);
+      original === undefined || original === "" ? {} : JSON.parse(original);
 
     const template = Object.assign({}, originalTemplate, {
       repository: {
@@ -259,7 +259,7 @@ export class Package extends File {
     let messages = [];
     const properties = context.properties;
 
-    if (target.name === undefined || target.name === '') {
+    if (target.name === undefined || target.name === "") {
       const m = targetRepository.name.match(/^([^\/]+)\/(.*)/);
       target.name = m ? m[2] : context.targetBranch.name;
     }
@@ -271,13 +271,13 @@ export class Package extends File {
     properties.main =
       target.main && !target.main.match(/\{\{main\}\}/)
         ? target.main
-        : 'dist/index.js';
+        : "dist/index.js";
 
     const slots = {
-      repository: 'chore(package): correct repository url',
-      bugs: 'chore(package): set bugs url from template',
-      homepage: 'chore(package): homepage from template',
-      template: 'chore(package): set template repo'
+      repository: "chore(package): correct repository url",
+      bugs: "chore(package): set bugs url from template",
+      homepage: "chore(package): homepage from template",
+      template: "chore(package): set template repo"
     };
     Object.keys(slots).forEach(key => {
       const templateValue = template[key];
@@ -287,7 +287,7 @@ export class Package extends File {
         templateValue !== undefined &&
         d.length > 0 &&
         !(
-          d[0].type === 'add' &&
+          d[0].type === "add" &&
           d[0].oldValue === undefined &&
           d[0].newValue === undefined
         )
@@ -311,21 +311,21 @@ export class Package extends File {
     );*/
 
     const deepProperties = {
-      devDependencies: { type: 'chore', scope: 'package', merge: defaultMerge },
-      dependencies: { type: 'fix', scope: 'package', merge: defaultMerge },
-      peerDependencies: { type: 'fix', scope: 'package', merge: defaultMerge },
+      devDependencies: { type: "chore", scope: "package", merge: defaultMerge },
+      dependencies: { type: "fix", scope: "package", merge: defaultMerge },
+      peerDependencies: { type: "fix", scope: "package", merge: defaultMerge },
       optionalDependencies: {
-        type: 'fix',
-        scope: 'package',
+        type: "fix",
+        scope: "package",
         merge: defaultMerge
       },
       bundeledDependencies: {
-        type: 'fix',
-        scope: 'package',
+        type: "fix",
+        scope: "package",
         merge: defaultMerge
       },
-      scripts: { type: 'chore', scope: 'scripts', merge: defaultMerge },
-      engines: { type: 'chore', scope: 'engines', merge: defaultMerge }
+      scripts: { type: "chore", scope: "scripts", merge: defaultMerge },
+      engines: { type: "chore", scope: "engines", merge: defaultMerge }
     };
 
     Object.keys(deepProperties).forEach(
@@ -341,7 +341,7 @@ export class Package extends File {
 
           const tp = context.expand(template[category][d]);
           if (
-            category === 'devDependencies' &&
+            category === "devDependencies" &&
             target.dependencies !== undefined &&
             target.dependencies[d] === tp
           ) {
@@ -374,7 +374,7 @@ export class Package extends File {
       )
     );
 
-    if (target.module === '{{module}}') {
+    if (target.module === "{{module}}") {
       delete target.module;
     }
 
@@ -385,7 +385,7 @@ export class Package extends File {
     ) {
       const m = target.author.name.match(/(^[^<]+)<([^>]+)>/);
       if (m !== undefined) {
-        const name = String(m[1]).replace(/^\s+|\s+$/g, '');
+        const name = String(m[1]).replace(/^\s+|\s+$/g, "");
         const email = m[2];
 
         if (
@@ -419,13 +419,13 @@ export class Package extends File {
     );
 
     if (target.keywords !== undefined) {
-      delete target.keywords['npm-package-template'];
+      delete target.keywords["npm-package-template"];
     }
 
-    removeKeyword(target, ['null', null, undefined], messages);
+    removeKeyword(target, ["null", null, undefined], messages);
 
     this.options.actions.forEach(action => {
-      if (action.op === 'replace') {
+      if (action.op === "replace") {
         const v = value(template, action.path);
         if (v !== undefined) {
           const oldValue = value(target, action.path);
@@ -446,14 +446,14 @@ export class Package extends File {
     const lastChar = newContent[newContent.length - 1];
 
     // keep trailing newline
-    if (originalLastChar === '\n' && lastChar === '}') {
-      newContent += '\n';
+    if (originalLastChar === "\n" && lastChar === "}") {
+      newContent += "\n";
     }
 
     const changed = original !== newContent;
 
     if (changed && messages.length === 0) {
-      messages.push('chore(package): update package.json from template');
+      messages.push("chore(package): update package.json from template");
     }
 
     return {
@@ -466,13 +466,13 @@ export class Package extends File {
 
 function deleter(object, reference, messages, path) {
   if (
-    typeof object === 'string' ||
+    typeof object === "string" ||
     object instanceof String ||
     object === true ||
     object === false ||
     object === undefined ||
     object === null ||
-    typeof object === 'number' ||
+    typeof object === "number" ||
     object instanceof Number
   ) {
     return object;
@@ -496,9 +496,9 @@ function deleter(object, reference, messages, path) {
     Object.keys(reference).forEach(key => {
       path.push(key);
 
-      if (reference[key] === '--delete--' && object[key] !== undefined) {
-        if (object[key] !== '--delete--') {
-          messages.push(`chore(npm): delete ${path.join('.')}`);
+      if (reference[key] === "--delete--" && object[key] !== undefined) {
+        if (object[key] !== "--delete--") {
+          messages.push(`chore(npm): delete ${path.join(".")}`);
         }
         delete object[key];
       } else {
@@ -531,7 +531,7 @@ function removeKeyword(pkg, keywords, messages) {
 }
 
 function addKeyword(pkg, regex, keyword, messages) {
-  if (keyword === undefined || keyword === null || keyword === 'null') {
+  if (keyword === undefined || keyword === null || keyword === "null") {
     return;
   }
 
@@ -552,14 +552,14 @@ function getVersion(e) {
 }
 
 function normalizeVersion(e) {
-  return e.replace(/^[\^\$]/, '');
+  return e.replace(/^[\^\$]/, "");
 }
 
 /**
  *
  */
 function defaultMerge(destination, target, template, dp, name, messages) {
-  if (template === '-') {
+  if (template === "-") {
     if (target !== undefined) {
       messages.push(`${dp.type}(${dp.scope}): remove ${name}@${target}`);
       delete destination[name];
@@ -572,14 +572,16 @@ function defaultMerge(destination, target, template, dp, name, messages) {
     messages.push(`${dp.type}(${dp.scope}): add ${name}@${template}`);
     destination[name] = template;
   } else if (template !== target) {
-    if (dp.name === 'engines') {
+    if (dp.name === "engines") {
       if (getVersion(target) > getVersion(template)) {
         return;
       }
     }
-    if (dp.name === 'devDependencies') {
+    if (dp.name === "devDependencies") {
+      //console.log(`${target} <> ${template} -> ${compareVersion(normalizeVersion(target), normalizeVersion(template))}`);
       if (
-        diffVersion(normalizeVersion(target), normalizeVersion(template)) >= 0
+        compareVersion(normalizeVersion(target), normalizeVersion(template)) >=
+        0
       ) {
         return;
       }

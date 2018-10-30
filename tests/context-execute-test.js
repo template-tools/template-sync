@@ -38,7 +38,7 @@ test("context execute", async t => {
 
   const pullRequest = await context.execute();
 
-  console.log(pullRequest.name);
+  console.log(pullRequest);
   t.truthy(pullRequest.name);
 
   //await pullRequest.merge();

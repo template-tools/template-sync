@@ -280,10 +280,7 @@ export class PreparedContext {
         templatePackageJson.template.usedBy = templatePackageJson.template.usedBy.sort();
 
         if (templatePRBranch === undefined) {
-          templatePRBranch = await templateBranch.repository.createBranch(
-            "template-add-used-1",
-            templateBranch
-          );
+          templatePRBranch = await templateBranch.createBranch("template-add-used-1");
           newTemplatePullRequest = true;
         }
 
@@ -350,18 +347,14 @@ export class PreparedContext {
     )).filter(m => m !== undefined && m.changed);
 
     if (merges.length === 0) {
-      this.info(`${targetBranch.fullCondensedName}: -`);
+      this.info(`${targetBranch}: -`);
       return;
     }
 
-    this.info(
-      merges
-        .map(m => `${targetBranch.fullCondensedName}: ${m.messages[0]}`)
-        .join(",")
-    );
+    this.info(merges.map(m => `${targetBranch}: ${m.messages[0]}`).join(","));
 
     if (this.dry) {
-      this.info(`${targetBranch.fullCondensedName}: dry run`);
+      this.info(`${targetBranch}: dry run`);
       return;
     }
 
@@ -373,10 +366,7 @@ export class PreparedContext {
 
     if (prBranch === undefined) {
       newPullRequestRequired = true;
-      prBranch = await this.targetBranch.repository.createBranch(
-        prBranchName,
-        targetBranch
-      );
+      prBranch = await this.targetBranch.createBranch(prBranchName);
     }
 
     const messages = merges.reduce((result, merge) => {
@@ -384,13 +374,15 @@ export class PreparedContext {
       return result;
     }, []);
 
-    await prBranch.commit(messages.join("\n"), merges.map(m => new Content(m.path,m.content)));
+    await prBranch.commit(
+      messages.join("\n"),
+      merges.map(m => new Content(m.path, m.content))
+    );
 
     if (newPullRequestRequired) {
       try {
-
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
-          title: `merge package from ${templateBranch.fullCondensedName}`,
+          title: `merge package from ${templateBranch}`,
           body: merges
             .map(
               m =>
@@ -401,7 +393,7 @@ export class PreparedContext {
             )
             .join("\n")
         });
-        this.info(`${targetBranch.fullCondensedName}: ${pullRequest.name}`);
+        this.info(`${targetBranch}: ${pullRequest}`);
 
         return pullRequest;
       } catch (err) {
@@ -409,13 +401,12 @@ export class PreparedContext {
       }
     } else {
       const pullRequest = new targetBranch.provider.pullRequestClass(
-        targetBranch.repository,
+        targetBranch,
+        prBranch,
         "old"
       );
 
-      this.info(
-        `${targetBranch.fullCondensedName}: update PR ${pullRequest.name}`
-      );
+      this.info(`${targetBranch}: update PR ${pullRequest}`);
       return pullRequest;
     }
   }

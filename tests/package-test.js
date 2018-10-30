@@ -302,6 +302,28 @@ test("package dependencies only increase", async t => {
   });
 });
 
+test("package dependencies increase beta <> rc", async t => {
+  const context = await createContext(
+    {
+      devDependencies: {
+        a: "^1.0.0-rc.1"
+      }
+    },
+    {
+      devDependencies: {
+        a: "^1.0.0-beta.8"
+      }
+    }
+  );
+
+  const pkg = new Package("package.json");
+  const merged = await pkg.merge(context);
+
+  t.deepEqual(JSON.parse(merged.content).devDependencies, {
+    a: "^1.0.0-rc.1"
+  });
+});
+
 test("package keywords", async t => {
   const context = await createContext(
     {},
