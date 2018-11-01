@@ -1,6 +1,5 @@
 import { Context } from "./context";
 import { PreparedContext } from "./prepared-context";
-
 import {
   setPassword,
   getPassword,
@@ -13,9 +12,8 @@ import { BitbucketProvider } from "bitbucket-repository-provider";
 import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { satisfies } from "semver";
-
-const program = require("caporal"),
-  prompt = require("prompt");
+import program from "caporal";
+import { start as pstart, get as pget } from "prompt";
 
 process.on("uncaughtException", err => console.error(err));
 process.on("unhandledRejection", reason => console.error(reason));
@@ -69,7 +67,7 @@ program
   .argument("[repos...]", "repos to merge")
   .action(async (args, options, logger) => {
     if (options.save) {
-      prompt.start();
+      pstart();
       const schema = {
         properties: {
           password: {
@@ -78,7 +76,7 @@ program
           }
         }
       };
-      prompt.get(schema, async (err, result) => {
+      pget(schema, async (err, result) => {
         if (err) {
           logger.error(err);
           return;

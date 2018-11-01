@@ -20,11 +20,15 @@ const external = [
   "deep-extend",
   "simple-diff",
   "micromatch",
+  "repository-provider",
   "local-repository-provider",
   "aggregation-repository-provider",
   "github-repository-provider",
   "bitbucket-repository-provider",
-  "expression-expander"
+  "expression-expander",
+  "semver",
+  "caporal",
+  "prompt"
 ];
 
 export default [
@@ -53,7 +57,7 @@ export default [
         ],
         exclude: "node_modules/**"
       }),
-      resolve(),
+      //resolve(),
       commonjs(),
       json({
         include: "package.json",
