@@ -216,13 +216,15 @@ export class Package extends File {
         }
       }
 
-      ["description", "name", "module", "browser", "version"].forEach(key => {
-        if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
-          if (!(key === "version" && pkg[key] === "0.0.0-semantic-release")) {
-            properties[key] = pkg[key];
+      ["description", "version", "name", "main", "module", "browser"].forEach(
+        key => {
+          if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
+            if (!(key === "version" && pkg[key] === "0.0.0-semantic-release")) {
+              properties[key] = pkg[key];
+            }
           }
         }
-      });
+      );
 
       return properties;
     } catch (e) {}
@@ -267,11 +269,6 @@ export class Package extends File {
     if (target.module !== undefined && !target.module.match(/\{\{module\}\}/)) {
       properties.module = target.module;
     }
-
-    properties.main =
-      target.main && !target.main.match(/\{\{main\}\}/)
-        ? target.main
-        : "dist/index.js";
 
     const slots = {
       repository: "chore(package): correct repository url",
