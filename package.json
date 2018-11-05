@@ -34,9 +34,9 @@
     "travis-deploy-once": "travis-deploy-once"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^2.0.33",
+    "aggregation-repository-provider": "^2.0.34",
     "babylon": "^6.18.0",
-    "bitbucket-repository-provider": "^2.1.4",
+    "bitbucket-repository-provider": "^2.1.5",
     "caporal": "^0.10.0",
     "deep-extend": "^0.6.0",
     "expression-expander": "^6.1.2",
@@ -59,7 +59,7 @@
     "documentation": "^8.1.2",
     "execa": "^1.0.0",
     "markdown-doctest": "^0.9.1",
-    "mock-repository-provider": "^3.0.47",
+    "mock-repository-provider": "3.0.48",
     "nyc": "^13.1.0",
     "rollup": "^0.66.6",
     "rollup-plugin-babel": "^4.0.3",
