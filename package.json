@@ -47,7 +47,7 @@
     "micromatch": "^3.1.10",
     "prompt": "^1.0.0",
     "recast": "^0.16.0",
-    "repository-provider": "^6.1.0",
+    "repository-provider": "^7.0.0",
     "semver": "^5.6.0",
     "set-getter": "^0.1.0",
     "simple-diff": "^1.6.0"
