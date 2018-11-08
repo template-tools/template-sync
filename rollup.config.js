@@ -28,7 +28,7 @@ const external = [
   "expression-expander",
   "semver",
   "caporal",
-  "prompt"
+  "enquirer"
 ];
 
 export default [

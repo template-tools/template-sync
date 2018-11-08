@@ -13,7 +13,7 @@ import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { satisfies } from "semver";
 import program from "caporal";
-import { start as pstart, get as pget } from "prompt";
+import { prompt } from "enquirer";
 
 process.on("uncaughtException", err => console.error(err));
 process.on("unhandledRejection", reason => console.error(reason));
@@ -67,29 +67,12 @@ program
   .argument("[repos...]", "repos to merge")
   .action(async (args, options, logger) => {
     if (options.save) {
-      pstart();
-      const schema = {
-        properties: {
-          password: {
-            required: true,
-            hidden: true
-          }
-        }
-      };
-      pget(schema, async (err, result) => {
-        if (err) {
-          logger.error(err);
-          return;
-        }
-
-        try {
-          await setPassword(result.password, options);
-        } catch (e) {
-          logger.error(err);
-          return;
-        }
-        logger.info("password set");
+      const response = await prompt({
+        type: "password",
+        name: "password",
+        message: "What is your password?"
       });
+      await setPassword(response.password, options);
     }
 
     try {
