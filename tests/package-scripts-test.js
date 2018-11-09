@@ -1,87 +1,102 @@
-import test from 'ava';
-import { Package } from '../src/package';
+import test from "ava";
+import { Package } from "../src/package";
 
-test('package scripts decode/encode empty script', t => {
+test("package scripts decode/encode empty script", t => {
   const d = Package.decodeScripts(undefined);
   t.is(Package.encodeScripts(d), undefined);
 });
 
-test('package scripts decode/encode scripts &&', t => {
+test("package scripts decode/encode scripts &&", t => {
   const d = Package.decodeScripts({
-    a: 'xx && yy&&zz',
-    b: 'XXX YYY ZZZ'
+    a: "xx && yy&&zz",
+    b: "XXX YYY ZZZ"
   });
 
   t.deepEqual(d, {
-    a: { op: '&&', args: ['xx', 'yy', 'zz'] },
-    b: { value: 'XXX YYY ZZZ' }
+    a: { op: "&&", args: ["xx", "yy", "zz"] },
+    b: { value: "XXX YYY ZZZ" }
   });
 
-  d.a.args[1] = 'yy2';
+  d.a.args[1] = "yy2";
 
   t.deepEqual(Package.encodeScripts(d), {
-    a: 'xx && yy2 && zz',
-    b: 'XXX YYY ZZZ'
+    a: "xx && yy2 && zz",
+    b: "XXX YYY ZZZ"
   });
 });
 
-test('package scripts merge undefined', t => {
+test.only("package scripts merge scripts && no dups", t => {
+  t.deepEqual(
+    Package.mergeScripts(
+      Package.decodeScripts({
+        a: "xx && yy"
+      }),
+      Package.decodeScripts({
+        a: "xx && zz"
+      })
+    ),
+    {
+      a: { op: "&&", args: ["xx", "yy", "zz"] }
+    }
+  );
+});
+
+test("package scripts merge undefined", t => {
   let d1 = Package.decodeScripts({
-    a: 'xx && yy'
+    a: "xx && yy"
   });
 
   t.deepEqual(Package.mergeScripts(d1, undefined), {
-    a: { op: '&&', args: ['xx', 'yy'] }
+    a: { op: "&&", args: ["xx", "yy"] }
   });
 
   d1 = Package.decodeScripts({
-    a: 'xx && yy'
+    a: "xx && yy"
   });
 
   t.deepEqual(Package.mergeScripts(undefined, d1), {
-    a: { op: '&&', args: ['xx', 'yy'] }
+    a: { op: "&&", args: ["xx", "yy"] }
   });
 
   t.is(Package.mergeScripts(undefined, undefined), undefined);
 });
 
-test('package scripts decode/merge/encode', t => {
+test("package scripts decode/merge/encode", t => {
   const d1 = Package.decodeScripts({
-    a: 'xx && yy'
+    a: "xx && yy"
   });
 
   const d2 = Package.decodeScripts({
-    a: 'xx'
+    a: "xx"
   });
 
   t.deepEqual(Package.mergeScripts(d1, d2), {
-    a: { op: '&&', args: ['xx', 'yy'] }
+    a: { op: "&&", args: ["xx", "yy"] }
   });
 });
 
-test('package scripts decode/merge/encode swapped', t => {
+test("package scripts decode/merge/encode swapped", t => {
   const d1 = Package.decodeScripts({
-    a: 'xx && yy'
+    a: "xx && yy"
   });
 
   const d2 = Package.decodeScripts({
-    a: 'xx'
+    a: "xx"
   });
 
   t.deepEqual(Package.mergeScripts(d2, d1), {
-    a: { op: '&&', args: ['xx', 'yy'] }
+    a: { op: "&&", args: ["xx", "yy"] }
   });
 });
 
-test('package scripts decode/merge/encode remove', t => {
+test("package scripts decode/merge/encode remove", t => {
   const d1 = Package.decodeScripts({
-    a: 'xx && yy'
+    a: "xx && yy"
   });
 
   const d2 = Package.decodeScripts({
-    a: '-'
+    a: "-"
   });
 
-  t.deepEqual(Package.mergeScripts(d1, d2), {
-  });
+  t.deepEqual(Package.mergeScripts(d1, d2), {});
 });
