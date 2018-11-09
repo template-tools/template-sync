@@ -72,3 +72,16 @@ test('package scripts decode/merge/encode swapped', t => {
     a: { op: '&&', args: ['xx', 'yy'] }
   });
 });
+
+test('package scripts decode/merge/encode remove', t => {
+  const d1 = Package.decodeScripts({
+    a: 'xx && yy'
+  });
+
+  const d2 = Package.decodeScripts({
+    a: '-'
+  });
+
+  t.deepEqual(Package.mergeScripts(d1, d2), {
+  });
+});

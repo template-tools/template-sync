@@ -78,11 +78,14 @@ export class Package extends File {
     Object.keys(scripts).forEach(key => {
       const script = scripts[key];
 
-      //console.log(`${key} ${JSON.stringify(script)}`);
-      if (script.match(/&&/)) {
-        decoded[key] = { op: "&&", args: script.split(/\s*&&\s*/) };
+      if (script === "-") {
+        decoded[key] = { op: "-" };
       } else {
-        decoded[key] = { value: script };
+        if (script.match(/&&/)) {
+          decoded[key] = { op: "&&", args: script.split(/\s*&&\s*/) };
+        } else {
+          decoded[key] = { value: script };
+        }
       }
     });
 
@@ -116,8 +119,18 @@ export class Package extends File {
     Object.keys(source).forEach(key => {
       let d = dest[key];
 
+      if(d !== undefined && d.op === '-') {
+        delete dest[key];
+        return;
+      }
+
       const s = source[key];
       switch (s.op) {
+        case "-":
+          delete dest[key];
+          return;
+          break;
+
         case "&&":
           d = mergeOP(s, d);
           break;
@@ -126,10 +139,17 @@ export class Package extends File {
           if (d === undefined) {
             d = { value: s.value };
           } else {
-            if (d.op === "&&") {
-              d = mergeOP(s, d);
-            } else {
-              d.value = s.value;
+            switch (d.op) {
+              case "-":
+                delete dest[key];
+                return;
+
+              case "&&":
+                d = mergeOP(s, d);
+                break;
+
+              default:
+                d.value = s.value;
             }
           }
       }
