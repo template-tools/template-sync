@@ -1,12 +1,12 @@
 import test from 'ava';
 import { Package } from '../src/package';
 
-test('decode/encode empty script', t => {
+test('package scripts decode/encode empty script', t => {
   const d = Package.decodeScripts(undefined);
   t.is(Package.encodeScripts(d), undefined);
 });
 
-test('decode/encode scripts &&', t => {
+test('package scripts decode/encode scripts &&', t => {
   const d = Package.decodeScripts({
     a: 'xx && yy&&zz',
     b: 'XXX YYY ZZZ'
@@ -25,7 +25,7 @@ test('decode/encode scripts &&', t => {
   });
 });
 
-test('merge undefined', t => {
+test('package scripts merge undefined', t => {
   let d1 = Package.decodeScripts({
     a: 'xx && yy'
   });
@@ -45,7 +45,7 @@ test('merge undefined', t => {
   t.is(Package.mergeScripts(undefined, undefined), undefined);
 });
 
-test('decode/merge/encode', t => {
+test('package scripts decode/merge/encode', t => {
   const d1 = Package.decodeScripts({
     a: 'xx && yy'
   });
@@ -59,7 +59,7 @@ test('decode/merge/encode', t => {
   });
 });
 
-test('decode/merge/encode swapped', t => {
+test('package scripts decode/merge/encode swapped', t => {
   const d1 = Package.decodeScripts({
     a: 'xx && yy'
   });
