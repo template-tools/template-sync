@@ -32,7 +32,7 @@ export function decodeScripts(scripts) {
   return decoded;
 }
 
-export function mergeScripts(source, dest) {
+export function mergeScripts(dest, source) {
   if (source === undefined) {
     if (dest === undefined) {
       return undefined;

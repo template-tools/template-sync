@@ -33,10 +33,10 @@ test("package scripts merge scripts && no dups", t => {
   t.deepEqual(
     mergeScripts(
       decodeScripts({
-        a: "xx && yy"
+        a: "xx && zz"
       }),
       decodeScripts({
-        a: "xx && zz"
+        a: "xx && yy"
       })
     ),
     {
@@ -50,7 +50,7 @@ test("package scripts merge undefined", t => {
     a: "xx && yy"
   });
 
-  t.deepEqual(mergeScripts(d1, undefined), {
+  t.deepEqual(mergeScripts(undefined, d1), {
     a: { op: "&&", args: ["xx", "yy"] }
   });
 
@@ -58,7 +58,7 @@ test("package scripts merge undefined", t => {
     a: "xx && yy"
   });
 
-  t.deepEqual(mergeScripts(undefined, d1), {
+  t.deepEqual(mergeScripts(d1, undefined), {
     a: { overwrite: false, op: "&&", args: ["xx", "yy"] }
   });
 
@@ -79,7 +79,7 @@ test("package scripts decode/merge/encode", t => {
   });
 });
 
-test.only("package scripts decode/merge/encode overwrite", t => {
+test("package scripts decode/merge/encode overwrite", t => {
   const d1 = decodeScripts({
     a: "xx"
   });
@@ -89,7 +89,7 @@ test.only("package scripts decode/merge/encode overwrite", t => {
   });
 
   t.deepEqual(mergeScripts(d1, d2), {
-    a: { op: "&&", args: ["xxx"] }
+    a: { overwrite: false, value: "xxx" }
   });
 });
 

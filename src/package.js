@@ -272,7 +272,7 @@ export class Package extends File {
     });
 
     target.scripts = encodeScripts(
-      mergeScripts(decodeScripts(template.scripts), decodedScripts)
+      mergeScripts(decodedScripts, decodeScripts(template.scripts))
     );
 
     if (target.module === "{{module}}") {
