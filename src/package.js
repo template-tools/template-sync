@@ -1,5 +1,6 @@
 import { File } from "./file";
 import { compareVersion } from "./util";
+import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts";
 import { value } from "jsonpath";
 import diff from "simple-diff";
 
@@ -68,120 +69,6 @@ const sortedKeys = [
  * Merger for package.json
  */
 export class Package extends File {
-  static decodeScripts(scripts) {
-    if (scripts === undefined) {
-      return undefined;
-    }
-
-    const decoded = {};
-
-    Object.keys(scripts).forEach(key => {
-      const script = scripts[key];
-
-      if (script === "-") {
-        decoded[key] = { op: "-" };
-      } else {
-        if (script.match(/&&/)) {
-          decoded[key] = { op: "&&", args: script.split(/\s*&&\s*/) };
-        } else {
-          decoded[key] = { value: script };
-        }
-      }
-    });
-
-    return decoded;
-  }
-
-  static mergeScripts(source, dest) {
-    if (source === undefined) {
-      if (dest === undefined) {
-        return undefined;
-      }
-      source = {};
-    } else if (dest === undefined) {
-      dest = {};
-    }
-
-    function mergeOP(a, b) {
-      const args = x => {
-        if (x === undefined) return [];
-        return x.args === undefined ? [x.value] : x.args;
-      };
-
-      const t = args(a).concat(args(b));
-
-      return {
-        op: "&&",
-        args: t.filter((item, pos) => t.indexOf(item) == pos)
-      };
-    }
-
-    Object.keys(source).forEach(key => {
-      let d = dest[key];
-
-      if(d !== undefined && d.op === '-') {
-        delete dest[key];
-        return;
-      }
-
-      const s = source[key];
-      switch (s.op) {
-        case "-":
-          delete dest[key];
-          return;
-          break;
-
-        case "&&":
-          d = mergeOP(s, d);
-          break;
-
-        default:
-          if (d === undefined) {
-            d = { value: s.value };
-          } else {
-            switch (d.op) {
-              case "-":
-                delete dest[key];
-                return;
-
-              case "&&":
-                d = mergeOP(s, d);
-                break;
-
-              default:
-                d.value = s.value;
-            }
-          }
-      }
-
-      dest[key] = d;
-    });
-
-    return dest;
-  }
-
-  static encodeScripts(encoded) {
-    if (encoded === undefined) {
-      return undefined;
-    }
-
-    const scripts = {};
-
-    Object.keys(encoded).forEach(key => {
-      const e = encoded[key];
-      switch (e.op) {
-        case "&&":
-          scripts[key] = e.args.join(" && ");
-          break;
-
-        default:
-          scripts[key] = e.value;
-      }
-    });
-
-    return scripts;
-  }
-
   static get defaultOptions() {
     return {
       actions: [],
@@ -315,7 +202,7 @@ export class Package extends File {
       }
     });
 
-    const decodedScripts = Package.decodeScripts(target.scripts);
+    const decodedScripts = decodeScripts(target.scripts);
 
     const usedDevModules = await context.usedDevModules();
 
@@ -384,11 +271,8 @@ export class Package extends File {
       }
     });
 
-    target.scripts = Package.encodeScripts(
-      Package.mergeScripts(
-        Package.decodeScripts(template.scripts),
-        decodedScripts
-      )
+    target.scripts = encodeScripts(
+      mergeScripts(decodeScripts(template.scripts), decodedScripts)
     );
 
     if (target.module === "{{module}}") {
