@@ -265,7 +265,7 @@ export class Package extends File {
     });
 
     Object.keys(template).forEach(p => {
-      if (target[p] === undefined) {
+      if (target[p] === undefined && target[p] !== "--delete--") {
         target[p] = template[p];
         messages.push(`chore(package): add ${p} from template`);
       }
@@ -399,7 +399,7 @@ function deleter(object, reference, messages, path) {
 
       if (reference[key] === "--delete--" && object[key] !== undefined) {
         if (object[key] !== "--delete--") {
-          messages.push(`chore(npm): delete ${path.join(".")}`);
+          messages.push(`chore(package): delete ${path.join(".")}`);
         }
         delete object[key];
       } else {
@@ -460,7 +460,7 @@ function normalizeVersion(e) {
  *
  */
 function defaultMerge(destination, target, template, dp, name, messages) {
-  if (template === "-") {
+  if (template === "--delete--") {
     if (target !== undefined) {
       messages.push(`${dp.type}(${dp.scope}): remove ${name}@${target}`);
       delete destination[name];

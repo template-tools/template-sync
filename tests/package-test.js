@@ -144,8 +144,8 @@ test("delete entries", async t => {
     preserve: 3
   });
 
-  t.false(merged.messages.includes("chore(npm): delete other"));
-  t.true(merged.messages.includes("chore(npm): delete slot.something"));
+  t.false(merged.messages.includes("chore(package): delete other"));
+  t.true(merged.messages.includes("chore(package): delete slot.something"));
 });
 
 test("package preserve extra prepare", async t => {
@@ -242,9 +242,9 @@ test("package devDependencies", async t => {
   const context = await createContext(
     {
       devDependencies: {
-        a: "-",
+        a: "--delete--",
         c: "1",
-        d: "-",
+        d: "--delete--",
         e: "1"
       }
     },
