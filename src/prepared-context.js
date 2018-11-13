@@ -15,7 +15,7 @@ import { JSONFile } from "./json-file";
 import { JSDoc } from "./jsdoc";
 import { Context } from "./context";
 import { Content } from "repository-provider";
-const  { value } = require("jsonpath");
+const JSONPath = require("jsonpath");
 
 /**
  * context prepared to execute one package
@@ -66,7 +66,7 @@ export class PreparedContext {
           rightMarker: "}}",
           markerRegexp: "{{([^}]+)}}",
           evaluate: (expression, context, path) =>
-            value(this.properties, expression)
+            JSONPath.value(this.properties, expression)
         })
       },
       files: {
@@ -98,7 +98,7 @@ export class PreparedContext {
   }
 
   evaluate(expression) {
-    return value(this.properties, expression);
+    return JSONPath.value(this.properties, expression);
   }
 
   error(...args) {
