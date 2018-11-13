@@ -2,7 +2,7 @@ import { File } from "./file";
 import { compareVersion } from "./util";
 import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts";
 import diff from "simple-diff";
-const  { value } = require("jsonpath");
+const JSONPath = require("jsonpath");
 
 function moduleNames(object) {
   if (object === undefined) return new Set();
@@ -327,11 +327,11 @@ export class Package extends File {
 
     this.options.actions.forEach(action => {
       if (action.op === "replace") {
-        const v = value(template, action.path);
+        const v = JSONPath.value(template, action.path);
         if (v !== undefined) {
-          const oldValue = value(target, action.path);
+          const oldValue = JSONPath.value(target, action.path);
           if (oldValue !== v) {
-            value(target, action.path, v);
+            JSONPath.value(target, action.path, v);
             messages.push(
               `chore(package): set ${action.path}='${v}' as in template`
             );
