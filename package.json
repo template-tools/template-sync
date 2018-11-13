@@ -24,7 +24,6 @@
   "scripts": {
     "cover": "c8 --temp-directory build/coverage ava && c8 report -r lcov --temp-directory build/coverage",
     "test": "ava",
-    "pretest": "rollup -c",
     "posttest": "npm run prepare && markdown-doctest",
     "docs": "documentation readme src/context.js --section=API",
     "semantic-release": "semantic-release",
@@ -93,9 +92,6 @@
       "tests/*-test.js"
     ],
     "presets": []
-  },
-  "xo": {
-    "space": true
   },
   "template": {
     "repository": {
