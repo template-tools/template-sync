@@ -1,8 +1,8 @@
 import { File } from "./file";
 import { compareVersion } from "./util";
 import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts";
-import { value } from "jsonpath";
 import diff from "simple-diff";
+const  { value } = require("jsonpath");
 
 function moduleNames(object) {
   if (object === undefined) return new Set();

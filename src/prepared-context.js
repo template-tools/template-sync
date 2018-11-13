@@ -1,5 +1,4 @@
 import { createContext } from "expression-expander";
-import { value } from "jsonpath";
 import micromatch from "micromatch";
 
 import { Travis } from "./travis";
@@ -16,6 +15,7 @@ import { JSONFile } from "./json-file";
 import { JSDoc } from "./jsdoc";
 import { Context } from "./context";
 import { Content } from "repository-provider";
+const  { value } = require("jsonpath");
 
 /**
  * context prepared to execute one package
