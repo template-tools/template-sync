@@ -9,7 +9,6 @@ test('cli defines', async t => {
     '-d',
     'description=a new module',
     '--list-properties',
-    'true'
   ]);
   t.truthy(c.stdout.match(/a new module/));
 });
@@ -27,7 +26,6 @@ test('cli dryrun', async t => {
 test('cli list properties', async t => {
   const c = await execa(nts, [
     '--list-properties',
-    'true',
     'arlac77/config-expander'
   ]);
   t.truthy(c.stdout.match(/Expands expressions in config files/));
