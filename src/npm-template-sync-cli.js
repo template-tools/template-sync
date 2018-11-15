@@ -23,7 +23,7 @@ const properties = {};
 program
   .description("Keep npm package in sync with its template")
   .version(version)
-  .option("--dry", "do not create branch/pull request", program.BOOL, false)
+  .option("--dry", "do not create branch/pull request")
   .option(
     "-k, --keystore <account/service>",
     "keystore",
@@ -43,15 +43,11 @@ program
   })
   .option(
     "--list-providers",
-    "list providers with options and exit",
-    program.BOOL,
-    false
+    "list providers with options and exit"
   )
   .option(
     "--list-properties",
-    "list all properties (if given of the first repo) and exit",
-    program.BOOL,
-    false
+    "list all properties (if given of the first repo) and exit"
   )
   .option(
     "-t, --template <identifier>",
@@ -60,9 +56,7 @@ program
   )
   .option(
     "--usage",
-    "track packages using template in package.json",
-    program.BOOL,
-    false
+    "track packages using template in package.json"
   )
   .argument("[repos...]", "repos to merge")
   .action(async (args, options, logger) => {
