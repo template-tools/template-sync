@@ -14,7 +14,7 @@ test('cli defines', async t => {
 });
 
 test('cli dryrun', async t => {
-  const c = await execa(nts, ['--dry', 'true', 'arlac77/config-expander']);
+  const c = await execa(nts, ['--dry', 'arlac77/config-expander']);
 
   /*
   console.log(c.stdout);
