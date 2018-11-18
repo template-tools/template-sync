@@ -45,7 +45,7 @@
     "jsonpath": "^1.0.0",
     "local-repository-provider": "^3.2.2",
     "micromatch": "^3.1.10",
-    "recast": "^0.16.0",
+    "recast": "^0.16.1",
     "repository-provider": "^7.1.0",
     "semver": "^5.6.0",
     "set-getter": "^0.1.0",
