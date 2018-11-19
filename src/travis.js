@@ -143,7 +143,7 @@ export class Travis extends File {
     });
 
     if (messages.length === 0) {
-      messages.push(`chore(travis): merge from template ${this.path}`);
+      messages.push(`chore(travis): merge from template ${this.name}`);
     }
 
     return {

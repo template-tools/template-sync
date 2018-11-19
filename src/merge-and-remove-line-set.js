@@ -27,7 +27,7 @@ export class MergeAndRemoveLineSet extends MergeLineSet {
       content,
       changed: content !== original,
       messages: [
-        this.options.message || `chore: ${this.path} updated from template`
+        this.options.message || `chore: ${this.name} updated from template`
       ]
     };
   }

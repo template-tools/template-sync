@@ -197,7 +197,7 @@ export class Rollup extends File {
       };
     } catch (e) {
       console.log(e);
-      context.warn(`unable to parse ${this.path}`);
+      context.warn(`unable to parse ${this.name}`);
       context.error(e);
     }
 

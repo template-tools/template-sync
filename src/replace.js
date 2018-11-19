@@ -10,7 +10,7 @@ export class Replace extends File {
     return {
       content,
       changed: content !== original,
-      messages: [`chore: ${this.path} overwritten from template`]
+      messages: [`chore: ${this.name} overwritten from template`]
     };
   }
 }

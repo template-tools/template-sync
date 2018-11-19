@@ -15,11 +15,11 @@ export class ReplaceIfEmpty extends File {
           changed: template !== '',
           messages: [
             this.options.message ||
-              `chore: add missing ${this.path} from template`
+              `chore: add missing ${this.name} from template`
           ]
         }
       : {
-          path: this.path,
+          name: this.name,
           content: original,
           changed: false
         };

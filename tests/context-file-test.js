@@ -17,8 +17,8 @@ test("create files", async t => {
     await provider.branch(REPOSITORY_NAME + "#master")
   );
 
-  t.is(files.find(f => f.path === "package.json").path, "package.json");
-  t.is(files.find(f => f.path === "package.json").constructor.name, "Package");
+  t.is(files.find(f => f.name === "package.json").name, "package.json");
+  t.is(files.find(f => f.name === "package.json").constructor.name, "Package");
 });
 
 test("context file targetContent", async t => {

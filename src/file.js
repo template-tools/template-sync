@@ -2,10 +2,10 @@ import { Content, emptyContent } from "repository-provider";
 
 /**
  * Mergable File
- * @param {string} path location in the repository
+ * @param {string} name location in the repository
  * @param {Object} options mergin options
  *
- * @property {string} path
+ * @property {string} name
  * @property {Object} options
  */
 export class File {
@@ -17,10 +17,10 @@ export class File {
     return {};
   }
 
-  constructor(path, options = {}) {
+  constructor(name, options = {}) {
     Object.defineProperties(this, {
-      path: {
-        value: path
+      name: {
+        value: name
       },
       options: {
         value: Object.assign({}, this.defaultOptions, options)
@@ -58,28 +58,28 @@ export class File {
   }
 
   async targetContent(context, options) {
-    return (await context.targetBranch.content(this.path, options)).content;
+    return (await context.targetBranch.content(this.name, options)).content;
   }
 
   async content(context) {
     let target, template;
 
     try {
-      target = await context.targetBranch.content(this.path);
+      target = await context.targetBranch.content(this.name);
     } catch (e) {
       if (this.needsOriginal) {
         throw e;
       }
-      target = emptyContent(this.path);
+      target = emptyContent(this.name);
     }
 
     try {
-      template = await context.templateBranch.content(this.path);
+      template = await context.templateBranch.content(this.name);
     } catch (e) {
       if (this.needsTemplate) {
         throw e;
       }
-      template = emptyContent(this.path);
+      template = emptyContent(this.name);
     }
 
     return [target.toString(), template.toString()];
@@ -102,13 +102,13 @@ export class File {
       const result = await this.mergeContent(context, original, template);
       if (result === undefined) {
         return {
-          path: this.path,
+          name: this.name,
           changed: false
         };
       }
-      result.path = this.path;
+      result.name = this.name;
 
-      context.properties.path = this.path;
+      context.properties.name = this.name;
       result.messages = context.expand(result.messages);
 
       return result;
@@ -118,10 +118,10 @@ export class File {
           context.targetBranch
             ? context.targetBranch.fullCondensedName
             : "unknown"
-        },${this.path}: ${err}`
+        },${this.name}: ${err}`
       );
       return {
-        path: this.path,
+        name: this.name,
         changed: false
       };
     }

@@ -165,7 +165,7 @@ export class PreparedContext {
       if (templateBranch === undefined) {
         throw new Error(
           `Unable to extract template repo url from ${targetBranch.name} ${
-            pkg.path
+            pkg.name
           }`
         );
       }
@@ -190,7 +190,7 @@ export class PreparedContext {
     return mapping
       .map(m => {
         const found = micromatch(
-          files.filter(f => f.type === "blob").map(f => f.path),
+          files.filter(f => f.type === "blob").map(f => f.name),
           m.pattern
         );
 
@@ -209,7 +209,7 @@ export class PreparedContext {
   }
 
   addFile(file) {
-    this.files.set(file.path, file);
+    this.files.set(file.name, file);
   }
 
   /**
@@ -219,7 +219,7 @@ export class PreparedContext {
   async usedDevModules() {
     const usedModuleSets = await Promise.all(
       Array.from(this.files.values()).map(async file => {
-        if (file.path === "package.json") {
+        if (file.name === "package.json") {
           return file.usedDevModules(
             file.targetContent(this, { ignoreMissing: true })
           );
@@ -256,7 +256,7 @@ export class PreparedContext {
     const templatePackage = await (templatePRBranch
       ? templatePRBranch
       : templateBranch
-    ).content(pkg.path, { ignoreMissing: true });
+    ).content(pkg.name, { ignoreMissing: true });
 
     const templatePackageContent = templatePackage.content;
 
@@ -376,7 +376,7 @@ export class PreparedContext {
 
     await prBranch.commit(
       messages.join("\n"),
-      merges.map(m => new Content(m.path, m.content))
+      merges.map(m => new Content(m.name, m.content))
     );
 
     if (newPullRequestRequired) {
@@ -386,7 +386,7 @@ export class PreparedContext {
           body: merges
             .map(
               m =>
-                `${m.path}
+                `${m.name}
 ---
 - ${m.messages.join("\n- ")}
 `
