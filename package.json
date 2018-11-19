@@ -33,7 +33,7 @@
     "travis-deploy-once": "travis-deploy-once"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^2.0.35",
+    "aggregation-repository-provider": "^2.0.36",
     "babylon": "^6.18.0",
     "bitbucket-repository-provider": "^2.1.5",
     "caporal": "^1.1.0",
