@@ -196,7 +196,6 @@ export class Package extends File {
           d[0].newValue === undefined
         )
       ) {
-        console.log(d);
         messages.push(slots[key]);
         target[key] = templateValue;
       }
