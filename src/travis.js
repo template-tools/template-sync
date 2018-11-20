@@ -138,6 +138,12 @@ export class Travis extends File {
       }
     });
 
+    Object.keys(yml).forEach(name => {
+      if (yml[name] === "--delete--") {
+        delete yml[name];
+      }
+    });
+
     const content = yaml.safeDump(yml, {
       lineWidth: 128
     });
