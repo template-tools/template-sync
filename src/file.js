@@ -108,7 +108,7 @@ export class File {
       }
       result.name = this.name;
 
-      //context.properties.entry  = { name: this.name };
+      context.properties.entry  = { name: this.name };
       result.messages = context.expand(result.messages);
 
       return result;

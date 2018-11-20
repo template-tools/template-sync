@@ -22,12 +22,12 @@ export class Context {
       {
         merger: 'MergeAndRemoveLineSet',
         pattern: '.gitignore',
-        options: { message: 'chore(git): update {{name}} from template' }
+        options: { message: 'chore(git): update {{entry.name}} from template' }
       },
       {
         merger: 'NpmIgnore',
         pattern: '.npmignore',
-        options: { message: 'chore(npm): update {{name}} from template' }
+        options: { message: 'chore(npm): update {{entry.name}} from template' }
       },
       { merger: 'ReplaceIfEmpty', pattern: '**/*' }
     ];
