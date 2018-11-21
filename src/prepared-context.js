@@ -181,7 +181,7 @@ export class PreparedContext {
 
   static async createFiles(branch, mapping = Context.defaultMapping) {
     const files = [];
-    for await (const entry of branch.list()) {
+    for await (const entry of branch.entries()) {
       files.push(entry);
     }
 

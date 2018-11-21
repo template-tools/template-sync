@@ -99,7 +99,7 @@ export class Package extends File {
    */
   async properties(branch) {
     try {
-      const content = await branch.content(this.name);
+      const content = await branch.entry(this.name);
       const pkg = JSON.parse(content.content);
 
       const properties = {
