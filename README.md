@@ -59,25 +59,25 @@ merges contents from template repo into destination repo handling some special c
     -   [Properties](#properties-1)
     -   [usedDevModules](#useddevmodules)
     -   [executeSingleRepo](#executesinglerepo)
--   [File](#file)
-    -   [Parameters](#parameters-2)
-    -   [Properties](#properties-2)
-    -   [properties](#properties-3)
-        -   [Parameters](#parameters-3)
-    -   [merge](#merge)
-        -   [Parameters](#parameters-4)
--   [templateOptions](#templateoptions)
-    -   [Parameters](#parameters-5)
--   [compareVersion](#compareversion)
-    -   [Parameters](#parameters-6)
 -   [Readme](#readme)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
-    -   [properties](#properties-4)
-        -   [Parameters](#parameters-7)
+    -   [properties](#properties-2)
+        -   [Parameters](#parameters-2)
 -   [defaultMerge](#defaultmerge)
-    -   [Parameters](#parameters-8)
+    -   [Parameters](#parameters-3)
 -   [normalizePackage](#normalizepackage)
+    -   [Parameters](#parameters-4)
+-   [File](#file)
+    -   [Parameters](#parameters-5)
+    -   [Properties](#properties-3)
+    -   [properties](#properties-4)
+        -   [Parameters](#parameters-6)
+    -   [merge](#merge)
+        -   [Parameters](#parameters-7)
+-   [templateOptions](#templateoptions)
+    -   [Parameters](#parameters-8)
+-   [compareVersion](#compareversion)
     -   [Parameters](#parameters-9)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
@@ -123,60 +123,6 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 ### executeSingleRepo
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
-
-## File
-
-Mergable File
-
-### Parameters
-
--   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
-
-### Properties
-
--   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-### properties
-
-Deliver some key properties
-
-#### Parameters
-
--   `branch` **Branch** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-### merge
-
-#### Parameters
-
--   `context` **PreparedContect** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
-
-## templateOptions
-
-find merger options in the template section of a package.json
-
-### Parameters
-
--   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## compareVersion
-
-compare two versions
-
-### Parameters
-
--   `a` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
--   `b` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** \-1 if a &lt; b, 0 if a == b and 1 if a > b
 
 ## Readme
 
@@ -224,6 +170,60 @@ bring package into nomalized (sorted) form
 -   `source` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** normalized source
+
+## File
+
+Mergable File
+
+### Parameters
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
+
+### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### properties
+
+Deliver some key properties
+
+#### Parameters
+
+-   `branch` **Branch** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### merge
+
+#### Parameters
+
+-   `context` **PreparedContect** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
+
+## templateOptions
+
+find merger options in the template section of a package.json
+
+### Parameters
+
+-   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## compareVersion
+
+compare two versions
+
+### Parameters
+
+-   `a` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+-   `b` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+
+Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** \-1 if a &lt; b, 0 if a == b and 1 if a > b
 
 ## MergeAndRemoveLineSet
 
