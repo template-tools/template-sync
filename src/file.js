@@ -58,14 +58,14 @@ export class File {
   }
 
   async targetContent(context, options) {
-    return (await context.targetBranch.content(this.name, options)).content;
+    return (await context.targetBranch.entry(this.name, options)).content;
   }
 
   async content(context) {
     let target, template;
 
     try {
-      target = await context.targetBranch.content(this.name);
+      target = await context.targetBranch.entry(this.name);
     } catch (e) {
       if (this.needsOriginal) {
         throw e;
@@ -74,7 +74,7 @@ export class File {
     }
 
     try {
-      template = await context.templateBranch.content(this.name);
+      template = await context.templateBranch.entry(this.name);
     } catch (e) {
       if (this.needsTemplate) {
         throw e;
