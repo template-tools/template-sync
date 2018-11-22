@@ -43,7 +43,7 @@
     "github-repository-provider": "^4.0.41",
     "js-yaml": "^3.12.0",
     "jsonpath": "^1.0.0",
-    "local-repository-provider": "^3.2.3",
+    "local-repository-provider": "^3.2.4",
     "micromatch": "^3.1.10",
     "recast": "^0.16.1",
     "repository-provider": "^7.2.2",
