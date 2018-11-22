@@ -256,7 +256,7 @@ export class PreparedContext {
     const templatePackage = await (templatePRBranch
       ? templatePRBranch
       : templateBranch
-    ).content(pkg.name, { ignoreMissing: true });
+    ).entry(pkg.name);
 
     const templatePackageContent = templatePackage.content;
 
