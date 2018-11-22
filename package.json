@@ -46,7 +46,11 @@
     "local-repository-provider": "^3.2.4",
     "micromatch": "^3.1.10",
     "recast": "^0.16.1",
+<<<<<<< HEAD
     "repository-provider": "^8.0.0",
+=======
+    "repository-provider": "^8.0.1",
+>>>>>>> 8ff69684d243d238168bc8d20eb66a56a9315d68
     "semver": "^5.6.0",
     "set-getter": "^0.1.0",
     "simple-diff": "^1.6.0"

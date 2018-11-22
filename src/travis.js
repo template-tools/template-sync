@@ -135,6 +135,9 @@ export class Travis extends File {
           s =>
             !tyml[scriptName].find(e => e === `-${s}`) && s.indexOf("-") !== 0
         );
+        if(Array.isArray(yml[scriptName]) && yml[scriptName].length == 0) {
+          delete yml[scriptName];
+        }
       }
     });
 
