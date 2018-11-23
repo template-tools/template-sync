@@ -59,25 +59,25 @@ merges contents from template repo into destination repo handling some special c
     -   [Properties](#properties-1)
     -   [usedDevModules](#useddevmodules)
     -   [executeSingleRepo](#executesinglerepo)
+-   [File](#file)
+    -   [Parameters](#parameters-2)
+    -   [Properties](#properties-2)
+    -   [properties](#properties-3)
+        -   [Parameters](#parameters-3)
+    -   [merge](#merge)
+        -   [Parameters](#parameters-4)
+-   [templateOptions](#templateoptions)
+    -   [Parameters](#parameters-5)
+-   [compareVersion](#compareversion)
+    -   [Parameters](#parameters-6)
 -   [Readme](#readme)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
-    -   [properties](#properties-2)
-        -   [Parameters](#parameters-2)
--   [defaultMerge](#defaultmerge)
-    -   [Parameters](#parameters-3)
--   [normalizePackage](#normalizepackage)
-    -   [Parameters](#parameters-4)
--   [File](#file)
-    -   [Parameters](#parameters-5)
-    -   [Properties](#properties-3)
     -   [properties](#properties-4)
-        -   [Parameters](#parameters-6)
-    -   [merge](#merge)
         -   [Parameters](#parameters-7)
--   [templateOptions](#templateoptions)
+-   [defaultMerge](#defaultmerge)
     -   [Parameters](#parameters-8)
--   [compareVersion](#compareversion)
+-   [normalizePackage](#normalizepackage)
     -   [Parameters](#parameters-9)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
@@ -123,53 +123,6 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 ### executeSingleRepo
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
-
-## Readme
-
-**Extends File**
-
-injects badges into README.md
-
-## sortedKeys
-
-order in which json keys are written
-
-## Package
-
-**Extends File**
-
-Merger for package.json
-
-### properties
-
-Deliver some key properties
-
-#### Parameters
-
--   `branch` **Branch** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## defaultMerge
-
-### Parameters
-
--   `destination`  
--   `target`  
--   `template`  
--   `dp`  
--   `name`  
--   `messages`  
-
-## normalizePackage
-
-bring package into nomalized (sorted) form
-
-### Parameters
-
--   `source` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** normalized source
 
 ## File
 
@@ -224,6 +177,53 @@ compare two versions
 -   `b` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
 
 Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** \-1 if a &lt; b, 0 if a == b and 1 if a > b
+
+## Readme
+
+**Extends File**
+
+injects badges into README.md
+
+## sortedKeys
+
+order in which json keys are written
+
+## Package
+
+**Extends File**
+
+Merger for package.json
+
+### properties
+
+Deliver some key properties
+
+#### Parameters
+
+-   `branch` **Branch** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## defaultMerge
+
+### Parameters
+
+-   `destination`  
+-   `target`  
+-   `template`  
+-   `dp`  
+-   `name`  
+-   `messages`  
+
+## normalizePackage
+
+bring package into nomalized (sorted) form
+
+### Parameters
+
+-   `source` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** normalized source
 
 ## MergeAndRemoveLineSet
 

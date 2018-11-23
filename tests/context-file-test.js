@@ -21,7 +21,7 @@ test("create files", async t => {
   t.is(files.find(f => f.name === "package.json").constructor.name, "Package");
 });
 
-test("context file targetContent", async t => {
+test("context file targetEntry", async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: { "package.json": '{"name":"a"}' }
@@ -40,7 +40,7 @@ test("context file targetContent", async t => {
 
   const f = new Package("package.json");
 
-  t.is(await f.targetContent(context), '{"name":"b"}');
+  t.is(await f.targetEntry(context), '{"name":"b"}');
 });
 
 const ROLLUP_FILE_CONTENT = `import babel from 'rollup-plugin-babel';

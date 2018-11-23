@@ -221,7 +221,7 @@ export class PreparedContext {
       Array.from(this.files.values()).map(async file => {
         if (file.name === "package.json") {
           return file.usedDevModules(
-            file.targetContent(this, { ignoreMissing: true })
+            file.targetEntry(this, { ignoreMissing: true })
           );
         } else {
           const m = await file.merge(this);
