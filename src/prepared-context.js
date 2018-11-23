@@ -14,7 +14,7 @@ import { Replace } from "./replace";
 import { JSONFile } from "./json-file";
 import { JSDoc } from "./jsdoc";
 import { Context } from "./context";
-import { Content } from "repository-provider";
+import { Entry } from "repository-provider";
 const JSONPath = require("jsonpath");
 
 /**
@@ -285,7 +285,7 @@ export class PreparedContext {
         }
 
         await templatePRBranch.commit(`fix: add ${name}`, [
-          new Content(
+          new Entry(
             "package.json",
             JSON.stringify(templatePackageJson, undefined, 2)
           )
@@ -376,7 +376,7 @@ export class PreparedContext {
 
     await prBranch.commit(
       messages.join("\n"),
-      merges.map(m => new Content(m.name, m.content))
+      merges.map(m => new Entry(m.name, m.content))
     );
 
     if (newPullRequestRequired) {

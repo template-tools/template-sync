@@ -1,4 +1,4 @@
-import { Content, emptyContent } from "repository-provider";
+import { emptyEntry } from "repository-provider";
 
 /**
  * Mergable File
@@ -57,7 +57,7 @@ export class File {
     return {};
   }
 
-  async targetContent(context, options) {
+  async targetEntry(context, options) {
     return (await context.targetBranch.entry(this.name, options)).content;
   }
 
@@ -70,7 +70,7 @@ export class File {
       if (this.needsOriginal) {
         throw e;
       }
-      target = emptyContent(this.name);
+      target = emptyEntry(this.name);
     }
 
     try {
@@ -79,10 +79,10 @@ export class File {
       if (this.needsTemplate) {
         throw e;
       }
-      template = emptyContent(this.name);
+      template = emptyEntry(this.name);
     }
 
-    return [target.toString(), template.toString()];
+    return Promise.all([target.getString(), template.getString()]);
   }
 
   async mergeContent(context, original, template) {
