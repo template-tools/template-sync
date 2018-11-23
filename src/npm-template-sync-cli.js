@@ -41,10 +41,7 @@ program
       setProperty(properties, k, v);
     });
   })
-  .option(
-    "--list-providers",
-    "list providers with options and exit"
-  )
+  .option("--list-providers", "list providers with options and exit")
   .option(
     "--list-properties",
     "list all properties (if given of the first repo) and exit"
@@ -54,10 +51,7 @@ program
     "template repository",
     /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
   )
-  .option(
-    "--usage",
-    "track packages using template in package.json"
-  )
+  .option("--usage", "track packages using template in package.json")
   .argument("[repos...]", "repos to merge")
   .action(async (args, options, logger) => {
     if (options.save) {
@@ -84,7 +78,11 @@ program
         let options = provider.optionsFromEnvironment(process.env);
 
         if (options !== undefined || properties[provider.name] !== undefined) {
-          options = Object.assign({}, options, properties[provider.name]);
+          options = Object.assign(
+            { logger: (...args) => logger.info(...args) },
+            options,
+            properties[provider.name]
+          );
           aggregationProvider.providers.push(new provider(options));
         }
       });
