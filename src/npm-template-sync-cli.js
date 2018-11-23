@@ -24,6 +24,7 @@ program
   .description("Keep npm package in sync with its template")
   .version(version)
   .option("--dry", "do not create branch/pull request")
+  .option("--debug", "log level debug")
   .option(
     "-k, --keystore <account/service>",
     "keystore",
@@ -79,7 +80,7 @@ program
 
         if (options !== undefined || properties[provider.name] !== undefined) {
           options = Object.assign(
-            { logger: (...args) => logger.info(...args) },
+            { logger: (...args) => logger.info(...args), logLevel: options.debug ? 'trace' : 'info' },
             options,
             properties[provider.name]
           );
