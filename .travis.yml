@@ -1,7 +1,6 @@
 language: node_js
 node_js:
   - 10.13
-sudo: 'false'
 branches:
   only:
     - master
@@ -10,8 +9,6 @@ cache: npm
 notifications:
   email:
     - markus.felten@gmx.de
-before_install:
-  - npm i -g npm@latest
 before_script:
   - npm prune
   - npm install -g --production coveralls codecov
