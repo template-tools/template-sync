@@ -58,6 +58,7 @@ const sortedKeys = [
   "man",
   "bugs",
   "homepage",
+  "config",
   "release",
   "ava",
   "nyc",
