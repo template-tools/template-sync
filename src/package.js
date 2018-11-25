@@ -205,13 +205,11 @@ export class Package extends File {
 
     const usedDevModules = await context.usedDevModules();
 
-    //context.debug(`usedDevModules: ${Array.from(usedDevModules).join(',')}`);
+    context.debug({ usedDevModules: Array.from(usedDevModules) });
 
     const optionalDevModules = context.optionalDevModules(usedDevModules);
 
-    /*context.debug(
-      `optionalDevModules: ${Array.from(optionalDevModules).join(',')}`
-    );*/
+    context.debug({ optionalDevModules: Array.from(optionalDevModules) });
 
     const deepProperties = {
       devDependencies: { type: "chore", scope: "package", merge: defaultMerge },

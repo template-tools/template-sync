@@ -27,7 +27,8 @@ const external = [
   "expression-expander",
   "semver",
   "caporal",
-  "enquirer"
+  "enquirer",
+  "loglevel-mixin"
 ];
 
 export default [
@@ -59,11 +60,7 @@ export default [
       format: "cjs",
       interop: false
     },
-    plugins: [
-      resolve(),
-      commonjs(),
-      cleanup()
-    ],
+    plugins: [resolve(), commonjs(), cleanup()],
     external,
     input: pkg.module
   }

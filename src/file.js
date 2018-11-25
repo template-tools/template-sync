@@ -113,17 +113,12 @@ export class File {
 
       return result;
     } catch (err) {
-      context.error(
-        `${
-          context.targetBranch
-            ? context.targetBranch.fullCondensedName
-            : "unknown"
-        },${this.name}: ${err}`
-      );
+      context.error(err);
+
       return {
         name: this.name,
         changed: false
       };
     }
   }
-}
+};

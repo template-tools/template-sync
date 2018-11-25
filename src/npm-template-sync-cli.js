@@ -15,7 +15,7 @@ import { satisfies } from "semver";
 import program from "caporal";
 import { prompt } from "enquirer";
 
-process.on("uncaughtException", err => console.error(err));
+process.on("uncaughtException", e => console.error(e));
 process.on("unhandledRejection", reason => console.error(reason));
 
 const properties = {};
@@ -64,6 +64,8 @@ program
       await setPassword(response.password, options);
     }
 
+    const logLevel = options.debug ? 'trace' : 'info';
+
     try {
       const pass = await getPassword(options);
       const aggregationProvider = new AggregationProvider();
@@ -80,7 +82,7 @@ program
 
         if (options !== undefined || properties[provider.name] !== undefined) {
           options = Object.assign(
-            { logger: (...args) => logger.info(...args), logLevel: options.debug ? 'trace' : 'info' },
+            { logger: (...args) => logger.info(...args), logLevel },
             options,
             properties[provider.name]
           );
@@ -118,6 +120,7 @@ program
 
       for (const repo of args.repos) {
         const pc = new PreparedContext(context, repo);
+        pc.logLevel = logLevel;
         await pc.initialize();
 
         if (options.listProperties) {
@@ -136,7 +139,7 @@ program
   });
 
 if (!satisfies(process.versions.node, engines.node)) {
-  console.error(`require node ${engines.node} (not ${process.versions.node})`);
+  console.error(`require node ${engines.node} (running with ${process.versions.node})`);
   process.exit(-1);
 }
 
