@@ -79,21 +79,40 @@ export class Context {
   }
 
   log(arg) {
-    console.log(
-      `${arg.level === "info" ? "" : arg.level + ": "}${arg.message ? arg.message : ''}${
-        Object.keys(arg).reduce((a, c) => {
-          switch (c) {
-            case "level":
-            case "message":
-            case "timestamp":
-              break;
-            default:
-              if(arg[c] !== undefined && Object.keys(arg[c]).length > 0) {
-                a.push(` ${c}: ${JSON.stringify(arg[c])}`)
-              }
-          }
-          return a;
-        }, [])}`
-    );
+    const prefixKeys = {
+      branch: 1,
+      level: "info"
+    };
+    const valueKeys = {
+      message: "v",
+      timestamp: "d"
+    };
+
+    const prefix = Object.keys(prefixKeys).reduce((a, c) => {
+      if (arg[c]) {
+        if(prefixKeys[c] !== arg[c]) {
+          a.push(arg[c]);
+        }
+        delete arg[c];
+      }
+      return a;
+    }, []);
+
+    const values = Object.keys(arg).reduce((a, c) => {
+      if (arg[c] !== undefined) {
+        switch (valueKeys[c]) {
+          case "v":
+            a.push(arg[c]);
+            break;
+          case "d":
+            break;
+          default:
+            a.push(`${c}=${JSON.stringify(arg[c])}`);
+        }
+      }
+      return a;
+    }, []);
+
+    console.log(`${prefix.join(",")}: ${values.join(" ")}`);
   }
 }

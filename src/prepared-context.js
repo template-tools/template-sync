@@ -103,13 +103,12 @@ export const PreparedContext = LogLevelMixin(
     }
 
     log(level, arg) {
-      this.context.log(makeLogEvent(level, arg, { branch: this.targetBranch }));
+      this.context.log(makeLogEvent(level, arg, { branch: this.targetBranch ? this.targetBranch.fullCondensedName : undefined }));
     }
 
     async initialize() {
       const context = this.context;
       const targetBranch = await context.provider.branch(this.targetBranchName);
-
 
       if (targetBranch.provider.name === "GithubProvider") {
         this.properties.github = {
@@ -351,7 +350,7 @@ export const PreparedContext = LogLevelMixin(
       this.info(merges.map(m => `${m.messages[0]}`).join(","));
 
       if (this.dry) {
-        this.info(`dry run`);
+        this.info('dry run');
         return;
       }
 
