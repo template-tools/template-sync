@@ -77,17 +77,17 @@ program
         properties.GithubProvider.auth = pass;
       }
 
-      [BitbucketProvider, GithubProvider, LocalProvider].forEach(provider => {
+      [GithubProvider, BitbucketProvider, LocalProvider].forEach(provider => {
         let options = provider.optionsFromEnvironment(process.env);
 
-        if (options !== undefined || properties[provider.name] !== undefined) {
+        //if (options !== undefined || properties[provider.name] !== undefined) {
           options = Object.assign(
             { logger: (...args) => logger.info(...args), logLevel },
             options,
             properties[provider.name]
           );
           aggregationProvider.providers.push(new provider(options));
-        }
+        //}
       });
 
       if (options.listProviders) {
@@ -95,7 +95,7 @@ program
           Array.from(
             aggregationProvider.providers.map(
               p =>
-                `${p.name}: ${JSON.stringify(removeSensibleValues(p.config))}`
+                `${p.name}: ${JSON.stringify(removeSensibleValues(p))}`
             )
           ).join("\n")
         );
