@@ -103,7 +103,13 @@ export const PreparedContext = LogLevelMixin(
     }
 
     log(level, arg) {
-      this.context.log(makeLogEvent(level, arg, { branch: this.targetBranch ? this.targetBranch.fullCondensedName : undefined }));
+      this.context.log(
+        makeLogEvent(level, arg, {
+          branch: this.targetBranch
+            ? this.targetBranch.fullCondensedName
+            : undefined
+        })
+      );
     }
 
     async initialize() {
@@ -134,7 +140,10 @@ export const PreparedContext = LogLevelMixin(
 
       Object.assign(this.properties, await pkg.properties(targetBranch));
 
-      this.debug({ message: "detected properties", properties: this.properties });
+      this.debug({
+        message: "detected properties",
+        properties: this.properties
+      });
 
       if (this.properties.usedBy !== undefined) {
         Object.defineProperties(this, {
@@ -336,21 +345,21 @@ export const PreparedContext = LogLevelMixin(
 
       files.forEach(f => this.addFile(f));
 
-      this.trace({ message: "got files", files: files.map(f => f.name)});
+      this.trace({ message: "got files", files: files.map(f => f.name) });
 
       const merges = (await Promise.all(
         files.map(async f => f.merge(this))
       )).filter(m => m !== undefined && m.changed);
 
       if (merges.length === 0) {
-        this.info('nothing to do');
+        this.info("-");
         return;
       }
 
       this.info(merges.map(m => `${m.messages[0]}`).join(","));
 
       if (this.dry) {
-        this.info('dry run');
+        this.info("dry run");
         return;
       }
 
