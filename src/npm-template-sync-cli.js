@@ -64,29 +64,38 @@ program
       await setPassword(response.password, options);
     }
 
-    const logLevel = options.debug ? 'trace' : 'info';
+    const logLevel = options.debug ? "trace" : "info";
 
     try {
       const pass = await getPassword(options);
-      const aggregationProvider = new AggregationProvider();
 
       if (pass !== null && pass !== undefined) {
         if (properties.GithubProvider === undefined) {
           properties.GithubProvider = {};
         }
-        properties.GithubProvider.auth = pass;
+        properties.GithubProvider.authentication.password = pass;
       }
+
+      const providers = [];
+
+      const logOptions = {
+        logger: (...args) => {
+          console.log(...args);
+        },
+        logLevel
+      };
 
       [GithubProvider, BitbucketProvider, LocalProvider].forEach(provider => {
         let options = provider.optionsFromEnvironment(process.env);
 
         //if (options !== undefined || properties[provider.name] !== undefined) {
-          options = Object.assign(
-            { logger: (...args) => logger.info(...args), logLevel },
-            options,
-            properties[provider.name]
-          );
-          aggregationProvider.providers.push(new provider(options));
+        options = Object.assign(
+          {},
+          logOptions,
+          properties[provider.name],
+          options
+        );
+        providers.push(new provider(options));
         //}
       });
 
@@ -94,8 +103,7 @@ program
         logger.info(
           Array.from(
             aggregationProvider.providers.map(
-              p =>
-                `${p.name}: ${JSON.stringify(removeSensibleValues(p))}`
+              p => `${p.name}: ${JSON.stringify(removeSensibleValues(p))}`
             )
           ).join("\n")
         );
@@ -103,13 +111,16 @@ program
         return;
       }
 
-      const context = new Context(aggregationProvider, {
-        templateBranchName: options.template,
-        dry: options.dry,
-        trackUsedByModule: options.usage,
-        logger,
-        properties
-      });
+      const context = new Context(
+        new AggregationProvider(providers, logOptions),
+        {
+          templateBranchName: options.template,
+          dry: options.dry,
+          trackUsedByModule: options.usage,
+          logger,
+          properties
+        }
+      );
 
       if (args.repos.length === 0 && options.listProperties) {
         logger.info(
@@ -139,7 +150,9 @@ program
   });
 
 if (!satisfies(process.versions.node, engines.node)) {
-  console.error(`require node ${engines.node} (running with ${process.versions.node})`);
+  console.error(
+    `require node ${engines.node} (running with ${process.versions.node})`
+  );
   process.exit(-1);
 }
 
