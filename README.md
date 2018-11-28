@@ -57,8 +57,6 @@ merges contents from template repo into destination repo handling some special c
 -   [PreparedContext](#preparedcontext)
     -   [Parameters](#parameters-1)
     -   [Properties](#properties-1)
-    -   [usedDevModules](#useddevmodules)
-    -   [executeSingleRepo](#executesinglerepo)
 -   [File](#file)
     -   [Parameters](#parameters-2)
     -   [Properties](#properties-2)
@@ -113,16 +111,6 @@ context prepared to execute one package
 
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
-
-### usedDevModules
-
-all used dev modules
-
-Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
-
-### executeSingleRepo
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>** 
 
 ## File
 
