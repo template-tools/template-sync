@@ -8,7 +8,7 @@ import {
 } from "./util";
 import { version, engines } from "../package.json";
 import { GithubProvider } from "github-repository-provider";
-import { BitbucketProvider } from "bitbucket-repository-provider";
+//import { BitbucketProvider } from "bitbucket-repository-provider";
 import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { satisfies } from "semver";
@@ -85,7 +85,7 @@ program
         logLevel
       };
 
-      [GithubProvider, BitbucketProvider, LocalProvider].forEach(provider => {
+      [GithubProvider, /*BitbucketProvider,*/ LocalProvider].forEach(provider => {
         let options = provider.optionsFromEnvironment(process.env);
 
         //if (options !== undefined || properties[provider.name] !== undefined) {
