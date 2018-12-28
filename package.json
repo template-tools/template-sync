@@ -36,7 +36,7 @@
     "aggregation-repository-provider": "^2.1.5",
     "babylon": "^6.18.0",
     "caporal": "^1.1.0",
-    "content-entry": "^1.8.0",
+    "content-entry": "^1.8.1",
     "deep-extend": "^0.6.0",
     "enquirer": "^2.2.0",
     "expression-expander": "^6.1.3",
