@@ -41,7 +41,7 @@ export default [
       interop: false
     },
     plugins: [
-      //resolve(),
+      resolve(),
       commonjs(),
       json({
         include: "package.json",

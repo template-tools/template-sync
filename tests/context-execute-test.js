@@ -19,8 +19,9 @@ test("context prepare", async t => {
 
   t.is(pc.templateBranch.fullCondensedName, TEMPLATE_REPO);
   t.is(pc.targetBranch.fullCondensedName, REPOSITORY_NAME);
-  t.is(pc.properties.name, "sync-test-repository");
+
   t.is(pc.properties.mySpecialKey, "mySpecialValue");
+  t.is(pc.properties.name, "sync-test-repository");
 });
 
 test("context execute", async t => {

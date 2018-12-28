@@ -101,7 +101,7 @@ export class Package extends File {
   async properties(branch) {
     try {
       const content = await branch.entry(this.name);
-      const pkg = JSON.parse(content.content);
+      const pkg = JSON.parse(await content.getString({ encoding: "utf-8" }));
 
       const properties = {
         npm: { name: pkg.name, fullName: pkg.name }

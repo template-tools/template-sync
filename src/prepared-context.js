@@ -14,7 +14,7 @@ import { Replace } from "./replace";
 import { JSONFile } from "./json-file";
 import { JSDoc } from "./jsdoc";
 import { Context } from "./context";
-import { Entry } from "repository-provider";
+import { StringContentEntry } from "content-entry";
 const JSONPath = require("jsonpath");
 
 /**
@@ -189,12 +189,7 @@ export const PreparedContext = LogLevelMixin(
 
       return mapping
         .map(m => {
-          const found = micromatch(
-            files
-              //.filter(f => f.type === "blob")
-              .map(f => f.name),
-            m.pattern
-          );
+          const found = micromatch(files.map(f => f.name), m.pattern);
 
           const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
 
@@ -261,7 +256,7 @@ export const PreparedContext = LogLevelMixin(
         : templateBranch
       ).entry(pkg.name);
 
-      const templatePackageContent = templatePackage.content;
+      const templatePackageContent = await templatePackage.getString();
 
       const templatePackageJson =
         templatePackageContent === undefined || templatePackageContent === ""
@@ -290,7 +285,7 @@ export const PreparedContext = LogLevelMixin(
           }
 
           await templatePRBranch.commit(`fix: add ${name}`, [
-            new Entry(
+            new StringContentEntry(
               "package.json",
               JSON.stringify(templatePackageJson, undefined, 2)
             )
@@ -381,7 +376,7 @@ export const PreparedContext = LogLevelMixin(
 
       await prBranch.commit(
         messages.join("\n"),
-        merges.map(m => new Entry(m.name, m.content))
+        merges.map(m => new StringContentEntry(m.name, m.content))
       );
 
       if (newPullRequestRequired) {

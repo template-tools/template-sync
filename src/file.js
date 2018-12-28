@@ -1,4 +1,4 @@
-import { emptyEntry } from "repository-provider";
+import { EmptyContentEntry } from "content-entry/src/empty-content-entry";
 
 /**
  * Mergable File
@@ -58,7 +58,7 @@ export class File {
   }
 
   async targetEntry(context, options) {
-    return (await context.targetBranch.entry(this.name, options)).content;
+    return (await context.targetBranch.entry(this.name, options)).getString();
   }
 
   async content(context) {
@@ -70,7 +70,7 @@ export class File {
       if (this.needsOriginal) {
         throw e;
       }
-      target = emptyEntry(this.name);
+      target = new EmptyContentEntry(this.name);
     }
 
     try {
@@ -79,7 +79,7 @@ export class File {
       if (this.needsTemplate) {
         throw e;
       }
-      template = emptyEntry(this.name);
+      template = new EmptyContentEntry(this.name);
     }
 
     return Promise.all([target.getString(), template.getString()]);
@@ -108,7 +108,7 @@ export class File {
       }
       result.name = this.name;
 
-      context.properties.entry  = { name: this.name };
+      context.properties.entry = { name: this.name };
       result.messages = context.expand(result.messages);
 
       return result;
@@ -121,4 +121,4 @@ export class File {
       };
     }
   }
-};
+}
