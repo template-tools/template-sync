@@ -27,10 +27,8 @@
     "pretest": "rollup -c",
     "posttest": "npm run prepare && markdown-doctest",
     "docs": "documentation readme src/context.js --section=API",
-    "semantic-release": "semantic-release",
     "prepare": "rollup -c",
-    "lint": "documentation lint src/context.js",
-    "travis-deploy-once": "travis-deploy-once"
+    "lint": "documentation lint src/context.js"
   },
   "dependencies": {
     "aggregation-repository-provider": "^2.1.5",
@@ -65,8 +63,7 @@
     "rollup-plugin-executable": "^1.3.0",
     "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-node-resolve": "^4.0.0",
-    "semantic-release": "^15.13.2",
-    "travis-deploy-once": "^5.0.11"
+    "semantic-release": "^15.13.2"
   },
   "optionalDependencies": {
     "keytar": "^4.3.0"
