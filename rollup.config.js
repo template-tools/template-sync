@@ -27,8 +27,7 @@ const external = [
   "expression-expander",
   "semver",
   "caporal",
-  "enquirer",
-  "loglevel-mixin"
+  "enquirer"
 ];
 
 export default [
