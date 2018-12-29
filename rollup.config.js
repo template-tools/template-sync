@@ -19,7 +19,6 @@ const external = [
   "deep-extend",
   "simple-diff",
   "micromatch",
-  "repository-provider",
   "local-repository-provider",
   "aggregation-repository-provider",
   "github-repository-provider",
