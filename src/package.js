@@ -318,7 +318,9 @@ export class Package extends File {
     );
 
     if (target.keywords !== undefined) {
-      delete target.keywords["npm-package-template"];
+      target.keywords = target.keywords.filter(
+        n => n !== "npm-package-template"
+      );
     }
 
     removeKeyword(target, ["null", null, undefined], messages);
