@@ -22,8 +22,7 @@ const scriptSlots = [
   "after_script"
 ];
 
-const deletableSlots = ["notifications.email"];
-
+const deletableSlots = ["notifications.email", "branches.only"];
 export class Travis extends File {
   static matchesFileName(name) {
     return name === ".travis.yml";
@@ -135,7 +134,7 @@ export class Travis extends File {
           s =>
             !tyml[scriptName].find(e => e === `-${s}`) && s.indexOf("-") !== 0
         );
-        if(Array.isArray(yml[scriptName]) && yml[scriptName].length == 0) {
+        if (Array.isArray(yml[scriptName]) && yml[scriptName].length == 0) {
           delete yml[scriptName];
         }
       }
