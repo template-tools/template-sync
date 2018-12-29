@@ -13,6 +13,7 @@ import { AggregationProvider } from "aggregation-repository-provider";
 import { satisfies } from "semver";
 import program from "caporal";
 import { prompt } from "enquirer";
+import { readFileSync } from "fs";
 
 process.on("uncaughtException", e => console.error(e));
 process.on("unhandledRejection", reason => console.error(reason));
@@ -120,6 +121,13 @@ program
           properties
         }
       );
+
+      if (args.repos.length === 0 || args.repos[0] === ".") {
+        const pkg = JSON.parse(
+          readFileSync("package.json", { encoding: "utf-8" })
+        );
+        args.repos.push(pkg.repository.url);
+      }
 
       if (args.repos.length === 0 && options.listProperties) {
         logger.info(
