@@ -334,7 +334,7 @@ test("package keywords", async t => {
           url: `https://github.com/.git`
         }
       },
-      keywords: ["A", "B"]
+      keywords: ["A", "B", "npm-package-template"]
     }
   );
 

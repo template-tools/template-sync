@@ -317,13 +317,11 @@ export class Package extends File {
       addKeyword(target, new RegExp(r), this.options.keywords[r], messages)
     );
 
-    if (target.keywords !== undefined) {
-      target.keywords = target.keywords.filter(
-        n => n !== "npm-package-template"
-      );
-    }
-
-    removeKeyword(target, ["null", null, undefined], messages);
+    removeKeyword(
+      target,
+      ["null", null, undefined, "npm-package-template"],
+      messages
+    );
 
     this.options.actions.forEach(action => {
       if (action.op === "replace") {
