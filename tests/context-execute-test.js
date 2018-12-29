@@ -37,9 +37,10 @@ test("context execute", async t => {
     REPOSITORY_NAME
   );
 
+  //context.logLevel = "trace";
+
   const pullRequest = await context.execute();
 
-  console.log(pullRequest);
   t.truthy(pullRequest.name);
 
   //await pullRequest.merge();
