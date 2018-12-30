@@ -66,6 +66,15 @@ const sortedKeys = [
   "template"
 ];
 
+const propertyKeys = [
+  "description",
+  "version",
+  "name",
+  "main",
+  "module",
+  "browser"
+];
+
 /**
  * Merger for package.json
  */
@@ -124,15 +133,13 @@ export class Package extends File {
         }
       }
 
-      ["description", "version", "name", "main", "module", "browser"].forEach(
-        key => {
-          if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
-            if (!(key === "version" && pkg[key] === "0.0.0-semantic-release")) {
-              properties[key] = pkg[key];
-            }
+      propertyKeys.forEach(key => {
+        if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
+          if (!(key === "version" && pkg[key] === "0.0.0-semantic-release")) {
+            properties[key] = pkg[key];
           }
         }
-      );
+      });
 
       return properties;
     } catch (e) {}
@@ -273,10 +280,6 @@ export class Package extends File {
       mergeScripts(decodedScripts, decodeScripts(template.scripts))
     );
 
-    if (target.module === "{{module}}") {
-      delete target.module;
-    }
-
     if (
       target.contributors !== undefined &&
       target.author !== undefined &&
@@ -339,6 +342,17 @@ export class Package extends File {
     });
 
     target = context.expand(target);
+
+    propertyKeys.forEach(key => {
+      if (target[key] === "{{" + key + "}}") {
+        delete target[key];
+
+        messages.push(
+          `chore(package): remove unknown value for ${key} ({{${key}}})`
+        );
+      }
+    });
+
     const sortedTarget = normalizePackage(target);
 
     let newContent = JSON.stringify(sortedTarget, undefined, 2);

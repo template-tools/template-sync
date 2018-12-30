@@ -386,6 +386,31 @@ test("package remove null keyword", async t => {
   t.true(merged.messages.includes("docs(package): remove keyword null"));
 });
 
+test("package remove unexpanded {{xxx}}", async t => {
+  const context = await createContext(
+    {
+      template: {}
+    },
+    {
+      browser: "{{browser}}",
+      main: "a value"
+    }
+  );
+
+  const pkg = new Package("package.json");
+  const merged = await pkg.merge(context);
+
+  const result = JSON.parse(merged.content);
+
+  t.true(result.browser === undefined);
+  t.true(result.main === "a value");
+  t.true(
+    merged.messages.includes(
+      "chore(package): remove unknown value for browser ({{browser}})"
+    )
+  );
+});
+
 test("add xo/space=true", async t => {
   const context = await createContext(
     {
