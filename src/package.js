@@ -1,5 +1,5 @@
 import { File } from "./file";
-import { compareVersion } from "./util";
+import { compareVersion, sortObjectsKeys } from "./util";
 import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts";
 import diff from "simple-diff";
 const JSONPath = require("jsonpath");
@@ -516,7 +516,19 @@ function normalizePackage(source) {
 
   sortedKeys.forEach(key => {
     if (source[key] !== undefined) {
-      normalized[key] = source[key];
+      switch (key) {
+        case "bin":
+        case "scripts":
+        case "dependencies":
+        case "devDependencies":
+        case "peerDependencies":
+        case "optionalDependencies":
+        case "bundledDependencies":
+          normalized[key] = sortObjectsKeys(source[key]);
+          break;
+        default:
+          normalized[key] = source[key];
+      }
     }
   });
 

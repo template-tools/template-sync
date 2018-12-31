@@ -119,3 +119,15 @@ export function compareVersion(a, b) {
 
   return 0;
 }
+
+export function sortObjectsKeys(source) {
+  const normalized = {};
+
+  Object.keys(source)
+    .sort((a, b) => a.localeCompare(b))
+    .forEach(key => {
+      normalized[key] = source[key];
+    });
+
+  return normalized;
+}
