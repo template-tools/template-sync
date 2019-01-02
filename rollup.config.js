@@ -22,7 +22,6 @@ const external = [
   "local-repository-provider",
   "aggregation-repository-provider",
   "github-repository-provider",
-  "expression-expander",
   "semver",
   "caporal",
   "enquirer"

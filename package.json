@@ -37,7 +37,7 @@
     "content-entry": "^2.0.2",
     "deep-extend": "^0.6.0",
     "enquirer": "^2.2.0",
-    "expression-expander": "^6.1.3",
+    "expression-expander": "^7.0.0",
     "github-repository-provider": "^5.1.18",
     "js-yaml": "^3.12.0",
     "jsonpath": "^1.0.0",
