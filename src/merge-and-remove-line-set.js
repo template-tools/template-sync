@@ -5,7 +5,7 @@ import { MergeLineSet } from './merge-line-set';
  */
 export class MergeAndRemoveLineSet extends MergeLineSet {
   async mergeContent(context, original, template) {
-    const toBeRemoved = new Set([
+    const toBeRemoved = new Set(["",
       ...template
         .split(/\r?\n/)
         .filter(l => l.startsWith('- '))
