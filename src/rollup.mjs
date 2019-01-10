@@ -1,7 +1,7 @@
-import { File } from './file';
+import { File } from "./file";
 
-const recast = require('recast');
-const babylon = require('recast/parsers/babylon');
+import recast from "recast";
+import babylon from "recast/parsers/babylon";
 
 export class Rollup extends File {
   static matchesFileName(name) {
@@ -28,7 +28,7 @@ export class Rollup extends File {
     });
 
     for (const decl of ast.program.body) {
-      if (decl.type === 'ImportDeclaration') {
+      if (decl.type === "ImportDeclaration") {
         modules.add(decl.source.value);
       }
     }
@@ -37,16 +37,16 @@ export class Rollup extends File {
   }
 
   async mergeContent(context, original, template) {
-    if (template === '') {
+    if (template === "") {
       return {
         content: original,
         changed: false
       };
     }
-    if (original === '') {
+    if (original === "") {
       return {
         content: template,
-        messages: ['chore(rollup): copy from template'],
+        messages: ["chore(rollup): copy from template"],
         changed: true
       };
     }
@@ -69,34 +69,34 @@ export class Rollup extends File {
       if (exp !== undefined && exp.properties !== undefined) {
         let output, dest;
 
-        const banner = removePropertiesKey(exp.properties, 'banner');
+        const banner = removePropertiesKey(exp.properties, "banner");
 
         for (const p of exp.properties) {
           switch (p.key.name) {
-            case 'targets':
+            case "targets":
               dest = p.value.elements[0].properties[0]; //.find(x => x.name === 'dest');
-              const op = findProperty(templateExp.properties, 'output');
+              const op = findProperty(templateExp.properties, "output");
               if (op !== undefined) {
-                p.key.name = 'output';
+                p.key.name = "output";
                 p.value = op.value;
                 output = p;
               }
               break;
-            case 'entry':
-              const ip = findProperty(templateExp.properties, 'input');
+            case "entry":
+              const ip = findProperty(templateExp.properties, "input");
               if (ip !== undefined) {
-                p.key.name = 'input';
+                p.key.name = "input";
                 p.value = ip.value;
               }
           }
         }
 
-        if (findProperty(exp.properties, 'input') === undefined) {
-          exp.properties.push(findProperty(templateExp.properties, 'input'));
+        if (findProperty(exp.properties, "input") === undefined) {
+          exp.properties.push(findProperty(templateExp.properties, "input"));
         }
 
-        const originalOutput = findProperty(exp.properties, 'output');
-        const templateOutput = findProperty(templateExp.properties, 'output');
+        const originalOutput = findProperty(exp.properties, "output");
+        const templateOutput = findProperty(templateExp.properties, "output");
 
         if (originalOutput === undefined) {
           exp.properties.push(templateOutput);
@@ -105,27 +105,27 @@ export class Rollup extends File {
             templateOutput,
             originalOutput,
             [
-              'format',
-              'file',
-              'dir',
-              'name',
-              'globals',
-              'paths',
-              'banner',
-              'footer',
-              'intro',
-              'outro',
-              'sourcemap',
-              'sourcemapFile',
-              'interop',
-              'extend',
-              'exports',
-              'amd',
-              'indent',
-              'strict',
-              'freeze',
-              'legacy',
-              'namespaceToStringTag'
+              "format",
+              "file",
+              "dir",
+              "name",
+              "globals",
+              "paths",
+              "banner",
+              "footer",
+              "intro",
+              "outro",
+              "sourcemap",
+              "sourcemapFile",
+              "interop",
+              "extend",
+              "exports",
+              "amd",
+              "indent",
+              "strict",
+              "freeze",
+              "legacy",
+              "namespaceToStringTag"
             ],
             messages
           );
@@ -136,16 +136,16 @@ export class Rollup extends File {
             }
 
             if (dest !== undefined) {
-              const file = findProperty(output.value.properties, 'file');
+              const file = findProperty(output.value.properties, "file");
               if (file !== undefined) {
                 file.value = dest.value;
               }
             }
           }
 
-          removePropertiesKey(exp.properties, 'format');
-          removePropertiesKey(exp.properties, 'sourceMap');
-          removePropertiesKey(exp.properties, 'dest');
+          removePropertiesKey(exp.properties, "format");
+          removePropertiesKey(exp.properties, "sourceMap");
+          removePropertiesKey(exp.properties, "dest");
         }
       }
       const originalImports = importDeclarationsByLocalName(ast);
@@ -161,7 +161,7 @@ export class Rollup extends File {
       });
 
       if (addedImports.length > 0) {
-        messages.push(`chore(rollup): import ${addedImports.join(',')}`);
+        messages.push(`chore(rollup): import ${addedImports.join(",")}`);
       }
 
       const addedPlugins = [];
@@ -180,14 +180,14 @@ export class Rollup extends File {
       });
 
       if (addedPlugins.length > 0) {
-        messages.push(`chore(rollup): add ${addedPlugins.join(',')}`);
+        messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
       }
 
       const content = recast.print(ast).code;
       const changed = content !== original;
 
       if (changed && messages.length === 0) {
-        messages.push('chore(rollup): update from template');
+        messages.push("chore(rollup): update from template");
       }
 
       return {
@@ -212,9 +212,9 @@ function removeUseStrict(ast) {
   for (const i in ast.program.body) {
     const decl = ast.program.body[i];
     if (
-      decl.type === 'ExpressionStatement' &&
-      decl.expression.type === 'Literal' &&
-      decl.expression.value === 'use strict'
+      decl.type === "ExpressionStatement" &&
+      decl.expression.type === "Literal" &&
+      decl.expression.value === "use strict"
     ) {
       ast.program.body.splice(i, 1);
       return;
@@ -226,7 +226,7 @@ function importDeclarationsByLocalName(ast) {
   const declarations = new Map();
 
   for (const decl of ast.program.body) {
-    if (decl.type === 'ImportDeclaration') {
+    if (decl.type === "ImportDeclaration") {
       declarations.set(decl.specifiers[0].local.name, decl);
     }
   }
@@ -236,7 +236,7 @@ function importDeclarationsByLocalName(ast) {
 
 function exportDefaultDeclaration(ast) {
   for (const decl of ast.program.body) {
-    if (decl.type === 'ExportDefaultDeclaration') {
+    if (decl.type === "ExportDefaultDeclaration") {
       return decl.declaration;
     }
   }
@@ -247,7 +247,7 @@ function exportDefaultDeclaration(ast) {
 function pluginsFromExpression(exp) {
   if (exp.properties !== undefined) {
     const plugins = exp.properties.find(
-      p => p !== undefined && p.key.name === 'plugins'
+      p => p !== undefined && p.key.name === "plugins"
     );
 
     if (plugins !== undefined) {
@@ -299,7 +299,7 @@ function mergeKeys(source, dest, knownKeys, messages) {
   }
 
   if (mergedKeys.length > 0) {
-    messages.push(`chore(rollup): add to output ${mergedKeys.join(',')}`);
+    messages.push(`chore(rollup): add to output ${mergedKeys.join(",")}`);
   }
 
   return mergedKeys;

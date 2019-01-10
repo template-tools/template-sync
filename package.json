@@ -4,8 +4,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/context.js",
-  "module": "src/context.js",
+  "main": "src/context.mjs",
+  "module": "src/context.mjs",
   "description": "Keep npm package in sync with its template",
   "keywords": [
     "npm",
@@ -23,8 +23,8 @@
   },
   "scripts": {
     "cover": "c8 --temp-directory build/coverage ava && c8 report -r lcov --temp-directory build/coverage",
-    "docs": "documentation readme src/context.js --section=API",
-    "lint": "documentation lint src/context.js",
+    "docs": "documentation readme src/context.mjs --section=API",
+    "lint": "documentation lint src/context.mjs",
     "posttest": "npm run prepare && markdown-doctest",
     "prepare": "rollup -c",
     "pretest": "rollup -c",

@@ -1,8 +1,12 @@
-import test from 'ava';
-import { astMerge } from '../src/ast-merge';
+import test from "ava";
+import { astMerge } from "../src/ast-merge";
 
+import recast from "recast";
+import babylon from "recast/parsers/babylon";
+/*
 const recast = require('recast');
 const babylon = require('recast/parsers/babylon');
+*/
 
 function merger(a, b) {
   const recastOptions = {
@@ -17,6 +21,6 @@ function merger(a, b) {
   return recast.print(astA).code;
 }
 
-test.skip('ast merge', t => {
+test.skip("ast merge", t => {
   t.is(merger(`{ a: 1 }`, `{ b: 2 }`), `{ a: 1, b: 2}`);
 });

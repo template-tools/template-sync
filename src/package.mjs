@@ -2,7 +2,7 @@ import { File } from "./file";
 import { compareVersion, sortObjectsKeys } from "./util";
 import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts";
 import diff from "simple-diff";
-const JSONPath = require("jsonpath");
+import JSONPath from "jsonpath";
 
 function moduleNames(object) {
   if (object === undefined) return new Set();
@@ -141,9 +141,7 @@ export class Package extends File {
         }
       });
       return properties;
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
 
     return {};
   }

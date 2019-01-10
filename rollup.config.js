@@ -31,35 +31,23 @@ const external = [
   "node-fetch"
 ];
 
-export default [
-  {
-    output: {
-      file: pkg.bin["npm-template-sync"],
-      format: "cjs",
-      banner:
-        '#!/bin/sh\n":" //# comment; exec /usr/bin/env node --experimental-modules --experimental-worker "$0" "$@"',
-      interop: false
-    },
-    plugins: [
-      resolve(),
-      commonjs(),
-      json({
-        preferConst: true,
-        compact: true
-      }),
-      executable()
-    ],
-    external,
-    input: "src/npm-template-sync-cli.js"
+export default {
+  output: {
+    file: pkg.bin["npm-template-sync"],
+    format: "cjs",
+    banner:
+      '#!/bin/sh\n":" //# comment; exec /usr/bin/env node --experimental-modules --experimental-worker "$0" "$@"',
+    interop: false
   },
-  {
-    output: {
-      file: pkg.main,
-      format: "cjs",
-      interop: false
-    },
-    plugins: [resolve(), commonjs(), json()],
-    external,
-    input: pkg.module
-  }
-];
+  plugins: [
+    resolve(),
+    commonjs(),
+    json({
+      preferConst: true,
+      compact: true
+    }),
+    executable()
+  ],
+  external,
+  input: "src/npm-template-sync-cli.mjs"
+};

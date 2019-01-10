@@ -15,7 +15,7 @@ import { JSONFile } from "./json-file";
 import { JSDoc } from "./jsdoc";
 import { Context } from "./context";
 import { StringContentEntry } from "content-entry";
-const JSONPath = require("jsonpath");
+import JSONPath from "jsonpath";
 
 /**
  * context prepared to execute one package
