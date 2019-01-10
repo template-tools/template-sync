@@ -4,7 +4,7 @@ import execa from "execa";
 
 const nts = join(__dirname, "..", "bin", "npm-template-sync");
 
-test.only("cli defines", async t => {
+test("cli defines", async t => {
   const c = await execa(nts, ["-d", "test=test string", "--list-properties"]);
   t.truthy(c.stdout.match(/test string/));
 });
