@@ -177,6 +177,12 @@ export const PreparedContext = LogLevelMixin(
         targetBranch: { value: targetBranch },
         templateBranch: { value: templateBranch }
       });
+
+      this.debug({
+        message: "initialized for",
+        targetBranch,
+        templateBranch
+      });
     }
 
     static async createFiles(branch, mapping = Context.defaultMapping) {
@@ -326,6 +332,12 @@ export const PreparedContext = LogLevelMixin(
     async executeSingleRepo() {
       const templateBranch = this.templateBranch;
       const targetBranch = this.targetBranch;
+
+      this.debug({
+        message: "executeSingleRepo",
+        templateBranch,
+        targetBranch
+      });
 
       const {
         templatePackageJson,

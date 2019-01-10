@@ -98,6 +98,7 @@ export class File {
    */
   async merge(context) {
     try {
+      context.debug({ message: "merge", name: this.name });
       const [original, template] = await this.content(context);
       const result = await this.mergeContent(context, original, template);
       if (result === undefined) {
@@ -110,6 +111,8 @@ export class File {
 
       context.properties.entry = { name: this.name };
       result.messages = context.expand(result.messages);
+
+      context.debug({ name: this.name, changes: result.changed });
 
       return result;
     } catch (err) {

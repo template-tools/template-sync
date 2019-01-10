@@ -140,9 +140,10 @@ export class Package extends File {
           }
         }
       });
-
       return properties;
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
 
     return {};
   }

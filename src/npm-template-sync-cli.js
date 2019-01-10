@@ -122,18 +122,18 @@ program
         }
       );
 
-      if (args.repos.length === 0 || args.repos[0] === ".") {
-        const pkg = JSON.parse(
-          readFileSync("package.json", { encoding: "utf-8" })
-        );
-        args.repos.push(pkg.repository.url);
-      }
-
       if (args.repos.length === 0 && options.listProperties) {
         logger.info(
           JSON.stringify(removeSensibleValues(context.properties), undefined, 2)
         );
         return;
+      }
+
+      if (args.repos.length === 0 || args.repos[0] === ".") {
+        const pkg = JSON.parse(
+          readFileSync("package.json", { encoding: "utf-8" })
+        );
+        args.repos.push(pkg.repository.url);
       }
 
       for (const repo of args.repos) {
@@ -151,7 +151,7 @@ program
         await pc.execute();
       }
     } catch (err) {
-      logger.error(err);
+      console.error(err);
       process.exit(-1);
     }
   });
