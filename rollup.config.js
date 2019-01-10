@@ -15,16 +15,20 @@ const external = [
   "net",
   "tty",
   "stream",
+  "child_process",
+  "http",
+  "https",
+  "assert",
+  "events",
+  "zlib",
   "jsonpath",
   "deep-extend",
   "simple-diff",
   "micromatch",
-  "local-repository-provider",
-  "aggregation-repository-provider",
-  "github-repository-provider",
   "semver",
   "caporal",
-  "enquirer"
+  "enquirer",
+  "node-fetch"
 ];
 
 export default [
@@ -40,11 +44,9 @@ export default [
       resolve(),
       commonjs(),
       json({
-        include: "package.json",
         preferConst: true,
         compact: true
       }),
-      cleanup(),
       executable()
     ],
     external,
@@ -56,7 +58,7 @@ export default [
       format: "cjs",
       interop: false
     },
-    plugins: [resolve(), commonjs(), cleanup()],
+    plugins: [resolve(), commonjs(), json()],
     external,
     input: pkg.module
   }
