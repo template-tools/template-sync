@@ -25,11 +25,7 @@ const external = [
 //  "micromatch",
 //  "semver",
 //  "caporal",
-
-
-
 //  "jsonpath",
-//  "enquirer"
 ];
 
 export default {
@@ -43,7 +39,7 @@ export default {
   plugins: [
     resolve(),
     commonjs({
-      ignore: [ 'string_decoder' , 'try-thread-sleep' ]
+    //  ignore: [ 'string_decoder' , 'try-thread-sleep' ]
     }),
     json({
       preferConst: true,

@@ -12,10 +12,8 @@ import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { satisfies } from "semver";
 import program from "caporal";
-import Enquirer from "enquirer";
 import { readFileSync } from "fs";
 
-Enquirer
 process.on("uncaughtException", e => console.error(e));
 process.on("unhandledRejection", reason => console.error(reason));
 
@@ -32,7 +30,6 @@ program
     /^[\w\-]+\/.*/,
     "arlac77/GitHub for Mac SSH key passphrase — github.com"
   )
-  .option("-s, --save", "save keystore")
   .option("-d --define <key=value>", "set provider option", values => {
     if (!Array.isArray(values)) {
       values = [values];
@@ -56,14 +53,6 @@ program
   .option("--usage", "track packages using template in package.json")
   .argument("[repos...]", "repos to merge")
   .action(async (args, options, logger) => {
-    if (options.save) {
-      const response = await Enquirer.prompt({
-        type: "password",
-        name: "password",
-        message: "What is your password?"
-      });
-      await setPassword(response.password, options);
-    }
 
     const logLevel = options.debug ? "trace" : "info";
 
