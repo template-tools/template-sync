@@ -27,8 +27,7 @@ const external = [
   "micromatch",
   "semver",
   "caporal",
-  "enquirer",
-  "node-fetch"
+  "enquirer"
 ];
 
 export default {
