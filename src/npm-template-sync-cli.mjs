@@ -12,9 +12,10 @@ import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { satisfies } from "semver";
 import program from "caporal";
-import { prompt } from "enquirer";
+import Enquirer from "enquirer";
 import { readFileSync } from "fs";
 
+Enquirer
 process.on("uncaughtException", e => console.error(e));
 process.on("unhandledRejection", reason => console.error(reason));
 
@@ -56,7 +57,7 @@ program
   .argument("[repos...]", "repos to merge")
   .action(async (args, options, logger) => {
     if (options.save) {
-      const response = await prompt({
+      const response = await Enquirer.prompt({
         type: "password",
         name: "password",
         message: "What is your password?"

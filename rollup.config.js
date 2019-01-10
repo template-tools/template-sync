@@ -1,4 +1,3 @@
-import cleanup from "rollup-plugin-cleanup";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import executable from "rollup-plugin-executable";
@@ -21,13 +20,16 @@ const external = [
   "assert",
   "events",
   "zlib",
-  "jsonpath",
-  "deep-extend",
-  "simple-diff",
-  "micromatch",
-  "semver",
-  "caporal",
-  "enquirer"
+//  "deep-extend",
+//  "simple-diff",
+//  "micromatch",
+//  "semver",
+//  "caporal",
+
+
+
+//  "jsonpath",
+//  "enquirer"
 ];
 
 export default {
@@ -40,7 +42,9 @@ export default {
   },
   plugins: [
     resolve(),
-    commonjs(),
+    commonjs({
+      ignore: [ 'string_decoder' , 'try-thread-sleep' ]
+    }),
     json({
       preferConst: true,
       compact: true
