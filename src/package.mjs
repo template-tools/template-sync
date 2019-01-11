@@ -1,8 +1,7 @@
 import { File } from "./file";
-import { compareVersion, sortObjectsKeys } from "./util";
+import { compareVersion, sortObjectsKeys, jspath } from "./util";
 import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts";
 import diff from "simple-diff";
-import JSONPath from "jsonpath";
 
 function moduleNames(object) {
   if (object === undefined) return new Set();
@@ -327,16 +326,18 @@ export class Package extends File {
 
     this.options.actions.forEach(action => {
       if (action.op === "replace") {
-        const v = JSONPath.value(template, action.path);
-        if (v !== undefined) {
-          const oldValue = JSONPath.value(target, action.path);
-          if (oldValue !== v) {
-            JSONPath.value(target, action.path, v);
-            messages.push(
-              `chore(package): set ${action.path}='${v}' as in template`
-            );
+        jspath(template, action.path, (value, setter) => {
+          if (value !== undefined) {
+            jspath(target, action.path, value => (oldValue = value));
+            if (oldValue !== value) {
+              setter(value);
+
+              messages.push(
+                `chore(package): set ${action.path}='${value}' as in template`
+              );
+            }
           }
-        }
+        });
       }
     });
 

@@ -15,7 +15,7 @@ import { JSONFile } from "./json-file";
 import { JSDoc } from "./jsdoc";
 import { Context } from "./context";
 import { StringContentEntry } from "content-entry";
-import JSONPath from "jsonpath";
+import { jspath } from "./util";
 
 /**
  * context prepared to execute one package
@@ -66,8 +66,11 @@ export const PreparedContext = LogLevelMixin(
             leftMarker: "{{",
             rightMarker: "}}",
             markerRegexp: "{{([^}]+)}}",
-            evaluate: (expression, context, path) =>
-              JSONPath.value(this.properties, expression)
+            evaluate: (expression, context, path) => {
+              let v;
+              jspath(this.properties,expression,(value) =v = value);
+              return v;
+            }
           })
         },
         files: {
@@ -99,7 +102,9 @@ export const PreparedContext = LogLevelMixin(
     }
 
     evaluate(expression) {
-      return JSONPath.value(this.properties, expression);
+      let v;
+      jspath(this.properties,expression,(value) =v = value);
+      return v;
     }
 
     log(level, arg) {

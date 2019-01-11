@@ -131,3 +131,26 @@ export function sortObjectsKeys(source) {
 
   return normalized;
 }
+
+/**
+ *
+ */
+export function jspath(object,path,cb) {
+  const parts = path.split('.');
+  const last = parts.pop();
+
+  for(const p of parts) {
+    if( p === '$') continue;
+    
+      const n = object[p];
+      if(n === undefined) {
+        return false;
+      }
+      object = n;
+  }
+
+  cb( object[last], value =>
+    object[last] = value);
+
+  return true;
+}
