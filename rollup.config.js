@@ -20,12 +20,8 @@ const external = [
   "assert",
   "events",
   "zlib",
-//  "deep-extend",
-//  "simple-diff",
-//  "micromatch",
-//  "semver",
-//  "caporal",
-//  "jsonpath",
+  "string_decoder",
+  "readline"
 ];
 
 export default {
@@ -37,9 +33,9 @@ export default {
     interop: false
   },
   plugins: [
-    resolve(),
+    resolve({ preferBuiltins: true }),
     commonjs({
-    //  ignore: [ 'string_decoder' , 'try-thread-sleep' ]
+      //  ignore: ["string_decoder", "try-thread-sleep"]
     }),
     json({
       preferConst: true,
