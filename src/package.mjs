@@ -326,17 +326,16 @@ export class Package extends File {
 
     this.options.actions.forEach(action => {
       if (action.op === "replace") {
-        jspath(template, action.path, (value, setter) => {
-          if (value !== undefined) {
-            jspath(target, action.path, value => (oldValue = value));
-            if (oldValue !== value) {
-              setter(value);
+        const templateValue = jspath(template, action.path);
+
+        jspath(target, action.path, (targetValue, setter) => {
+            if (templateValue !== targetValue) {
+              setter(templateValue);
 
               messages.push(
-                `chore(package): set ${action.path}='${value}' as in template`
+                `chore(package): set ${action.path}='${templateValue}' as in template`
               );
             }
-          }
         });
       }
     });

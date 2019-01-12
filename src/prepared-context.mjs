@@ -66,11 +66,8 @@ export const PreparedContext = LogLevelMixin(
             leftMarker: "{{",
             rightMarker: "}}",
             markerRegexp: "{{([^}]+)}}",
-            evaluate: (expression, context, path) => {
-              let v;
-              jspath(this.properties,expression,(value) =v = value);
-              return v;
-            }
+            evaluate: (expression, context, path) =>
+              jspath(this.properties, expression)
           })
         },
         files: {
@@ -102,9 +99,7 @@ export const PreparedContext = LogLevelMixin(
     }
 
     evaluate(expression) {
-      let v;
-      jspath(this.properties,expression,(value) =v = value);
-      return v;
+      return jspath(this.properties, expression);
     }
 
     log(level, arg) {

@@ -135,22 +135,34 @@ export function sortObjectsKeys(source) {
 /**
  *
  */
-export function jspath(object,path,cb) {
-  const parts = path.split('.');
+export function jspath(object, path, cb) {
+  let parts = path.split(".");
+
+  parts = parts.reduce((a,c) => {
+    const m = c.match(/^(\w+)\['(.+)'\]$/);
+    return m ? [...a,m[1],m[2]] : [...a,c];
+  },[]);
+
+  //console.log(parts);
+
   const last = parts.pop();
 
-  for(const p of parts) {
-    if( p === '$') continue;
-    
-      const n = object[p];
-      if(n === undefined) {
-        return false;
-      }
-      object = n;
+  for (const p of parts) {
+    if (p === "$") {
+      continue;
+    }
+
+    const n = object[p];
+    if (n === undefined) {
+      return undefined;
+    }
+    object = n;
   }
 
-  cb( object[last], value =>
-    object[last] = value);
 
-  return true;
+  if(cb !== undefined) {
+    cb(object[last], value => { object[last] = value; });
+  }
+
+  return object[last];
 }

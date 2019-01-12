@@ -21,14 +21,34 @@ test("jspath set $", t => {
   t.deepEqual(object, { a: { b: { c: 7 } } });
 });
 
-test("jspath get", t => {
+test("jspath get $.a['b'].c", t =>
+  t.is(
+    jspath(
+      {
+        a: { b: { c: 3 } }
+      },
+      "$.a['b'].c"
+    ),
+    3
+  ));
+
+test("jspath set $.a['b'].c", t => {
   const object = {
     a: { b: { c: 3 } }
   };
 
-  let x;
+  jspath(object, "$.a['b'].c", (value, setter) => setter(7));
 
-  jspath(object, "a.b.c", (value, setter) => x = value);
-
-  t.is(x, 3);
+  t.deepEqual(object, { a: { b: { c: 7 } } });
 });
+
+test("jspath get", t =>
+  t.is(
+    jspath(
+      {
+        a: { b: { c: 3 } }
+      },
+      "a.b.c"
+    ),
+    3
+  ));
