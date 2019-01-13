@@ -44,7 +44,10 @@ const external = [
   "util",
   "v8",
   "vm",
-  "zlib"
+  "zlib",
+
+  
+  "node-fetch"
 ];
 
 export default {
