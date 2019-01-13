@@ -11,8 +11,16 @@ import { GithubProvider } from "github-repository-provider";
 import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { satisfies } from "semver";
-import program from "caporal";
+import program from "commander";
 import { readFileSync } from "fs";
+
+
+if (!satisfies(process.versions.node, engines.node)) {
+  console.error(
+    `require node ${engines.node} (running with ${process.versions.node})`
+  );
+  process.exit(-1);
+}
 
 process.on("uncaughtException", e => console.error(e));
 process.on("unhandledRejection", reason => console.error(reason));
@@ -20,7 +28,7 @@ process.on("unhandledRejection", reason => console.error(reason));
 const properties = {};
 
 program
-  .description("Keep npm package in sync with its template")
+  .usage("Keep npm package in sync with its template")
   .version(version)
   .option("--dry", "do not create branch/pull request")
   .option("--debug", "log level debug")
@@ -51,8 +59,12 @@ program
     /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
   )
   .option("--usage", "track packages using template in package.json")
-  .argument("[repos...]", "repos to merge")
-  .action(async (args, options, logger) => {
+  .command("[repos...]", "repos to merge")
+  .action(async (args) => {
+
+    const options = {};
+    //console.log(program);
+    console.log(args);
 
     const logLevel = options.debug ? "trace" : "info";
 
@@ -90,7 +102,7 @@ program
       });
 
       if (options.listProviders) {
-        logger.info(
+        console.log(
           Array.from(
             aggregationProvider.providers.map(
               p => `${p.name}: ${JSON.stringify(removeSensibleValues(p))}`
@@ -107,13 +119,13 @@ program
           templateBranchName: options.template,
           dry: options.dry,
           trackUsedByModule: options.usage,
-          logger,
+          console,
           properties
         }
       );
 
       if (args.repos.length === 0 && options.listProperties) {
-        logger.info(
+        console.log(
           JSON.stringify(removeSensibleValues(context.properties), undefined, 2)
         );
         return;
@@ -132,7 +144,7 @@ program
         await pc.initialize();
 
         if (options.listProperties) {
-          logger.info(
+          console.log(
             JSON.stringify(removeSensibleValues(pc.properties), undefined, 2)
           );
           return;
@@ -144,13 +156,5 @@ program
       console.error(err);
       process.exit(-1);
     }
-  });
-
-if (!satisfies(process.versions.node, engines.node)) {
-  console.error(
-    `require node ${engines.node} (running with ${process.versions.node})`
-  );
-  process.exit(-1);
-}
-
-program.parse(process.argv);
+  })
+.parse(process.argv);
