@@ -7,7 +7,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 
 const nts = join(here, "..", "bin", "npm-template-sync");
 
-test("cli defines", async t => {
+test.skip("cli defines", async t => {
   const c = await execa(nts, ["-d", "test=test string", "--list-properties"]);
   t.truthy(c.stdout.match(/test string/));
 });
