@@ -51,6 +51,7 @@ program
   )
   .option("--usage", "track packages using template in package.json")
   .action(async (...repos) => {
+    repos.pop(); // TODO why
 
     const logLevel = program.debug ? "debug" : "info";
 
