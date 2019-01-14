@@ -47,7 +47,6 @@ const external = [
   "vm",
   "zlib",
 
-  
   "node-fetch"
 ];
 
@@ -61,12 +60,13 @@ export default {
   },
   plugins: [
     resolve({ preferBuiltins: true }),
-    commonjs({
-      //  ignore: ["string_decoder", "try-thread-sleep"]
-    }),
+    commonjs(),
     json({
       preferConst: true,
       compact: true
+    }),
+    cleanup({
+      exclude: ["node_modules/@octokit/plugin-throttling/lib/route-matcher.js"]
     }),
     executable()
   ],
