@@ -30,6 +30,7 @@ program
   .command("[repos...]", "repos to merge")
   .option("--dry", "do not create branch/pull request")
   .option("--debug", "log level debug")
+  .option("--track", "track packages in templates package.json")
   .option(
     "-d --define <key=value>",
     "set provider option",
@@ -49,7 +50,6 @@ program
     "template repository",
     /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
   )
-  .option("--usage", "track packages using template in package.json")
   .action(async (...repos) => {
     repos.pop(); // TODO why
 
@@ -92,7 +92,7 @@ program
         {
           templateBranchName: program.template,
           dry: program.dry,
-          trackUsedByModule: program.usage,
+          trackUsedByModule: program.track,
           console,
           properties
         }
