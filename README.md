@@ -64,19 +64,15 @@ merges contents from template repo into destination repo handling some special c
         -   [Parameters](#parameters-3)
     -   [merge](#merge)
         -   [Parameters](#parameters-4)
--   [templateOptions](#templateoptions)
-    -   [Parameters](#parameters-5)
--   [compareVersion](#compareversion)
-    -   [Parameters](#parameters-6)
 -   [Readme](#readme)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-4)
-        -   [Parameters](#parameters-7)
+        -   [Parameters](#parameters-5)
 -   [defaultMerge](#defaultmerge)
-    -   [Parameters](#parameters-8)
+    -   [Parameters](#parameters-6)
 -   [normalizePackage](#normalizepackage)
-    -   [Parameters](#parameters-9)
+    -   [Parameters](#parameters-7)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
     -   [defaultIgnoreSet](#defaultignoreset)
@@ -84,6 +80,12 @@ merges contents from template repo into destination repo handling some special c
     -   [defaultIgnoreSet](#defaultignoreset-1)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
+-   [templateOptions](#templateoptions)
+    -   [Parameters](#parameters-8)
+-   [compareVersion](#compareversion)
+    -   [Parameters](#parameters-9)
+-   [jspath](#jspath)
+    -   [Parameters](#parameters-10)
 
 ## Context
 
@@ -143,28 +145,6 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 -   `context` **PreparedContect** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
-
-## templateOptions
-
-find merger options in the template section of a package.json
-
-### Parameters
-
--   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## compareVersion
-
-compare two versions
-
-### Parameters
-
--   `a` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
--   `b` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** \-1 if a &lt; b, 0 if a == b and 1 if a > b
 
 ## Readme
 
@@ -252,6 +232,36 @@ Overwrites none existing file from template
 **Extends File**
 
 Replace file from template (always)
+
+## templateOptions
+
+find merger options in the template section of a package.json
+
+### Parameters
+
+-   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## compareVersion
+
+compare two versions
+
+### Parameters
+
+-   `a` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+-   `b` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+
+Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** \-1 if a &lt; b, 0 if a == b and 1 if a > b
+
+## jspath
+
+### Parameters
+
+-   `object`  
+-   `path`  
+-   `cb`  
 
 # install
 
