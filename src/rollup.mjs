@@ -1,7 +1,7 @@
 import { File } from "./file";
-
 import recast from "recast";
-import babylon from "recast/parsers/babylon";
+
+//import babylon from "recast/parsers/babylon";
 
 export class Rollup extends File {
   static matchesFileName(name) {
@@ -24,7 +24,7 @@ export class Rollup extends File {
     const modules = new Set();
 
     const ast = recast.parse(content, {
-      parser: babylon
+      //parser: babylon
     });
 
     for (const decl of ast.program.body) {
@@ -55,7 +55,7 @@ export class Rollup extends File {
 
     try {
       const recastOptions = {
-        parser: babylon
+      //  parser: babylon
       };
 
       const templateAST = recast.parse(template, recastOptions);
