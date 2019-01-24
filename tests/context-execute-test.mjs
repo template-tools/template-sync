@@ -24,7 +24,7 @@ test("context prepare", async t => {
   t.is(pc.properties.name, "sync-test-repository");
 });
 
-test("context execute", async t => {
+test("context execute - PR", async t => {
   const provider = new GithubProvider(
     GithubProvider.optionsFromEnvironment(process.env)
   );
@@ -41,7 +41,7 @@ test("context execute", async t => {
 
   const pullRequest = await context.execute();
 
-  t.truthy(pullRequest.name);
+  t.truthy(pullRequest && pullRequest.name);
 
   //await pullRequest.merge();
 
