@@ -37,7 +37,7 @@
     "content-entry": "^2.1.0",
     "deep-extend": "^0.6.0",
     "expression-expander": "^7.0.0",
-    "github-repository-provider": "^6.0.13",
+    "github-repository-provider": "^6.0.15",
     "js-yaml": "^3.12.1",
     "local-repository-provider": "^5.0.4",
     "loglevel-mixin": "^3.0.0",
