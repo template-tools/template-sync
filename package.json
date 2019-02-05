@@ -47,7 +47,7 @@
     "simple-diff": "^1.6.0"
   },
   "devDependencies": {
-    "ava": "^1.2.0",
+    "ava": "^1.2.1",
     "c8": "^3.4.0",
     "documentation": "^9.1.1",
     "esm": "^3.2.0",
