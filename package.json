@@ -31,18 +31,18 @@
     "test": "ava"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^2.1.12",
+    "aggregation-repository-provider": "^2.2.0",
     "babylon": "^6.18.0",
     "commander": "^2.19.0",
     "content-entry": "^2.1.0",
     "deep-extend": "^0.6.0",
     "expression-expander": "^7.0.0",
-    "github-repository-provider": "^7.0.2",
+    "github-repository-provider": "^7.0.3",
     "js-yaml": "^3.12.1",
-    "local-repository-provider": "^6.0.1",
+    "local-repository-provider": "^6.0.2",
     "loglevel-mixin": "^3.0.0",
     "micromatch": "^3.1.10",
-    "recast": "^0.16.2",
+    "recast": "^0.17.3",
     "semver": "^5.6.0",
     "simple-diff": "^1.6.0"
   },
