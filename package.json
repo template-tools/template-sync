@@ -31,15 +31,15 @@
     "test": "ava"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^2.2.0",
+    "aggregation-repository-provider": "^2.3.1",
     "babylon": "^6.18.0",
     "commander": "^2.19.0",
     "content-entry": "^2.1.0",
     "deep-extend": "^0.6.0",
     "expression-expander": "^7.0.0",
-    "github-repository-provider": "^7.0.3",
+    "github-repository-provider": "^7.0.4",
     "js-yaml": "^3.12.1",
-    "local-repository-provider": "^6.0.2",
+    "local-repository-provider": "^6.0.3",
     "loglevel-mixin": "^3.0.0",
     "micromatch": "^3.1.10",
     "recast": "^0.17.3",
