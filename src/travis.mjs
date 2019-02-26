@@ -22,6 +22,7 @@ const scriptSlots = [
 ];
 
 const deletableSlots = ["notifications.email", "branches.only"];
+
 export class Travis extends File {
   static matchesFileName(name) {
     return name === ".travis.yml";
@@ -55,7 +56,6 @@ export class Travis extends File {
 
         versions.forEach(v => {
           const x = v.replace(/^\-\s*/, "");
-          //console.log(`${d}<>${v} => ${compareVersion(d, x) === 0 || x != v}`);
           if (compareVersion(d, x) === 0 || x != v) {
             if (templateVersions.has(x)) {
               return;
@@ -88,8 +88,6 @@ export class Travis extends File {
       if (tyml[parts[0]] !== undefined) {
         const v = tyml[parts[0]][parts[1]];
 
-        //console.log(`${name} -> ${Array.isArray(v)} ${v[0]}`);
-
         if (Array.isArray(v)) {
           for (const vv of v) {
             if (vv.startsWith("-")) {
@@ -101,11 +99,6 @@ export class Travis extends File {
             }
           }
         }
-
-        /*if (v !== undefined && v[0] === "-") {
-          delete tyml[parts[0]][parts[1]];
-        }
-        */
       }
     });
 
@@ -120,7 +113,7 @@ export class Travis extends File {
     scriptSlots.forEach(scriptName => {
       const cs = savedScripts[scriptName];
 
-      if (cs != undefined) {
+      if (cs !== undefined) {
         cs.forEach(s => {
           if (!yml[scriptName].find(e => e === s)) {
             yml[scriptName].push(s);
