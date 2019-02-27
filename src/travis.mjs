@@ -21,7 +21,39 @@ const scriptSlots = [
   "after_script"
 ];
 
-export function mergeScripts(a, b, messages = []) {
+export function mergeScripts(a, b, path = [], messages = []) {
+
+  for(const s of b) {
+    if(s[0] === '-') {
+      const t = s.substring(1);
+      const i = a.indexOf(t);
+      if(i >= 0) {
+        a.splice(i);
+        messages.push(`remove ${t} from ${path.join('.')}`);
+      }
+    }
+    else {
+      a.push(s);
+      messages.push(`add ${s} to ${path.join('.')}`);
+    }
+  }
+  //console.log("MERGE", path.join("."), a, b);
+
+  return a;
+}
+
+export function merge(a, b, path = [], messages = []) {
+
+  //console.log('WALK', path.join('.'), a, b);
+  
+  if(a === undefined) {
+    return b;
+  }
+
+  if (typeof a === 'string' || a instanceof String) {
+    return b === undefined ? a :b;
+  }
+
   if (Array.isArray(a)) {
     return a;
   }
@@ -29,7 +61,17 @@ export function mergeScripts(a, b, messages = []) {
   const r = {};
 
   for (const key of Object.keys(a)) {
-    r[key] = mergeScripts(a[key], b[key], messages);
+    if (scriptSlots.find(e => e === key)) {
+      r[key] = mergeScripts(a[key], b[key], [...path, key], messages);
+    } else {
+      r[key] = merge(a[key], b[key], [...path, key], messages);
+    }
+  }
+
+  for (const key of Object.keys(b)) {
+    if(r[key] === undefined) {
+      r[key] = b[key];
+    }
   }
 
   return r;

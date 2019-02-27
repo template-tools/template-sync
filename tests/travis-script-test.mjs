@@ -1,8 +1,9 @@
 import test from "ava";
-import { mergeScripts } from "../src/travis";
+import { merge } from "../src/travis";
 
 const templateFragment = {
   jobs: {
+    other: "xx",
     include: {
       script: [
         "-npm install -g --production coveralls codecov",
@@ -22,8 +23,9 @@ test("travis scripts", t => {
     }
   };
 
-  t.deepEqual(mergeScripts(originalFragment, templateFragment), {
+  t.deepEqual(merge(originalFragment, templateFragment), {
     jobs: {
+      other: "xx",
       include: {
         script: [
           "cat ./coverage/lcov.info | coveralls",
