@@ -22,19 +22,17 @@ const scriptSlots = [
 ];
 
 export function mergeScripts(a, b, path = [], messages = []) {
-
-  for(const s of b) {
-    if(s[0] === '-') {
+  for (const s of b) {
+    if (s[0] === "-") {
       const t = s.substring(1);
       const i = a.indexOf(t);
-      if(i >= 0) {
+      if (i >= 0) {
         a.splice(i);
-        messages.push(`remove ${t} from ${path.join('.')}`);
+        messages.push(`chore(travis): remove ${t} from ${path.join(".")}`);
       }
-    }
-    else {
+    } else {
       a.push(s);
-      messages.push(`add ${s} to ${path.join('.')}`);
+      messages.push(`chore(travis): add ${s} to ${path.join(".")}`);
     }
   }
   //console.log("MERGE", path.join("."), a, b);
@@ -43,15 +41,14 @@ export function mergeScripts(a, b, path = [], messages = []) {
 }
 
 export function merge(a, b, path = [], messages = []) {
-
   //console.log('WALK', path.join('.'), a, b);
-  
-  if(a === undefined) {
+
+  if (a === undefined) {
     return b;
   }
 
-  if (typeof a === 'string' || a instanceof String) {
-    return b === undefined ? a :b;
+  if (typeof a === "string" || a instanceof String) {
+    return b === undefined ? a : b;
   }
 
   if (Array.isArray(a)) {
@@ -69,8 +66,9 @@ export function merge(a, b, path = [], messages = []) {
   }
 
   for (const key of Object.keys(b)) {
-    if(r[key] === undefined) {
+    if (r[key] === undefined) {
       r[key] = b[key];
+      messages.push(`chore(travis): add ${b[key]} to ${path.join(".")}`);
     }
   }
 
@@ -187,6 +185,8 @@ export class Travis extends File {
         }
       }
     });
+
+    //yml  = merge(yml, tyml);
 
     Object.keys(yml).forEach(name => {
       if (yml[name] === "--delete--") {
