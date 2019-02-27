@@ -21,6 +21,20 @@ const scriptSlots = [
   "after_script"
 ];
 
+export function mergeScripts(a, b, messages = []) {
+  if (Array.isArray(a)) {
+    return a;
+  }
+
+  const r = {};
+
+  for (const key of Object.keys(a)) {
+    r[key] = mergeScripts(a[key], b[key], messages);
+  }
+
+  return r;
+}
+
 const deletableSlots = ["notifications.email", "branches.only"];
 
 export class Travis extends File {
