@@ -7,20 +7,6 @@ function difference(a, b) {
   return new Set([...a].filter(x => !b.has(x)));
 }
 
-const scriptSlots = [
-  "before_install",
-  "install",
-  "before_script",
-  "script",
-  "before_cache",
-  "after_success",
-  "after_failure",
-  "before_deploy",
-  "deploy",
-  "after_deploy",
-  "after_script"
-];
-
 function pathMessage(path, direction = "to") {
   return path.length > 0 ? ` ${direction} ` + path.join(".") : "";
 }
@@ -44,15 +30,92 @@ export function mergeScripts(a, b, path = [], messages = []) {
   return a;
 }
 
+export function mergeVersions(a, b, path = [], messages = []) {
+  const aVersions = new Set( a ? [...a.map(s => String(s))] : []);
+  const bVersions = new Set( b ? [...b.map(s => String(s))] : []);
+
+  const versions = new Set([...aVersions, ...bVersions]);
+  const newVersions = new Set(versions);
+
+  versions.forEach(v => {
+    if (v.startsWith("-")) {
+      const d = v.replace(/^\-\s*/, "");
+
+      versions.forEach(v => {
+        const x = v.replace(/^\-\s*/, "");
+        if (compareVersion(d, x) === 0 || x != v) {
+          if (templateVersions.has(x)) {
+            return;
+          }
+
+          newVersions.delete(x);
+          newVersions.delete(v);
+        }
+      });
+    }
+  });
+
+  const r = difference(aVersions, bVersions);
+  if (r.size > 0) {
+    messages.push(
+      `chore(travis): remove node versions ${Array.from(new Set(r)).sort()}`
+    );
+  }
+
+  const as = difference(bVersions, aVersions);
+  if (as.size > 0) {
+    messages.push(
+      `chore(travis): add node versions ${Array.from(new Set(as)).sort()}`
+    );
+  }
+
+  if (newVersions.size > 0) {
+    return Array.from(new Set(newVersions))
+      .sort()
+      .map(s => (String(parseFloat(s)) == s ? parseFloat(s) : s));
+  }
+
+  return [];
+}
+
+const slots = {
+  node_js: mergeVersions,
+  before_install: mergeScripts,
+  install: mergeScripts,
+  before_script: mergeScripts,
+  script: mergeScripts,
+  before_cache: mergeScripts,
+  after_success: mergeScripts,
+  after_failure: mergeScripts,
+  before_deploy: mergeScripts,
+  deploy: mergeScripts,
+  after_deploy: mergeScripts,
+  after_script: mergeScripts
+};
+
 export function merge(a, b, path = [], messages = []) {
-  //console.log('WALK', path.join('.'), a, b);
+  //console.log("WALK", path.join("."), a, '<>', b);
 
   if (a === undefined) {
+    messages.push(`chore(travis): ${path.join(".")}=${b}`);
     return b;
   }
 
-  if (typeof a === "string" || a instanceof String) {
-    return b === undefined ? a : b;
+  if (b === undefined) {
+    return a;
+  }
+
+  if (
+    typeof a === "string" ||
+    a instanceof String ||
+    typeof a === "number" ||
+    a instanceof Number
+  ) {
+    if (b !== undefined) {
+      return b;
+    }
+
+    return a;
   }
 
   if (Array.isArray(a)) {
@@ -61,23 +124,26 @@ export function merge(a, b, path = [], messages = []) {
 
   const r = {};
 
-  for (const key of Object.keys(a)) {
-    if (scriptSlots.find(e => e === key)) {
-      r[key] = mergeScripts(a[key], b[key], [...path, key], messages);
-    } else {
-      r[key] = merge(a[key], b[key], [...path, key], messages);
-    }
-  }
-
-  for (const key of Object.keys(b)) {
-    if (r[key] === undefined) {
-      r[key] = b[key];
-      messages.push(`chore(travis): ${[...path,key].join('.')}=${b[key]}`);
-    }
+  for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
+    r[key] = (slots[key] ? slots[key] : merge)(a[key], b[key], [...path, key], messages);
   }
 
   return r;
 }
+
+const scriptSlots = [
+  "before_install",
+  "install",
+  "before_script",
+  "script",
+  "before_cache",
+  "after_success",
+  "after_failure",
+  "before_deploy",
+  "deploy",
+  "after_deploy",
+  "after_script"
+];
 
 const deletableSlots = ["notifications.email", "branches.only"];
 

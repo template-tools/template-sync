@@ -2,7 +2,7 @@ import test from "ava";
 import { merge } from "../src/travis";
 
 const templateFragment = {
-  language: 'node_js',
+  language: "node_js",
   jobs: {
     other: "xx",
     other2: [1, 2],
@@ -28,7 +28,7 @@ test("travis scripts", t => {
 
   const messages = [];
   t.deepEqual(merge(originalFragment, templateFragment, undefined, messages), {
-    language: 'node_js',
+    language: "node_js",
     jobs: {
       other: "xx",
       other2: [1, 2],
@@ -48,4 +48,28 @@ test("travis scripts", t => {
     "chore(travis): jobs.other2=1,2",
     "chore(travis): language=node_js"
   ]);
+});
+
+test("merge objects", t => {
+  const messages = [];
+
+  t.deepEqual(
+    merge({ a: "AA", c: "CC" }, { b: "BB", c: "CCC" }, undefined, messages),
+    {
+      a: "AA",
+      b: "BB",
+      c: "CCC"
+    }
+  );
+});
+
+test("merge versions", t => {
+  const messages = [];
+
+  t.deepEqual(
+    merge({ node_js: ['1.0'] }, { node_js: ['2.0']}, undefined, messages),
+    {
+      node_js: ['1.0','2.0']
+    }
+  );
 });
