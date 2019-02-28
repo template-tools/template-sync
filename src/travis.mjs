@@ -21,6 +21,10 @@ const scriptSlots = [
   "after_script"
 ];
 
+function pathMessage(path, direction = "to") {
+  return path.length > 0 ? ` ${direction} ` + path.join(".") : "";
+}
+
 export function mergeScripts(a, b, path = [], messages = []) {
   for (const s of b) {
     if (s[0] === "-") {
@@ -28,11 +32,11 @@ export function mergeScripts(a, b, path = [], messages = []) {
       const i = a.indexOf(t);
       if (i >= 0) {
         a.splice(i);
-        messages.push(`chore(travis): remove ${t} from ${path.join(".")}`);
+        messages.push(`chore(travis): remove ${t}${pathMessage(path, "from")}`);
       }
     } else {
       a.push(s);
-      messages.push(`chore(travis): add ${s} to ${path.join(".")}`);
+      messages.push(`chore(travis): add ${s}${pathMessage(path)}`);
     }
   }
   //console.log("MERGE", path.join("."), a, b);
@@ -68,7 +72,7 @@ export function merge(a, b, path = [], messages = []) {
   for (const key of Object.keys(b)) {
     if (r[key] === undefined) {
       r[key] = b[key];
-      messages.push(`chore(travis): add ${b[key]} to ${path.join(".")}`);
+      messages.push(`chore(travis): ${[...path,key].join('.')}=${b[key]}`);
     }
   }
 

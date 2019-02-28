@@ -2,6 +2,7 @@ import test from "ava";
 import { merge } from "../src/travis";
 
 const templateFragment = {
+  language: 'node_js',
   jobs: {
     other: "xx",
     other2: [1, 2],
@@ -27,6 +28,7 @@ test("travis scripts", t => {
 
   const messages = [];
   t.deepEqual(merge(originalFragment, templateFragment, undefined, messages), {
+    language: 'node_js',
     jobs: {
       other: "xx",
       other2: [1, 2],
@@ -43,6 +45,7 @@ test("travis scripts", t => {
     "chore(travis): remove npm install -g --production coveralls codecov from jobs.include.script",
     "chore(travis): add cat ./coverage/lcov.info | coveralls to jobs.include.script",
     "chore(travis): add npm install -g --production codecov to jobs.include.script",
-    "chore(travis): add 1,2 to jobs"
+    "chore(travis): jobs.other2=1,2",
+    "chore(travis): language=node_js"
   ]);
 });
