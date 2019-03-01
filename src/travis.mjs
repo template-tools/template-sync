@@ -29,8 +29,10 @@ export function mergeScripts(a, b, path = [], messages = []) {
         messages.push(`chore(travis): remove ${t}${pathMessage(path, "from")}`);
       }
     } else {
-      a.push(s);
-      messages.push(`chore(travis): add ${s}${pathMessage(path)}`);
+      if (a.indexOf(s) < 0) {
+        a.push(s);
+        messages.push(`chore(travis): add ${s}${pathMessage(path)}`);
+      }
     }
   }
 
@@ -132,12 +134,21 @@ export function merge(a, b, path = [], messages = []) {
   const r = {};
 
   for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
-    r[key] = (slots[key] ? slots[key] : merge)(
-      a[key],
-      b[key],
-      [...path, key],
-      messages
-    );
+    if (b[key] !== "--delete--") {
+      const v = (slots[key] ? slots[key] : merge)(
+        a[key],
+        b[key],
+        [...path, key],
+        messages
+      );
+
+      if (v !== undefined) {
+        if (Array.isArray(v) && v.length === 0) {
+        } else {
+          r[key] = v;
+        }
+      }
+    }
   }
 
   return r;
@@ -202,12 +213,6 @@ export class Travis extends File {
         if (Array.isArray(yml[scriptName]) && yml[scriptName].length === 0) {
           delete yml[scriptName];
         }
-      }
-    });
-
-    Object.keys(yml).forEach(name => {
-      if (yml[name] === "--delete--") {
-        delete yml[name];
       }
     });
 */
