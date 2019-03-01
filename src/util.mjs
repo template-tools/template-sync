@@ -1,3 +1,6 @@
+export function asArray(o) {
+  return Array.isArray(o) ? o : [o];
+}
 
 /**
  * find merger options in the template section of a package.json
@@ -119,10 +122,10 @@ export function sortObjectsKeys(source) {
 export function jspath(object, path, cb) {
   let parts = path.split(".");
 
-  parts = parts.reduce((a,c) => {
+  parts = parts.reduce((a, c) => {
     const m = c.match(/^(\w+)\['(.+)'\]$/);
-    return m ? [...a,m[1],m[2]] : [...a,c];
-  },[]);
+    return m ? [...a, m[1], m[2]] : [...a, c];
+  }, []);
 
   //console.log(parts);
 
@@ -140,9 +143,10 @@ export function jspath(object, path, cb) {
     object = n;
   }
 
-
-  if(cb !== undefined) {
-    cb(object[last], value => { object[last] = value; });
+  if (cb !== undefined) {
+    cb(object[last], value => {
+      object[last] = value;
+    });
   }
 
   return object[last];

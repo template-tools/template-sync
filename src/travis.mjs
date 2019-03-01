@@ -1,5 +1,5 @@
 import { File } from "./file";
-import { compareVersion } from "./util";
+import { compareVersion, asArray } from "./util";
 import deepExtend from "deep-extend";
 import yaml from "js-yaml";
 
@@ -12,6 +12,14 @@ function pathMessage(path, direction = "to") {
 }
 
 export function mergeScripts(a, b, path = [], messages = []) {
+  if (a === undefined) {
+    a = [];
+  } else {
+    a = asArray(a);
+  }
+
+  b = asArray(b);
+
   for (const s of b) {
     if (s[0] === "-") {
       const t = s.substring(1);
@@ -25,14 +33,13 @@ export function mergeScripts(a, b, path = [], messages = []) {
       messages.push(`chore(travis): add ${s}${pathMessage(path)}`);
     }
   }
-  //console.log("MERGE", path.join("."), a, b);
 
   return a;
 }
 
 export function mergeVersions(a, b, path = [], messages = []) {
-  const aVersions = new Set( a ? [...a.map(s => String(s))] : []);
-  const bVersions = new Set( b ? [...b.map(s => String(s))] : []);
+  const aVersions = new Set(a ? [...a.map(s => String(s))] : []);
+  const bVersions = new Set(b ? [...b.map(s => String(s))] : []);
 
   const versions = new Set([...aVersions, ...bVersions]);
   const newVersions = new Set(versions);
@@ -44,7 +51,7 @@ export function mergeVersions(a, b, path = [], messages = []) {
       versions.forEach(v => {
         const x = v.replace(/^\-\s*/, "");
         if (compareVersion(d, x) === 0 || x != v) {
-          if (templateVersions.has(x)) {
+          if (bVersions.has(x)) {
             return;
           }
 
@@ -125,25 +132,16 @@ export function merge(a, b, path = [], messages = []) {
   const r = {};
 
   for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
-    r[key] = (slots[key] ? slots[key] : merge)(a[key], b[key], [...path, key], messages);
+    r[key] = (slots[key] ? slots[key] : merge)(
+      a[key],
+      b[key],
+      [...path, key],
+      messages
+    );
   }
 
   return r;
 }
-
-const scriptSlots = [
-  "before_install",
-  "install",
-  "before_script",
-  "script",
-  "before_cache",
-  "after_success",
-  "after_failure",
-  "before_deploy",
-  "deploy",
-  "after_deploy",
-  "after_script"
-];
 
 const deletableSlots = ["notifications.email", "branches.only"];
 
@@ -155,57 +153,14 @@ export class Travis extends File {
   async mergeContent(context, original, template) {
     const ymlOptions = { schema: yaml.FAILSAFE_SCHEMA };
 
-    const yml = yaml.safeLoad(original, ymlOptions) || {};
+    let yml = yaml.safeLoad(original, ymlOptions) || {};
     const tyml = yaml.safeLoad(context.expand(template), ymlOptions);
-
-    const savedScripts = scriptSlots.reduce((a, c) => {
-      a[c] = yml[c];
-      return a;
-    }, {});
 
     const messages = [];
 
-    const oldVersions = new Set(
-      yml.node_js ? [...yml.node_js.map(s => String(s))] : []
-    );
-    const templateVersions = new Set(
-      tyml.node_js ? [...tyml.node_js.map(s => String(s))] : []
-    );
-    const versions = new Set([...oldVersions, ...templateVersions]);
-    const newVersions = new Set(versions);
+    yml = merge(yml, tyml, undefined, messages);
 
-    versions.forEach(v => {
-      if (v.startsWith("-")) {
-        const d = v.replace(/^\-\s*/, "");
-
-        versions.forEach(v => {
-          const x = v.replace(/^\-\s*/, "");
-          if (compareVersion(d, x) === 0 || x != v) {
-            if (templateVersions.has(x)) {
-              return;
-            }
-
-            newVersions.delete(x);
-            newVersions.delete(v);
-          }
-        });
-      }
-    });
-
-    const r = difference(oldVersions, newVersions);
-    if (r.size > 0) {
-      messages.push(
-        `chore(travis): remove node versions ${Array.from(new Set(r)).sort()}`
-      );
-    }
-
-    const a = difference(newVersions, oldVersions);
-    if (a.size > 0) {
-      messages.push(
-        `chore(travis): add node versions ${Array.from(new Set(a)).sort()}`
-      );
-    }
-
+    /*
     deletableSlots.forEach(name => {
       const parts = name.split(/\./);
 
@@ -227,12 +182,6 @@ export class Travis extends File {
     });
 
     deepExtend(yml, tyml);
-
-    if (newVersions.size > 0) {
-      yml.node_js = Array.from(new Set(newVersions))
-        .sort()
-        .map(s => (String(parseFloat(s)) == s ? parseFloat(s) : s));
-    }
 
     scriptSlots.forEach(scriptName => {
       const cs = savedScripts[scriptName];
@@ -256,13 +205,12 @@ export class Travis extends File {
       }
     });
 
-    //yml  = merge(yml, tyml);
-
     Object.keys(yml).forEach(name => {
       if (yml[name] === "--delete--") {
         delete yml[name];
       }
     });
+*/
 
     const content = yaml.safeDump(yml, {
       lineWidth: 128
