@@ -1,6 +1,5 @@
 import { File } from "./file";
 import { compareVersion, asArray } from "./util";
-import deepExtend from "deep-extend";
 import yaml from "js-yaml";
 
 function difference(a, b) {
@@ -102,6 +101,8 @@ const slots = {
   after_script: mergeScripts
 };
 
+//const deletableSlots = ["notifications.email", "branches.only"];
+
 export function merge(a, b, path = [], messages = []) {
   //console.log("WALK", path.join("."), a, '<>', b);
 
@@ -133,7 +134,7 @@ export function merge(a, b, path = [], messages = []) {
 
   const r = {};
 
-  for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
+  for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {    
     if (b[key] !== "--delete--") {
       const v = (slots[key] ? slots[key] : merge)(
         a[key],
@@ -154,7 +155,6 @@ export function merge(a, b, path = [], messages = []) {
   return r;
 }
 
-const deletableSlots = ["notifications.email", "branches.only"];
 
 export class Travis extends File {
   static matchesFileName(name) {
@@ -164,60 +164,9 @@ export class Travis extends File {
   async mergeContent(context, original, template) {
     const ymlOptions = { schema: yaml.FAILSAFE_SCHEMA };
 
-    let yml = yaml.safeLoad(original, ymlOptions) || {};
-    const tyml = yaml.safeLoad(context.expand(template), ymlOptions);
-
     const messages = [];
 
-    yml = merge(yml, tyml, undefined, messages);
-
-    /*
-    deletableSlots.forEach(name => {
-      const parts = name.split(/\./);
-
-      if (tyml[parts[0]] !== undefined) {
-        const v = tyml[parts[0]][parts[1]];
-
-        if (Array.isArray(v)) {
-          for (const vv of v) {
-            if (vv.startsWith("-")) {
-              delete tyml[parts[0]][parts[1]];
-
-              if (Object.keys(tyml[parts[0]]).length === 0) {
-                delete tyml[parts[0]];
-              }
-            }
-          }
-        }
-      }
-    });
-
-    deepExtend(yml, tyml);
-
-    scriptSlots.forEach(scriptName => {
-      const cs = savedScripts[scriptName];
-
-      if (cs !== undefined) {
-        cs.forEach(s => {
-          if (!yml[scriptName].find(e => e === s)) {
-            yml[scriptName].push(s);
-          }
-        });
-      }
-
-      if (yml[scriptName]) {
-        yml[scriptName] = yml[scriptName].filter(
-          s =>
-            !tyml[scriptName].find(e => e === `-${s}`) && s.indexOf("-") !== 0
-        );
-        if (Array.isArray(yml[scriptName]) && yml[scriptName].length === 0) {
-          delete yml[scriptName];
-        }
-      }
-    });
-*/
-
-    const content = yaml.safeDump(yml, {
+    const content = yaml.safeDump(merge(yaml.safeLoad(original, ymlOptions) || {}, yaml.safeLoad(context.expand(template), ymlOptions), undefined, messages), {
       lineWidth: 128
     });
 
