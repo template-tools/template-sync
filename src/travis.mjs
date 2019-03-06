@@ -129,12 +129,32 @@ export function merge(a, b, path = [], messages = []) {
   }
 
   if (Array.isArray(a)) {
+    if (Array.isArray(b)) {
+      const r = [...a];
+      for (const x of b) {
+        if (x.startsWith("-")) {
+          const d = x.replace(/^\-\s*/, "");
+          const i = r.indexOf(d);
+
+          if (i >= 0) {
+            messages.push(`chore(travis): remove ${d} from ${path.join(".")}`);
+            r.splice(i, 1);
+          }
+        } else {
+          messages.push(`chore(travis): add ${x} to ${path.join(".")}`);
+          r.push(x);
+        }
+      }
+
+      return r;
+    }
+
     return a;
   }
 
   const r = {};
 
-  for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {    
+  for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
     if (b[key] !== "--delete--") {
       const v = (slots[key] ? slots[key] : merge)(
         a[key],
@@ -155,7 +175,6 @@ export function merge(a, b, path = [], messages = []) {
   return r;
 }
 
-
 export class Travis extends File {
   static matchesFileName(name) {
     return name === ".travis.yml";
@@ -166,9 +185,17 @@ export class Travis extends File {
 
     const messages = [];
 
-    const content = yaml.safeDump(merge(yaml.safeLoad(original, ymlOptions) || {}, yaml.safeLoad(context.expand(template), ymlOptions), undefined, messages), {
-      lineWidth: 128
-    });
+    const content = yaml.safeDump(
+      merge(
+        yaml.safeLoad(original, ymlOptions) || {},
+        yaml.safeLoad(context.expand(template), ymlOptions),
+        undefined,
+        messages
+      ),
+      {
+        lineWidth: 128
+      }
+    );
 
     if (messages.length === 0) {
       messages.push(`chore(travis): merge from template ${this.name}`);
