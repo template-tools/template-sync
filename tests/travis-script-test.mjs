@@ -38,15 +38,13 @@ test("travis scripts", t => {
     }
   });
 
-  /*
-  console.log(messages);
   t.deepEqual(messages, [
     "chore(travis): remove npm install -g --production coveralls codecov from jobs.include.script",
     "chore(travis): add cat ./coverage/lcov.info | coveralls to jobs.include.script",
     "chore(travis): add npm install -g --production codecov to jobs.include.script",
+    'chore(travis): add npm test to jobs.include.script',
     "chore(travis): language=node_js"
   ]);
-  */
 });
 
 test("merge objects", t => {
