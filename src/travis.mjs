@@ -99,9 +99,11 @@ const slots = {
   deploy: mergeScripts,
   after_deploy: mergeScripts,
   after_script: mergeScripts
+  /*
+  'jobs.include.stage' : mergeArrays
+  'branches.only' : mergeArrays
+  */
 };
-
-//const deletableSlots = ["notifications.email", "branches.only"];
 
 export function merge(a, b, path = [], messages = []) {
   //console.log("WALK", path.join("."), a, '<>', b);
