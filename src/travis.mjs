@@ -132,7 +132,7 @@ export function merge(a, b, path = [], messages = []) {
     if (Array.isArray(b)) {
       const r = [...a];
       for (const x of b) {
-        if (x.startsWith("-")) {
+        if (typeof x === "string" && x.startsWith("-")) {
           const d = x.replace(/^\-\s*/, "");
           const i = r.indexOf(d);
 
