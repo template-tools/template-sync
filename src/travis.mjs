@@ -108,8 +108,10 @@ const slots = {
 export function merge(a, b, path = [], messages = []) {
   //console.log("WALK", path.join("."), a, '<>', b);
 
+  const location = path.join(".");
+
   if (a === undefined) {
-    messages.push(`chore(travis): ${path.join(".")}=${b}`);
+    messages.push(`chore(travis): ${location}=${b}`);
     return b;
   }
 
@@ -131,7 +133,7 @@ export function merge(a, b, path = [], messages = []) {
   }
 
   if (Array.isArray(a)) {
-    if (Array.isArray(b)) {
+    if (Array.isArray(b) && location !== 'jobs.include') {
       const r = [...a];
       for (const x of b) {
         if (typeof x === "string" && x.startsWith("-")) {
@@ -139,11 +141,11 @@ export function merge(a, b, path = [], messages = []) {
           const i = r.indexOf(d);
 
           if (i >= 0) {
-            messages.push(`chore(travis): remove ${d} from ${path.join(".")}`);
+            messages.push(`chore(travis): remove ${d} from ${location}`);
             r.splice(i, 1);
           }
         } else {
-          messages.push(`chore(travis): add ${x} to ${path.join(".")}`);
+          messages.push(`chore(travis): add ${x} to ${location}`);
           r.push(x);
         }
       }
