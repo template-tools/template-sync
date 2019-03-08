@@ -6,16 +6,16 @@ const templateFragment = {
   jobs: {
     include: {
       script: [
-        "-npm install -g --production coveralls codecov",
         "cat ./coverage/lcov.info | coveralls",
         "npm install -g --production codecov",
-        "npm test"
+        "npm test",
+        "-npm install -g --production coveralls codecov"
       ]
     }
   }
 };
 
-test("travis scripts", t => {
+test.only("travis scripts", t => {
   const originalFragment = {
     jobs: {
       include: {
@@ -24,25 +24,42 @@ test("travis scripts", t => {
     }
   };
 
+/*
+  console.log(
+    "XX",
+    JSON.stringify(merge(originalFragment, templateFragment), {
+      language: "node_js",
+      jobs: {
+        include: {
+          script: [
+            "npm test",
+            "cat ./coverage/lcov.info | coveralls",
+            "npm install -g --production codecov"
+          ]
+        }
+      }
+    })
+  );
+*/
+
   const messages = [];
   t.deepEqual(merge(originalFragment, templateFragment, undefined, messages), {
     language: "node_js",
     jobs: {
       include: {
         script: [
+          "npm test",
           "cat ./coverage/lcov.info | coveralls",
-          "npm install -g --production codecov",
-          "npm test"
+          "npm install -g --production codecov"
         ]
       }
     }
   });
 
   t.deepEqual(messages, [
-    "chore(travis): remove npm install -g --production coveralls codecov from jobs.include.script",
     "chore(travis): add cat ./coverage/lcov.info | coveralls to jobs.include.script",
     "chore(travis): add npm install -g --production codecov to jobs.include.script",
-    'chore(travis): add npm test to jobs.include.script',
+    "chore(travis): remove npm install -g --production coveralls codecov from jobs.include.script",
     "chore(travis): language=node_js"
   ]);
 });

@@ -10,24 +10,39 @@ function pathMessage(path, direction = "to") {
   return path.length > 0 ? ` ${direction} ` + path.join(".") : "";
 }
 
-export function mergeScripts(a, b, path = [], messages = []) {
+export function mergeScripts(a, b, path, messages) {
+  return mergeArrays(a, b, path, messages);
+}
+
+export function mergeArrays(a, b, path = [], messages = []) {
   if (a === undefined) {
-    a = [];
   } else {
     a = asArray(a);
+  }
+
+  if (b === undefined) {
+    return a;
   }
 
   b = asArray(b);
 
   for (const s of b) {
     if (s[0] === "-") {
-      const t = s.substring(1);
-      const i = a.indexOf(t);
-      if (i >= 0) {
-        a.splice(i);
-        messages.push(`chore(travis): remove ${t}${pathMessage(path, "from")}`);
+      if (a !== undefined) {
+        const t = s.substring(1);
+        const i = a.indexOf(t);
+        if (i >= 0) {
+          a.splice(i,1);
+          messages.push(
+            `chore(travis): remove ${t}${pathMessage(path, "from")}`
+          );
+        }
       }
     } else {
+      if (a === undefined) {
+        a = [];
+      }
+
       if (a.indexOf(s) < 0) {
         a.push(s);
         messages.push(`chore(travis): add ${s}${pathMessage(path)}`);
@@ -98,17 +113,18 @@ const slots = {
   before_deploy: mergeScripts,
   deploy: mergeScripts,
   after_deploy: mergeScripts,
-  after_script: mergeScripts
-  /*
-  'jobs.include.stage' : mergeArrays
-  'branches.only' : mergeArrays
-  */
+  after_script: mergeScripts,
+  "branches.only": mergeArrays,
+  "notifications.email": mergeArrays,
+  "jobs.include.stage": mergeArrays
 };
 
 export function merge(a, b, path = [], messages = []) {
-  //console.log("WALK", path.join("."), a, '<>', b);
-
   const location = path.join(".");
+
+  if (slots[location] !== undefined) {
+    return slots[location](a, b, path, messages);
+  }
 
   if (a === undefined) {
     messages.push(`chore(travis): ${location}=${b}`);
@@ -133,7 +149,7 @@ export function merge(a, b, path = [], messages = []) {
   }
 
   if (Array.isArray(a)) {
-    if (Array.isArray(b) && location !== 'jobs.include') {
+    if (Array.isArray(b) && location !== "jobs.include") {
       const r = [...a];
       for (const x of b) {
         if (typeof x === "string" && x.startsWith("-")) {
