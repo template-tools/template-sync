@@ -46,7 +46,7 @@ test("travis mergeArrays", t => {
 });
 
 test("travis mergeArrays remove", t => {
- t.deepEqual(mergeArrays(undefined, ["-a"]), undefined);
+  t.deepEqual(mergeArrays(undefined, ["-a"]), undefined);
   t.deepEqual(mergeArrays([], ["-a"]), []);
   t.deepEqual(mergeArrays(["a"], ["-a"]), []);
   t.deepEqual(mergeArrays(["a", "b"], ["-a", "c"]), ["b", "c"]);
