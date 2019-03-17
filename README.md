@@ -7,7 +7,6 @@
 [![Coverage Status](https://coveralls.io/repos/arlac77/npm-template-sync/badge.svg)](https://coveralls.io/r/arlac77/npm-template-sync)
 [![Known Vulnerabilities](https://snyk.io/test/github/arlac77/npm-template-sync/badge.svg)](https://snyk.io/test/github/arlac77/npm-template-sync)
 [![GitHub Issues](https://img.shields.io/github/issues/arlac77/npm-template-sync.svg?style=flat-square)](https://github.com/arlac77/npm-template-sync/issues)
-[![Stories in Ready](https://badge.waffle.io/arlac77/npm-template-sync.svg?label=ready&title=Ready)](http://waffle.io/arlac77/npm-template-sync)
 [![Dependency Status](https://david-dm.org/arlac77/npm-template-sync.svg)](https://david-dm.org/arlac77/npm-template-sync)
 [![devDependency Status](https://david-dm.org/arlac77/npm-template-sync/dev-status.svg)](https://david-dm.org/arlac77/npm-template-sync#info=devDependencies)
 [![docs](http://inch-ci.org/github/arlac77/npm-template-sync.svg?branch=master)](http://inch-ci.org/github/arlac77/npm-template-sync)
