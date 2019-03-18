@@ -36,7 +36,7 @@
     "commander": "^2.19.0",
     "content-entry": "^2.1.0",
     "expression-expander": "^7.0.0",
-    "github-repository-provider": "^7.0.7",
+    "github-repository-provider": "^7.0.8",
     "js-yaml": "^3.12.1",
     "local-repository-provider": "^6.0.5",
     "loglevel-mixin": "^3.0.0",
