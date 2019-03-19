@@ -119,7 +119,7 @@ const slots = {
   "jobs.include.stage": mergeArrays
 };
 
-const scalarTypes = new Set(["string","number","boolean"]); 
+const scalarTypes = new Set(["string","number","bigint","boolean"]); 
 function isScalar(a) {
   return scalarTypes.has(typeof a) ||
     a instanceof String ||
