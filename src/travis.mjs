@@ -119,34 +119,57 @@ const slots = {
   "jobs.include.stage": mergeArrays
 };
 
+const scalarTypes = new Set(["string","number","boolean"]); 
+function isScalar(a) {
+  return scalarTypes.has(typeof a) ||
+    a instanceof String ||
+    a instanceof Number;
+} 
+
+/**
+ * merge to values
+ * @param {any} a
+ * @param {any} b
+ * @param {string[]} path 
+ * @param {string[]} messages 
+ * @return {any} merged value
+ */
 export function merge(a, b, path = [], messages = []) {
   const location = path.join(".");
+
+  if(path.length > 5) {
+    console.log(location,a,b);
+    return b;
+  }
 
   if (slots[location] !== undefined) {
     return slots[location](a, b, path, messages);
   }
 
+
   if (a === undefined) {
-    messages.push(`chore(travis): ${location}=${b}`);
-    return b;
+    if(Array.isArray(b)) {
+      return mergeArrays(a,b,path,messages);
+    }
+  //  if (isScalar(b)) {
+      messages.push(`chore(travis): ${location}=${b}`);
+      return b;
+  //  }
   }
 
   if (b === undefined) {
     return a;
   }
 
-  if (
-    typeof a === "string" ||
-    a instanceof String ||
-    typeof a === "number" ||
-    a instanceof Number
-  ) {
+  if (isScalar(a)) {
     if (b !== undefined) {
       return b;
     }
 
     return a;
   }
+
+  //console.log(location,a,typeof a, b, typeof b);
 
   if (Array.isArray(a)) {
     if (Array.isArray(b) && location !== "jobs.include") {
@@ -173,6 +196,9 @@ export function merge(a, b, path = [], messages = []) {
   }
 
   const r = {};
+
+  if(a === undefined) { a = {}; }
+  if(b === undefined) { b = {}; }
 
   for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
     if (b[key] !== "--delete--") {

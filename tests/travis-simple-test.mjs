@@ -7,16 +7,19 @@ test("travis simple", t => {
   t.deepEqual(
     merge(
       {
-        language: "node_js" 
+        language: "node_js",
+        always: true 
       },
       {
-        language: "node_js" 
+        language: "node_js", 
+        always: true 
       },
       undefined,
       messages
     ),
     {
-      language: "node_js" 
+      language: "node_js", 
+      always: true 
     }
   );
 

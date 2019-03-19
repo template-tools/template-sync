@@ -55,22 +55,24 @@ merges contents from template repo into destination repo handling some special c
 -   [PreparedContext](#preparedcontext)
     -   [Parameters](#parameters-1)
     -   [Properties](#properties-1)
--   [File](#file)
+-   [merge](#merge)
     -   [Parameters](#parameters-2)
+-   [File](#file)
+    -   [Parameters](#parameters-3)
     -   [Properties](#properties-2)
     -   [properties](#properties-3)
-        -   [Parameters](#parameters-3)
-    -   [merge](#merge)
         -   [Parameters](#parameters-4)
+    -   [merge](#merge-1)
+        -   [Parameters](#parameters-5)
 -   [Readme](#readme)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-4)
-        -   [Parameters](#parameters-5)
+        -   [Parameters](#parameters-6)
 -   [defaultMerge](#defaultmerge)
-    -   [Parameters](#parameters-6)
--   [normalizePackage](#normalizepackage)
     -   [Parameters](#parameters-7)
+-   [normalizePackage](#normalizepackage)
+    -   [Parameters](#parameters-8)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
     -   [defaultIgnoreSet](#defaultignoreset)
@@ -79,11 +81,11 @@ merges contents from template repo into destination repo handling some special c
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
 -   [templateOptions](#templateoptions)
-    -   [Parameters](#parameters-8)
--   [compareVersion](#compareversion)
     -   [Parameters](#parameters-9)
--   [jspath](#jspath)
+-   [compareVersion](#compareversion)
     -   [Parameters](#parameters-10)
+-   [jspath](#jspath)
+    -   [Parameters](#parameters-11)
 
 ## Context
 
@@ -111,6 +113,19 @@ context prepared to execute one package
 
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
+
+## merge
+
+merge to values
+
+### Parameters
+
+-   `a` **any** 
+-   `b` **any** 
+-   `path` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
+-   `messages` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
+
+Returns **any** merged value
 
 ## File
 
