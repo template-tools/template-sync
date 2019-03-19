@@ -38,10 +38,10 @@
     "expression-expander": "^7.0.0",
     "github-repository-provider": "^7.0.8",
     "js-yaml": "^3.12.1",
-    "local-repository-provider": "^6.0.5",
+    "local-repository-provider": "^6.0.7",
     "loglevel-mixin": "^3.0.0",
     "micromatch": "^3.1.10",
-    "recast": "^0.17.3",
+    "recast": "^0.17.4",
     "semver": "^5.6.0",
     "simple-diff": "^1.6.0"
   },
