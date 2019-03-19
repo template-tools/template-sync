@@ -120,11 +120,12 @@ const slots = {
 };
 
 const scalarTypes = new Set(["string","number","bigint","boolean"]); 
+
 function isScalar(a) {
   return scalarTypes.has(typeof a) ||
     a instanceof String ||
     a instanceof Number;
-} 
+}
 
 /**
  * merge to values
@@ -146,7 +147,6 @@ export function merge(a, b, path = [], messages = []) {
     return slots[location](a, b, path, messages);
   }
 
-
   if (a === undefined) {
     if(Array.isArray(b)) {
       return mergeArrays(a,b,path,messages);
@@ -157,7 +157,7 @@ export function merge(a, b, path = [], messages = []) {
   //  }
   }
 
-  if (b === undefined) {
+  if (b === undefined || b === null) {
     return a;
   }
 

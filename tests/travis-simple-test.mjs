@@ -10,13 +10,15 @@ test("travis merge scalars", t => {
         "string": "abc",
         "boolean": true,
         "number" : 123,
-        "bigint" : 123n
+        "bigint" : 123n,
+        x1 : null
       },
       {
         "string": "abc",
         "boolean": true,
         "number" : 123,
-        "bigint" : 123n
+        "bigint" : 123n,
+        x1 : null
       },
       undefined,
       messages
@@ -25,7 +27,8 @@ test("travis merge scalars", t => {
         "string": "abc",
         "boolean": true,
         "number" : 123,
-        "bigint" : 123n      
+        "bigint" : 123n,
+        x1 : null
     }
   );
 
