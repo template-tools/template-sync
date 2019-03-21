@@ -6,6 +6,39 @@ function difference(a, b) {
   return new Set([...a].filter(x => !b.has(x)));
 }
 
+export function isEqual(a, b) {
+  if (a !== undefined && b === undefined) {
+    return false;
+  }
+
+  if (Array.isArray(a)) {
+    if (a.length !== b.length) {
+      for (let i = 0; i < a.length; i++) {
+        if (!isEqual(a[i], b[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+
+  if (typeof a === "object") {
+    for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
+      if (b[key] === "--delete--" && a[key] !== undefined) {
+        return false;
+      }
+
+      if (!isEqual(a[key], b[key])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  return a === b;
+}
+
 function pathMessage(path, direction = "to") {
   return path.length > 0 ? ` ${direction} ` + path.join(".") : "";
 }
@@ -32,7 +65,7 @@ export function mergeArrays(a, b, path = [], messages = []) {
         const t = s.substring(1);
         const i = a.indexOf(t);
         if (i >= 0) {
-          a.splice(i,1);
+          a.splice(i, 1);
           messages.push(
             `chore(travis): remove ${t}${pathMessage(path, "from")}`
           );
@@ -43,7 +76,8 @@ export function mergeArrays(a, b, path = [], messages = []) {
         a = [];
       }
 
-      if (a.indexOf(s) < 0) {
+      if (!a.find(x => isEqual(x, s))) {
+        //if (a.indexOf(s) < 0) {
         a.push(s);
         messages.push(`chore(travis): add ${s}${pathMessage(path)}`);
       }
@@ -119,17 +153,12 @@ const slots = {
   "jobs.include.stage": mergeArrays
 };
 
-function isEqual(a,b)
-{
-    a === b;
-}
-
-const scalarTypes = new Set(["string","number","bigint","boolean"]);
+const scalarTypes = new Set(["string", "number", "bigint", "boolean"]);
 
 function isScalar(a) {
-  return scalarTypes.has(typeof a) ||
-    a instanceof String ||
-    a instanceof Number;
+  return (
+    scalarTypes.has(typeof a) || a instanceof String || a instanceof Number
+  );
 }
 
 /**
@@ -143,8 +172,8 @@ function isScalar(a) {
 export function merge(a, b, path = [], messages = []) {
   const location = path.join(".");
 
-  if(path.length > 5) {
-    console.log(location,a,b);
+  if (path.length > 5) {
+    console.log(location, a, b);
     return b;
   }
 
@@ -153,13 +182,13 @@ export function merge(a, b, path = [], messages = []) {
   }
 
   if (a === undefined) {
-    if(Array.isArray(b)) {
-      return mergeArrays(a,b,path,messages);
+    if (Array.isArray(b)) {
+      return mergeArrays(a, b, path, messages);
     }
-  //  if (isScalar(b)) {
-      messages.push(`chore(travis): ${location}=${b}`);
-      return b;
-  //  }
+    //  if (isScalar(b)) {
+    messages.push(`chore(travis): ${location}=${b}`);
+    return b;
+    //  }
   }
 
   if (b === undefined || b === null) {
@@ -178,7 +207,7 @@ export function merge(a, b, path = [], messages = []) {
 
   if (Array.isArray(a)) {
     if (Array.isArray(b) && location !== "jobs.include") {
-      return mergeArrays(a,b,path,messages);
+      return mergeArrays(a, b, path, messages);
     }
 
     return a;
@@ -186,8 +215,12 @@ export function merge(a, b, path = [], messages = []) {
 
   const r = {};
 
-  if(a === undefined) { a = {}; }
-  if(b === undefined) { b = {}; }
+  if (a === undefined) {
+    a = {};
+  }
+  if (b === undefined) {
+    b = {};
+  }
 
   for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
     if (b[key] !== "--delete--") {
