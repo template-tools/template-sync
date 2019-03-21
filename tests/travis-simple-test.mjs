@@ -11,14 +11,16 @@ test("travis merge scalars", t => {
         "boolean": true,
         "number" : 123,
         "bigint" : 123n,
-        x1 : null
+        x1 : null,
+        x2 : [1]
       },
       {
         "string": "abc",
         "boolean": true,
         "number" : 123,
         "bigint" : 123n,
-        x1 : null
+        x1 : null,
+        x2 : [1]
       },
       undefined,
       messages
@@ -28,11 +30,11 @@ test("travis merge scalars", t => {
         "boolean": true,
         "number" : 123,
         "bigint" : 123n,
-        x1 : null
+        x1 : null,
+        x2 : [1]
     }
   );
 
   t.deepEqual(messages, [
   ]);
 });
-

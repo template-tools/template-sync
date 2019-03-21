@@ -119,7 +119,12 @@ const slots = {
   "jobs.include.stage": mergeArrays
 };
 
-const scalarTypes = new Set(["string","number","bigint","boolean"]); 
+function isEqual(a,b)
+{
+    a === b;
+}
+
+const scalarTypes = new Set(["string","number","bigint","boolean"]);
 
 function isScalar(a) {
   return scalarTypes.has(typeof a) ||
@@ -131,8 +136,8 @@ function isScalar(a) {
  * merge to values
  * @param {any} a
  * @param {any} b
- * @param {string[]} path 
- * @param {string[]} messages 
+ * @param {string[]} path
+ * @param {string[]} messages
  * @return {any} merged value
  */
 export function merge(a, b, path = [], messages = []) {
@@ -173,23 +178,7 @@ export function merge(a, b, path = [], messages = []) {
 
   if (Array.isArray(a)) {
     if (Array.isArray(b) && location !== "jobs.include") {
-      const r = [...a];
-      for (const x of b) {
-        if (typeof x === "string" && x.startsWith("-")) {
-          const d = x.replace(/^\-\s*/, "");
-          const i = r.indexOf(d);
-
-          if (i >= 0) {
-            messages.push(`chore(travis): remove ${d} from ${location}`);
-            r.splice(i, 1);
-          }
-        } else {
-          messages.push(`chore(travis): add ${x} to ${location}`);
-          r.push(x);
-        }
-      }
-
-      return r;
+      return mergeArrays(a,b,path,messages);
     }
 
     return a;
