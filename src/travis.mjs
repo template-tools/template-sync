@@ -77,7 +77,6 @@ export function mergeArrays(a, b, path = [], messages = []) {
       }
 
       if (!a.find(x => isEqual(x, s))) {
-        //if (a.indexOf(s) < 0) {
         a.push(s);
         messages.push(`chore(travis): add ${s}${pathMessage(path)}`);
       }
@@ -172,6 +171,8 @@ function isScalar(a) {
 export function merge(a, b, path = [], messages = []) {
   const location = path.join(".");
 
+  //console.log(location, typeof a, typeof b);
+
   if (path.length > 5) {
     console.log(location, a, b);
     return b;
@@ -185,10 +186,10 @@ export function merge(a, b, path = [], messages = []) {
     if (Array.isArray(b)) {
       return mergeArrays(a, b, path, messages);
     }
-    //  if (isScalar(b)) {
-    messages.push(`chore(travis): ${location}=${b}`);
-    return b;
-    //  }
+    if (isScalar(b)) {
+      messages.push(`chore(travis): ${location}=${b}`);
+      return b;
+    }
   }
 
   if (b === undefined || b === null) {
@@ -240,7 +241,8 @@ export function merge(a, b, path = [], messages = []) {
     }
   }
 
-  return r;
+  return Object.keys(r).length === 0 ? undefined : r;
+//  return r;
 }
 
 export class Travis extends File {
