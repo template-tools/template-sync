@@ -6,7 +6,6 @@ branches:
     - master
     - /^greenkeeper/.*$/
 cache: npm
-notifications: {}
 script:
   - npm run cover
 jobs:
