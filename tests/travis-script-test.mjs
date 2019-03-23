@@ -15,7 +15,7 @@ const templateFragment = {
   }
 };
 
-test.only("travis scripts", t => {
+test("travis scripts", t => {
   const originalFragment = {
     jobs: {
       include: {
