@@ -35,6 +35,7 @@ const sortedKeys = [
   "main",
   "browser",
   "module",
+  "unpkg",
   "description",
   "keywords",
   "author",
