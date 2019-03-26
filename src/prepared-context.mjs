@@ -187,7 +187,7 @@ export const PreparedContext = LogLevelMixin(
 
     static async createFiles(branch, mapping = Context.defaultMapping) {
       const files = [];
-      for await (const entry of branch.entries()) {
+      for await (const entry of branch) {
         files.push(entry);
       }
 
