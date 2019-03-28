@@ -41,7 +41,7 @@
     "local-repository-provider": "^6.1.2",
     "loglevel-mixin": "^3.0.0",
     "micromatch": "^3.1.10",
-    "recast": "^0.17.4",
+    "recast": "^0.17.5",
     "semver": "^6.0.0",
     "simple-diff": "^1.6.0"
   },
