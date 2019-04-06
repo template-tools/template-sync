@@ -1,4 +1,4 @@
-import { File } from './file';
+import { File } from "./file";
 
 export class JSONFile extends File {
   static matchesFileName(name) {
@@ -10,12 +10,12 @@ export class JSONFile extends File {
   }
 
   async mergeContent(context, original, templateRaw) {
-    if (templateRaw === '' || templateRaw === undefined) {
+    if (templateRaw === "" || templateRaw === undefined) {
       return undefined;
     }
 
     const target =
-      original === '' || original === undefined ? {} : JSON.parse(original);
+      original === "" || original === undefined ? {} : JSON.parse(original);
     const template = JSON.parse(templateRaw);
 
     Object.assign(target, template);
@@ -25,7 +25,7 @@ export class JSONFile extends File {
     return {
       content,
       changed: content !== original,
-      messages: ['chore: update from template']
+      messages: ["chore: update {{entry.name}} from template"]
     };
   }
 }

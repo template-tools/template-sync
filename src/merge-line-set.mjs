@@ -1,4 +1,4 @@
-import { File } from './file';
+import { File } from "./file";
 
 /**
  * File where every line is a key
@@ -18,12 +18,14 @@ export class MergeLineSet extends File {
 
     this.defaultIgnoreSet.forEach(entry => result.remove(entry));
 
-    const content = Array.from(result.values()).join('\n');
+    const content = Array.from(result.values()).join("\n");
 
     return {
       content,
       changed: content !== original,
-      messages: [this.options.message || 'fix: updated from template']
+      messages: [
+        this.options.message || "fix: update {{entry.name}} from template"
+      ]
     };
   }
 }

@@ -22,12 +22,12 @@ export class Context {
       {
         merger: "MergeAndRemoveLineSet",
         pattern: ".gitignore",
-        options: { message: "chore(git): update {{entry.name}} from template" }
+        options: { message: "chore(git): merge {{entry.name}} with template" }
       },
       {
         merger: "NpmIgnore",
         pattern: ".npmignore",
-        options: { message: "chore(npm): update {{entry.name}} from template" }
+        options: { message: "chore(npm): merge {{entry.name}} with template" }
       },
       { merger: "ReplaceIfEmpty", pattern: "**/*" }
     ];
@@ -90,7 +90,7 @@ export class Context {
 
     const prefix = Object.keys(prefixKeys).reduce((a, c) => {
       if (arg[c]) {
-        if(prefixKeys[c] !== arg[c]) {
+        if (prefixKeys[c] !== arg[c]) {
           a.push(arg[c]);
         }
         delete arg[c];

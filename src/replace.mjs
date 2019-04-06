@@ -1,4 +1,4 @@
-import { File } from './file';
+import { File } from "./file";
 
 /**
  * Replace file from template (always)
@@ -10,7 +10,7 @@ export class Replace extends File {
     return {
       content,
       changed: content !== original,
-      messages: [`chore: ${this.name} overwritten from template`]
+      messages: [`chore: overwrite {{entry.name}} with template content`]
     };
   }
 }
