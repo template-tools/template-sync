@@ -58,8 +58,8 @@
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-executable": "^1.4.5",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^4.1.0",
-    "semantic-release": "^15.13.3"
+    "rollup-plugin-node-resolve": "^4.2.0",
+    "semantic-release": "^15.13.8"
   },
   "engines": {
     "node": ">=10.15.3"
