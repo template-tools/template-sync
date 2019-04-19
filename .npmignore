@@ -6,10 +6,9 @@ doc
 *.tmp
 .test
 .tmp
-.gitignore
 .travis.yml
-.npmignore
 .vscode
 .markdown-doctest-setup.js
 rollup.config.js
 SUMMARY.md
+.DS_Store
