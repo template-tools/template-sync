@@ -48,7 +48,7 @@
   "devDependencies": {
     "ava": "^1.4.1",
     "c8": "^3.5.0",
-    "documentation": "^10.0.0",
+    "documentation": "^10.1.0",
     "esm": "^3.2.22",
     "execa": "^1.0.0",
     "markdown-doctest": "^0.9.1",
