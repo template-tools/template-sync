@@ -1,8 +1,9 @@
 import test from 'ava';
-import { Context } from '../src/context';
-import { PreparedContext } from '../src/prepared-context';
-import { Replace } from '../src/replace';
 import { MockProvider } from 'mock-repository-provider';
+
+import { Context } from '../src/context.mjs';
+import { PreparedContext } from '../src/prepared-context.mjs';
+import { Replace } from '../src/replace.mjs';
 
 test('replace', async t => {
   const provider = new MockProvider({

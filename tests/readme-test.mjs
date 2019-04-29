@@ -1,9 +1,10 @@
 import test from 'ava';
-import { Context } from '../src/context';
-import { PreparedContext } from '../src/prepared-context';
-import { Readme } from '../src/readme';
-import { Package } from '../src/package';
 import { MockProvider } from 'mock-repository-provider';
+
+import { Context } from '../src/context.mjs';
+import { PreparedContext } from '../src/prepared-context.mjs';
+import { Readme } from '../src/readme.mjs';
+import { Package } from '../src/package.mjs';
 
 test('readme default options', t => {
   const readme = new Readme('aFile');

@@ -1,4 +1,4 @@
-import { MergeLineSet } from "./merge-line-set";
+import { MergeLineSet } from "./merge-line-set.mjs";
 
 /**
  *

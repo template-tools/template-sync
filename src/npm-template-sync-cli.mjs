@@ -1,9 +1,9 @@
-import { Context } from "./context";
-import { PreparedContext } from "./prepared-context";
+import { Context } from "./context.mjs";
+import { PreparedContext } from "./prepared-context.mjs";
 import {
   setProperty,
   removeSensibleValues
-} from "./util";
+} from "./util.mjs";
 import { version, engines } from "../package.json";
 import { GithubProvider } from "github-repository-provider";
 import { LocalProvider } from "local-repository-provider";

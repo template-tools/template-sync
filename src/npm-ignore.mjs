@@ -1,4 +1,4 @@
-import { MergeAndRemoveLineSet } from './merge-and-remove-line-set';
+import { MergeAndRemoveLineSet } from './merge-and-remove-line-set.mjs';
 
 /**
  *

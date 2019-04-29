@@ -1,5 +1,5 @@
 import test from "ava";
-import { merge, mergeArrays } from "../src/travis";
+import { merge, mergeArrays } from "../src/travis.mjs";
 
 test("travis notifications add/remove", t => {
   const messages = [];

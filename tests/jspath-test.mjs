@@ -1,5 +1,5 @@
 import test from "ava";
-import { jspath } from "../src/util";
+import { jspath } from "../src/util.mjs";
 
 test("jspath set", t => {
   const object = {

@@ -1,6 +1,7 @@
-import { File } from "./file";
-import { compareVersion, asArray } from "./util";
 import yaml from "js-yaml";
+
+import { File } from "./file.mjs";
+import { compareVersion, asArray } from "./util.mjs";
 
 function difference(a, b) {
   return new Set([...a].filter(x => !b.has(x)));

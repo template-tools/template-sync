@@ -1,5 +1,5 @@
 import test from "ava";
-import { merge } from "../src/travis";
+import { merge } from "../src/travis.mjs";
 
 const templateFragment = {
   language: "node_js",

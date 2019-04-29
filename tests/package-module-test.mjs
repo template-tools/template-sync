@@ -1,5 +1,5 @@
 import test from "ava";
-import { Package } from "../src/package";
+import { Package } from "../src/package.mjs";
 
 test("Package optional dev modules", t => {
   const pkg = new Package("package.json");

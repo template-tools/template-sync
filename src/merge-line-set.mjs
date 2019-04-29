@@ -1,4 +1,4 @@
-import { File } from "./file";
+import { File } from "./file.mjs";
 
 /**
  * File where every line is a key

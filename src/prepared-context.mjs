@@ -1,21 +1,21 @@
 import { createContext } from "expression-expander";
 import micromatch from "micromatch";
 import { LogLevelMixin, makeLogEvent } from "loglevel-mixin";
-import { Travis } from "./travis";
-import { Readme } from "./readme";
-import { Package } from "./package";
-import { Rollup } from "./rollup";
-import { License } from "./license";
-import { MergeAndRemoveLineSet } from "./merge-and-remove-line-set";
-import { MergeLineSet } from "./merge-line-set";
-import { NpmIgnore } from "./npm-ignore";
-import { ReplaceIfEmpty } from "./replace-if-empty";
-import { Replace } from "./replace";
-import { JSONFile } from "./json-file";
-import { JSDoc } from "./jsdoc";
-import { Context } from "./context";
 import { StringContentEntry } from "content-entry";
-import { jspath } from "./util";
+import { Travis } from "./travis.mjs";
+import { Readme } from "./readme.mjs";
+import { Package } from "./package.mjs";
+import { Rollup } from "./rollup.mjs";
+import { License } from "./license.mjs";
+import { MergeAndRemoveLineSet } from "./merge-and-remove-line-set.mjs";
+import { MergeLineSet } from "./merge-line-set.mjs";
+import { NpmIgnore } from "./npm-ignore.mjs";
+import { ReplaceIfEmpty } from "./replace-if-empty.mjs";
+import { Replace } from "./replace.mjs";
+import { JSONFile } from "./json-file.mjs";
+import { JSDoc } from "./jsdoc.mjs";
+import { Context } from "./context.mjs";
+import { jspath } from "./util.mjs";
 
 /**
  * context prepared to execute one package

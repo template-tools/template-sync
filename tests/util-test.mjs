@@ -1,5 +1,5 @@
 import test from "ava";
-import { templateOptions, compareVersion } from "../src/util";
+import { templateOptions, compareVersion } from "../src/util.mjs";
 
 test("templateOptions matching", t => {
   t.deepEqual(

@@ -1,4 +1,4 @@
-import { PreparedContext } from "./prepared-context";
+import { PreparedContext } from "./prepared-context.mjs";
 
 export { PreparedContext };
 

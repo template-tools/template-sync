@@ -1,5 +1,5 @@
 import test from 'ava';
-import { JSDoc } from '../src/jsdoc';
+import { JSDoc } from '../src/jsdoc.mjs';
 
 test('optional dev modules', t => {
   const jsdoc = new JSDoc('jsdoc.json');

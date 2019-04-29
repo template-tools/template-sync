@@ -1,8 +1,9 @@
 import test from 'ava';
-import { Context } from '../src/context';
-import { PreparedContext } from '../src/prepared-context';
-import { Rollup } from '../src/rollup';
 import { MockProvider } from 'mock-repository-provider';
+
+import { Context } from '../src/context.mjs';
+import { PreparedContext } from '../src/prepared-context.mjs';
+import { Rollup } from '../src/rollup.mjs';
 
 test('rollup', async t => {
   const provider = new MockProvider({

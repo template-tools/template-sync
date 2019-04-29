@@ -1,5 +1,5 @@
 import test from "ava";
-import { Rollup } from "../src/rollup";
+import { Rollup } from "../src/rollup.mjs";
 
 test("rollup used modules", async t => {
   const rollup = new Rollup("rollup.config.json");

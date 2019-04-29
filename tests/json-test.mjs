@@ -1,8 +1,9 @@
 import test from 'ava';
-import { Context } from '../src/context';
-import { PreparedContext } from '../src/prepared-context';
-import { JSONFile } from '../src/json-file';
 import { MockProvider } from 'mock-repository-provider';
+
+import { Context } from '../src/context.mjs';
+import { PreparedContext } from '../src/prepared-context.mjs';
+import { JSONFile } from '../src/json-file.mjs';
 
 const FILE_NAME = 'a.json';
 

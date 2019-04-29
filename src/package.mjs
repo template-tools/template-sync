@@ -1,6 +1,6 @@
-import { File } from "./file";
-import { compareVersion, sortObjectsKeys, jspath } from "./util";
-import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts";
+import { File } from "./file.mjs";
+import { compareVersion, sortObjectsKeys, jspath } from "./util.mjs";
+import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts.mjs";
 import diff from "simple-diff";
 
 function moduleNames(object) {

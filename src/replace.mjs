@@ -1,4 +1,4 @@
-import { File } from "./file";
+import { File } from "./file.mjs";
 
 /**
  * Replace file from template (always)

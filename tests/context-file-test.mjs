@@ -1,10 +1,11 @@
 import test from "ava";
-import { Context } from "../src/context";
-import { PreparedContext } from "../src/prepared-context";
 import { MockProvider } from "mock-repository-provider";
 import { GithubProvider } from "github-repository-provider";
-import { Package } from "../src/package";
-import { Rollup } from "../src/rollup";
+
+import { Context } from "../src/context.mjs";
+import { PreparedContext } from "../src/prepared-context.mjs";
+import { Package } from "../src/package.mjs";
+import { Rollup } from "../src/rollup.mjs";
 
 const REPOSITORY_NAME = "arlac77/sync-test-repository";
 

@@ -1,5 +1,5 @@
 import test from "ava";
-import { merge, isEqual } from "../src/travis";
+import { merge, isEqual } from "../src/travis.mjs";
 
 test("travis isEqual", t => {
   t.true(isEqual(1,1));

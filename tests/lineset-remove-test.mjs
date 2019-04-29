@@ -1,8 +1,9 @@
 import test from "ava";
-import { Context } from "../src/context";
-import { PreparedContext } from "../src/prepared-context";
-import { MergeAndRemoveLineSet } from "../src/merge-and-remove-line-set";
 import { MockProvider } from "mock-repository-provider";
+
+import { Context } from "../src/context.mjs";
+import { PreparedContext } from "../src/prepared-context.mjs";
+import { MergeAndRemoveLineSet } from "../src/merge-and-remove-line-set.mjs";
 
 test("MergeAndRemoveLineSet lines", async t => {
   const provider = new MockProvider({

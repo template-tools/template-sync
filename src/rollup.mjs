@@ -1,7 +1,6 @@
-import { File } from "./file";
 import recast from "recast";
+import { File } from "./file.mjs";
 
-//import babylon from "recast/parsers/babylon";
 
 export class Rollup extends File {
   static matchesFileName(name) {

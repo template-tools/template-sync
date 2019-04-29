@@ -1,4 +1,4 @@
-import { EmptyContentEntry } from "content-entry/src/empty-content-entry";
+import { EmptyContentEntry } from "content-entry/src/empty-content-entry.mjs";
 
 /**
  * Mergable File

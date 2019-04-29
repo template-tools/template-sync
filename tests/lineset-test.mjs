@@ -1,8 +1,9 @@
 import test from "ava";
-import { Context } from "../src/context";
-import { PreparedContext } from "../src/prepared-context";
-import { MergeLineSet } from "../src/merge-line-set";
 import { MockProvider } from "mock-repository-provider";
+
+import { Context } from "../src/context.mjs";
+import { PreparedContext } from "../src/prepared-context.mjs";
+import { MergeLineSet } from "../src/merge-line-set.mjs";
 
 test("merge lines", async t => {
   const provider = new MockProvider({

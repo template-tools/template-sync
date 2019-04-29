@@ -1,4 +1,4 @@
-import { File } from './file';
+import { File } from './file.mjs';
 
 export class License extends File {
   static matchesFileName(name) {

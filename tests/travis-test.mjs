@@ -1,8 +1,9 @@
 import test from "ava";
-import { Context } from "../src/context";
-import { PreparedContext } from "../src/prepared-context";
-import { Travis } from "../src/travis";
 import { MockProvider } from "mock-repository-provider";
+
+import { Context } from "../src/context.mjs";
+import { PreparedContext } from "../src/prepared-context.mjs";
+import { Travis } from "../src/travis.mjs";
 
 async function mockYmlVersions(templateVersions, targetVersions) {
   const provider = new MockProvider({

@@ -3,7 +3,7 @@ import {
   decodeScripts,
   encodeScripts,
   mergeScripts
-} from "../src/package-scripts";
+} from "../src/package-scripts.mjs";
 
 test("package scripts decode/encode empty script", t => {
   const d = decodeScripts(undefined);

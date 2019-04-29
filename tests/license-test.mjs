@@ -1,8 +1,9 @@
 import test from 'ava';
-import { Context } from '../src/context';
-import { PreparedContext } from '../src/prepared-context';
-import { License } from '../src/license';
 import { MockProvider } from 'mock-repository-provider';
+
+import { Context } from '../src/context.mjs';
+import { PreparedContext } from '../src/prepared-context.mjs';
+import { License } from '../src/license.mjs';
 
 test('modify one year', async t => {
   const provider = new MockProvider({

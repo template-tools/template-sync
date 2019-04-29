@@ -1,4 +1,4 @@
-import { JSONFile } from './json-file';
+import { JSONFile } from './json-file.mjs';
 
 export class JSDoc extends JSONFile {
   optionalDevModules(modules) {
