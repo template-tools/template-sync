@@ -57,7 +57,6 @@ merges contents from template repo into destination repo handling some special c
     -   [Properties](#properties-1)
 -   [merge](#merge)
     -   [Parameters](#parameters-2)
--   [Readme](#readme)
 -   [File](#file)
     -   [Parameters](#parameters-3)
     -   [Properties](#properties-2)
@@ -65,6 +64,7 @@ merges contents from template repo into destination repo handling some special c
         -   [Parameters](#parameters-4)
     -   [merge](#merge-1)
         -   [Parameters](#parameters-5)
+-   [Readme](#readme)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-4)
@@ -127,12 +127,6 @@ merge to values
 
 Returns **any** merged value
 
-## Readme
-
-**Extends File**
-
-injects badges into README.md
-
 ## File
 
 Mergable File
@@ -164,6 +158,12 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 -   `context` **PreparedContect** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
+
+## Readme
+
+**Extends File**
+
+injects badges into README.md
 
 ## sortedKeys
 
