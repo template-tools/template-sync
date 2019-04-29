@@ -31,12 +31,12 @@
     "test": "ava"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^2.3.3",
+    "aggregation-repository-provider": "^2.3.4",
     "babylon": "^6.18.0",
     "commander": "^2.20.0",
     "content-entry": "^2.1.2",
     "expression-expander": "^7.0.1",
-    "github-repository-provider": "^7.0.13",
+    "github-repository-provider": "^7.0.14",
     "js-yaml": "^3.13.1",
     "local-repository-provider": "^6.2.4",
     "loglevel-mixin": "^3.0.0",
