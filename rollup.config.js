@@ -66,6 +66,7 @@ export default {
       compact: true
     }),
     cleanup({
+      extensions: ["js", "mjs", "jsx", "tag"],
       exclude: ["node_modules/@octokit/plugin-throttling/lib/route-matcher.js"]
     }),
     executable()
