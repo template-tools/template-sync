@@ -30,6 +30,7 @@ function moduleNames(object) {
 const sortedKeys = [
   "name",
   "version",
+  "type",
   "private",
   "publishConfig",
   "main",
