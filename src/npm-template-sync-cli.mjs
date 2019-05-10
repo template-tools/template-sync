@@ -1,9 +1,6 @@
 import { Context } from "./context.mjs";
 import { PreparedContext } from "./prepared-context.mjs";
-import {
-  setProperty,
-  removeSensibleValues
-} from "./util.mjs";
+import { setProperty, removeSensibleValues } from "./util.mjs";
 import { version, engines } from "../package.json";
 import { GithubProvider } from "github-repository-provider";
 import { LocalProvider } from "local-repository-provider";
@@ -56,8 +53,6 @@ program
     const logLevel = program.debug ? "debug" : "info";
 
     try {
-      const providers = [];
-
       const logOptions = {
         logger: (...args) => {
           console.log(...args);
@@ -65,15 +60,15 @@ program
         logLevel
       };
 
-      [GithubProvider, LocalProvider].forEach(provider => {
-        const options = Object.assign(
-          {},
-          logOptions,
-          properties[provider.name],
-          provider.optionsFromEnvironment(process.env)
-        );
-        providers.push(new provider(options));
-      });
+      const providers = [GithubProvider, LocalProvider].map(provider =>
+        providers.push(
+          new provider({
+            ...logOptions,
+            ...properties[provider.name],
+            ...provider.optionsFromEnvironment(process.env)
+          })
+        )
+      );
 
       if (program.listProviders) {
         console.log(
