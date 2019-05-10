@@ -32,34 +32,6 @@ export function setProperty(properties, attributePath, value) {
   }
 }
 
-export function removeSensibleValues(object) {
-  if (
-    object === undefined ||
-    object === null ||
-    typeof object === "number" ||
-    typeof object === "string" ||
-    object instanceof String
-  ) {
-    return object;
-  }
-
-  const result = {};
-  for (const key of Object.keys(object)) {
-    const value = object[key];
-
-    if (typeof value === "string" || value instanceof String) {
-      if (key.match(/pass|auth|key|user/)) {
-        result[key] = "...";
-        continue;
-      }
-    }
-
-    result[key] = removeSensibleValues(value);
-  }
-
-  return result;
-}
-
 /**
  * compare two versions
  * @param {string|number} a
