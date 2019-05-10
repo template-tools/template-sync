@@ -1,13 +1,15 @@
-import { Context } from "./context.mjs";
-import { PreparedContext } from "./prepared-context.mjs";
-import { setProperty, removeSensibleValues } from "./util.mjs";
 import { version, engines } from "../package.json";
+import { readFileSync } from "fs";
+import { satisfies } from "semver";
+import program from "commander";
+import { removeSensibleValues } from "remove-sensible-values";
 import { GithubProvider } from "github-repository-provider";
 import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
-import { satisfies } from "semver";
-import program from "commander";
-import { readFileSync } from "fs";
+import { Context } from "./context.mjs";
+import { PreparedContext } from "./prepared-context.mjs";
+import { setProperty } from "./util.mjs";
+
 
 if (!satisfies(process.versions.node, engines.node)) {
   console.error(
@@ -61,13 +63,11 @@ program
       };
 
       const providers = [GithubProvider, LocalProvider].map(provider =>
-        providers.push(
           new provider({
             ...logOptions,
             ...properties[provider.name],
             ...provider.optionsFromEnvironment(process.env)
           })
-        )
       );
 
       if (program.listProviders) {
