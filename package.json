@@ -42,7 +42,7 @@
     "loglevel-mixin": "^3.0.0",
     "micromatch": "^4.0.2",
     "recast": "^0.18.1",
-    "remove-sensible-values": "^1.0.1",
+    "remove-sensible-values": "^1.0.2",
     "semver": "^6.1.0",
     "simple-diff": "^1.6.0"
   },
