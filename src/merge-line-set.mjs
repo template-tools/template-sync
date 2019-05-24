@@ -16,7 +16,7 @@ export class MergeLineSet extends File {
     const result = new Set(template.split(/\n/));
     original.split(/\r?\n/).forEach(line => result.add(line));
 
-    this.defaultIgnoreSet.forEach(entry => result.remove(entry));
+    this.defaultIgnoreSet.forEach(entry => result.delete(entry));
 
     const content = Array.from(result.values()).join("\n");
 

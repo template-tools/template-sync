@@ -20,7 +20,7 @@ test("merge lines", async t => {
 
   const merger = new MergeLineSet("aFile");
   const merged = await merger.merge(context);
-  t.deepEqual(merged.content, ["Line 1", "Line 2", "Line 3"].join("\n"));
+  t.is(merged.content, ["Line 1", "Line 2", "Line 3"].join("\n"));
 
   t.true(merged.messages.includes("fix: update aFile from template"));
 });
