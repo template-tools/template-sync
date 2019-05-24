@@ -8,7 +8,6 @@ import pkg from "./package.json";
 
 // require('module').builtinModules
 const external = [
-import builtins from "builtin-modules";
   ...builtins,
 
   "node-fetch"
