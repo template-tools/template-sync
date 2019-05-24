@@ -9,7 +9,7 @@ export class MergeLineSet extends File {
    * @return {Set<string>}
    */
   get defaultIgnoreSet() {
-    return new Set();
+    return new Set([""]);
   }
 
   async mergeContent(context, original, template) {

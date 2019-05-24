@@ -15,6 +15,7 @@ export class NpmIgnore extends MergeAndRemoveLineSet {
    */
   get defaultIgnoreSet() {
     return new Set([
+      '',
       '.*.swp',
       '._*',
       '.DS_Store',
