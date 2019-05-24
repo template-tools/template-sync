@@ -43,7 +43,7 @@
     "micromatch": "^4.0.2",
     "recast": "^0.18.1",
     "remove-sensible-values": "^1.0.1",
-    "semver": "^6.0.0",
+    "semver": "^6.1.0",
     "simple-diff": "^1.6.0"
   },
   "devDependencies": {
