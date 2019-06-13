@@ -6,7 +6,6 @@ import executable from "rollup-plugin-executable";
 import json from "rollup-plugin-json";
 import pkg from "./package.json";
 
-// require('module').builtinModules
 const external = [
   ...builtins,
 
