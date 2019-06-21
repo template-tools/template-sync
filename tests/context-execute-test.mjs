@@ -25,7 +25,7 @@ test("context prepare", async t => {
   t.is(pc.properties.name, "sync-test-repository");
 });
 
-test("context execute - PR", async t => {
+test.only("context execute - PR", async t => {
   const provider = new GithubProvider(
     GithubProvider.optionsFromEnvironment(process.env)
   );
@@ -38,13 +38,10 @@ test("context execute - PR", async t => {
     REPOSITORY_NAME
   );
 
-  //context.logLevel = "trace";
-
   const pullRequest = await context.execute();
 
   t.truthy(pullRequest && pullRequest.name);
 
-  //await pullRequest.merge();
-
-  //t.pass('worker done');
+  await pullRequest.source.delete();
+  await pullRequest.delete();
 });
