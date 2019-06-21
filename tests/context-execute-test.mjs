@@ -25,7 +25,7 @@ test("context prepare", async t => {
   t.is(pc.properties.name, "sync-test-repository");
 });
 
-test.only("context execute - PR", async t => {
+test("context execute - PR", async t => {
   const provider = new GithubProvider(
     GithubProvider.optionsFromEnvironment(process.env)
   );
@@ -42,6 +42,8 @@ test.only("context execute - PR", async t => {
 
   t.truthy(pullRequest && pullRequest.name);
 
-  await pullRequest.source.delete();
+  console.log("SOURCE",pullRequest.source.name);
+  console.log("DSTINATION",pullRequest.destination.name);
+  //await pullRequest.source.delete();
   await pullRequest.delete();
 });
