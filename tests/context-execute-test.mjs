@@ -42,8 +42,10 @@ test("context execute - PR", async t => {
 
   t.truthy(pullRequest && pullRequest.name);
 
+  /*
   console.log("SOURCE",pullRequest.source.name);
   console.log("DSTINATION",pullRequest.destination.name);
-  //await pullRequest.source.delete();
+  */
+  await pullRequest.destination.delete();
   await pullRequest.delete();
 });
