@@ -50,7 +50,7 @@ program
     /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
   )
   .action(async (...repos) => {
-    repos.pop(); // TODO why
+    repos.pop();
 
     const logLevel = program.debug ? "debug" : "info";
 
@@ -63,17 +63,16 @@ program
       };
 
       const providers = [GithubProvider, LocalProvider].map(provider =>
-          new provider({
+        provider.initialize({
             ...logOptions,
-            ...properties[provider.name],
-            ...provider.optionsFromEnvironment(process.env)
-          })
+            ...properties[provider.name] },
+            process.env)
       );
 
       if (program.listProviders) {
         console.log(
           Array.from(
-            aggregationProvider.providers.map(
+            providers.map(
               p => `${p.name}: ${JSON.stringify(removeSensibleValues(p))}`
             )
           ).join("\n")
