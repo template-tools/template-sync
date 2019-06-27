@@ -61,7 +61,7 @@
     "rollup-plugin-executable": "^1.5.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.1.0",
-    "semantic-release": "^15.13.17"
+    "semantic-release": "^15.13.18"
   },
   "engines": {
     "node": ">=10.16.0"
