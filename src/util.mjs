@@ -1,3 +1,5 @@
+export const defaultEncodingOptions = { encoding: "utf8" };
+
 export function asArray(o) {
   return Array.isArray(o) ? o : [o];
 }

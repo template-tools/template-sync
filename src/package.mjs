@@ -1,5 +1,5 @@
 import { File } from "./file.mjs";
-import { compareVersion, sortObjectsKeys, jspath } from "./util.mjs";
+import { compareVersion, sortObjectsKeys, jspath, defaultEncodingOptions } from "./util.mjs";
 import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts.mjs";
 import diff from "simple-diff";
 
@@ -111,7 +111,7 @@ export class Package extends File {
   async properties(branch) {
     try {
       const content = await branch.entry(this.name);
-      const pkg = JSON.parse(await content.getString({ encoding: "utf-8" }));
+      const pkg = JSON.parse(await content.getString(defaultEncodingOptions));
 
       const properties = {
         npm: { name: pkg.name, fullName: pkg.name }

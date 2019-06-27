@@ -8,7 +8,7 @@ import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { Context } from "./context.mjs";
 import { PreparedContext } from "./prepared-context.mjs";
-import { setProperty } from "./util.mjs";
+import { setProperty, defaultEncodingOptions } from "./util.mjs";
 
 
 if (!satisfies(process.versions.node, engines.node)) {
@@ -101,7 +101,7 @@ program
 
       if (repos.length === 0 || repos[0] === ".") {
         const pkg = JSON.parse(
-          readFileSync("package.json", { encoding: "utf-8" })
+          readFileSync("package.json", defaultEncodingOptions)
         );
         repos.push(pkg.repository.url);
       }
