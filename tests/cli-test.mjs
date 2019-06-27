@@ -19,12 +19,12 @@ test("cli dryrun", async t => {
   console.log(c.stdout);
   console.log(c.stderr);
 */
-  t.is(c.code, 0);
+  t.is(c.exitCode, 0);
 });
 
 test("cli list properties", async t => {
   const c = await execa(nts, ["--list-properties", "arlac77/config-expander"]);
   t.truthy(c.stdout.match(/Expands expressions in config files/));
 
-  t.is(c.code, 0);
+  t.is(c.exitCode, 0);
 });
