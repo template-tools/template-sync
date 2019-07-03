@@ -33,40 +33,26 @@ export class Context {
     ];
   }
 
-  constructor(provider, options) {
-    options = Object.assign(
-      {},
-      {
-        logger: console,
-        dry: false,
-        trackUsedByModule: false
-      },
-      options
-    );
-
-    options.properties = Object.assign(
-      {
-        date: { year: new Date().getFullYear() },
-        license: {}
-      },
-      options.properties
-    );
-
+  constructor(provider, options={}) {
     Object.defineProperties(this, {
       trackUsedByModule: {
-        value: options.trackUsedByModule
+        value: options.trackUsedByModule || false
       },
       dry: {
-        value: options.dry
+        value: options.dry || false
       },
       logger: {
-        value: options.logger
+        value: options.logger || console
       },
       provider: {
         value: provider
       },
       properties: {
-        value: options.properties
+        value: {
+          date: { year: new Date().getFullYear() },
+          license: {},  
+          ...options.properties
+        }
       },
       templateBranchName: {
         value: options.templateBranchName

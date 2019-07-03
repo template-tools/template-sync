@@ -10,7 +10,6 @@ import { Context } from "./context.mjs";
 import { PreparedContext } from "./prepared-context.mjs";
 import { setProperty, defaultEncodingOptions } from "./util.mjs";
 
-
 if (!satisfies(process.versions.node, engines.node)) {
   console.error(
     `require node ${engines.node} (running with ${process.versions.node})`
@@ -62,17 +61,23 @@ program
         logLevel
       };
 
-      const providers = [GithubProvider, LocalProvider].map(provider =>
-        provider.initialize({
-            ...logOptions,
-            ...properties[provider.name] },
-            process.env)
+      const provider = new AggregationProvider(
+        [GithubProvider, LocalProvider].map(provider =>
+          provider.initialize(
+            {
+              ...logOptions,
+              ...properties[provider.name]
+            },
+            process.env
+          )
+        ),
+        logOptions
       );
 
       if (program.listProviders) {
         console.log(
           Array.from(
-            providers.map(
+            provider.providers.map(
               p => `${p.name}: ${JSON.stringify(removeSensibleValues(p))}`
             )
           ).join("\n")
@@ -81,16 +86,13 @@ program
         return;
       }
 
-      const context = new Context(
-        new AggregationProvider(providers, logOptions),
-        {
-          templateBranchName: program.template,
-          dry: program.dry,
-          trackUsedByModule: program.track,
-          console,
-          properties
-        }
-      );
+      const context = new Context(provider, {
+        templateBranchName: program.template,
+        dry: program.dry,
+        trackUsedByModule: program.track,
+        console,
+        properties
+      });
 
       if (repos.length === 0 && program.listProperties) {
         console.log(
