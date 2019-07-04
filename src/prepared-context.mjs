@@ -369,9 +369,7 @@ export const PreparedContext = LogLevelMixin(
 
       let newPullRequestRequired = false;
       const prBranchName = "npm-template-sync-1";
-      let prBranch = (await this.targetBranch.repository.branches()).get(
-        prBranchName
-      );
+      let prBranch = await this.targetBranch.repository.branch(prBranchName)
 
       if (prBranch === undefined) {
         newPullRequestRequired = true;
