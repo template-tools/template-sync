@@ -2,6 +2,7 @@ import { createContext } from "expression-expander";
 import micromatch from "micromatch";
 import { LogLevelMixin, makeLogEvent } from "loglevel-mixin";
 import { StringContentEntry } from "content-entry";
+import { generateBranchName } from "repository-provider";
 import { Travis } from "./travis.mjs";
 import { Readme } from "./readme.mjs";
 import { Package } from "./package.mjs";
@@ -251,7 +252,7 @@ export const PreparedContext = LogLevelMixin(
 
       let templatePullRequest;
       let newTemplatePullRequest = false;
-      const templateAddBranchName = "npm-template-trac-usage-1";
+      const templateAddBranchName = "npm-template-trac-usage/1";
       let templatePRBranch = await templateBranch.repository.branch(templateAddBranchName);
 
       const pkg = new Package("package.json");
@@ -368,7 +369,7 @@ export const PreparedContext = LogLevelMixin(
       }
 
       let newPullRequestRequired = false;
-      const prBranchName = "npm-template-sync-1";
+      const prBranchName = "npm-template-sync/1";
       let prBranch = await this.targetBranch.repository.branch(prBranchName)
 
       if (prBranch === undefined) {
