@@ -38,7 +38,7 @@
     "expression-expander": "^7.0.2",
     "github-repository-provider": "^7.3.30",
     "js-yaml": "^3.13.1",
-    "local-repository-provider": "^6.4.26",
+    "local-repository-provider": "^6.4.28",
     "loglevel-mixin": "^3.0.0",
     "micromatch": "^4.0.2",
     "recast": "^0.18.1",
