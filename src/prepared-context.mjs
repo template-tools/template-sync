@@ -2,7 +2,6 @@ import { createContext } from "expression-expander";
 import micromatch from "micromatch";
 import { LogLevelMixin, makeLogEvent } from "loglevel-mixin";
 import { StringContentEntry } from "content-entry";
-import { generateBranchName } from "repository-provider";
 import { Travis } from "./travis.mjs";
 import { Readme } from "./readme.mjs";
 import { Package } from "./package.mjs";
