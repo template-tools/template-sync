@@ -52,6 +52,7 @@ const sortedKeys = [
   "bundledDependencies",
   "engines",
   "os",
+  "cpu",
   "arch",
   "repository",
   "directories",
