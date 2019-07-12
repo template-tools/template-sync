@@ -252,7 +252,9 @@ export const PreparedContext = LogLevelMixin(
       let templatePullRequest;
       let newTemplatePullRequest = false;
       const templateAddBranchName = "npm-template-trac-usage/1";
-      let templatePRBranch = await templateBranch.repository.branch(templateAddBranchName);
+      let templatePRBranch = await templateBranch.repository.branch(
+        templateAddBranchName
+      );
 
       const pkg = new Package("package.json");
 
@@ -283,7 +285,9 @@ export const PreparedContext = LogLevelMixin(
           templatePackageJson.template.usedBy = templatePackageJson.template.usedBy.sort();
 
           if (templatePRBranch === undefined) {
-            templatePRBranch = await templateBranch.createBranch(templateAddBranchName);
+            templatePRBranch = await templateBranch.createBranch(
+              templateAddBranchName
+            );
             newTemplatePullRequest = true;
           }
 
@@ -336,11 +340,7 @@ export const PreparedContext = LogLevelMixin(
         targetBranch
       });
 
-      const {
-        templatePackageJson,
-        templatePRBranch,
-        templatePullRequest
-      } = await this.trackUsedModule(targetBranch);
+      const { templatePackageJson } = await this.trackUsedModule(targetBranch);
 
       const files = await PreparedContext.createFiles(
         templateBranch,
@@ -369,7 +369,7 @@ export const PreparedContext = LogLevelMixin(
 
       let newPullRequestRequired = false;
       const prBranchName = "npm-template-sync/1";
-      let prBranch = await this.targetBranch.repository.branch(prBranchName)
+      let prBranch = await this.targetBranch.repository.branch(prBranchName);
 
       if (prBranch === undefined) {
         newPullRequestRequired = true;
