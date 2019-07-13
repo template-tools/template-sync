@@ -389,7 +389,7 @@ export const PreparedContext = LogLevelMixin(
       if (newPullRequestRequired) {
         try {
           const pullRequest = await targetBranch.createPullRequest(prBranch, {
-            title: `merge package from ${templateBranch}`,
+            title: `merge from ${templateBranch}`,
             body: merges
               .map(
                 m =>
