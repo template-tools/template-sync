@@ -1,6 +1,15 @@
 import { File } from "./file.mjs";
-import { compareVersion, sortObjectsKeys, jspath, defaultEncodingOptions } from "./util.mjs";
-import { decodeScripts, encodeScripts, mergeScripts } from "./package-scripts.mjs";
+import {
+  compareVersion,
+  sortObjectsKeys,
+  jspath,
+  defaultEncodingOptions
+} from "./util.mjs";
+import {
+  decodeScripts,
+  encodeScripts,
+  mergeScripts
+} from "./package-scripts.mjs";
 import diff from "simple-diff";
 
 function moduleNames(object) {
@@ -111,44 +120,42 @@ export class Package extends File {
    * @return {Object}
    */
   async properties(branch) {
-    try {
-      const content = await branch.entry(this.name);
-      const pkg = JSON.parse(await content.getString(defaultEncodingOptions));
-
-      const properties = {
-        npm: { name: pkg.name, fullName: pkg.name }
-      };
-
-      if (pkg.name !== undefined) {
-        const m = pkg.name.match(/^(\@[^\/]+)\/(.*)/);
-        if (m) {
-          properties.npm.organization = m[1];
-          properties.npm.name = m[2];
-        }
-      }
-
-      if (pkg.template !== undefined) {
-        if (pkg.template.repository !== undefined) {
-          properties.templateRepo = pkg.template.repository.url;
-        }
-        if (pkg.template.usedBy !== undefined) {
-          properties.usedBy = pkg.template.usedBy;
-        }
-      }
-
-      propertyKeys.forEach(key => {
-        if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
-          if (!(key === "version" && pkg[key] === "0.0.0-semantic-release")) {
-            properties[key] = pkg[key];
-          }
-        }
-      });
-      return properties;
-    } catch (e) {
-      console.log(e);
+    const content = await branch.maybeEntry(this.name);
+    if (content === undefined) {
+      return {};
     }
 
-    return {};
+    const pkg = JSON.parse(await content.getString(defaultEncodingOptions));
+
+    const properties = {
+      npm: { name: pkg.name, fullName: pkg.name }
+    };
+
+    if (pkg.name !== undefined) {
+      const m = pkg.name.match(/^(\@[^\/]+)\/(.*)/);
+      if (m) {
+        properties.npm.organization = m[1];
+        properties.npm.name = m[2];
+      }
+    }
+
+    if (pkg.template !== undefined) {
+      if (pkg.template.repository !== undefined) {
+        properties.templateRepo = pkg.template.repository.url;
+      }
+      if (pkg.template.usedBy !== undefined) {
+        properties.usedBy = pkg.template.usedBy;
+      }
+    }
+
+    propertyKeys.forEach(key => {
+      if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
+        if (!(key === "version" && pkg[key] === "0.0.0-semantic-release")) {
+          properties[key] = pkg[key];
+        }
+      }
+    });
+    return properties;
   }
 
   async mergeContent(context, original, templateContent) {
@@ -335,13 +342,15 @@ export class Package extends File {
         const templateValue = jspath(template, action.path);
 
         jspath(target, action.path, (targetValue, setter) => {
-            if (templateValue !== targetValue) {
-              setter(templateValue);
+          if (templateValue !== targetValue) {
+            setter(templateValue);
 
-              messages.push(
-                `chore(package): set ${action.path}='${templateValue}' as in template`
-              );
-            }
+            messages.push(
+              `chore(package): set ${
+                action.path
+              }='${templateValue}' as in template`
+            );
+          }
         });
       }
     });
