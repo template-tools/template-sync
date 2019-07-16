@@ -189,7 +189,7 @@ export class Package extends File {
 
     if (target.name === undefined || target.name === "") {
       const m = targetRepository.name.match(/^([^\/]+)\/(.*)/);
-      target.name = m ? m[2] : context.targetBranch.name;
+      target.name = m ? m[2] : context.targetBranch.repository.name;
     }
 
     if (target.module !== undefined && !target.module.match(/\{\{module\}\}/)) {
