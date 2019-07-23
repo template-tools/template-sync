@@ -116,6 +116,10 @@ export const PreparedContext = LogLevelMixin(
       const context = this.context;
       const targetBranch = await context.provider.branch(this.targetBranchName);
 
+      if(targetBranch === undefined) {
+        throw new Error(`Unable to find branch ${this.targetBranchName}`);
+      }
+
       if (targetBranch.provider.name === "GithubProvider") {
         this.properties.github = {
           user: targetBranch.owner.name,
