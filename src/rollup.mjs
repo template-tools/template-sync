@@ -166,20 +166,19 @@ export class Rollup extends File {
       const originalPlugins = pluginsFromExpression(exp);
       const templatePlugins = pluginsFromExpression(templateExp);
 
-      if (originalPlugins !== undefined && templatePlugins !== undefined) {
-        templatePlugins.forEach(templatePlugin => {
-          if (
-            originalPlugins.find(
-              op => op.callee.name === templatePlugin.callee.name
-            ) === undefined
-          ) {
-            originalPlugins.push(templatePlugin);
-            addedPlugins.push(templatePlugin.callee.name);
-          }
-        });
-        if (addedPlugins.length > 0) {
-          messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
+      templatePlugins.forEach(templatePlugin => {
+        if (
+          templatePlugin.callee !== undefined &&
+          originalPlugins.find(
+            op => op.callee !== undefined && op.callee.name === templatePlugin.callee.name
+          ) === undefined
+        ) {
+          originalPlugins.push(templatePlugin);
+          addedPlugins.push(templatePlugin.callee.name);
         }
+      });
+      if (addedPlugins.length > 0) {
+        messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
       }
 
       const content = recast.print(ast).code;
@@ -244,7 +243,7 @@ function exportDefaultDeclaration(ast) {
 }
 
 function pluginsFromExpression(exp) {
-  if (exp.properties !== undefined) {
+  if (exp !== undefined && exp.properties !== undefined) {
     const plugins = exp.properties.find(
       p => p !== undefined && p.key.name === "plugins"
     );
