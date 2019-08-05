@@ -1,7 +1,6 @@
 import recast from "recast";
 import { File } from "./file.mjs";
 
-
 export class Rollup extends File {
   static matchesFileName(name) {
     return name.match(/rollup\.config\.js/);
@@ -54,7 +53,7 @@ export class Rollup extends File {
 
     try {
       const recastOptions = {
-      //  parser: babylon
+        //  parser: babylon
       };
 
       const templateAST = recast.parse(template, recastOptions);
@@ -167,16 +166,18 @@ export class Rollup extends File {
       const originalPlugins = pluginsFromExpression(exp);
       const templatePlugins = pluginsFromExpression(templateExp);
 
-      templatePlugins.forEach(templatePlugin => {
-        if (
-          originalPlugins.find(
-            op => op.callee.name === templatePlugin.callee.name
-          ) === undefined
-        ) {
-          originalPlugins.push(templatePlugin);
-          addedPlugins.push(templatePlugin.callee.name);
-        }
-      });
+      if (templatePlugins) {
+        templatePlugins.forEach(templatePlugin => {
+          if (
+            originalPlugins.find(
+              op => op.callee.name === templatePlugin.callee.name
+            ) === undefined
+          ) {
+            originalPlugins.push(templatePlugin);
+            addedPlugins.push(templatePlugin.callee.name);
+          }
+        });
+      }
 
       if (addedPlugins.length > 0) {
         messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
