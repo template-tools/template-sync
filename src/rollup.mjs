@@ -166,7 +166,7 @@ export class Rollup extends File {
       const originalPlugins = pluginsFromExpression(exp);
       const templatePlugins = pluginsFromExpression(templateExp);
 
-      if (templatePlugins) {
+      if (originalPlugins !== undefined && templatePlugins !== undefined) {
         templatePlugins.forEach(templatePlugin => {
           if (
             originalPlugins.find(
@@ -177,10 +177,9 @@ export class Rollup extends File {
             addedPlugins.push(templatePlugin.callee.name);
           }
         });
-      }
-
-      if (addedPlugins.length > 0) {
-        messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
+        if (addedPlugins.length > 0) {
+          messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
+        }
       }
 
       const content = recast.print(ast).code;
