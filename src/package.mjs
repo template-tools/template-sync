@@ -45,6 +45,7 @@ const sortedKeys = [
   "main",
   "browser",
   "module",
+  "svelte",
   "unpkg",
   "description",
   "keywords",
