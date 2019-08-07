@@ -52,6 +52,7 @@ const sortedKeys = [
   "maintainers",
   "contributors",
   "license",
+  "sustainability",
   "bin",
   "scripts",
   "dependencies",
