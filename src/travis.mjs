@@ -3,6 +3,29 @@ import yaml from "js-yaml";
 import { File } from "./file.mjs";
 import { compareVersion, asArray } from "./util.mjs";
 
+/**
+ * should value be removed
+ * @param {string} value
+ * @param {string} fromTemplate
+ * @return {number} treu if fromTemplate tells is to delete value
+ */
+function toBeDeleted(value, fromTemplate) {
+  if(fromTemplate === undefined) {
+    return { delete: false, keepOriginal: true };
+  }
+
+  if ( typeof fromTemplate === 'string') {
+
+    const m = fromTemplate.match(/--delete--\s*(.*)/);
+    if (m) {
+      const flag = m[1] === value;
+      return { delete: flag, keepOriginal: !flag };
+    }
+  }
+
+  return { delete: false, keepOriginal: false };
+}
+
 function difference(a, b) {
   return new Set([...a].filter(x => !b.has(x)));
 }
@@ -198,11 +221,11 @@ export function merge(a, b, path = [], messages = []) {
   }
 
   if (isScalar(a)) {
-    if (b !== undefined) {
-      return b;
+    const x = toBeDeleted(a, b);
+    if (x.delete) {
+      return undefined;
     }
-
-    return a;
+    return x.keepOriginal ? a : b;
   }
 
   //console.log(location,a,typeof a, b, typeof b);
@@ -243,7 +266,7 @@ export function merge(a, b, path = [], messages = []) {
   }
 
   return Object.keys(r).length === 0 ? undefined : r;
-//  return r;
+  //  return r;
 }
 
 export class Travis extends File {
