@@ -56,16 +56,16 @@
     "execa": "^2.0.4",
     "markdown-doctest": "^0.9.1",
     "mock-repository-provider": "^5.1.21",
-    "rollup": "^1.20.0",
+    "rollup": "^1.20.1",
     "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-commonjs": "^10.0.2",
     "rollup-plugin-executable": "^1.5.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "semantic-release": "^15.13.23"
+    "semantic-release": "^15.13.24"
   },
   "engines": {
-    "node": ">=10.16.3"
+    "node": ">=10.16.0"
   },
   "repository": {
     "type": "git",
