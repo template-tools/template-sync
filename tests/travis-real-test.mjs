@@ -1,5 +1,5 @@
 import test from "ava";
-import { merge, isEqual } from "../src/travis.mjs";
+import { merge } from "../src/travis.mjs";
 
 test("travis real merge", t => {
   const messages = [];
@@ -82,7 +82,7 @@ test("travis real merge", t => {
           '-npm run travis-deploy-once "npm run semantic-release"',
           "-npm run semantic-release"
         ],
-        notifications: { email: ["-markus.felten@gmx.de"] }
+     //   notifications: { email: ["-markus.felten@gmx.de"] }
       },
       undefined,
       messages
