@@ -158,6 +158,11 @@ export class Package extends File {
         }
       }
     });
+
+    if(pkg.config !== undefined) {
+      Object.assign(properties,pkg.config);
+    }
+
     return properties;
   }
 

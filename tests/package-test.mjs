@@ -59,7 +59,10 @@ test("package extract properties", async t => {
       name: "aName",
       version: "1.2.3",
       description: "a description",
-      module: "a module"
+      module: "a module",
+      config: {
+        "api" : "/some/path"
+      }
     }
   );
 
@@ -73,7 +76,8 @@ test("package extract properties", async t => {
     description: "a description",
     module: "a module",
     name: "aName",
-    version: "1.2.3"
+    version: "1.2.3",
+    api: "/some/path"
   });
 });
 
