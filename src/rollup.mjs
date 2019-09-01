@@ -21,16 +21,17 @@ export class Rollup extends File {
   usedDevModules(content) {
     const modules = new Set();
 
-    const ast = recast.parse(content, {
-      //parser: babylon
-    });
+    try {
+      const ast = recast.parse(content, {
+        //parser: babylon
+      });
 
-    for (const decl of ast.program.body) {
-      if (decl.type === "ImportDeclaration") {
-        modules.add(decl.source.value);
+      for (const decl of ast.program.body) {
+        if (decl.type === "ImportDeclaration") {
+          modules.add(decl.source.value);
+        }
       }
-    }
-
+    } catch (e) {}
     return modules;
   }
 
@@ -196,8 +197,8 @@ export class Rollup extends File {
         messages
       };
     } catch (e) {
-      context.warn(`unable to parse ${this.name}`);
-      context.error(e);
+      //  context.warn(`unable to parse ${this.name}`);
+      // context.error(e);
     }
 
     return {
