@@ -170,7 +170,9 @@ export class Rollup extends File {
         if (
           templatePlugin.callee !== undefined &&
           originalPlugins.find(
-            op => op.callee !== undefined && op.callee.name === templatePlugin.callee.name
+            op =>
+              op.callee !== undefined &&
+              op.callee.name === templatePlugin.callee.name
           ) === undefined
         ) {
           originalPlugins.push(templatePlugin);
@@ -194,7 +196,6 @@ export class Rollup extends File {
         messages
       };
     } catch (e) {
-      console.log(e);
       context.warn(`unable to parse ${this.name}`);
       context.error(e);
     }
