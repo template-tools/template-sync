@@ -1,6 +1,21 @@
 import recast from "recast";
 import { File } from "./file.mjs";
 
+/*
+import { Parser } from "acorn/dist/acorn.es.js";
+
+const acorn = {
+  parser: {
+    parse(source) {
+      return new Parser(source).parse();
+    }
+  }
+};
+*/
+
+const acorn = undefined;
+
+
 export class Rollup extends File {
   static matchesFileName(name) {
     return name.match(/rollup\.config\.js/);
@@ -22,16 +37,15 @@ export class Rollup extends File {
     const modules = new Set();
 
     try {
-      const ast = recast.parse(content, {
-        //parser: babylon
-      });
+      const ast = recast.parse(content, acorn);
 
       for (const decl of ast.program.body) {
         if (decl.type === "ImportDeclaration") {
           modules.add(decl.source.value);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+    }
     return modules;
   }
 
@@ -53,12 +67,8 @@ export class Rollup extends File {
     const messages = [];
 
     try {
-      const recastOptions = {
-        //  parser: babylon
-      };
-
-      const templateAST = recast.parse(template, recastOptions);
-      const ast = recast.parse(original, recastOptions);
+      const templateAST = recast.parse(template, acorn);
+      const ast = recast.parse(original, acorn);
 
       removeUseStrict(ast);
 
