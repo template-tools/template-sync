@@ -1,10 +1,11 @@
 import recast from "recast";
+import parser from "recast/parsers/babel.js";
+
 import { File } from "./file.mjs";
 
 /*
 import { Parser } from "acorn/dist/acorn.es.js";
-
-const acorn = {
+const parser = {
   parser: {
     parse(source) {
       return new Parser(source).parse();
@@ -13,7 +14,8 @@ const acorn = {
 };
 */
 
-const acorn = undefined;
+
+//const parser = undefined;
 
 
 export class Rollup extends File {
@@ -37,7 +39,7 @@ export class Rollup extends File {
     const modules = new Set();
 
     try {
-      const ast = recast.parse(content, acorn);
+      const ast = recast.parse(content, parser);
 
       for (const decl of ast.program.body) {
         if (decl.type === "ImportDeclaration") {
@@ -45,6 +47,7 @@ export class Rollup extends File {
         }
       }
     } catch (e) {
+      console.log(e);
     }
     return modules;
   }
@@ -67,8 +70,8 @@ export class Rollup extends File {
     const messages = [];
 
     try {
-      const templateAST = recast.parse(template, acorn);
-      const ast = recast.parse(original, acorn);
+      const templateAST = recast.parse(template, parser);
+      const ast = recast.parse(original, parser);
 
       removeUseStrict(ast);
 
