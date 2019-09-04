@@ -328,6 +328,28 @@ test("package dependencies increase beta <> rc", async t => {
   });
 });
 
+test("package dependencies git", async t => {
+  const context = await createContext(
+    {
+      devDependencies: {
+        "a": "git+https://github.com/arlac77/light-server.git"
+      }
+    },
+    {
+      devDependencies: {
+        a: "^1.0.0-rc.1"
+      }
+    }
+  );
+
+  const pkg = new Package("package.json");
+  const merged = await pkg.merge(context);
+
+  t.deepEqual(JSON.parse(merged.content).devDependencies, {
+    a: "git+https://github.com/arlac77/light-server.git"
+  });
+});
+
 test("package keywords", async t => {
   const context = await createContext(
     {},

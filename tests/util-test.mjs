@@ -51,6 +51,10 @@ test("compare versions numbers only", t => {
   t.is(compareVersion("1.0.1", "1.0.2"), -1);
 });
 
+test("compare versions url", t => {
+  t.is(compareVersion("1", "git+https://github.com/arlac77/light-server.git"), -1);
+});
+
 test("compare versions alpha beta ...", t => {
   t.is(compareVersion("1.0.0-beta.5", "1.0.0-beta.6"), -1);
   t.is(compareVersion("1.0.0-beta.6", "1.0.0-beta.5"), 1);

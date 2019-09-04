@@ -44,6 +44,11 @@ export function compareVersion(a, b) {
   const toArray = value => {
     value = String(value);
 
+    /** url means highest version */
+    if(value.match(/^[\w\-\+]+:/)) {
+      return [99999];
+    }
+
     const slots = value.split(/\./).map(x => parseInt(x, 10));
     const m = value.match(/\-(\w+)\.?(.*)/);
 
