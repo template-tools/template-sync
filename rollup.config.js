@@ -8,7 +8,7 @@ import pkg from "./package.json";
 
 const external = [
   ...builtins,
-
+  "universal-user-agent",
   "node-fetch"
 ];
 
