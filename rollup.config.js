@@ -9,6 +9,7 @@ import pkg from "./package.json";
 const external = [
   ...builtins,
   "universal-user-agent",
+  "@octokit/rest",
   "node-fetch"
 ];
 
