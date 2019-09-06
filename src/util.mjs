@@ -49,6 +49,8 @@ export function compareVersion(a, b) {
       return [99999];
     }
 
+    value = value.replace(/^[\^\~]/,'');
+
     const slots = value.split(/\./).map(x => parseInt(x, 10));
     const m = value.match(/\-(\w+)\.?(.*)/);
 
