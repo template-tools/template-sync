@@ -1,8 +1,7 @@
 import yaml from "js-yaml";
-import { isEqual, isScalar } from "hinted-tree-merger";
-
+import { isEqual, isScalar, compareVersion } from "hinted-tree-merger";
 import { File } from "./file.mjs";
-import { compareVersion, asArray } from "./util.mjs";
+import { asArray } from "./util.mjs";
 
 /**
  * should value be removed

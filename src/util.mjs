@@ -34,57 +34,6 @@ export function setProperty(properties, attributePath, value) {
   }
 }
 
-/**
- * compare two versions
- * @param {string|number} a
- * @param {string|number} b
- * @return {number} -1 if a < b, 0 if a == b and 1 if a > b
- */
-export function compareVersion(a, b) {
-  const toArray = value => {
-    value = String(value);
-
-    /** url means highest version */
-    if(value.match(/^[\w\-\+]+:/)) {
-      return [99999];
-    }
-
-    value = value.replace(/^[\^\~]/,'');
-
-    const slots = value.split(/\./).map(x => parseInt(x, 10));
-    const m = value.match(/\-(\w+)\.?(.*)/);
-
-    if (m) {
-      let e = m ? slots.pop() : 0;
-      const last = slots.pop();
-      const suffixes = { alpha: 0.3, beta: 0.2, rc: 0.1 };
-      return [...slots, last - suffixes[m[1]], e];
-    }
-
-    return slots;
-  };
-
-  const aa = toArray(a);
-  const bb = toArray(b);
-
-  //console.log(`${aa} <> ${bb}`);
-
-  for (const i in aa) {
-    if (i >= bb.length) {
-      break;
-    }
-
-    if (aa[i] < bb[i]) {
-      return -1;
-    }
-    if (aa[i] > bb[i]) {
-      return 1;
-    }
-  }
-
-  return 0;
-}
-
 export function sortObjectsKeys(source) {
   const normalized = {};
 

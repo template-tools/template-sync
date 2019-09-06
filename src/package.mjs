@@ -1,6 +1,9 @@
+import { compareVersion } from "hinted-tree-merger";
+import diff from "simple-diff";
+
+
 import { File } from "./file.mjs";
 import {
-  compareVersion,
   sortObjectsKeys,
   jspath,
   defaultEncodingOptions
@@ -10,7 +13,6 @@ import {
   encodeScripts,
   mergeScripts
 } from "./package-scripts.mjs";
-import diff from "simple-diff";
 
 function moduleNames(object) {
   if (object === undefined) return new Set();
