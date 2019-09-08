@@ -3,21 +3,6 @@ import parser from "recast/parsers/babel.js";
 
 import { File } from "./file.mjs";
 
-/*
-import { Parser } from "acorn/dist/acorn.es.js";
-const parser = {
-  parser: {
-    parse(source) {
-      return new Parser(source).parse();
-    }
-  }
-};
-*/
-
-
-//const parser = undefined;
-
-
 export class Rollup extends File {
   static matchesFileName(name) {
     return name.match(/rollup\.config\.js/);
