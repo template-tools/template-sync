@@ -51,7 +51,7 @@
     "ava": "^2.3.0",
     "builtin-modules": "^3.1.0",
     "c8": "^5.0.4",
-    "documentation": "^12.1.1",
+    "documentation": "^12.1.2",
     "esm": "^3.2.25",
     "execa": "^2.0.4",
     "markdown-doctest": "^0.9.1",
