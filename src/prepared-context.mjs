@@ -116,7 +116,7 @@ export const PreparedContext = LogLevelMixin(
       const context = this.context;
       const targetBranch = await context.provider.branch(this.targetBranchName);
 
-      if(targetBranch === undefined) {
+      if (targetBranch === undefined) {
         throw new Error(`Unable to find branch ${this.targetBranchName}`);
       }
 
@@ -168,9 +168,7 @@ export const PreparedContext = LogLevelMixin(
 
         if (templateBranch === undefined) {
           throw new Error(
-            `Unable to extract template repo url from ${targetBranch.name} ${
-              pkg.name
-            }`
+            `Unable to extract template repo url from ${targetBranch.name} ${pkg.name}`
           );
         }
       } else {
@@ -346,9 +344,31 @@ export const PreparedContext = LogLevelMixin(
 
       const { templatePackageJson } = await this.trackUsedModule(targetBranch);
 
+      /* collect files form template cascade */
+      let templateFiles = [];
+
+      if (templatePackageJson.template) {
+        if (templatePackageJson.template.files) {
+          templateFiles.push(...templatePackageJson.template.files);
+        }
+
+        if (templatePackageJson.template.inheritFrom) {
+          const inheritFromBranch = await this.provider.branch(
+            templatePackageJson.template.inheritFrom
+          );
+
+          const pc = await inheritFromBranch.entry("package.json");
+          const pkg = JSON.parse(await pc.getString());
+
+          if (pkg.template && pkg.template.files) {
+            templateFiles.push(...pkg.template.files);
+          }
+        }
+      }
+
       const files = await PreparedContext.createFiles(
         templateBranch,
-        templatePackageJson.template && templatePackageJson.template.files
+        templateFiles
       );
 
       files.forEach(f => this.addFile(f));
