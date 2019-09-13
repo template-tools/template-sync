@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import { isEqual, isScalar, compareVersion } from "hinted-tree-merger";
+import { isEqual, isScalar, compareVersion, mergeVersions } from "hinted-tree-merger";
 import { File } from "./file.mjs";
 import { asArray } from "./util.mjs";
 
@@ -24,10 +24,6 @@ function toBeDeleted(value, fromTemplate) {
   }
 
   return { delete: false, keepOriginal: false };
-}
-
-function difference(a, b) {
-  return new Set([...a].filter(x => !b.has(x)));
 }
 
 function pathMessage(path, direction = "to") {
@@ -77,56 +73,29 @@ export function mergeArrays(a, b, path = [], messages = []) {
   return a;
 }
 
-export function mergeVersions(a, b, path = [], messages = []) {
-  const aVersions = new Set(a ? [...a.map(s => String(s))] : []);
-  const bVersions = new Set(b ? [...b.map(s => String(s))] : []);
-
-  const versions = new Set([...aVersions, ...bVersions]);
-  const newVersions = new Set(versions);
-
-  versions.forEach(v => {
-    if (v.startsWith("-")) {
-      const d = v.replace(/^\-\s*/, "");
-
-      versions.forEach(v => {
-        const x = v.replace(/^\-\s*/, "");
-        if (compareVersion(d, x) === 0 || x != v) {
-          if (bVersions.has(x)) {
-            return;
-          }
-
-          newVersions.delete(x);
-          newVersions.delete(v);
-        }
-      });
-    }
-  });
-
-  const r = difference(aVersions, bVersions);
-  if (r.size > 0) {
+export function myMergeVersions(a, b, path = [], messages = []) {
+  const actions = [];
+  const res = mergeVersions(a,b, actions);
+  
+  const added = actions.filter(a => a.add).map(a => a.add);
+  if(added.length > 0) {
     messages.push(
-      `chore(travis): remove node versions ${Array.from(new Set(r)).sort()}`
-    );
+      `chore(travis): add node versions ${added}`
+      );
   }
 
-  const as = difference(bVersions, aVersions);
-  if (as.size > 0) {
+  const removed = actions.filter(a => a.remove).map(a => a.remove);
+  if(removed.length > 0) {
     messages.push(
-      `chore(travis): add node versions ${Array.from(new Set(as)).sort()}`
-    );
+      `chore(travis): remove node versions ${removed}`
+      );
   }
 
-  if (newVersions.size > 0) {
-    return Array.from(new Set(newVersions))
-      .sort()
-      .map(s => (String(parseFloat(s)) == s ? parseFloat(s) : s));
-  }
-
-  return [];
+  return res.map(s => (String(parseFloat(s)) == s ? parseFloat(s) : s));
 }
 
 const slots = {
-  node_js: mergeVersions,
+  node_js: myMergeVersions,
   before_install: mergeScripts,
   install: mergeScripts,
   before_script: mergeScripts,
@@ -225,7 +194,6 @@ export function merge(a, b, path = [], messages = []) {
   }
 
   return Object.keys(r).length === 0 ? undefined : r;
-  //  return r;
 }
 
 export class Travis extends File {

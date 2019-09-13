@@ -11,11 +11,11 @@ async function mockYmlVersions(templateVersions, targetVersions) {
       master: {
         aFile: `node_js:
 ${templateVersions
-          .map(
-            v => `  - ${v}
+  .map(
+    v => `  - ${v}
 `
-          )
-          .join("")}
+  )
+  .join("")}
 `
       }
     },
@@ -23,11 +23,11 @@ ${templateVersions
       master: {
         aFile: `node_js:
 ${targetVersions
-          .map(
-            v => `  - ${v}
+  .map(
+    v => `  - ${v}
 `
-          )
-          .join("")}
+  )
+  .join("")}
 `
       }
     }
@@ -39,6 +39,7 @@ ${targetVersions
     }),
     "targetRepo"
   );
+
   const merger = new Travis("aFile");
   return merger.merge(context);
 }
@@ -61,9 +62,16 @@ test("travis node versions none numeric", async t => {
   t.deepEqual(
     merged.content,
     `node_js:
+  - 7.7.1
   - 7.7.2
 `
   );
+
+
+  t.deepEqual(merged.messages, [
+    "chore(travis): add node versions 7.7.2",
+    "chore(travis): remove node versions iojs"
+  ]);
 });
 
 test("travis node versions simple", async t => {
