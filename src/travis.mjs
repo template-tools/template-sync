@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import { isEqual, isScalar, compareVersion, mergeVersions } from "hinted-tree-merger";
+import { isEqual, isScalar, mergeVersions } from "hinted-tree-merger";
 import { File } from "./file.mjs";
 import { asArray } from "./util.mjs";
 
