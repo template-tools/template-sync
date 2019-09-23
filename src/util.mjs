@@ -81,3 +81,20 @@ export function jspath(object, path, cb) {
 
   return object[last];
 }
+
+
+export function mergeTemplateFiles(a,bs) {
+  for(const b of bs) {
+    const f = a.find(e => e.merger === b.merger);
+    if(f) {
+      if(b.options && b.options.badges) {
+        f.options.badges.push(...b.options.badges);
+      }
+    }
+    else {
+      a.push(b);
+    }
+  }
+  return a;
+}
+

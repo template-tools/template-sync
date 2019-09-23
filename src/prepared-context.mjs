@@ -15,7 +15,7 @@ import { Replace } from "./replace.mjs";
 import { JSONFile } from "./json-file.mjs";
 import { JSDoc } from "./jsdoc.mjs";
 import { Context } from "./context.mjs";
-import { jspath } from "./util.mjs";
+import { jspath, mergeTemplateFiles } from "./util.mjs";
 
 /**
  * context prepared to execute one package
@@ -361,7 +361,7 @@ export const PreparedContext = LogLevelMixin(
           const pkg = JSON.parse(await pc.getString());
 
           if (pkg.template && pkg.template.files) {
-            templateFiles.push(...pkg.template.files);
+            mergeTemplateFiles(templateFiles,pkg.template.files);
           }
         }
       }
