@@ -10,12 +10,11 @@ import { asArray } from "./util.mjs";
  * @return {number} treu if fromTemplate tells is to delete value
  */
 function toBeDeleted(value, fromTemplate) {
-  if(fromTemplate === undefined) {
+  if (fromTemplate === undefined) {
     return { delete: false, keepOriginal: true };
   }
 
-  if ( typeof fromTemplate === 'string') {
-
+  if (typeof fromTemplate === "string") {
     const m = fromTemplate.match(/--delete--\s*(.*)/);
     if (m) {
       const flag = m[1] === value;
@@ -73,22 +72,26 @@ export function mergeArrays(a, b, path = [], messages = []) {
   return a;
 }
 
-export function myMergeVersions(a, b, path = [], messages = []) {
-  const actions = [];
-  const res = mergeVersions(a,b, actions);
+export function myMergeVersions(a, b, path, messages = []) {
+  const added = [],
+    removed = [];
+
+  const res = mergeVersions(a, b, path, action => {
+    if (action.add) {
+      added.push(action.add);
+    }
+    if (action.remove) {
+      removed.push(action.remove);
+    }
+  });
+
   
-  const added = actions.filter(a => a.add).map(a => a.add);
-  if(added.length > 0) {
-    messages.push(
-      `chore(travis): add node versions ${added}`
-      );
+  if (added.length > 0) {
+    messages.push(`chore(travis): add node versions ${added}`);
   }
 
-  const removed = actions.filter(a => a.remove).map(a => a.remove);
-  if(removed.length > 0) {
-    messages.push(
-      `chore(travis): remove node versions ${removed}`
-      );
+  if (removed.length > 0) {
+    messages.push(`chore(travis): remove node versions ${removed}`);
   }
 
   return res.map(s => (String(parseFloat(s)) == s ? parseFloat(s) : s));
