@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import { isEqual, isScalar, mergeVersions } from "hinted-tree-merger";
+import { isEqual, isScalar, mergeVersionsPreferNumeric } from "hinted-tree-merger";
 import { File } from "./file.mjs";
 import { asArray } from "./util.mjs";
 
@@ -76,7 +76,7 @@ export function myMergeVersions(a, b, path, messages = []) {
   const added = [],
     removed = [];
 
-  const res = mergeVersions(a, b, undefined, action => {
+  const res = mergeVersionsPreferNumeric(a, b, undefined, action => {
     if (action.add) {
       added.push(action.add);
     }
@@ -94,7 +94,7 @@ export function myMergeVersions(a, b, path, messages = []) {
     messages.push(`chore(travis): remove node versions ${removed}`);
   }
 
-  return res.map(s => (String(parseFloat(s)) == s ? parseFloat(s) : s));
+  return res;
 }
 
 const slots = {
