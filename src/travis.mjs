@@ -76,7 +76,7 @@ export function myMergeVersions(a, b, path, messages = []) {
   const added = [],
     removed = [];
 
-  const res = mergeVersions(a, b, path, action => {
+  const res = mergeVersions(a, b, undefined, action => {
     if (action.add) {
       added.push(action.add);
     }
