@@ -80,8 +80,8 @@ test("mergeTemplateFiles 2", t => {
             badges: [
               {
                 name: "npm1",
-                icon: "https://img.shields.io/npm/v/{{name}}.svg",
-                url: "https://www.npmjs.com/package/{{name}}"
+                icon: "https://img.shields.io/npm/v/{{name}}1.svg",
+                url: "https://www.npmjs.com/package/{{name}}1"
               }
             ]
           }
@@ -100,8 +100,8 @@ test("mergeTemplateFiles 2", t => {
             },
             {
               name: "npm1",
-              icon: "https://img.shields.io/npm/v/{{name}}.svg",
-              url: "https://www.npmjs.com/package/{{name}}"
+              icon: "https://img.shields.io/npm/v/{{name}}1.svg",
+              url: "https://www.npmjs.com/package/{{name}}1"
             }
           ]
         }

@@ -1,3 +1,5 @@
+import { mergeArrays } from "hinted-tree-merger";
+
 export const defaultEncodingOptions = { encoding: "utf8" };
 
 export function asArray(o) {
@@ -82,19 +84,12 @@ export function jspath(object, path, cb) {
   return object[last];
 }
 
-
-export function mergeTemplateFiles(a,bs) {
-  for(const b of bs) {
-    const f = a.find(e => e.merger === b.merger);
-    if(f) {
-      if(b.options && b.options.badges) {
-        f.options.badges.push(...b.options.badges);
-      }
+export function mergeTemplateFiles(a, bs) {
+  return mergeArrays(a, bs, "", undefined, {
+    "": { key: "merger" },
+    "[].options.badges": {
+      key: "name",
+      sort: (a, b) => a.name.localeCompare(b.name)
     }
-    else {
-      a.push(b);
-    }
-  }
-  return a;
+  });
 }
-
