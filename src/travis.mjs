@@ -16,7 +16,7 @@ export class Travis extends File {
       merge(
         yaml.safeLoad(original, ymlOptions) || {},
         yaml.safeLoad(context.expand(template), ymlOptions),
-        '',
+        "",
         action => {
           if (actions[action.path] === undefined) {
             actions[action.path] = [action];
@@ -26,22 +26,13 @@ export class Travis extends File {
           delete action.path;
         },
         {
-          "": { removeEmpty: true },
-          cache: { removeEmpty: true },
-          script: { removeEmpty: true },
-          node_js: { removeEmpty: true },
-          jobs: { removeEmpty: true },
-          before_script: { removeEmpty: true },
-          after_script: { removeEmpty: true },
-          after_success: { removeEmpty: true },
-          notifications: { removeEmpty: true },
-          node_js: mergeVersionsPreferNumeric,
+          "*": { removeEmpty: true },
+          node_js: { merge: mergeVersionsPreferNumeric },
           "jobs.include": {
-            removeEmpty: true,
             key: "stage"
           }
         }
-          ),
+      ),
       {
         lineWidth: 128
       }
@@ -59,7 +50,7 @@ export class Travis extends File {
         "chore(travis):" +
           (add.length ? ` add ${add}` : "") +
           (remove.length ? ` remove ${remove}` : "") +
-          ` (${slot.replace(/\[\d+\]/,'')})`
+          ` (${slot.replace(/\[\d+\]/, "")})`
       );
     }
 
