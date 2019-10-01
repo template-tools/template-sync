@@ -1,11 +1,4 @@
 language: node_js
-node_js:
-  - 12.11.0
-cache: npm
-script:
-  - npm run cover
-  - npx codecov
-  - cat ./build/coverage/lcov.info | npx coveralls
 jobs:
   include:
     - stage: doc
@@ -22,6 +15,13 @@ jobs:
         skip_cleanup: 'true'
         script:
           - npx semantic-release
+    - stage: test
+      node_js:
+        - 12.11.1
+      script:
+        - npm run cover
+        - npx codecov
+        - cat ./build/coverage/lcov.info | npx coveralls
 branches:
   only:
     - master
