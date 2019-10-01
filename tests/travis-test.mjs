@@ -1,9 +1,36 @@
 import test from "ava";
+import yaml from "js-yaml";
+
 import { MockProvider } from "mock-repository-provider";
 
 import { Context } from "../src/context.mjs";
 import { PreparedContext } from "../src/prepared-context.mjs";
 import { Travis } from "../src/travis.mjs";
+
+async function travisMerge(template, original) {
+  const provider = new MockProvider({
+    templateRepo: {
+      master: {
+        aFile: yaml.safeDump(template)
+      }
+    },
+    targetRepo: {
+      master: {
+        aFile: yaml.safeDump(original)
+      }
+    }
+  });
+
+  const context = await PreparedContext.from(
+    new Context(provider, {
+      templateBranchName: "templateRepo"
+    }),
+    "targetRepo"
+  );
+
+  const merger = new Travis("aFile");
+  return await merger.merge(context);
+}
 
 async function mockYmlVersions(templateVersions, targetVersions) {
   const provider = new MockProvider({
@@ -67,10 +94,8 @@ test("travis node versions none numeric", async t => {
 `
   );
 
-
   t.deepEqual(merged.messages, [
-    "chore(travis): add node versions 7.7.2",
-    "chore(travis): remove node versions iojs"
+    "chore(travis): add 7.7.2 remove iojs (node_js)"
   ]);
 });
 
@@ -212,4 +237,48 @@ before_script:
   - npm prune
 `
   );
+});
+
+test("travis scripts", async t => {
+  const merged = await travisMerge(
+    {
+      language: "node_js",
+      jobs: {
+        include: {
+          script: [
+            "cat ./coverage/lcov.info | coveralls",
+            "npm install -g --production codecov",
+            "npm test",
+            "-npm install -g --production coveralls codecov"
+          ]
+        }
+      }
+    },
+    {
+      language: "node_js",
+      jobs: {
+        include: {
+          script: ["npm install -g --production coveralls codecov", "npm test"]
+        }
+      }
+    }
+  );
+
+  t.deepEqual(
+    merged.content,
+    `language: node_js
+jobs:
+  include:
+    script:
+      - npm install -g --production codecov
+      - npm test
+      - cat ./coverage/lcov.info | coveralls
+`
+  );
+
+  t.deepEqual(merged.messages, [
+    "chore(travis): add cat ./coverage/lcov.info | coveralls (jobs.include.script)",
+    "chore(travis): add npm install -g --production codecov (jobs.include.script)",
+    "chore(travis): remove npm install -g --production coveralls codecov (jobs.include.script)"
+  ]);
 });
