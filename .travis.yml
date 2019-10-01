@@ -22,6 +22,15 @@ jobs:
         skip_cleanup: 'true'
         script:
           - npx semantic-release
+    - stage: test
+      node_js:
+        - '-10'
+        - '-12'
+        - 12.11.0
+      script:
+        - npm run cover
+        - npx codecov
+        - cat ./build/coverage/lcov.info | npx coveralls
 branches:
   only:
     - master
