@@ -361,7 +361,7 @@ export const PreparedContext = LogLevelMixin(
           const pkg = JSON.parse(await pc.getString());
 
           if (pkg.template && pkg.template.files) {
-            mergeTemplateFiles(templateFiles,pkg.template.files);
+            templateFiles = mergeTemplateFiles(templateFiles,pkg.template.files);
           }
         }
       }
