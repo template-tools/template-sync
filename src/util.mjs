@@ -87,7 +87,7 @@ export function jspath(object, path, cb) {
 export function mergeTemplateFiles(a, bs) {
   return mergeArrays(a, bs, "", undefined, {
     "": { key: "merger" },
-    "[].options.badges": {
+    "*.options.badges": {
       key: "name",
       sort: (a, b) => a.name.localeCompare(b.name)
     }
