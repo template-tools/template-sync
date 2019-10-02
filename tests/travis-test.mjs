@@ -231,8 +231,7 @@ before_script:
 
   t.deepEqual(
     merged.content,
-    `node_js:
-  - 7.7.2
+    `node_js: 7.7.2
 before_script:
   - npm prune
 `
