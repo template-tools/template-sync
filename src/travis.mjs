@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import { mergeVersionsPreferNumeric, merge } from "hinted-tree-merger";
+import { mergeVersionsPreferNumeric, merge, isScalar } from "hinted-tree-merger";
 import { File } from "./file.mjs";
 
 export class Travis extends File {
@@ -27,6 +27,7 @@ export class Travis extends File {
         },
         {
           "*": { removeEmpty: true },
+          "*node_js": { merge: mergeVersionsPreferNumeric },
           node_js: { merge: mergeVersionsPreferNumeric },
           "jobs.include": {
             key: "stage"
@@ -38,21 +39,18 @@ export class Travis extends File {
       }
     );
 
-    const messages = [];
-
-    for (const slot of Object.keys(actions)) {
+    const messages = Object.keys(actions).map(slot => {
       const a = actions[slot];
 
-      const add = a.filter(x => x.add).map(x => x.add);
-      const remove = a.filter(x => x.remove).map(x => x.remove);
+      const toValue = s => s !== undefined && isScalar(s) ? s : undefined;
+      const add = a.map(x => toValue(x.add)).filter(x => x !== undefined);
+      const remove = a.map(x => toValue(x.remove)).filter(x => x !== undefined);
 
-      messages.push(
-        "chore(travis):" +
+      return "chore(travis):" +
           (add.length ? ` add ${add}` : "") +
           (remove.length ? ` remove ${remove}` : "") +
-          ` (${slot.replace(/\[\d+\]/, "")})`
-      );
-    }
+          ` (${slot.replace(/\[\d*\]/, "")})`;
+    });
 
     if (messages.length === 0) {
       messages.push(`chore(travis): merge from template ${this.name}`);
