@@ -37,10 +37,10 @@
     "commander": "^3.0.2",
     "content-entry": "^2.2.2",
     "expression-expander": "^7.0.3",
-    "github-repository-provider": "^7.4.19",
+    "github-repository-provider": "^7.4.21",
     "hinted-tree-merger": "^3.0.0",
     "js-yaml": "^3.13.1",
-    "local-repository-provider": "^6.4.40",
+    "local-repository-provider": "^6.4.41",
     "loglevel-mixin": "^3.0.0",
     "micromatch": "^4.0.2",
     "recast": "^0.18.3",
@@ -54,7 +54,7 @@
     "c8": "^5.0.4",
     "documentation": "^12.1.2",
     "esm": "^3.2.25",
-    "execa": "^2.1.0",
+    "execa": "^3.0.0",
     "markdown-doctest": "^1.0.0",
     "mock-repository-provider": "^5.1.27",
     "rollup": "^1.23.1",
@@ -66,7 +66,7 @@
     "semantic-release": "^15.13.26"
   },
   "engines": {
-    "node": ">=12.11.1"
+    "node": ">=12.12.0"
   },
   "repository": {
     "type": "git",
