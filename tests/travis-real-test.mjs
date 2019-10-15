@@ -111,8 +111,8 @@ test("travis real merge", async t => {
     }
   );
 
-  t.log(merged.content);
-  t.log(merged.messages);
+ // t.log(merged.content);
+ // t.log(merged.messages);
   t.deepEqual(yaml.safeLoad(merged.content), {
     language: "node_js",
     node_js: ["10.15.3", "11.12.0"],
