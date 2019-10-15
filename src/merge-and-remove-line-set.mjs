@@ -6,12 +6,11 @@ import { MergeLineSet } from "./merge-line-set.mjs";
 export class MergeAndRemoveLineSet extends MergeLineSet {
   async mergeContent(context, original, template) {
     const toBeRemoved = new Set([
-      "",
       ...template
         .split(/\r?\n/)
         .filter(l => l.startsWith("- "))
         .map(l => l.replace(/^-\s+/, "")),
-      ...Array.from(this.defaultIgnoreSet)
+      ...[...this.defaultIgnoreSet]
     ]);
 
     const result = new Set(
