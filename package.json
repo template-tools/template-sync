@@ -57,7 +57,7 @@
     "execa": "^3.2.0",
     "markdown-doctest": "^1.0.0",
     "mock-repository-provider": "^5.1.27",
-    "rollup": "^1.25.0",
+    "rollup": "^1.25.1",
     "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-executable": "^1.5.1",
