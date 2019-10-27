@@ -41,7 +41,7 @@
     "hinted-tree-merger": "^3.0.1",
     "js-yaml": "^3.13.1",
     "local-repository-provider": "^6.4.45",
-    "loglevel-mixin": "^3.0.0",
+    "loglevel-mixin": "^4.0.0",
     "micromatch": "^4.0.2",
     "recast": "^0.18.5",
     "remove-sensible-values": "1.0.3",
