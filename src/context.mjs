@@ -67,7 +67,7 @@ export class Context {
   log(arg) {
     const prefixKeys = {
       branch: 1,
-      level: "info"
+      severity: "info"
     };
     const valueKeys = {
       message: "v",
