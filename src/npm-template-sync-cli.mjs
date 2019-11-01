@@ -48,9 +48,7 @@ program
     "template repository",
     /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
   )
-  .action(async (...repos) => {
-    repos.pop();
-
+  .action(async (commander,repos) => {
     const logLevel = program.debug ? "debug" : "info";
 
     try {
