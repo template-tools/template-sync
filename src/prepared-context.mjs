@@ -15,7 +15,7 @@ import { Replace } from "./replace.mjs";
 import { JSONFile } from "./json-file.mjs";
 import { JSDoc } from "./jsdoc.mjs";
 import { Context } from "./context.mjs";
-import { jspath, mergeTemplateFiles } from "./util.mjs";
+import { jspath, templateFilesFrom, mergeTemplateFiles } from "./util.mjs";
 
 /**
  * context prepared to execute one package
@@ -164,7 +164,7 @@ export const PreparedContext = LogLevelMixin(
           templateBranch = await context.provider.branch(
             this.properties.templateRepo
           );
-        } catch (e) {}
+        } catch (e) { }
 
         if (templateBranch === undefined) {
           throw new Error(
@@ -349,20 +349,10 @@ export const PreparedContext = LogLevelMixin(
 
       if (templatePackageJson.template) {
         if (templatePackageJson.template.files) {
-          templateFiles.push(...templatePackageJson.template.files);
+          templateFiles = mergeTemplateFiles(templatePackageJson.template.files, await templateFilesFrom(this.provider, templatePackageJson.template.inheritFrom));
         }
-
-        if (templatePackageJson.template.inheritFrom) {
-          const inheritFromBranch = await this.provider.branch(
-            templatePackageJson.template.inheritFrom
-          );
-
-          const pc = await inheritFromBranch.entry("package.json");
-          const pkg = JSON.parse(await pc.getString());
-
-          if (pkg.template && pkg.template.files) {
-            templateFiles = mergeTemplateFiles(templateFiles,pkg.template.files);
-          }
+        else {
+          templateFiles = await templateFilesFrom(this.provider, templatePackageJson.template.inheritFrom);
         }
       }
 
@@ -373,7 +363,7 @@ export const PreparedContext = LogLevelMixin(
 
       files.forEach(f => this.addFile(f));
 
-      this.trace(level => files.map(f => { return  { name: f.name, merger: f.constructor.name }; } ));
+      this.trace(level => files.map(f => { return { name: f.name, merger: f.constructor.name }; }));
 
       const merges = (await Promise.all(
         files.map(async f => f.merge(this))

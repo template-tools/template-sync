@@ -84,12 +84,27 @@ export function jspath(object, path, cb) {
   return object[last];
 }
 
-export function mergeTemplateFiles(a, bs) {
-  return mergeArrays(a, bs, "", undefined, {
+export function mergeTemplateFiles(a, b) {
+  return mergeArrays(a, b, "", undefined, {
     "": { key: "merger" },
     "*.options.badges": {
       key: "name",
       compare: (a, b) => a.name.localeCompare(b.name)
     }
   });
+}
+
+export async function templateFilesFrom(provider,repo)
+{
+  if (repo) {
+    const branch = await provider.branch(repo);
+    const pc = await branch.entry("package.json");
+    const pkg = JSON.parse(await pc.getString());
+
+    if (pkg.template && pkg.template.files) {
+      return pkg.template.files;
+    }
+  }
+  
+  return [];
 }
