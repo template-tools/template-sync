@@ -27,6 +27,7 @@ program
   .version(version)
   .command("[repos...]", "repos to merge")
   .option("--dry", "do not create branch/pull request")
+  .option("--trace", "log level trace")
   .option("--debug", "log level debug")
   .option("--track", "track packages in templates package.json")
   .option(
@@ -48,8 +49,8 @@ program
     "template repository",
     /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
   )
-  .action(async (commander,repos) => {
-    const logLevel = program.debug ? "debug" : "info";
+  .action(async (commander, repos) => {
+    const logLevel = program.trace ? "trace" : program.debug ? "debug" : "info";
 
     try {
       const logOptions = {
