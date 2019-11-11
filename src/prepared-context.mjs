@@ -373,7 +373,7 @@ export const PreparedContext = LogLevelMixin(
 
       files.forEach(f => this.addFile(f));
 
-      this.trace({ message: "got files", files: files.map(f => f.name) });
+      this.trace(level => files.map(f => { return  { name: f.name, merger: f.constructor.name }; } ));
 
       const merges = (await Promise.all(
         files.map(async f => f.merge(this))
