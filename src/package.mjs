@@ -258,11 +258,9 @@ export class Package extends File {
       engines: { type: "chore", scope: "engines", merge: defaultMerge }
     };
 
-    Object.keys(deepProperties).forEach(
-      name => (deepProperties[name].name = name)
-    );
-
     Object.keys(deepProperties).forEach(category => {
+      deepProperties[category].name = category;
+
       if (template[category] !== undefined) {
         Object.keys(template[category]).forEach(d => {
           if (target[category] === undefined) {
