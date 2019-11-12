@@ -34,7 +34,7 @@
   "dependencies": {
     "aggregation-repository-provider": "^2.6.32",
     "babylon": "^6.18.0",
-    "commander": "^4.0.0",
+    "commander": "^4.0.1",
     "content-entry": "^2.2.2",
     "expression-expander": "^7.0.3",
     "github-repository-provider": "^7.4.29",
