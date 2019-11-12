@@ -56,7 +56,7 @@
     "esm": "^3.2.25",
     "execa": "^3.2.0",
     "markdown-doctest": "^1.0.0",
-    "mock-repository-provider": "^5.1.28",
+    "mock-repository-provider": "^5.1.31",
     "rollup": "^1.26.5",
     "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-commonjs": "^10.1.0",
