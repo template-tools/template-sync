@@ -76,7 +76,6 @@
     "url": "https://github.com/arlac77/npm-template-sync/issues"
   },
   "homepage": "https://github.com/arlac77/npm-template-sync#readme",
-  "release": {},
   "ava": {
     "require": [
       "esm"
