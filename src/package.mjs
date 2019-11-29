@@ -49,6 +49,7 @@ const sortedKeys = [
   "module",
   "svelte",
   "unpkg",
+  "sideEffects",
   "description",
   "keywords",
   "author",
