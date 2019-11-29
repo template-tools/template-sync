@@ -1,13 +1,8 @@
 import { compareVersion } from "hinted-tree-merger";
 import diff from "simple-diff";
 
-
 import { File } from "./file.mjs";
-import {
-  sortObjectsKeys,
-  jspath,
-  defaultEncodingOptions
-} from "./util.mjs";
+import { sortObjectsKeys, jspath, defaultEncodingOptions } from "./util.mjs";
 import {
   decodeScripts,
   encodeScripts,
@@ -162,9 +157,7 @@ export class Package extends File {
       }
     });
 
-    if(pkg.config !== undefined) {
-      Object.assign(properties,pkg.config);
-    }
+    Object.assign(properties, pkg.config);
 
     return properties;
   }
@@ -213,7 +206,7 @@ export class Package extends File {
       homepage: "chore(package): homepage from template",
       template: "chore(package): set template repo"
     };
-    Object.keys(slots).forEach(key => {
+    Object.entries(slots).forEach(([key, slot]) => {
       const templateValue = template[key];
       const d = diff(target[key], templateValue);
 
@@ -226,7 +219,7 @@ export class Package extends File {
           d[0].newValue === undefined
         )
       ) {
-        messages.push(slots[key]);
+        messages.push(slot);
         target[key] = templateValue;
       }
     });
@@ -259,8 +252,8 @@ export class Package extends File {
       engines: { type: "chore", scope: "engines", merge: defaultMerge }
     };
 
-    Object.keys(deepProperties).forEach(category => {
-      deepProperties[category].name = category;
+    Object.entries(deepProperties).forEach(([category, deepProperty]) => {
+      deepProperty.name = category;
 
       if (template[category] !== undefined) {
         Object.keys(template[category]).forEach(d => {
@@ -276,11 +269,11 @@ export class Package extends File {
           ) {
             // do not include dev dependency if regular dependency is already present
           } else {
-            deepProperties[category].merge(
+            deepProperty.merge(
               target[category],
               target[category][d],
               tp,
-              deepProperties[category],
+              deepProperty,
               d,
               messages
             );
@@ -289,9 +282,9 @@ export class Package extends File {
       }
     });
 
-    Object.keys(template).forEach(p => {
+    Object.entries(template).forEach(([p, templateObject]) => {
       if (target[p] === undefined && target[p] !== "--delete--") {
-        target[p] = template[p];
+        target[p] = templateObject;
         messages.push(`chore(package): add ${p} from template`);
       }
     });
@@ -336,8 +329,8 @@ export class Package extends File {
 
     target = deleter(target, template, messages, []);
 
-    Object.keys(this.options.keywords).forEach(r =>
-      addKeyword(target, new RegExp(r), this.options.keywords[r], messages)
+    Object.entries(this.options.keywords).forEach(([r, rk]) =>
+      addKeyword(target, new RegExp(r), rk, messages)
     );
 
     removeKeyword(
@@ -355,9 +348,7 @@ export class Package extends File {
             setter(templateValue);
 
             messages.push(
-              `chore(package): set ${
-                action.path
-              }='${templateValue}' as in template`
+              `chore(package): set ${action.path}='${templateValue}' as in template`
             );
           }
         });
@@ -429,16 +420,16 @@ function deleter(object, reference, messages, path) {
   }
 
   if (reference) {
-    Object.keys(reference).forEach(key => {
+    Object.entries(reference).forEach(([key, rk]) => {
       path.push(key);
 
-      if (reference[key] === "--delete--" && object[key] !== undefined) {
+      if (rk === "--delete--" && object[key] !== undefined) {
         if (object[key] !== "--delete--") {
           messages.push(`chore(package): delete ${path.join(".")}`);
         }
         delete object[key];
       } else {
-        object[key] = deleter(object[key], reference[key], messages, path);
+        object[key] = deleter(object[key], rk, messages, path);
       }
       path.pop();
     });
