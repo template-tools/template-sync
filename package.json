@@ -32,7 +32,7 @@
     "test": "ava"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^2.6.32",
+    "aggregation-repository-provider": "^2.6.33",
     "babylon": "^6.18.0",
     "commander": "^4.0.1",
     "content-entry": "^2.2.2",
