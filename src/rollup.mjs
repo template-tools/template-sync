@@ -5,7 +5,7 @@ import { File } from "./file.mjs";
 
 export class Rollup extends File {
   static matchesFileName(name) {
-    return name.match(/rollup\.config\.js/);
+    return name.match(/rollup\.config\.m?js/);
   }
 
   get needsTemplate() {
@@ -15,7 +15,7 @@ export class Rollup extends File {
   optionalDevModules(modules) {
     return new Set(
       Array.from(modules).filter(
-        m => m.match(/rollup-plugin/) || m.match(/babel-preset/)
+        m => m.match(/@rollup\/plugin/) || m.match(/rollup-plugin/) || m.match(/babel-preset/)
       )
     );
   }
@@ -195,7 +195,7 @@ export class Rollup extends File {
         messages
       };
     } catch (e) {
-      //  context.warn(`unable to parse ${this.name}`);
+        context.warn(`unable to parse ${this.name}`);
       // context.error(e);
     }
 
@@ -225,6 +225,7 @@ function importDeclarationsByLocalName(ast) {
 
   for (const decl of ast.program.body) {
     if (decl.type === "ImportDeclaration") {
+      //console.log("IMPORT", decl.specifiers[0].local.name);
       declarations.set(decl.specifiers[0].local.name, decl);
     }
   }
