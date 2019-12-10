@@ -1,8 +1,10 @@
 import resolve from "@rollup/plugin-node-resolve";
+import json from "@rollup/plugin-json";
+
 import commonjs from "rollup-plugin-commonjs";
 import executable from "rollup-plugin-executable";
-import json from "@rollup/plugin-json";
 import cleanup from "rollup-plugin-cleanup";
+import acornClassFields from "acorn-class-fields";
 import builtins from "builtin-modules";
 import pkg from "./package.json";
 
@@ -12,18 +14,17 @@ const external = [
   "@octokit/rest",
   "node-fetch"
 ];
-
 const extensions = ["js", "mjs", "jsx", "tag"];
 const plugins = [
   commonjs(),
   resolve(),
   json({
+    //  include: "package.json",
     preferConst: true,
     compact: true
   }),
   cleanup({
-    extensions,
-//    exclude: ["node_modules/@octokit/plugin-throttling/lib/route-matcher.js"]
+    extensions
   })
 ];
 
@@ -39,7 +40,11 @@ const config = Object.keys(pkg.bin || {}).map(name => {
   };
 });
 
-if (pkg.module !== undefined && pkg.main !== undefined && pkg.module != pkg.main) {
+if (
+  pkg.module !== undefined &&
+  pkg.main !== undefined &&
+  pkg.module != pkg.main
+) {
   config.push({
     input: pkg.module,
     output: {
@@ -55,5 +60,5 @@ export default config.map(c => {
     format: "cjs",
     ...c.output
   };
-  return { plugins, external, ...c };
+  return { acornInjectPlugins: [acornClassFields], plugins, external, ...c };
 });
