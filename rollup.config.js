@@ -1,3 +1,4 @@
+import acornClassFields from 'acorn-class-fields';
 import resolve from "@rollup/plugin-node-resolve";
 import json from "@rollup/plugin-json";
 
