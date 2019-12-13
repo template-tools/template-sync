@@ -64,13 +64,15 @@ export class File {
   async content(context) {
     let target, template;
 
+    const targetName = context.expand(this.name);
+
     try {
-      target = await context.targetBranch.entry(this.name);
+      target = await context.targetBranch.entry(targetName);
     } catch (e) {
       if (this.needsOriginal) {
         throw e;
       }
-      target = new EmptyContentEntry(this.name);
+      target = new EmptyContentEntry(targetName);
     }
 
     try {
