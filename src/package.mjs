@@ -254,7 +254,8 @@ export class Package extends File {
         merge: defaultMerge
       },
       scripts: { type: "chore", scope: "scripts", merge: defaultMerge },
-      engines: { type: "chore", scope: "engines", merge: defaultMerge }
+      engines: { type: "chore", scope: "engines", merge: defaultMerge },
+      bin: { type: "chore", scope: "bin", merge: defaultMerge }
     };
 
     Object.entries(deepProperties).forEach(([category, deepProperty]) => {
@@ -490,7 +491,7 @@ function normalizeVersion(e) {
 /**
  *
  */
-function defaultMerge(destination, target, template, dp, name, messages) {
+function defaultMerge( destination, target, template, dp, name, messages) {
   if (template === "--delete--") {
     if (target !== undefined) {
       messages.push(`${dp.type}(${dp.scope}): remove ${name}@${target}`);
@@ -510,7 +511,6 @@ function defaultMerge(destination, target, template, dp, name, messages) {
       }
     }
     if (dp.name === "devDependencies") {
-      //console.log(`${target} <> ${template} -> ${compareVersion(normalizeVersion(target), normalizeVersion(template))}`);
       if (
         compareVersion(normalizeVersion(target), normalizeVersion(template)) >=
         0

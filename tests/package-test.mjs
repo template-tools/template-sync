@@ -61,7 +61,7 @@ test("package extract properties", async t => {
       description: "a description",
       module: "a module",
       config: {
-        "api" : "/some/path"
+        api: "/some/path"
       }
     }
   );
@@ -192,6 +192,33 @@ test("package handle missing scripts in template", async t => {
 
   t.deepEqual(JSON.parse(merged.content).scripts, {
     prepare: "rollup"
+  });
+});
+
+test("package bin with expander", async t => {
+  const context = await createContext(
+    {
+      bin: {
+        a: "bin/a"
+      }
+    },
+    {
+      bin: {
+        "{{name}}": "bin/{{name}}",
+        "{{name}}-systemd": "bin/{{name}}-systemd"
+      }
+    }
+  );
+
+  context.properties.name = "myName";
+
+  const pkg = new Package("package.json");
+  const merged = await pkg.merge(context);
+
+  t.deepEqual(JSON.parse(merged.content).bin, {
+    a: "bin/a",
+    myName: "bin/myName",
+    "myName-systemd": "bin/myName-systemd"
   });
 });
 
@@ -332,7 +359,7 @@ test("package dependencies git", async t => {
   const context = await createContext(
     {
       devDependencies: {
-        "a": "git+https://github.com/arlac77/light-server.git"
+        a: "git+https://github.com/arlac77/light-server.git"
       }
     },
     {
