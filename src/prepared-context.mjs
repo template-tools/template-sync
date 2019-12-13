@@ -164,7 +164,7 @@ export const PreparedContext = LogLevelMixin(
           templateBranch = await context.provider.branch(
             this.properties.templateRepo
           );
-        } catch (e) { }
+        } catch (e) {}
 
         if (templateBranch === undefined) {
           throw new Error(
@@ -197,7 +197,10 @@ export const PreparedContext = LogLevelMixin(
 
       return mapping
         .map(m => {
-          const found = micromatch(files.map(f => f.name), m.pattern);
+          const found = micromatch(
+            files.map(f => f.name),
+            m.pattern
+          );
 
           const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
 
@@ -349,10 +352,18 @@ export const PreparedContext = LogLevelMixin(
 
       if (templatePackageJson.template) {
         if (templatePackageJson.template.files) {
-          templateFiles = mergeTemplateFiles(templatePackageJson.template.files, await templateFilesFrom(this.provider, templatePackageJson.template.inheritFrom));
-        }
-        else {
-          templateFiles = await templateFilesFrom(this.provider, templatePackageJson.template.inheritFrom);
+          templateFiles = mergeTemplateFiles(
+            templatePackageJson.template.files,
+            await templateFilesFrom(
+              this.provider,
+              templatePackageJson.template.inheritFrom
+            )
+          );
+        } else {
+          templateFiles = await templateFilesFrom(
+            this.provider,
+            templatePackageJson.template.inheritFrom
+          );
         }
       }
 
@@ -363,11 +374,15 @@ export const PreparedContext = LogLevelMixin(
 
       files.forEach(f => this.addFile(f));
 
-      this.trace(level => files.map(f => { return { name: f.name, merger: f.constructor.name }; }));
+      this.trace(level =>
+        files.map(f => {
+          return { name: f.name, merger: f.constructor.name };
+        })
+      );
 
-      const merges = (await Promise.all(
-        files.map(async f => f.merge(this))
-      )).filter(m => m !== undefined && m.changed);
+      const merges = (
+        await Promise.all(files.map(async f => f.merge(this)))
+      ).filter(m => m !== undefined && m.changed);
 
       if (merges.length === 0) {
         this.info("-");
