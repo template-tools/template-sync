@@ -100,18 +100,20 @@ export class File {
    */
   async merge(context) {
     try {
+      const targetName = context.expand(this.name);
+
       context.debug({ message: "merge", name: this.name });
       const [original, template] = await this.content(context);
       const result = await this.mergeContent(context, original, template);
       if (result === undefined) {
         return {
-          name: this.name,
+          name: targetName,
           changed: false
         };
       }
-      result.name = this.name;
+      result.name = targetName;
 
-      context.properties.entry = { name: this.name };
+      context.properties.entry = { name: targetName };
       result.messages = context.expand(result.messages);
 
       context.debug({ name: this.name, changes: result.changed });
