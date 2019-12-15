@@ -1,6 +1,6 @@
 import { version, engines } from "../package.json";
 import { readFileSync } from "fs";
-import { satisfies } from "semver";
+import satisfies from "semver/functions/satisfies.js";
 import program from "commander";
 import { removeSensibleValues } from "remove-sensible-values";
 import { GithubProvider } from "github-repository-provider";
