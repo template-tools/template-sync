@@ -56,7 +56,7 @@
     "c8": "^6.0.1",
     "documentation": "^12.1.4",
     "esm": "^3.2.25",
-    "execa": "^3.4.0",
+    "execa": "^4.0.0",
     "markdown-doctest": "^1.0.0",
     "mock-repository-provider": "^5.1.34",
     "rollup": "^1.27.13",
