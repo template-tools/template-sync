@@ -2,6 +2,7 @@ import recast from "recast";
 import parser from "recast/parsers/babel.js";
 
 import { File } from "./file.mjs";
+import { actions2messages } from './util.mjs';
 
 export class Rollup extends File {
   static matchesFileName(name) {

@@ -1,4 +1,4 @@
-import { mergeArrays } from "hinted-tree-merger";
+import { mergeArrays,isScalar } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
 
@@ -94,8 +94,7 @@ export function mergeTemplateFiles(a, b) {
   });
 }
 
-export async function templateFilesFrom(provider,repo)
-{
+export async function templateFilesFrom(provider, repo) {
   if (repo) {
     const branch = await provider.branch(repo);
     const pc = await branch.entry("package.json");
@@ -105,6 +104,29 @@ export async function templateFilesFrom(provider,repo)
       return pkg.template.files;
     }
   }
-  
+
   return [];
+}
+
+export function actions2messages(actions, prefix, name) {
+  const messages = Object.keys(actions).map(slot => {
+    const a = actions[slot];
+
+    const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
+    const add = a.map(x => toValue(x.add)).filter(x => x !== undefined);
+    const remove = a.map(x => toValue(x.remove)).filter(x => x !== undefined);
+
+    return (
+      prefix +
+      (add.length ? ` add ${add}` : "") +
+      (remove.length ? ` remove ${remove}` : "") +
+      ` (${slot.replace(/\[\d*\]/, "")})`
+    );
+  });
+
+  if (messages.length === 0) {
+    messages.push(`${prefix} merge from template ${name}`);
+  }
+
+  return messages;
 }

@@ -1,7 +1,8 @@
-import { File } from "./file.mjs";
-import stringify from '@iarna/toml/stringify.js';
-import parse from '@iarna/toml/parse-string.js';
+import stringify from "@iarna/toml/stringify.js";
+import parse from "@iarna/toml/parse-string.js";
 import { merge } from "hinted-tree-merger";
+import { File } from "./file.mjs";
+import { actions2messages } from './util.mjs';
 
 export class TOML extends File {
   static matchesFileName(name) {
@@ -17,46 +18,25 @@ export class TOML extends File {
       return undefined;
     }
 
-    const messagePrefix = 'chore(toml):';
     const actions = {};
 
     const content = stringify(
-      merge(
-        parse(original) || {},
-        context.expand(parse(templateRaw))),
-        "",
-        action => {
-          if (actions[action.path] === undefined) {
-            actions[action.path] = [action];
-          } else {
-            actions[action.path].push(action);
-          }
-          delete action.path;
+      merge(parse(original) || {}, parse(context.expand(templateRaw))),
+      "",
+      action => {
+        if (actions[action.path] === undefined) {
+          actions[action.path] = [action];
+        } else {
+          actions[action.path].push(action);
         }
-      );
-  
-
-    const messages = Object.keys(actions).map(slot => {
-      const a = actions[slot];
-
-      const toValue = s => s !== undefined && isScalar(s) ? s : undefined;
-      const add = a.map(x => toValue(x.add)).filter(x => x !== undefined);
-      const remove = a.map(x => toValue(x.remove)).filter(x => x !== undefined);
-
-      return messagePrefix +
-          (add.length ? ` add ${add}` : "") +
-          (remove.length ? ` remove ${remove}` : "") +
-          ` (${slot.replace(/\[\d*\]/, "")})`;
-    });
-
-    if (messages.length === 0) {
-      messages.push(`${messagePrefix} merge from template ${this.name}`);
-    }
+        delete action.path;
+      }
+    );
 
     return {
       content,
       changed: content !== original,
-      messages
+      messages: actions2messages(actions, "chore(toml):", this.name)
     };
   }
 }

@@ -1,6 +1,11 @@
 import yaml from "js-yaml";
-import { mergeVersionsPreferNumeric, merge, isScalar } from "hinted-tree-merger";
+import {
+  mergeVersionsPreferNumeric,
+  merge,
+  isScalar
+} from "hinted-tree-merger";
 import { File } from "./file.mjs";
+import { actions2messages } from "./util.mjs";
 
 export class Travis extends File {
   static matchesFileName(name) {
@@ -9,7 +14,6 @@ export class Travis extends File {
 
   async mergeContent(context, original, template) {
     const ymlOptions = { schema: yaml.FAILSAFE_SCHEMA };
-    const messagePrefix = 'chore(travis):';
     const actions = {};
 
     const content = yaml.safeDump(
@@ -38,27 +42,10 @@ export class Travis extends File {
       }
     );
 
-    const messages = Object.keys(actions).map(slot => {
-      const a = actions[slot];
-
-      const toValue = s => s !== undefined && isScalar(s) ? s : undefined;
-      const add = a.map(x => toValue(x.add)).filter(x => x !== undefined);
-      const remove = a.map(x => toValue(x.remove)).filter(x => x !== undefined);
-
-      return messagePrefix +
-          (add.length ? ` add ${add}` : "") +
-          (remove.length ? ` remove ${remove}` : "") +
-          ` (${slot.replace(/\[\d*\]/, "")})`;
-    });
-
-    if (messages.length === 0) {
-      messages.push(`${messagePrefix} merge from template ${this.name}`);
-    }
-
     return {
       content,
       changed: content !== original,
-      messages
+      messages: actions2messages(actions, "chore(travis):", this.name)
     };
   }
 }
