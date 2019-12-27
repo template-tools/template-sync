@@ -1,20 +1,19 @@
-import test from 'ava';
-import { MockProvider } from 'mock-repository-provider';
+import test from "ava";
+import { MockProvider } from "mock-repository-provider";
 
-import { Context } from '../src/context.mjs';
-import { PreparedContext } from '../src/prepared-context.mjs';
-import { TOML } from '../src/toml.mjs';
-import stringify from '@iarna/toml/stringify.js';
-import parse from '@iarna/toml/parse-string.js';
+import { Context } from "../src/context.mjs";
+import { PreparedContext } from "../src/prepared-context.mjs";
+import { TOML } from "../src/toml.mjs";
+import stringify from "@iarna/toml/stringify.js";
+import parse from "@iarna/toml/parse-string.js";
 
-const FILE_NAME = 'a.toml';
+const FILE_NAME = "a.toml";
 
 async function createContext(template, target) {
   const provider = new MockProvider({
     templateRepo: {
       master: {
-        [FILE_NAME]:
-          template !== undefined ? stringify(template) : undefined
+        [FILE_NAME]: template !== undefined ? stringify(template) : undefined
       }
     },
     targetRepo: {
@@ -25,18 +24,21 @@ async function createContext(template, target) {
   });
 
   return PreparedContext.from(
-    new Context(provider, { templateBranchName: 'templateRepo' }),
-    'targetRepo'
+    new Context(provider, {
+      properties: { description: "value" },
+      templateBranchName: "templateRepo"
+    }),
+    "targetRepo"
   );
 }
 
-test('toml merge', async t => {
+test("toml merge", async t => {
   const context = await createContext(
     {
-      key: 'value'
+      key: "{{description}}"
     },
     {
-      oldKey: 'oldValue'
+      oldKey: "oldValue"
     }
   );
 
@@ -44,8 +46,7 @@ test('toml merge', async t => {
   const merged = await json.merge(context);
 
   t.deepEqual(parse(merged.content), {
-    key: 'value',
-    oldKey: 'oldValue'
+    key: "value",
+    oldKey: "oldValue"
   });
 });
-
