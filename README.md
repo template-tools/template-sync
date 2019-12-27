@@ -33,6 +33,8 @@ merges contents from template repo into destination repo handling some special c
 - package.json - merge devDependencies, engines and scripts
 - rollup.conf.js - copy / rewrite
 - .travis.yml - merge
+- *.toml - merge
+- *.json - merge
 - README.md - merge badges
 
 ![generated pull request](doc/pr_sample.png)

@@ -1,21 +1,29 @@
-import yaml from "js-yaml";
-import { mergeVersionsPreferNumeric, merge, isScalar } from "hinted-tree-merger";
 import { File } from "./file.mjs";
+import stringify from '@iarna/toml/stringify.js';
+import parse from '@iarna/toml/parse-string.js';
+import { merge } from "hinted-tree-merger";
 
-export class Travis extends File {
+export class TOML extends File {
   static matchesFileName(name) {
-    return name === ".travis.yml";
+    return name.match(/\.toml$/);
   }
 
-  async mergeContent(context, original, template) {
-    const ymlOptions = { schema: yaml.FAILSAFE_SCHEMA };
-    const messagePrefix = 'chore(travis):';
+  get needsTemplate() {
+    return false;
+  }
+
+  async mergeContent(context, original, templateRaw) {
+    if (templateRaw === "" || templateRaw === undefined) {
+      return undefined;
+    }
+
+    const messagePrefix = 'chore(toml):';
     const actions = {};
 
-    const content = yaml.safeDump(
+    const content = stringify(
       merge(
-        yaml.safeLoad(original, ymlOptions) || {},
-        yaml.safeLoad(context.expand(template), ymlOptions),
+        parse(original) || {},
+        context.expand(parse(templateRaw))),
         "",
         action => {
           if (actions[action.path] === undefined) {
@@ -24,19 +32,9 @@ export class Travis extends File {
             actions[action.path].push(action);
           }
           delete action.path;
-        },
-        {
-          "*": { removeEmpty: true },
-          "*node_js": { merge: mergeVersionsPreferNumeric },
-          "jobs.include": {
-            key: "stage"
-          }
         }
-      ),
-      {
-        lineWidth: 128
-      }
-    );
+      );
+  
 
     const messages = Object.keys(actions).map(slot => {
       const a = actions[slot];

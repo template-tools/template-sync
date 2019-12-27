@@ -12,6 +12,7 @@ import { MergeLineSet } from "./merge-line-set.mjs";
 import { NpmIgnore } from "./npm-ignore.mjs";
 import { ReplaceIfEmpty } from "./replace-if-empty.mjs";
 import { Replace } from "./replace.mjs";
+import { TOML } from "./toml.mjs";
 import { JSONFile } from "./json-file.mjs";
 import { JSDoc } from "./jsdoc.mjs";
 import { Context } from "./context.mjs";
@@ -29,6 +30,7 @@ export const PreparedContext = LogLevelMixin(
   class _PreparedContext {
     static get mergers() {
       return [
+        TOML,
         Rollup,
         Travis,
         Readme,
