@@ -9,6 +9,10 @@ export class TOML extends File {
     return name.match(/\.toml$/);
   }
 
+  static get defaultOptions() {
+    return { expand : false };
+  }
+
   get needsTemplate() {
     return false;
   }
@@ -21,7 +25,7 @@ export class TOML extends File {
     const actions = {};
 
     const content = stringify(
-      merge(parse(original) || {}, parse(context.expand(templateRaw))),
+      merge(parse(original) || {}, parse(this.options.expand ? context.expand(templateRaw) : templateRaw)),
       "",
       action => {
         if (actions[action.path] === undefined) {

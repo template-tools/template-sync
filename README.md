@@ -34,6 +34,7 @@ merges contents from template repo into destination repo handling some special c
 - rollup.conf.js - copy / rewrite
 - .travis.yml - merge
 - *.toml - merge
+- *.ini - merge
 - *.json - merge
 - README.md - merge badges
 

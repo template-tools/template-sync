@@ -24,7 +24,7 @@ async function createContext(template, target) {
 
   return PreparedContext.from(
     new Context(provider, {
-      properties: {},
+      properties: { description: 'value' },
       templateBranchName: "templateRepo"
     }),
     "targetRepo"

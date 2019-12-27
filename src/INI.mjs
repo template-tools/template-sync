@@ -8,6 +8,10 @@ export class INI extends File {
     return name.match(/\.ini$/);
   }
 
+  static get defaultOptions() {
+    return { expand : false };
+  }
+
   get needsTemplate() {
     return false;
   }
@@ -20,7 +24,7 @@ export class INI extends File {
     const actions = {};
 
     const content = encode(
-      merge(decode(original) || {}, decode(context.expand(templateRaw))),
+      merge(decode(original) || {}, decode(this.options.expand ? context.expand(templateRaw) : templateRaw)),
       "",
       action => {
         if (actions[action.path] === undefined) {

@@ -42,7 +42,7 @@ test("toml merge", async t => {
     }
   );
 
-  const json = new TOML(FILE_NAME);
+  const json = new TOML(FILE_NAME, { expand: true });
   const merged = await json.merge(context);
 
   t.deepEqual(parse(merged.content), {
