@@ -1,4 +1,4 @@
-import { mergeArrays,isScalar } from "hinted-tree-merger";
+import { mergeArrays, isScalar } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
 
@@ -129,4 +129,13 @@ export function actions2messages(actions, prefix, name) {
   }
 
   return messages;
+}
+
+export function aggregateActions(actions, action) {
+  if (actions[action.path] === undefined) {
+    actions[action.path] = [action];
+  } else {
+    actions[action.path].push(action);
+  }
+  delete action.path;
 }

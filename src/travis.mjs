@@ -1,11 +1,10 @@
 import yaml from "js-yaml";
 import {
   mergeVersionsPreferNumeric,
-  merge,
-  isScalar
+  merge
 } from "hinted-tree-merger";
 import { File } from "./file.mjs";
-import { actions2messages } from "./util.mjs";
+import { actions2messages, aggregateActions } from "./util.mjs";
 
 export class Travis extends File {
   static matchesFileName(name) {
@@ -21,14 +20,7 @@ export class Travis extends File {
         yaml.safeLoad(original, ymlOptions) || {},
         yaml.safeLoad(context.expand(template), ymlOptions),
         "",
-        action => {
-          if (actions[action.path] === undefined) {
-            actions[action.path] = [action];
-          } else {
-            actions[action.path].push(action);
-          }
-          delete action.path;
-        },
+        action => aggregateActions(actions,action),
         {
           "*": { removeEmpty: true },
           "*node_js": { merge: mergeVersionsPreferNumeric },

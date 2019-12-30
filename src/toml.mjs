@@ -2,7 +2,7 @@ import stringify from "@iarna/toml/stringify.js";
 import parse from "@iarna/toml/parse-string.js";
 import { merge } from "hinted-tree-merger";
 import { File } from "./file.mjs";
-import { actions2messages } from './util.mjs';
+import { actions2messages, aggregateActions } from "./util.mjs";
 
 export class TOML extends File {
   static matchesFileName(name) {
@@ -10,7 +10,7 @@ export class TOML extends File {
   }
 
   static get defaultOptions() {
-    return { expand : false };
+    return { expand: false };
   }
 
   get needsTemplate() {
@@ -25,16 +25,12 @@ export class TOML extends File {
     const actions = {};
 
     const content = stringify(
-      merge(parse(original) || {}, parse(this.options.expand ? context.expand(templateRaw) : templateRaw)),
+      merge(
+        parse(original) || {},
+        parse(this.options.expand ? context.expand(templateRaw) : templateRaw)
+      ),
       "",
-      action => {
-        if (actions[action.path] === undefined) {
-          actions[action.path] = [action];
-        } else {
-          actions[action.path].push(action);
-        }
-        delete action.path;
-      }
+      action => aggregateActions(actions, action)
     );
 
     return {

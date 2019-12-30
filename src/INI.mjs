@@ -1,7 +1,7 @@
 import { encode, decode } from "./ini-encoder.mjs";
 import { merge } from "hinted-tree-merger";
 import { File } from "./file.mjs";
-import { actions2messages } from "./util.mjs";
+import { actions2messages, aggregateActions } from "./util.mjs";
 
 export class INI extends File {
   static matchesFileName(name) {
@@ -26,14 +26,7 @@ export class INI extends File {
     const content = encode(
       merge(decode(original) || {}, decode(this.options.expand ? context.expand(templateRaw) : templateRaw)),
       "",
-      action => {
-        if (actions[action.path] === undefined) {
-          actions[action.path] = [action];
-        } else {
-          actions[action.path].push(action);
-        }
-        delete action.path;
-      }
+      action => aggregateActions(actions, action)
     );
 
     return {
