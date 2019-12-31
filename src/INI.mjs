@@ -9,7 +9,7 @@ export class INI extends File {
   }
 
   static get defaultOptions() {
-    return { expand : false };
+    return { ...super.defaultOptions, expand: false };
   }
 
   get needsTemplate() {
@@ -24,15 +24,19 @@ export class INI extends File {
     const actions = {};
 
     const content = encode(
-      merge(decode(original) || {}, decode(this.options.expand ? context.expand(templateRaw) : templateRaw)),
+      merge(
+        decode(original) || {},
+        decode(this.options.expand ? context.expand(templateRaw) : templateRaw)
+      ),
       "",
-      action => aggregateActions(actions, action)
+      action => aggregateActions(actions, action),
+      this.options.mergeHints
     );
 
     return {
       content,
       changed: content !== original,
-      messages: actions2messages(actions, "chore(ini):", this.name)
+      messages: actions2messages(actions, this.options.messagePrefix, this.name)
     };
   }
 }

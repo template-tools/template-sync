@@ -13,7 +13,8 @@ import { NpmIgnore } from "./npm-ignore.mjs";
 import { ReplaceIfEmpty } from "./replace-if-empty.mjs";
 import { Replace } from "./replace.mjs";
 import { TOML } from "./toml.mjs";
-import { INI } from "./INI.mjs";
+import { INI } from "./ini.mjs";
+import { YAML } from "./yaml.mjs";
 import { JSONFile } from "./json-file.mjs";
 import { JSDoc } from "./jsdoc.mjs";
 import { Context } from "./context.mjs";
@@ -33,6 +34,7 @@ export const PreparedContext = LogLevelMixin(
       return [
         TOML,
         INI,
+        YAML,
         Rollup,
         Travis,
         Readme,

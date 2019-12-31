@@ -14,7 +14,7 @@ export class File {
   }
 
   static get defaultOptions() {
-    return {};
+    return { messagePrefix: "", mergeHints: {} };
   }
 
   constructor(name, options = {}) {

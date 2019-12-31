@@ -10,7 +10,7 @@ export class TOML extends File {
   }
 
   static get defaultOptions() {
-    return { expand: false };
+    return { ...super.defaultOptions, expand: false };
   }
 
   get needsTemplate() {
@@ -30,13 +30,14 @@ export class TOML extends File {
         parse(this.options.expand ? context.expand(templateRaw) : templateRaw)
       ),
       "",
-      action => aggregateActions(actions, action)
+      action => aggregateActions(actions, action),
+      this.options.mergeHints
     );
 
     return {
       content,
       changed: content !== original,
-      messages: actions2messages(actions, "chore(toml):", this.name)
+      messages: actions2messages(actions, this.options.messagePrefix, this.name)
     };
   }
 }

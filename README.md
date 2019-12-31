@@ -32,7 +32,8 @@ merges contents from template repo into destination repo handling some special c
 - line set files like .npmignore and .gitignore - by merging both sets together
 - package.json - merge (.*)[Dd]ependencies, engines and scripts
 - rollup.conf.js - copy / rewrite
-- .travis.yml - merge
+- *.yml - merge
+- .travis.yml - merge with hints
 - *.toml - merge
 - *.ini - merge
 - *.json - merge

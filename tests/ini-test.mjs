@@ -4,7 +4,7 @@ import { decode } from "../src/ini-encoder.mjs";
 
 import { Context } from "../src/context.mjs";
 import { PreparedContext } from "../src/prepared-context.mjs";
-import { INI } from "../src/INI.mjs";
+import { INI } from "../src/ini.mjs";
 
 const FILE_NAME = "a.ini";
 

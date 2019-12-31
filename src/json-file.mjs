@@ -1,3 +1,5 @@
+import { merge } from "hinted-tree-merger";
+import { actions2messages, aggregateActions } from "./util.mjs";
 import { File } from "./file.mjs";
 
 export class JSONFile extends File {
@@ -14,18 +16,22 @@ export class JSONFile extends File {
       return undefined;
     }
 
-    const target =
-      original === "" || original === undefined ? {} : JSON.parse(original);
-    const template = JSON.parse(templateRaw);
+    const actions = {};
 
-    Object.assign(target, template);
-
-    const content = JSON.stringify(context.expand(target), undefined, 2);
+    const content = JSON.stringify(
+      merge(
+        original === undefined || original.length === 0 ? {} : JSON.parse(original),
+        JSON.parse(this.options.expand ? context.expand(templateRaw) : templateRaw)
+      ),
+      "",
+      action => aggregateActions(actions, action),
+      this.options.mergeHints 
+    );
 
     return {
       content,
       changed: content !== original,
-      messages: ["chore: update {{entry.name}} from template"]
+      messages: actions2messages(actions, this.options.messagePrefix, this.name)
     };
   }
 }
