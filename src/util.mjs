@@ -94,14 +94,28 @@ export function mergeTemplateFiles(a, b) {
   });
 }
 
-export async function templateFilesFrom(provider, repo) {
-  if (repo) {
+export async function templateFilesFrom(pkg, provider, repo) {
+  if (!pkg) {
     const branch = await provider.branch(repo);
     const pc = await branch.entry("package.json");
-    const pkg = JSON.parse(await pc.getString());
+    pkg = JSON.parse(await pc.getString());
+  }
 
-    if (pkg.template && pkg.template.files) {
-      return pkg.template.files;
+  const template = pkg.template;
+
+  if (template) {
+    if (template.inheritFrom) {
+      const itf = await templateFilesFrom(
+        undefined,
+        provider,
+        template.inheritFrom
+      );
+
+      return template.files ? mergeTemplateFiles(template.files, itf) : itf;
+    }
+
+    if (template.files) {
+      return template.files;
     }
   }
 

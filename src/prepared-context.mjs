@@ -354,25 +354,10 @@ export const PreparedContext = LogLevelMixin(
       const { templatePackageJson } = await this.trackUsedModule(targetBranch);
 
       /* collect files form template cascade */
-      let templateFiles = [];
+      let templateFiles = await templateFilesFrom(templatePackageJson, this.provider, templatePackageJson.template.inheritFrom);
 
-      if (templatePackageJson.template) {
-        if (templatePackageJson.template.files) {
-          templateFiles = mergeTemplateFiles(
-            templatePackageJson.template.files,
-            await templateFilesFrom(
-              this.provider,
-              templatePackageJson.template.inheritFrom
-            )
-          );
-        } else {
-          templateFiles = await templateFilesFrom(
-            this.provider,
-            templatePackageJson.template.inheritFrom
-          );
-        }
-      }
-
+      //console.log(templateFiles.map(f => `${f.merger}:${f.pattern}`));
+    
       const files = await PreparedContext.createFiles(
         templateBranch,
         templateFiles
