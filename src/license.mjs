@@ -63,7 +63,7 @@ export class License extends File {
     }
 
     if (messages.length === 0) {
-      messages.push('${this.options.messagePrefix}update');
+      messages.push(`${this.options.messagePrefix}update`);
     }
 
     if (original !== '') {
