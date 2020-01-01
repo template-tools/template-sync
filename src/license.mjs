@@ -1,18 +1,23 @@
 import { File } from './file.mjs';
 
-function yearsToString(years) {
-  years = Array.from(years).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
-  
-  /*
-  for(let i = 0; i < years.length; i++) {
-    years[i] === years[i + 1];
-    if(i === years.length - 2) {
-      return `${years[0]}-${years[i + 1]}`;
+function getRanges(array) {
+  const ranges = [];
+  let rstart, rend;
+  for (let i = 0; i < array.length; i++) {
+    rstart = array[i];
+    rend = rstart;
+    while (array[i + 1] - array[i] === 1) {
+      rend = array[i + 1]; // increment the index if the numbers sequential
+      i++;
     }
+    ranges.push(rstart == rend ? rstart+'' : rstart + '-' + rend);
   }
-*/
+  return ranges;
+}
 
-  return years.join(',');
+function yearsToString(years) {  
+  const ranges = getRanges(Array.from(years).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)));
+  return ranges.join(',');
 }
 
 export class License extends File {
