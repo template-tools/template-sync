@@ -26,7 +26,7 @@ test('modify one year', async t => {
 
   const license = new License('aFile');
   const merged = await license.merge(context);
-  t.deepEqual(merged.messages, ['chore(license): add current year 2099']);
+  t.deepEqual(merged.messages, ['chore(license): add year 2099']);
   t.deepEqual(merged.content, 'Copyright (c) 1999,2099 by xyz');
 });
 
@@ -53,7 +53,7 @@ test('modify year list', async t => {
 
   const license = new License('aFile');
   const merged = await license.merge(context);
-  t.deepEqual(merged.messages, ['chore(license): add current year 2099']);
+  t.deepEqual(merged.messages, ['chore(license): add year 2099']);
   t.deepEqual(merged.content, 'Copyright (c) 1999,2000,2001,2007,2099 by xyz');
 });
 
