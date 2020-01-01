@@ -1,85 +1,60 @@
-import test from 'ava';
-import { MockProvider } from 'mock-repository-provider';
+import test from "ava";
+import { MockProvider } from "mock-repository-provider";
 
-import { Context } from '../src/context.mjs';
-import { PreparedContext } from '../src/prepared-context.mjs';
-import { License } from '../src/license.mjs';
+import { Context } from "../src/context.mjs";
+import { PreparedContext } from "../src/prepared-context.mjs";
+import { License } from "../src/license.mjs";
 
-test('modify one year', async t => {
+async function lmt(t, license, year = 2099, expected = "", messages = []) {
   const provider = new MockProvider({
     templateRepo: {
-      master: { aFile: 'Copyright (c) {{date.year}} by {{owner}}' }
+      master: { aFile: "Copyright (c) {{date.year}} by {{license.owner}}" }
     },
-    'myOwner/targetRepo': { master: { aFile: 'Copyright (c) 1999 by xyz' } }
+    "myOwner/targetRepo": { master: { aFile: license } }
   });
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: 'templateRepo',
+      templateBranchName: "templateRepo",
       properties: {
-        date: { year: 2099 },
-        license: { owner: 'xyz' }
+        date: { year },
+        license: { owner: "xyz" }
       }
     }),
-    'myOwner/targetRepo'
+    "myOwner/targetRepo"
   );
 
-  const license = new License('aFile');
-  const merged = await license.merge(context);
-  t.deepEqual(merged.messages, ['chore(license): add year 2099']);
-  t.deepEqual(merged.content, 'Copyright (c) 1999,2099 by xyz');
-});
+  const lf = new License("aFile");
+  const merged = await lf.merge(context);
+  t.deepEqual(merged.messages, messages);
+  t.deepEqual(merged.content, expected);
+}
 
-test('modify year list', async t => {
-  const provider = new MockProvider({
-    templateRepo: {
-      master: { aFile: 'Copyright (c) {{date.year}} by {{owner}}' }
-    },
-    'myOwner/targetRepo': {
-      master: { aFile: 'Copyright (c) 2001,1999,2000,2001,2007 by xyz' }
-    }
-  });
+lmt.title = (
+  providedTitle = "",
+  license,
+  year = 2099,
+  expected = "",
+  messages = []
+) => `license ${providedTitle} ${license} ${expected}`.trim();
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateBranchName: 'templateRepo',
-      properties: {
-        date: { year: 2099 },
-        license: { owner: 'xyz' }
-      }
-    }),
-    'myOwner/targetRepo'
-  );
+test(lmt, "Copyright (c) 1999 by xyz", 2099, "Copyright (c) 1999,2099 by xyz", [
+  "chore(license): add year 2099"
+]);
 
-  const license = new License('aFile');
-  const merged = await license.merge(context);
-  t.deepEqual(merged.messages, ['chore(license): add year 2099']);
-  t.deepEqual(merged.content, 'Copyright (c) 1999,2000,2001,2007,2099 by xyz');
-});
+test(
+  lmt,
+  "Copyright (c) 2001,1999,2000,2001,2007 by xyz",
+  2099,
+  "Copyright (c) 1999,2000,2001,2007,2099 by xyz",
+  ["chore(license): add year 2099"]
+);
 
-test('license with empty target', async t => {
-  const provider = new MockProvider({
-    templateRepo: {
-      master: { aFile: 'Copyright (c) {{date.year}} by {{license.owner}}' }
-    },
-    'myOwner/targetRepo': {
-      master: {}
-    }
-  });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateBranchName: 'templateRepo',
-      properties: {
-        date: { year: 2099 }
-      }
-    }),
-    'myOwner/targetRepo'
-  );
-
-  const license = new License('aFile');
-  const merged = await license.merge(context);
-
-  t.deepEqual(merged.messages, ['chore(license): add LICENSE']);
-  t.deepEqual(merged.content, 'Copyright (c) 2099 by myOwner');
-});
+test(
+  lmt,
+  undefined,
+  2099,
+  "Copyright (c) 2099 by myOwner",
+  ["chore(license): add LICENSE"]
+);
