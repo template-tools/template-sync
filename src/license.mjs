@@ -1,4 +1,4 @@
-import { File } from './file.mjs';
+import { File } from "./file.mjs";
 
 function getRanges(array) {
   const ranges = [];
@@ -10,14 +10,50 @@ function getRanges(array) {
       rend = array[i + 1]; // increment the index if the numbers sequential
       i++;
     }
-    ranges.push(rstart == rend ? rstart+'' : rstart + '-' + rend);
+    ranges.push(rstart == rend ? rstart + "" : rstart + "-" + rend);
   }
   return ranges;
 }
 
-function yearsToString(years) {  
-  const ranges = getRanges(Array.from(years).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)));
-  return ranges.join(',');
+function yearsToString(years) {
+  const ranges = getRanges(
+    Array.from(years).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
+  );
+  return ranges.join(",");
+}
+
+export function stringToIntegers(str) {
+  const years = new Set();
+
+  while (true) {
+    const m = str.match(/^,?(\d+)(\s*([\-\,])\s*(\d+))?(.*)/);
+
+    if (m) {
+      const low = parseInt(m[1], 10);
+      years.add(low);
+
+      if (m[4]) {
+        const high = parseInt(m[4], 10);
+
+        switch (m[3]) {
+          case ",":
+            years.add(high);
+            break;
+          case "-":
+            for (let y = low; y <= high; y++) {
+              years.add(y);
+            }
+            break;
+        }
+      }
+      str = m[5];
+    }
+    else {
+      break;
+    }
+  }
+
+  return years;
 }
 
 export class License extends File {
@@ -28,32 +64,24 @@ export class License extends File {
   static get defaultOptions() {
     return {
       ...super.defaultOptions,
-      messagePrefix: "chore(license): ",
+      messagePrefix: "chore(license): "
     };
   }
 
   async mergeContent(context, original, template) {
     const messages = [];
-    const year = context.evaluate('date.year');
-    const years = new Set();
+    const year = context.evaluate("date.year");
+    let years = new Set();
 
     const m = original.match(
-      /opyright\s*\(c\)\s*(\d+)([,\-\d]+)*(\s*(,|by)\s*(.*))?/
+      /opyright\s*\(c\)\s*((\d+)([,\-\d]+)*)(\s*(,|by)\s*(.*))?/
     );
 
     if (m) {
-      years.add(parseInt(m[1], 10));
+      years = stringToIntegers(m[1]);
 
-      if (m[2] !== undefined) {
-        m[2].split(/\s*[,\-]\s*/).forEach(y => {
-          if (y.length > 0) {
-            years.add(parseInt(y, 10));
-          }
-        });
-      }
-
-      if (m[4] !== undefined) {
-        context.properties.license.owner = m[5];
+      if (m[5] !== undefined) {
+        context.properties.license.owner = m[6];
       }
 
       if (!years.has(year)) {
@@ -66,7 +94,7 @@ export class License extends File {
       messages.push(`${this.options.messagePrefix}update`);
     }
 
-    if (original !== '') {
+    if (original !== "") {
       const content = original.replace(
         /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
         `opyright (c) ${yearsToString(years)}`
