@@ -40,6 +40,95 @@ async function createContext(template, target) {
   );
 }
 
+async function pkgt(t, template, content, expected, messages = [], changed) {
+  const context = await createContext(template, content);
+
+  const pkg = new Package("package.json");
+  const merged = await pkg.merge(context);
+
+  switch (changed) {
+    case true:
+      t.true(merged.changed);
+    case false:
+      t.false(merged.changed);
+  }
+
+  if (merged.changed) {
+    t.deepEqual(merged.messages, messages);
+
+    t.deepEqual(
+      JSON.parse(merged.content),
+      expected === undefined ? content : expected
+    );
+  }
+  else {
+    t.true(true);
+  }
+}
+
+pkgt.title = (providedTitle = "", template, content, expected, messages = []) =>
+  `license ${providedTitle} ${JSON.stringify(
+    template
+  )} ${content} ${expected}`.trim();
+
+test(
+  "empty bugs results in no change",
+  pkgt,
+  {},
+  {
+    name: "targetRepo",
+    repository: {
+      type: "git",
+      url: "http://mock-provider.com/tragetUser/targetRepo"
+    },
+    bugs: { url: "http://mock-provider.com/tragetUser/targetRepo/issues" },
+    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    template: {
+      repository: {
+        url: "http://mock-provider.com/templateRepo"
+      }
+    }
+  },
+  false
+);
+
+test(
+  "repository change only",
+  pkgt,
+  {},
+  {
+    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    bugs: {
+      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+    },
+    template: {
+      repository: {
+        url: "http://mock-provider.com/templateRepo"
+      }
+    }
+  },
+  {
+    name: "targetRepo",
+    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    bugs: {
+      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+    },
+    repository: {
+      type: "git",
+      url: "http://mock-provider.com/tragetUser/targetRepo"
+    },
+    template: {
+      repository: {
+        url: "http://mock-provider.com/templateRepo"
+      }
+    }
+  },
+  [
+    "chore(package):  (repository)",
+    "chore(package): add repository from template"
+  ]
+);
+
 test("default options", t => {
   const pkg = new Package("package.json");
   t.deepEqual(pkg.options.actions, []);
@@ -514,68 +603,6 @@ test("jsonpath", async t => {
       "chore(package): set $.nyc['report-dir']='./build/coverage' as in template"
     )
   );
-});
-
-test("repository change only", async t => {
-  const context = await createContext(
-    {},
-    {
-      homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
-      bugs: {
-        url: "http://mock-provider.com/tragetUser/targetRepo/issues"
-      },
-      template: {
-        repository: {
-          url: "http://mock-provider.com/templateRepo"
-        }
-      }
-    }
-  );
-  const pkg = new Package("package.json");
-  const merged = await pkg.merge(context);
-
-  t.deepEqual(merged.messages, ["chore(package): correct repository url"]);
-
-  t.deepEqual(JSON.parse(merged.content), {
-    name: "targetRepo",
-    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
-    bugs: {
-      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
-    },
-    repository: {
-      type: "git",
-      url: "http://mock-provider.com/tragetUser/targetRepo"
-    },
-    template: {
-      repository: {
-        url: "http://mock-provider.com/templateRepo"
-      }
-    }
-  });
-});
-
-test("empty bugs results in no change", async t => {
-  const context = await createContext(
-    {},
-    {
-      name: "targetRepo",
-      repository: {
-        type: "git",
-        url: "http://mock-provider.com/tragetUser/targetRepo"
-      },
-      bugs: { url: "http://mock-provider.com/tragetUser/targetRepo/issues" },
-      homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
-      template: {
-        repository: {
-          url: "http://mock-provider.com/templateRepo"
-        }
-      }
-    }
-  );
-  const pkg = new Package("package.json");
-  const merged = await pkg.merge(context);
-
-  t.false(merged.changed);
 });
 
 test("Package start fresh", async t => {

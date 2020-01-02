@@ -1,8 +1,14 @@
 import { compareVersion } from "hinted-tree-merger";
-import diff from "simple-diff";
-
+import { merge } from "hinted-tree-merger";
 import { File } from "./file.mjs";
-import { sortObjectsKeys, jspath, defaultEncodingOptions } from "./util.mjs";
+import {
+  actions2messages,
+  aggregateActions,
+  sortObjectsKeys,
+  jspath,
+  defaultEncodingOptions
+} from "./util.mjs";
+
 import {
   decodeScripts,
   encodeScripts,
@@ -38,17 +44,17 @@ const sortedKeys = [
   "version",
   "private",
   "publishConfig",
-  'files',
-  'sideEffects',
-  'type',
-  'main',
-  'umd:main',
-  'jsdelivr',
-  'unpkg',
-  'module',
-  'source',
-  'jsnext:main',
-  'browser',
+  "files",
+  "sideEffects",
+  "type",
+  "main",
+  "umd:main",
+  "jsdelivr",
+  "unpkg",
+  "module",
+  "source",
+  "jsnext:main",
+  "browser",
   "svelte",
   "description",
   "keywords",
@@ -169,14 +175,12 @@ export class Package extends File {
 
   async mergeContent(context, original, templateContent) {
     const originalLastChar = original[original.length - 1];
-    const originalTemplate = JSON.parse(templateContent);
-
     const targetRepository = context.targetBranch.repository;
 
     let target =
       original === undefined || original === "" ? {} : JSON.parse(original);
 
-    const template = Object.assign({}, originalTemplate, {
+    const template = { ...JSON.parse(templateContent),
       repository: {
         type: targetRepository.type,
         url: targetRepository.url
@@ -190,10 +194,10 @@ export class Package extends File {
           url: context.templateBranch.url
         }
       }
-    });
+    };
+
     template.template = Object.assign({}, target.template, template.template);
 
-    let messages = [];
     const properties = context.properties;
 
     if (target.name === undefined || target.name === "") {
@@ -205,29 +209,17 @@ export class Package extends File {
       properties.module = target.module;
     }
 
-    const slots = {
-      repository: "chore(package): correct repository url",
-      bugs: "chore(package): set bugs url from template",
-      homepage: "chore(package): homepage from template",
-      template: "chore(package): set template repo"
-    };
-    Object.entries(slots).forEach(([key, slot]) => {
-      const templateValue = template[key];
-      const d = diff(target[key], templateValue);
+    const actions = {};
 
-      if (
-        templateValue !== undefined &&
-        d.length > 0 &&
-        !(
-          d[0].type === "add" &&
-          d[0].oldValue === undefined &&
-          d[0].newValue === undefined
-        )
-      ) {
-        messages.push(slot);
-        target[key] = templateValue;
-      }
-    });
+    merge(
+      target,
+      template,
+      "",
+      action => aggregateActions(actions, action),
+      {}
+    );
+
+    let messages = actions2messages(actions, "chore(package): ", this.name);
 
     const decodedScripts = decodeScripts(target.scripts);
 
@@ -491,7 +483,7 @@ function normalizeVersion(e) {
 /**
  *
  */
-function defaultMerge( destination, target, template, dp, name, messages) {
+function defaultMerge(destination, target, template, dp, name, messages) {
   if (template === "--delete--") {
     if (target !== undefined) {
       messages.push(`${dp.type}(${dp.scope}): remove ${name}@${target}`);
