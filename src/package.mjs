@@ -1,5 +1,4 @@
-import { compareVersion } from "hinted-tree-merger";
-import { merge } from "hinted-tree-merger";
+import { merge, compareVersion, mergeVersionsLargest } from "hinted-tree-merger";
 import { File } from "./file.mjs";
 import {
   actions2messages,
@@ -216,7 +215,11 @@ export class Package extends File {
       template,
       "",
       action => aggregateActions(actions, action),
-      {}
+      {
+        "files" : {},
+        "engines.*": { merge: mergeVersionsLargest },
+        "pacman.depends.*": { merge: mergeVersionsLargest }
+      }
     );
 
     let messages = actions2messages(actions, "chore(package): ", this.name);
@@ -246,7 +249,6 @@ export class Package extends File {
         merge: defaultMerge
       },
       scripts: { type: "chore", scope: "scripts", merge: defaultMerge },
-      engines: { type: "chore", scope: "engines", merge: defaultMerge },
       bin: { type: "chore", scope: "bin", merge: defaultMerge }
     };
 
@@ -471,11 +473,6 @@ function addKeyword(pkg, regex, keyword, messages) {
   }
 }
 
-function getVersion(e) {
-  const m = e.match(/([\d\.]+)/);
-  return m ? Number(m[1]) : undefined;
-}
-
 function normalizeVersion(e) {
   return e.replace(/^[\^\$]/, "");
 }
@@ -497,11 +494,6 @@ function defaultMerge(destination, target, template, dp, name, messages) {
     messages.push(`${dp.type}(${dp.scope}): add ${name}@${template}`);
     destination[name] = template;
   } else if (template !== target) {
-    if (dp.name === "engines") {
-      if (getVersion(target) > getVersion(template)) {
-        return;
-      }
-    }
     if (dp.name === "devDependencies") {
       if (
         compareVersion(normalizeVersion(target), normalizeVersion(template)) >=

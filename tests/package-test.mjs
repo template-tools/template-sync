@@ -605,7 +605,7 @@ test("jsonpath", async t => {
   );
 });
 
-test("Package start fresh", async t => {
+test("package start fresh", async t => {
   const context = await createContext({});
   const pkg = new Package("package.json");
   const merged = await pkg.merge(context);
