@@ -179,6 +179,8 @@ export class Package extends File {
     let target =
       original === undefined || original === "" ? {} : JSON.parse(original);
 
+    target = context.expand(target);
+
     const template = { ...JSON.parse(templateContent),
       repository: {
         type: targetRepository.type,
