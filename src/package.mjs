@@ -1,4 +1,8 @@
-import { merge, compareVersion, mergeVersionsLargest } from "hinted-tree-merger";
+import {
+  merge,
+  compareVersion,
+  mergeVersionsLargest
+} from "hinted-tree-merger";
 import { File } from "./file.mjs";
 import {
   actions2messages,
@@ -98,6 +102,10 @@ const propertyKeys = [
   "browser"
 ];
 
+function compare(a, b) {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
 /**
  * Merger for package.json
  */
@@ -181,7 +189,8 @@ export class Package extends File {
 
     target = context.expand(target);
 
-    const template = { ...JSON.parse(templateContent),
+    const template = {
+      ...JSON.parse(templateContent),
       repository: {
         type: targetRepository.type,
         url: targetRepository.url
@@ -197,7 +206,7 @@ export class Package extends File {
       }
     };
 
-    template.template = Object.assign({}, target.template, template.template);
+    template.template = { ...target.template, ...template.template };
 
     const properties = context.properties;
 
@@ -212,17 +221,24 @@ export class Package extends File {
 
     const actions = {};
 
-    merge(
-      target,
-      template,
-      "",
-      action => aggregateActions(actions, action),
-      {
-        "files" : {},
-        "engines.*": { merge: mergeVersionsLargest },
-        "pacman.depends.*": { merge: mergeVersionsLargest }
-      }
-    );
+    merge(target, template, "", action => aggregateActions(actions, action), {
+      files: { compare },
+      bin: { compare },
+      scripts: { compare },
+      /*
+      dependencies: {
+        removeEmpty: true
+      },
+      "dependencies.*": { merge: mergeVersionsLargest, compare },
+      
+      devDependencies: {
+        removeEmpty: true
+      },
+      "devDependencies.*": { merge: mergeVersionsLargest, compare },
+      */
+      "engines.*": { merge: mergeVersionsLargest, compare },
+      "pacman.depends.*": { merge: mergeVersionsLargest, compare }
+    });
 
     let messages = actions2messages(actions, "chore(package): ", this.name);
 
@@ -250,7 +266,7 @@ export class Package extends File {
         scope: "package",
         merge: defaultMerge
       },
-      scripts: { type: "chore", scope: "scripts", merge: defaultMerge },
+      //scripts: { type: "chore", scope: "scripts", merge: defaultMerge },
       bin: { type: "chore", scope: "bin", merge: defaultMerge }
     };
 
