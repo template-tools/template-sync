@@ -24,7 +24,7 @@ export class YAML extends File {
           ymlOptions
         ),
         "",
-        action => aggregateActions(actions, action),
+        (action, hint) => aggregateActions(actions, action, hint),
         this.options.mergeHints
       ),
       {

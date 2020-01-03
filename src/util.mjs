@@ -124,16 +124,35 @@ export async function templateFilesFrom(pkg, provider, repo) {
 
 export function actions2messages(actions, prefix, name) {
   const messages = Object.entries(actions).map(([slot, a]) => {
+    /*
+    let type = a.type,
+      scope = a.scope;
+
+    let m = prefix.match(/^(\w+)(\(\w+\))?:/);
+
+    if (m) {
+      if (!type) {
+        type = m[1];
+      }
+      if (!scope) {
+        scope = m[3];
+      }
+    }*/
+
     const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
     const add = a.map(x => toValue(x.add)).filter(x => x !== undefined);
     const remove = a.map(x => toValue(x.remove)).filter(x => x !== undefined);
 
-    return (
-      prefix +
-      (add.length ? ` add ${add}` : "") +
-      (remove.length ? ` remove ${remove}` : "") +
-      ` (${slot.replace(/\[\d*\]/, "")})`
-    );
+    /*
+    return scope
+      ? `${type}(${scope}): `
+      : `${type}: ` +
+*/
+
+    return prefix +
+          (add.length ? ` add ${add}` : "") +
+          (remove.length ? ` remove ${remove}` : "") +
+          ` (${slot.replace(/\[\d*\]/, "")})`;
   });
 
   if (messages.length === 0) {
@@ -143,7 +162,16 @@ export function actions2messages(actions, prefix, name) {
   return messages;
 }
 
-export function aggregateActions(actions, action) {
+export function aggregateActions(actions, action, hint) {
+  if (hint) {
+    if (hint.type) {
+      action.type = hint.type;
+    }
+    if (hint.scope) {
+      action.scope = hint.scope;
+    }
+  }
+
   if (actions[action.path] === undefined) {
     actions[action.path] = [action];
   } else {

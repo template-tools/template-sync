@@ -221,11 +221,16 @@ export class Package extends File {
 
     const actions = {};
 
-    merge(target, template, "", action => aggregateActions(actions, action), {
-      files: { compare },
-      bin: { compare },
-      scripts: { compare },
-      /*
+    merge(
+      target,
+      template,
+      "",
+      (action, hint) => aggregateActions(actions, action, hint),
+      {
+        files: { compare },
+        bin: { compare, type: "chore", scope: "bin" },
+        scripts: { compare, type: "chore", scope: "scripts" },
+        /*
       dependencies: {
         removeEmpty: true
       },
@@ -236,9 +241,20 @@ export class Package extends File {
       },
       "devDependencies.*": { merge: mergeVersionsLargest, compare },
       */
-      "engines.*": { merge: mergeVersionsLargest, compare, type: 'fix' },
-      "pacman.depends.*": { merge: mergeVersionsLargest, compare, type: 'fix' }
-    });
+        "engines.*": {
+          merge: mergeVersionsLargest,
+          compare,
+          type: "fix",
+          scope: "engines"
+        },
+        "pacman.depends.*": {
+          merge: mergeVersionsLargest,
+          compare,
+          type: "fix",
+          scope: "engines"
+        }
+      }
+    );
 
     let messages = actions2messages(actions, "chore(package): ", this.name);
 

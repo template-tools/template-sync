@@ -30,7 +30,7 @@ export class TOML extends File {
         parse(this.options.expand ? context.expand(templateRaw) : templateRaw)
       ),
       "",
-      action => aggregateActions(actions, action),
+      (action, hint) => aggregateActions(actions, action, hint),
       this.options.mergeHints
     );
 
