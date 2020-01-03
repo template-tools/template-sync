@@ -144,11 +144,10 @@ export function actions2messages(actions, prefix, name) {
 
 export function aggregateActions(actions, action, hint) {
   if (hint) {
-    if (hint.type) {
-      action.type = hint.type;
-    }
-    if (hint.scope) {
-      action.scope = hint.scope;
+    for (const key of ["type", "skope"]) {
+      if (hint[key]) {
+        action[key] = hint[key];
+      }
     }
   }
 
