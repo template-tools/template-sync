@@ -124,32 +124,12 @@ export async function templateFilesFrom(pkg, provider, repo) {
 
 export function actions2messages(actions, prefix, name) {
   const messages = Object.entries(actions).map(([slot, a]) => {
-    /*
-    let type = a.type,
-      scope = a.scope;
-
-    let m = prefix.match(/^(\w+)(\(\w+\))?:/);
-
-    if (m) {
-      if (!type) {
-        type = m[1];
-      }
-      if (!scope) {
-        scope = m[3];
-      }
-    }*/
-
     const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
     const add = a.map(x => toValue(x.add)).filter(x => x !== undefined);
     const remove = a.map(x => toValue(x.remove)).filter(x => x !== undefined);
-
-    /*
-    return scope
-      ? `${type}(${scope}): `
-      : `${type}: ` +
-*/
-
-    return prefix +
+    return a.type
+      ? `${a.type}(${a.scope}): `
+      : prefix +
           (add.length ? ` add ${add}` : "") +
           (remove.length ? ` remove ${remove}` : "") +
           ` (${slot.replace(/\[\d*\]/, "")})`;

@@ -227,7 +227,7 @@ export class Package extends File {
       "",
       (action, hint) => aggregateActions(actions, action, hint),
       {
-        files: { compare },
+        files: { compare, type: "chore", scope: "files" },
         bin: { compare, type: "chore", scope: "bin" },
         scripts: { compare, type: "chore", scope: "scripts" },
         /*
@@ -251,7 +251,7 @@ export class Package extends File {
           merge: mergeVersionsLargest,
           compare,
           type: "fix",
-          scope: "engines"
+          scope: "pacman"
         }
       }
     );
