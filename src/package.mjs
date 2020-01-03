@@ -236,8 +236,8 @@ export class Package extends File {
       },
       "devDependencies.*": { merge: mergeVersionsLargest, compare },
       */
-      "engines.*": { merge: mergeVersionsLargest, compare },
-      "pacman.depends.*": { merge: mergeVersionsLargest, compare }
+      "engines.*": { merge: mergeVersionsLargest, compare, type: 'fix' },
+      "pacman.depends.*": { merge: mergeVersionsLargest, compare, type: 'fix' }
     });
 
     let messages = actions2messages(actions, "chore(package): ", this.name);
@@ -266,7 +266,6 @@ export class Package extends File {
         scope: "package",
         merge: defaultMerge
       },
-      //scripts: { type: "chore", scope: "scripts", merge: defaultMerge },
       bin: { type: "chore", scope: "bin", merge: defaultMerge }
     };
 

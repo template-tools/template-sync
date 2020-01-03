@@ -60,14 +60,13 @@ async function pkgt(t, template, content, expected, messages = [], changed) {
       JSON.parse(merged.content),
       expected === undefined ? content : expected
     );
-  }
-  else {
+  } else {
     t.true(true);
   }
 }
 
 pkgt.title = (providedTitle = "", template, content, expected, messages = []) =>
-  `license ${providedTitle} ${JSON.stringify(
+  `package ${providedTitle} ${JSON.stringify(
     template
   )} ${content} ${expected}`.trim();
 
