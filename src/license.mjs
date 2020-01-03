@@ -26,33 +26,27 @@ export function stringToIntegers(str) {
   const years = new Set();
 
   while (true) {
-    const m = str.match(/^,?(\d+)(\s*([\-\,])\s*(\d+))?(.*)/);
+    let m = str.match(/^(\d+)(\s*,\s*)?(.*)/);
 
     if (m) {
       const low = parseInt(m[1], 10);
       years.add(low);
 
-      if (m[4]) {
-        const high = parseInt(m[4], 10);
+      str = m[3];
+      m = str.match(/^-(\d+)(.*)/);
 
-        switch (m[3]) {
-          case ",":
-            years.add(high);
-            break;
-          case "-":
-            for (let y = low; y <= high; y++) {
-              years.add(y);
-            }
-            break;
+      if (m && m[1]) {
+        str = m[2];
+        const high = parseInt(m[1], 10);
+        for (let y = low; y <= high; y++) {
+          years.add(y);
         }
       }
-      str = m[5];
     }
     else {
       break;
     }
   }
-
   return years;
 }
 

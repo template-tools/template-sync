@@ -58,6 +58,14 @@ test(
   ["chore(license): add year 2099"]
 );
 
+test(
+  lmt,
+  "Copyright (c) 2015,2017-2020 by xyz",
+  2020,
+  "Copyright (c) 2015,2017-2020 by xyz",
+  ["chore(license): update"]
+);
+
 
 test(
   lmt,
