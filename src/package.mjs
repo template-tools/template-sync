@@ -1,7 +1,7 @@
 import {
   merge,
-  compareVersion,
-  mergeVersionsLargest
+  mergeVersionsLargest,
+  mergeExpressions
 } from "hinted-tree-merger";
 import { File } from "./file.mjs";
 import {
@@ -11,12 +11,6 @@ import {
   jspath,
   defaultEncodingOptions
 } from "./util.mjs";
-
-import {
-  decodeScripts,
-  encodeScripts,
-  mergeScripts
-} from "./package-scripts.mjs";
 
 function moduleNames(object) {
   if (object === undefined) return new Set();
@@ -106,6 +100,15 @@ function compare(a, b) {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
+const REMOVE_HINT = { removeEmpty: true };
+
+const DEPENDENCY_HINT = {
+  merge: mergeVersionsLargest,
+  compare,
+  type: "chore",
+  scope: "package"
+};
+
 /**
  * Merger for package.json
  */
@@ -189,7 +192,7 @@ export class Package extends File {
 
     target = context.expand(target);
 
-    const template = {
+    const template = context.expand({
       ...JSON.parse(templateContent),
       repository: {
         type: targetRepository.type,
@@ -204,9 +207,7 @@ export class Package extends File {
           url: context.templateBranch.url
         }
       }
-    };
-
-    template.template = { ...target.template, ...template.template };
+    });
 
     const properties = context.properties;
 
@@ -221,26 +222,31 @@ export class Package extends File {
 
     const actions = {};
 
-    merge(
+    target = merge(
       target,
       template,
       "",
       (action, hint) => aggregateActions(actions, action, hint),
       {
         files: { compare, type: "chore", scope: "files" },
-        bin: { compare, type: "chore", scope: "bin" },
-        scripts: { compare, type: "chore", scope: "scripts" },
-        /*
-      dependencies: {
-        removeEmpty: true
-      },
-      "dependencies.*": { merge: mergeVersionsLargest, compare },
-      
-      devDependencies: {
-        removeEmpty: true
-      },
-      "devDependencies.*": { merge: mergeVersionsLargest, compare },
-      */
+        bin: REMOVE_HINT,
+        "bin.*": { compare, type: "chore", scope: "bin" },
+        "scripts.*": {
+          compare,
+          merge: mergeExpressions,
+          type: "chore",
+          scope: "scripts"
+        },
+        dependencies: REMOVE_HINT,
+        "dependencies.*": { ...DEPENDENCY_HINT, type: "fix" },
+        devDependencies: REMOVE_HINT,
+        "devDependencies.*": DEPENDENCY_HINT,
+        peerDependencies: REMOVE_HINT,
+        "peerDependencies.*": DEPENDENCY_HINT,
+        optionalDependencies: REMOVE_HINT,
+        "optionalDependencies.*": DEPENDENCY_HINT,
+        bundeledDependencies: REMOVE_HINT,
+        "bundeledDependencies.*": DEPENDENCY_HINT,
         "engines.*": {
           merge: mergeVersionsLargest,
           compare,
@@ -256,9 +262,9 @@ export class Package extends File {
       }
     );
 
-    let messages = actions2messages(actions, "chore(package): ", this.name);
+    console.log("XXX",target.dependencies);
 
-    const decodedScripts = decodeScripts(target.scripts);
+    let messages = actions2messages(actions, "chore(package): ", this.name);
 
     const usedDevModules = await context.usedDevModules();
 
@@ -267,64 +273,6 @@ export class Package extends File {
     const optionalDevModules = context.optionalDevModules(usedDevModules);
 
     context.debug({ optionalDevModules: Array.from(optionalDevModules) });
-
-    const deepProperties = {
-      devDependencies: { type: "chore", scope: "package", merge: defaultMerge },
-      dependencies: { type: "fix", scope: "package", merge: defaultMerge },
-      peerDependencies: { type: "fix", scope: "package", merge: defaultMerge },
-      optionalDependencies: {
-        type: "fix",
-        scope: "package",
-        merge: defaultMerge
-      },
-      bundeledDependencies: {
-        type: "fix",
-        scope: "package",
-        merge: defaultMerge
-      },
-      bin: { type: "chore", scope: "bin", merge: defaultMerge }
-    };
-
-    Object.entries(deepProperties).forEach(([category, deepProperty]) => {
-      deepProperty.name = category;
-
-      if (template[category] !== undefined) {
-        Object.keys(template[category]).forEach(d => {
-          if (target[category] === undefined) {
-            target[category] = {};
-          }
-
-          const tp = context.expand(template[category][d]);
-          if (
-            category === "devDependencies" &&
-            target.dependencies !== undefined &&
-            target.dependencies[d] === tp
-          ) {
-            // do not include dev dependency if regular dependency is already present
-          } else {
-            deepProperty.merge(
-              target[category],
-              target[category][d],
-              tp,
-              deepProperty,
-              d,
-              messages
-            );
-          }
-        });
-      }
-    });
-
-    Object.entries(template).forEach(([p, templateObject]) => {
-      if (target[p] === undefined && target[p] !== "--delete--") {
-        target[p] = templateObject;
-        messages.push(`chore(package): add ${p} from template`);
-      }
-    });
-
-    target.scripts = encodeScripts(
-      mergeScripts(decodedScripts, decodeScripts(template.scripts))
-    );
 
     if (
       target.contributors !== undefined &&
@@ -503,42 +451,6 @@ function addKeyword(pkg, regex, keyword, messages) {
       messages.push(`docs(package): add keyword ${keyword}`);
       pkg.keywords.push(keyword);
     }
-  }
-}
-
-function normalizeVersion(e) {
-  return e.replace(/^[\^\$]/, "");
-}
-
-/**
- *
- */
-function defaultMerge(destination, target, template, dp, name, messages) {
-  if (template === "--delete--") {
-    if (target !== undefined) {
-      messages.push(`${dp.type}(${dp.scope}): remove ${name}@${target}`);
-      delete destination[name];
-    }
-
-    return;
-  }
-
-  if (target === undefined) {
-    messages.push(`${dp.type}(${dp.scope}): add ${name}@${template}`);
-    destination[name] = template;
-  } else if (template !== target) {
-    if (dp.name === "devDependencies") {
-      if (
-        compareVersion(normalizeVersion(target), normalizeVersion(template)) >=
-        0
-      ) {
-        return;
-      }
-    }
-
-    messages.push(`${dp.type}(${dp.scope}): ${name}@${template}`);
-
-    destination[name] = template;
   }
 }
 

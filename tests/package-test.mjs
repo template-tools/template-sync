@@ -122,10 +122,48 @@ test(
       }
     }
   },
-  [
-    "chore(package):  (repository)",
-    "chore(package): add repository from template"
-  ]
+  ["chore(package):  (repository)"]
+);
+
+test(
+  "remove empty deps",
+  pkgt,
+  {
+    dependencies: {},
+    repository: {
+      type: "git",
+      url: "http://mock-provider.com/tragetUser/targetRepo"
+    }
+  },
+  {
+    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    bugs: {
+      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+    },
+    template: {
+      repository: {
+        url: "http://mock-provider.com/templateRepo"
+      }
+    }
+  },
+  {
+    name: "targetRepo",
+    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    bugs: {
+      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+    },
+    repository: {
+      type: "git",
+      url: "http://mock-provider.com/tragetUser/targetRepo"
+    },
+    template: {
+      repository: {
+        url: "http://mock-provider.com/templateRepo"
+      }
+    }
+  },
+  ["chore(package):  (dependencies)",
+  "chore(package):  (repository)"]
 );
 
 test("default options", t => {
@@ -233,11 +271,12 @@ test("delete entries", async t => {
   const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).slot, {
+    add: 2,
     preserve: 3
   });
 
   t.false(merged.messages.includes("chore(package): delete other"));
-  t.true(merged.messages.includes("chore(package): delete slot.something"));
+  t.true(merged.messages.includes("chore(package):  (slot.something)"));
 });
 
 test("package preserve extra prepare", async t => {
@@ -386,8 +425,8 @@ test("package devDependencies", async t => {
   });
 
   t.true(
-    merged.messages.includes("chore(package): remove a@1") &&
-      merged.messages.includes("chore(package): add c@1")
+    merged.messages.includes("chore(package):  remove 1 (devDependencies.a)") &&
+      merged.messages.includes("chore(package):  add 1 (devDependencies.c)")
   );
 });
 
@@ -597,9 +636,10 @@ test("jsonpath", async t => {
   t.deepEqual(JSON.parse(merged.content).nyc, {
     "report-dir": "./build/coverage"
   });
+
   t.true(
     merged.messages.includes(
-      "chore(package): set $.nyc['report-dir']='./build/coverage' as in template"
+      "chore(package):  add ./build/coverage (nyc.report-dir)"
     )
   );
 });
