@@ -262,8 +262,6 @@ export class Package extends File {
       }
     );
 
-    console.log("XXX",target.dependencies);
-
     let messages = actions2messages(actions, "chore(package): ", this.name);
 
     const usedDevModules = await context.usedDevModules();
