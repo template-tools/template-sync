@@ -28,16 +28,16 @@ npm-template-sync --define "description=a very new fantastic module" -t myUser/m
 
 merges contents from template repo into destination repo handling some special cases for:
 
-- Licenses - rewriting license years
-- line set files like .npmignore and .gitignore - by merging both sets together
-- package.json - merge (.*)[Dd]ependencies, engines and scripts
-- rollup.conf.js - copy / rewrite
-- *.yml - merge
-- .travis.yml - merge with hints
-- *.toml - merge
-- *.ini - merge
-- *.json - merge
-- README.md - merge badges
+-   Licenses - rewriting license years
+-   line set files like .npmignore and .gitignore - by merging both sets together
+-   package.json - merge (.\*)[Dd]ependencies, engines and scripts
+-   rollup.conf.js - copy / rewrite
+-   \*.yml - merge
+-   .travis.yml - merge with hints
+-   \*.toml - merge
+-   \*.ini - merge
+-   \*.json - merge
+-   README.md - merge badges
 
 ![generated pull request](doc/pr_sample.png)
 
@@ -63,24 +63,18 @@ merges contents from template repo into destination repo handling some special c
 -   [PreparedContext](#preparedcontext)
     -   [Parameters](#parameters-1)
     -   [Properties](#properties-1)
--   [merge](#merge)
-    -   [Parameters](#parameters-2)
+-   [Readme](#readme)
 -   [File](#file)
-    -   [Parameters](#parameters-3)
+    -   [Parameters](#parameters-2)
     -   [Properties](#properties-2)
     -   [properties](#properties-3)
+        -   [Parameters](#parameters-3)
+    -   [merge](#merge)
         -   [Parameters](#parameters-4)
-    -   [merge](#merge-1)
-        -   [Parameters](#parameters-5)
--   [Readme](#readme)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-4)
-        -   [Parameters](#parameters-6)
--   [defaultMerge](#defaultmerge)
-    -   [Parameters](#parameters-7)
--   [normalizePackage](#normalizepackage)
-    -   [Parameters](#parameters-8)
+        -   [Parameters](#parameters-5)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
     -   [defaultIgnoreSet](#defaultignoreset)
@@ -89,18 +83,16 @@ merges contents from template repo into destination repo handling some special c
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
 -   [templateOptions](#templateoptions)
-    -   [Parameters](#parameters-9)
--   [compareVersion](#compareversion)
-    -   [Parameters](#parameters-10)
+    -   [Parameters](#parameters-6)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-11)
+    -   [Parameters](#parameters-7)
 
 ## Context
 
 ### Parameters
 
 -   `provider` **RepositoryProvider** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
 
 ### Properties
 
@@ -122,18 +114,11 @@ context prepared to execute one package
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
 
-## merge
+## Readme
 
-merge to values
+**Extends File**
 
-### Parameters
-
--   `a` **any** 
--   `b` **any** 
--   `path` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
--   `messages` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
-
-Returns **any** merged value
+injects badges into README.md
 
 ## File
 
@@ -167,12 +152,6 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
 
-## Readme
-
-**Extends File**
-
-injects badges into README.md
-
 ## sortedKeys
 
 order in which json keys are written
@@ -192,27 +171,6 @@ Deliver some key properties
 -   `branch` **Branch** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## defaultMerge
-
-### Parameters
-
--   `destination`  
--   `target`  
--   `template`  
--   `dp`  
--   `name`  
--   `messages`  
-
-## normalizePackage
-
-bring package into nomalized (sorted) form
-
-### Parameters
-
--   `source` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** normalized source
 
 ## MergeAndRemoveLineSet
 
@@ -264,17 +222,6 @@ find merger options in the template section of a package.json
 -   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## compareVersion
-
-compare two versions
-
-### Parameters
-
--   `a` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
--   `b` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** \-1 if a &lt; b, 0 if a == b and 1 if a > b
 
 ## jspath
 

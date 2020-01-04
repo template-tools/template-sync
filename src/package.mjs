@@ -1,13 +1,13 @@
 import {
   merge,
   mergeVersionsLargest,
-  mergeExpressions
+  mergeExpressions,
+  compareWithDefinedOrder
 } from "hinted-tree-merger";
 import { File } from "./file.mjs";
 import {
   actions2messages,
   aggregateActions,
-  sortObjectsKeys,
   jspath,
   defaultEncodingOptions
 } from "./util.mjs";
@@ -100,11 +100,10 @@ function compare(a, b) {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
-const REMOVE_HINT = { removeEmpty: true };
+const REMOVE_HINT = { compare, removeEmpty: true };
 
 const DEPENDENCY_HINT = {
   merge: mergeVersionsLargest,
-  compare,
   type: "chore",
   scope: "package"
 };
@@ -228,9 +227,13 @@ export class Package extends File {
       "",
       (action, hint) => aggregateActions(actions, action, hint),
       {
+        "*": {
+          compare: (a, b) => compareWithDefinedOrder(a, b, sortedKeys)
+        },
+        "repository": { compare },
         files: { compare, type: "chore", scope: "files" },
-        bin: REMOVE_HINT,
-        "bin.*": { compare, type: "chore", scope: "bin" },
+        bin: { compare, removeEmpty: true },
+        "bin.*": { type: "chore", scope: "bin" },
         "scripts.*": {
           compare,
           merge: mergeExpressions,
@@ -266,7 +269,9 @@ export class Package extends File {
           compare,
           type: "fix",
           scope: "pacman"
-        }
+        },
+        ava: { compare: undefined },
+        ...this.options.mergeHints
       }
     );
 
@@ -354,9 +359,7 @@ export class Package extends File {
       }
     });
 
-    const sortedTarget = normalizePackage(target);
-
-    let newContent = JSON.stringify(sortedTarget, undefined, 2);
+    let newContent = JSON.stringify(target, undefined, 2);
     const lastChar = newContent[newContent.length - 1];
 
     // keep trailing newline
@@ -458,39 +461,4 @@ function addKeyword(pkg, regex, keyword, messages) {
       pkg.keywords.push(keyword);
     }
   }
-}
-
-/**
- * bring package into nomalized (sorted) form
- * @param {Object} source
- * @return {Object} normalized source
- */
-function normalizePackage(source) {
-  const normalized = {};
-
-  sortedKeys.forEach(key => {
-    if (source[key] !== undefined) {
-      switch (key) {
-        case "bin":
-        case "scripts":
-        case "dependencies":
-        case "devDependencies":
-        case "peerDependencies":
-        case "optionalDependencies":
-        case "bundledDependencies":
-          normalized[key] = sortObjectsKeys(source[key]);
-          break;
-        default:
-          normalized[key] = source[key];
-      }
-    }
-  });
-
-  Object.keys(source).forEach(key => {
-    if (normalized[key] === undefined) {
-      normalized[key] = source[key];
-    }
-  });
-
-  return normalized;
 }

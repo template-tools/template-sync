@@ -23,7 +23,7 @@ export class File {
         value: name
       },
       options: {
-        value: Object.assign({}, this.defaultOptions, options)
+        value: { ...this.defaultOptions, ...options }
       }
     });
   }
