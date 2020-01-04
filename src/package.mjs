@@ -261,6 +261,9 @@ export class Package extends File {
           compare,
           overwrite: false
         },
+        "pacman": {
+          compare: undefined
+        },
         "pacman.*":{
           overwrite: false
         },
