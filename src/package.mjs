@@ -253,6 +253,14 @@ export class Package extends File {
           type: "fix",
           scope: "engines"
         },
+        config: REMOVE_HINT,
+        "config.*":{
+          compare,
+          overwrite: false
+        },
+        "pacman.*":{
+          overwrite: false
+        },
         "pacman.depends.*": {
           merge: mergeVersionsLargest,
           compare,
