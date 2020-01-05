@@ -2,6 +2,10 @@ import { mergeArrays, isScalar } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
 
+export function compare(a, b) {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
 export function asArray(o) {
   return Array.isArray(o) ? o : [o];
 }
@@ -77,7 +81,7 @@ export function mergeTemplateFiles(a, b) {
     "": { key: ["merger", "pattern"] },
     "*.options.badges": {
       key: "name",
-      compare: (a, b) => a.name.localeCompare(b.name)
+      compare
     }
   });
 }
@@ -89,25 +93,26 @@ export async function templateFilesFrom(pkg, provider, repo) {
     pkg = JSON.parse(await pc.getString());
   }
 
+  let files = [];
+
   const template = pkg.template;
 
   if (template) {
-    if (template.inheritFrom) {
-      const itf = await templateFilesFrom(
-        undefined,
-        provider,
-        template.inheritFrom
-      );
-
-      return template.files ? mergeTemplateFiles(template.files, itf) : itf;
+    if (template.files) {
+      files = template.files;
     }
 
-    if (template.files) {
-      return template.files;
+    if (template.inheritFrom) {
+      for (const ih of asArray(template.inheritFrom)) {
+        files = mergeTemplateFiles(
+          files,
+          await templateFilesFrom(undefined, provider, ih)
+        );
+      }
     }
   }
 
-  return [];
+  return files;
 }
 
 export function actions2messages(actions, prefix, name) {
@@ -126,7 +131,9 @@ export function actions2messages(actions, prefix, name) {
     return a.type ? `${a.type}(${a.scope}): ` : prefix + verbs.join(" ");
   });
 
-  return messages.length === 0 ? [`${prefix}merge from template ${name}`] : messages;
+  return messages.length === 0
+    ? [`${prefix}merge from template ${name}`]
+    : messages;
 }
 
 export function aggregateActions(actions, action, hint) {

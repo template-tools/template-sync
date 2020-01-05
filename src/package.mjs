@@ -9,7 +9,8 @@ import {
   actions2messages,
   aggregateActions,
   jspath,
-  defaultEncodingOptions
+  defaultEncodingOptions,
+  compare
 } from "./util.mjs";
 
 function moduleNames(object) {
@@ -97,9 +98,6 @@ const propertyKeys = [
   "browser"
 ];
 
-function compare(a, b) {
-  return a < b ? -1 : a > b ? 1 : 0;
-}
 
 const REMOVE_HINT = { compare, removeEmpty: true };
 
