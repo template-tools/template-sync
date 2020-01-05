@@ -98,12 +98,7 @@ const propertyKeys = [
 ];
 
 const REMOVE_HINT = { compare, removeEmpty: true };
-
-const DEPENDENCY_HINT = {
-  merge: mergeVersionsLargest,
-  type: "chore",
-  scope: "package"
-};
+const DEPENDENCY_HINT = { merge: mergeVersionsLargest };
 
 /**
  * Merger for package.json
@@ -234,6 +229,15 @@ export class Package extends File {
         });
     }
 
+    Object.entries(this.options.keywords).forEach(([r, keyword]) => {
+      if (target.name.match(new RegExp(r))) {
+        if (template.keywords === undefined) {
+          template.keywords = [];
+        }
+        template.keywords.push(keyword);
+      }
+    });
+
     const actions = {};
 
     target = merge(
@@ -243,8 +247,8 @@ export class Package extends File {
       (action, hint) => aggregateActions(actions, action, hint),
       {
         "": { orderBy: sortedKeys },
-        "*": { type: "chore" },
-        keywords: { removeEmpty: true, compare },
+        "*": { scope: "package", type: "chore" },
+        keywords: { removeEmpty: true, compare, type: "docs" },
         repository: { compare },
         files: { compare, scope: "files", removeEmpty: true },
         bin: { compare, removeEmpty: true },
@@ -308,12 +312,6 @@ export class Package extends File {
       }
     }
 
-    target = deleter(target, template, messages, []);
-
-    Object.entries(this.options.keywords).forEach(([r, rk]) =>
-      addKeyword(target, new RegExp(r), rk, messages)
-    );
-
     this.options.actions.forEach(action => {
       if (action.op === "replace") {
         const templateValue = jspath(template, action.path);
@@ -361,68 +359,5 @@ export class Package extends File {
       messages,
       changed
     };
-  }
-}
-
-function deleter(object, reference, messages, path) {
-  if (
-    typeof object === "string" ||
-    object instanceof String ||
-    object === true ||
-    object === false ||
-    object === undefined ||
-    object === null ||
-    typeof object === "number" ||
-    object instanceof Number
-  ) {
-    return object;
-  }
-
-  if (Array.isArray(object)) {
-    return object.map((e, i) => {
-      path.push(i);
-      const n = deleter(
-        object[i],
-        Array.isArray(reference) ? reference[i] : undefined,
-        messages,
-        path
-      );
-      path.pop();
-      return n;
-    });
-  }
-
-  if (reference) {
-    Object.entries(reference).forEach(([key, rk]) => {
-      path.push(key);
-
-      if (rk === "--delete--" && object[key] !== undefined) {
-        if (object[key] !== "--delete--") {
-          messages.push(`chore(package): delete ${path.join(".")}`);
-        }
-        delete object[key];
-      } else {
-        object[key] = deleter(object[key], rk, messages, path);
-      }
-      path.pop();
-    });
-  }
-
-  return object;
-}
-
-function addKeyword(pkg, regex, keyword, messages) {
-  if (keyword === undefined || keyword === null || keyword === "null") {
-    return;
-  }
-
-  if (pkg.name.match(regex)) {
-    if (pkg.keywords === undefined) {
-      pkg.keywords = [];
-    }
-    if (!pkg.keywords.find(k => k === keyword)) {
-      messages.push(`docs(package): add keyword ${keyword}`);
-      pkg.keywords.push(keyword);
-    }
   }
 }

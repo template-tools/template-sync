@@ -116,19 +116,30 @@ export async function templateFilesFrom(pkg, provider, repo) {
 }
 
 export function actions2messages(actions, prefix, name) {
-  const messages = Object.entries(actions).map(([slot, a]) => {
+  const messages = Object.entries(actions).map(([slot, action]) => {
+
     const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
     const verbs = ["add", "remove", "update"]
       .map(verb => [
         verb,
-        a.map(x => toValue(x[verb])).filter(x => x !== undefined)
+        action.map(x => toValue(x[verb])).filter(x => x !== undefined)
       ])
       .filter(([name, value]) => value.length > 0)
       .map(([name, value]) => `${name} ${value}`);
 
     verbs.push(`(${slot.replace(/\[\d*\]/, "")})`);
 
-    return a.type ? `${a.type}(${a.scope}): ` : prefix + verbs.join(" ");
+    const a = action.reduce((a,c)=> Object.assign(a,c),{ type: 'chore'});
+
+    if(a.type) {
+      prefix = a.type;
+      if(a.scope) {
+        prefix += `(${a.scope})`;
+      }
+      prefix += ': ';
+    }
+    
+    return prefix + verbs.join(" ");
   });
 
   return messages.length === 0

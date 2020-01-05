@@ -11,7 +11,7 @@ export class Travis extends YAML {
       ...super.defaultOptions,
       messagePrefix: "chore(travis): ",
       mergeHints: {
-        "*": { removeEmpty: true },
+        "*": { scope: "travis", removeEmpty: true },
         "*node_js": { merge: mergeVersionsPreferNumeric },
         "jobs.include": {
           key: "stage"

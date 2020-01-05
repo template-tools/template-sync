@@ -428,7 +428,7 @@ test("package devDependencies", async t => {
 
   t.true(
     merged.messages.includes("chore(package): remove 1 (devDependencies.a)") &&
-      merged.messages.includes("chore(package): add 1 (devDependencies.c)")
+      merged.messages.includes("chore: add 1 (devDependencies.c)")
   );
 });
 
@@ -528,7 +528,7 @@ test("package keywords", async t => {
   const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).keywords, ["A", "B", "X"]);
-  t.true(merged.messages.includes("docs(package): add keyword X"));
+  t.true(merged.messages.includes("docs(package): add X (keywords)"));
 });
 
 test("package keywords empty", async t => {
@@ -547,7 +547,8 @@ test("package keywords empty", async t => {
   const merged = await pkg.merge(context);
 
   t.deepEqual(JSON.parse(merged.content).keywords, ["XXX"]);
-  t.true(merged.messages.includes("docs(package): add keyword XXX"));
+
+  t.true(merged.messages.includes("docs(package): (keywords)"));
 });
 
 test("package remove null keyword", async t => {
@@ -565,7 +566,7 @@ test("package remove null keyword", async t => {
   const merged = await pkg.merge(context);
 
   t.is(JSON.parse(merged.content).keywords, undefined);
-  t.true(merged.messages.includes("chore(package): remove  (keywords)"));
+  t.true(merged.messages.includes("docs(package): remove  (keywords)"));
 });
 
 test("package remove unexpanded {{xxx}}", async t => {
