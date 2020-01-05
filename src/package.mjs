@@ -244,9 +244,9 @@ export class Package extends File {
       {
         "": { orderBy: sortedKeys },
         "*": { type: "chore" },
-        keywords: { compare },
+        keywords: { removeEmpty: true, compare },
         repository: { compare },
-        files: { compare, scope: "files" },
+        files: { compare, scope: "files", removeEmpty: true },
         bin: { compare, removeEmpty: true },
         "bin.*": { scope: "bin" },
         "scripts.*": {
@@ -312,12 +312,6 @@ export class Package extends File {
 
     Object.entries(this.options.keywords).forEach(([r, rk]) =>
       addKeyword(target, new RegExp(r), rk, messages)
-    );
-
-    removeKeyword(
-      target,
-      ["null", null, undefined, "npm-package-template"],
-      messages
     );
 
     this.options.actions.forEach(action => {
@@ -415,25 +409,6 @@ function deleter(object, reference, messages, path) {
   }
 
   return object;
-}
-
-function removeKeyword(pkg, keywords, messages) {
-  if (pkg.keywords !== undefined) {
-    keywords.forEach(keyword => {
-      if (pkg.keywords.find(k => k === keyword)) {
-        messages.push(`docs(package): remove keyword ${keyword}`);
-        pkg.keywords = pkg.keywords.filter(k => k !== keyword);
-      }
-    });
-
-    if (
-      (pkg.keywords.length === 1 && pkg.keywords[0] === null) ||
-      pkg.keywords[0] === undefined
-    ) {
-      messages.push(`docs(package): remove keyword null`);
-      pkg.keywords = [];
-    }
-  }
 }
 
 function addKeyword(pkg, regex, keyword, messages) {

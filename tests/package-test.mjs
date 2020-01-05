@@ -516,7 +516,7 @@ test("package keywords", async t => {
           url: `https://github.com/.git`
         }
       },
-      keywords: ["A", "B", "npm-package-template"]
+      keywords: ["A", "B"]
     }
   );
 
@@ -557,15 +557,15 @@ test("package remove null keyword", async t => {
     },
     {
       name: "abc_xxx_1",
-      keywords: [null]
+      keywords: [null,""]
     }
   );
 
   const pkg = new Package("package.json");
   const merged = await pkg.merge(context);
 
-  t.deepEqual(JSON.parse(merged.content).keywords, []);
-  t.true(merged.messages.includes("docs(package): remove keyword null"));
+  t.is(JSON.parse(merged.content).keywords, undefined);
+  t.true(merged.messages.includes("chore(package): remove  (keywords)"));
 });
 
 test("package remove unexpanded {{xxx}}", async t => {
