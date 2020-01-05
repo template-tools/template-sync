@@ -219,6 +219,24 @@ export class Package extends File {
       properties.module = target.module;
     }
 
+    const usedDevModules = await context.usedDevModules();
+    context.debug({ usedDevModules: [...usedDevModules] });
+
+    if(target.devDependencies) {
+    [
+      ...context.optionalDevModules(
+        new Set(Object.keys(target.devDependencies))
+      )
+    ]
+      .filter(m => !usedDevModules.has(m))
+      .forEach(m => {
+        if (template.devDependencies === undefined) {
+          template.devDependencies = {};
+        }
+        template.devDependencies[m] = "--delete--";
+      });
+    }
+    
     const actions = {};
 
     target = merge(
@@ -230,7 +248,7 @@ export class Package extends File {
         "*": {
           compare: (a, b) => compareWithDefinedOrder(a, b, sortedKeys)
         },
-        "repository": { compare },
+        repository: { compare },
         files: { compare, type: "chore", scope: "files" },
         bin: { compare, removeEmpty: true },
         "bin.*": { type: "chore", scope: "bin" },
@@ -257,11 +275,11 @@ export class Package extends File {
           scope: "engines"
         },
         config: REMOVE_HINT,
-        "config.*":{
+        "config.*": {
           compare,
           overwrite: false
         },
-        "pacman.*":{
+        "pacman.*": {
           overwrite: false
         },
         "pacman.depends.*": {
@@ -276,14 +294,6 @@ export class Package extends File {
     );
 
     let messages = actions2messages(actions, "chore(package): ", this.name);
-
-    const usedDevModules = await context.usedDevModules();
-
-    context.debug({ usedDevModules: Array.from(usedDevModules) });
-
-    const optionalDevModules = context.optionalDevModules(usedDevModules);
-
-    context.debug({ optionalDevModules: Array.from(optionalDevModules) });
 
     if (
       target.contributors !== undefined &&
@@ -302,22 +312,6 @@ export class Package extends File {
         }
       }
     }
-
-    const toBeDeletedModules =
-      target.devDependencies === undefined
-        ? []
-        : Array.from(
-            context.optionalDevModules(
-              new Set(Object.keys(target.devDependencies))
-            )
-          ).filter(m => !usedDevModules.has(m));
-
-    toBeDeletedModules.forEach(d => {
-      messages = messages.filter(
-        m => !m.startsWith(`chore(package): add ${d}@`)
-      );
-      delete target.devDependencies[d];
-    });
 
     target = deleter(target, template, messages, []);
 
