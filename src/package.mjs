@@ -84,6 +84,7 @@ const sortedKeys = [
   "ava",
   "nyc",
   "xo",
+  "native",
   "template"
 ];
 
