@@ -113,30 +113,25 @@ export async function templateFilesFrom(pkg, provider, repo) {
 export function actions2messages(actions, prefix, name) {
   const messages = Object.entries(actions).map(([slot, a]) => {
     const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
-    const verbs = ["add", "remove"]
+    const verbs = ["add", "remove", "update"]
       .map(verb => [
         verb,
         a.map(x => toValue(x[verb])).filter(x => x !== undefined)
       ])
       .filter(([name, value]) => value.length > 0)
-      .map(([name, value]) => `${name} ${value}`)
-      .join(" ");
+      .map(([name, value]) => `${name} ${value}`);
 
-    return a.type
-      ? `${a.type}(${a.scope}): `
-      : prefix + `${verbs} (${slot.replace(/\[\d*\]/, "")})`;
+    verbs.push(`(${slot.replace(/\[\d*\]/, "")})`);
+
+    return a.type ? `${a.type}(${a.scope}): ` : prefix + verbs.join(" ");
   });
 
-  if (messages.length === 0) {
-    messages.push(`${prefix}merge from template ${name}`);
-  }
-
-  return messages;
+  return messages.length === 0 ? [`${prefix}merge from template ${name}`] : messages;
 }
 
 export function aggregateActions(actions, action, hint) {
   if (hint) {
-    for (const key of ["type", "skope"]) {
+    for (const key of ["type", "scope"]) {
       if (hint[key]) {
         action[key] = hint[key];
       }

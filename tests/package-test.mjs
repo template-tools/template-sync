@@ -122,7 +122,7 @@ test(
       }
     }
   },
-  ["chore(package):  (repository)"]
+  ["chore(package): (repository)"]
 );
 
 test(
@@ -162,8 +162,8 @@ test(
       }
     }
   },
-  ["chore(package):  (dependencies)",
-  "chore(package):  (repository)"]
+  ["chore(package): (dependencies)",
+  "chore(package): (repository)"]
 );
 
 test("default options", t => {
@@ -276,7 +276,7 @@ test("delete entries", async t => {
   });
 
   t.false(merged.messages.includes("chore(package): delete other"));
-  t.true(merged.messages.includes("chore(package):  (slot.something)"));
+  t.true(merged.messages.includes("chore(package): (slot.something)"));
 });
 
 test("package preserve extra prepare", async t => {
