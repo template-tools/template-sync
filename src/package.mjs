@@ -236,7 +236,7 @@ export class Package extends File {
         template.devDependencies[m] = "--delete--";
       });
     }
-    
+
     const actions = {};
 
     target = merge(
@@ -279,7 +279,10 @@ export class Package extends File {
           compare,
           overwrite: false
         },
-        "pacman.*": {
+        "pacman": {
+          compare: undefined
+        },
+        "pacman.*":{
           overwrite: false
         },
         "pacman.depends.*": {
