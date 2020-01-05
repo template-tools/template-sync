@@ -9,7 +9,7 @@ export class Travis extends YAML {
   static get defaultOptions() {
     return {
       ...super.defaultOptions,
-      messagePrefix: "chore(travis):",
+      messagePrefix: "chore(travis): ",
       mergeHints: {
         "*": { removeEmpty: true },
         "*node_js": { merge: mergeVersionsPreferNumeric },

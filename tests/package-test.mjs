@@ -427,8 +427,8 @@ test("package devDependencies", async t => {
   });
 
   t.true(
-    merged.messages.includes("chore(package):  remove 1 (devDependencies.a)") &&
-      merged.messages.includes("chore(package):  add 1 (devDependencies.c)")
+    merged.messages.includes("chore(package): remove 1 (devDependencies.a)") &&
+      merged.messages.includes("chore(package): add 1 (devDependencies.c)")
   );
 });
 
@@ -641,7 +641,7 @@ test("jsonpath", async t => {
 
   t.true(
     merged.messages.includes(
-      "chore(package):  add ./build/coverage (nyc.report-dir)"
+      "chore(package): add ./build/coverage (nyc.report-dir)"
     )
   );
 });

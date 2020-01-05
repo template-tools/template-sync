@@ -115,16 +115,19 @@ export function actions2messages(actions, prefix, name) {
     const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
     const add = a.map(x => toValue(x.add)).filter(x => x !== undefined);
     const remove = a.map(x => toValue(x.remove)).filter(x => x !== undefined);
+
+    const verbs = Object.entries({ add, remove })
+      .filter(([name,value])=> value.length > 0)
+      .map(([name,value]) =>`${name} ${value}`).join(' ');
+
     return a.type
       ? `${a.type}(${a.scope}): `
       : prefix +
-          (add.length ? ` add ${add}` : "") +
-          (remove.length ? ` remove ${remove}` : "") +
-          ` (${slot.replace(/\[\d*\]/, "")})`;
+      `${verbs} (${slot.replace(/\[\d*\]/, "")})`;
   });
 
   if (messages.length === 0) {
-    messages.push(`${prefix} merge from template ${name}`);
+    messages.push(`${prefix}merge from template ${name}`);
   }
 
   return messages;
