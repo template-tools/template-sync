@@ -231,16 +231,16 @@ export const PreparedContext = LogLevelMixin(
      * all used dev modules
      * @return {Set<string>}
      */
-    async usedDevModules() {
+    async usedDevDependencies() {
       const usedModuleSets = await Promise.all(
         Array.from(this.files.values()).map(async file => {
           if (file.name === "package.json") {
-            return file.usedDevModules(
+            return file.usedDevDependencies(
               file.targetEntry(this, { ignoreMissing: true })
             );
           } else {
             const m = await file.merge(this);
-            return file.usedDevModules(m.content);
+            return file.usedDevDependencies(m.content);
           }
         })
       );
@@ -251,9 +251,9 @@ export const PreparedContext = LogLevelMixin(
       );
     }
 
-    optionalDevModules(modules) {
+    optionalDevDependencies(dependencies) {
       return Array.from(this.files.values())
-        .map(file => file.optionalDevModules(modules))
+        .map(file => file.optionalDevDependencies(dependencies))
         .reduce((sum, current) => new Set([...sum, ...current]), new Set());
     }
 

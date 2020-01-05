@@ -124,11 +124,11 @@ export class Package extends File {
     return name.match(/^package\.json$/);
   }
 
-  optionalDevModules(modules = new Set()) {
+  optionalDevDependencies(modules = new Set()) {
     return new Set(["cracks", "dont-crack"].filter(m => modules.has(m)));
   }
 
-  async usedDevModules(content) {
+  async usedDevDependencies(content) {
     content = await content;
 
     const pkg = content.length === 0 ? {} : JSON.parse(content);
@@ -220,22 +220,22 @@ export class Package extends File {
       properties.module = target.module;
     }
 
-    const usedDevModules = await context.usedDevModules();
-    context.debug({ usedDevModules: [...usedDevModules] });
-
-    if(target.devDependencies) {
-    [
-      ...context.optionalDevModules(
-        new Set(Object.keys(target.devDependencies))
-      )
-    ]
-      .filter(m => !usedDevModules.has(m))
-      .forEach(m => {
-        if (template.devDependencies === undefined) {
-          template.devDependencies = {};
-        }
-        template.devDependencies[m] = "--delete--";
-      });
+    if (target.devDependencies) {
+      const usedDevDependencies = await context.usedDevDependencies();
+      context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
+      [
+        ...context.optionalDevDependencies(
+          new Set(Object.keys(target.devDependencies))
+        )
+      ]
+        .filter(m => !usedDevDependencies.has(m))
+        .forEach(m => {
+          if (template.devDependencies === undefined) {
+            template.devDependencies = {};
+          }
+          template.devDependencies[m] = "--delete--";
+          context.debug(`delete devDependency: ${m}`);
+        });
     }
 
     const actions = {};
@@ -249,6 +249,7 @@ export class Package extends File {
         "": {
           compare: (a, b) => compareWithDefinedOrder(a, b, sortedKeys)
         },
+        keywords: { compare },
         repository: { compare },
         files: { compare, type: "chore", scope: "files" },
         bin: { compare, removeEmpty: true },
@@ -280,10 +281,10 @@ export class Package extends File {
           compare,
           overwrite: false
         },
-        "pacman": {
+        pacman: {
           compare: undefined
         },
-        "pacman.*":{
+        "pacman.*": {
           overwrite: false
         },
         "pacman.depends.*": {

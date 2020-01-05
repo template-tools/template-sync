@@ -88,7 +88,7 @@ test("context used dev modules", async t => {
   context.addFile(new Package("package.json"));
 
   t.deepEqual(
-    await context.usedDevModules(),
+    await context.usedDevDependencies(),
     new Set(["rollup-plugin-babel", "cracks"])
   );
 });
@@ -113,7 +113,7 @@ test("context optional dev modules", async t => {
   context.addFile(new Rollup("rollup.config.js"));
 
   t.deepEqual(
-    context.optionalDevModules(new Set(["rollup-plugin-babel"])),
+    context.optionalDevDependencies(new Set(["rollup-plugin-babel"])),
     new Set(["rollup-plugin-babel"])
   );
 });

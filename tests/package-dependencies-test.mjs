@@ -1,17 +1,17 @@
 import test from "ava";
 import { Package } from "../src/package.mjs";
 
-test("Package optional dev modules", t => {
+test("package optional dev dependencies", t => {
   const pkg = new Package("package.json");
   t.deepEqual(
-    pkg.optionalDevModules(new Set(["a", "cracks", "dont-crack"])),
+    pkg.optionalDevDependencies(new Set(["a", "cracks", "dont-crack"])),
     new Set(["cracks", "dont-crack"])
   );
 });
 
-test("Package optional dev modules empty", t => {
+test("package optional dev dependencies empty", t => {
   const pkg = new Package("package.json");
-  t.deepEqual(pkg.optionalDevModules(new Set()), new Set());
+  t.deepEqual(pkg.optionalDevDependencies(new Set()), new Set());
 });
 
 const PACKAGE_FILE_CONTENT = `{
@@ -20,10 +20,10 @@ const PACKAGE_FILE_CONTENT = `{
   }
 }`;
 
-test("Package used dev modules", async t => {
+test("package used dev dependencies", async t => {
   const pkg = new Package("package.json");
   t.deepEqual(
-    await pkg.usedDevModules(PACKAGE_FILE_CONTENT),
+    await pkg.usedDevDependencies(PACKAGE_FILE_CONTENT),
     new Set(["cracks"])
   );
 });

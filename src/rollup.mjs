@@ -12,29 +12,29 @@ export class Rollup extends File {
     return false;
   }
 
-  optionalDevModules(modules) {
+  optionalDevDependencies(dependencies) {
     return new Set(
-      Array.from(modules).filter(
+      Array.from(dependencies).filter(
         m => m.match(/@rollup\/plugin/) || m.match(/rollup-plugin/) || m.match(/babel-preset/)
       )
     );
   }
 
-  usedDevModules(content) {
-    const modules = new Set();
+  usedDevDependencies(content) {
+    const dependencies = new Set();
 
     try {
       const ast = recast.parse(content, parser);
 
       for (const decl of ast.program.body) {
         if (decl.type === "ImportDeclaration") {
-          modules.add(decl.source.value);
+          dependencies.add(decl.source.value);
         }
       }
     } catch (e) {
       console.log(e);
     }
-    return modules;
+    return dependencies;
   }
 
   async mergeContent(context, original, template) {

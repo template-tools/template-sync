@@ -40,11 +40,11 @@ export class File {
     return false;
   }
 
-  optionalDevModules(modules) {
+  optionalDevDependencies(modules) {
     return new Set();
   }
 
-  usedDevModules(content) {
+  usedDevDependencies(content) {
     return new Set();
   }
 

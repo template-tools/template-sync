@@ -4,7 +4,7 @@ import { JSDoc } from '../src/jsdoc.mjs';
 test('optional dev modules', t => {
   const jsdoc = new JSDoc('jsdoc.json');
   t.deepEqual(
-    jsdoc.optionalDevModules(new Set(['a', 'babel-preset-latest'])),
+    jsdoc.optionalDevDependencies(new Set(['a', 'babel-preset-latest'])),
     new Set(['babel-preset-latest'])
   );
 });
@@ -24,7 +24,7 @@ const FILE_CONTENT = `{
 test('used dev modules', async t => {
   const jsdoc = new JSDoc('jsdoc.json');
   t.deepEqual(
-    await jsdoc.usedDevModules(FILE_CONTENT),
+    await jsdoc.usedDevDependencies(FILE_CONTENT),
     new Set(['babel-preset-es2015', 'babel-preset-stage-3'])
   );
 });
