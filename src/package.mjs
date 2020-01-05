@@ -1,8 +1,7 @@
 import {
   merge,
   mergeVersionsLargest,
-  mergeExpressions,
-  compareWithDefinedOrder
+  mergeExpressions
 } from "hinted-tree-merger";
 import { File } from "./file.mjs";
 import {
@@ -97,7 +96,6 @@ const propertyKeys = [
   "module",
   "browser"
 ];
-
 
 const REMOVE_HINT = { compare, removeEmpty: true };
 
@@ -244,18 +242,16 @@ export class Package extends File {
       "",
       (action, hint) => aggregateActions(actions, action, hint),
       {
-        "": {
-          compare: (a, b) => compareWithDefinedOrder(a, b, sortedKeys)
-        },
+        "": { orderBy: sortedKeys },
+        "*": { type: "chore" },
         keywords: { compare },
         repository: { compare },
-        files: { compare, type: "chore", scope: "files" },
+        files: { compare, scope: "files" },
         bin: { compare, removeEmpty: true },
-        "bin.*": { type: "chore", scope: "bin" },
+        "bin.*": { scope: "bin" },
         "scripts.*": {
           compare,
           merge: mergeExpressions,
-          type: "chore",
           scope: "scripts"
         },
         dependencies: REMOVE_HINT,
@@ -279,9 +275,6 @@ export class Package extends File {
           compare,
           overwrite: false
         },
-        pacman: {
-          compare: undefined
-        },
         "pacman.*": {
           overwrite: false
         },
@@ -291,7 +284,6 @@ export class Package extends File {
           type: "fix",
           scope: "pacman"
         },
-        ava: { compare: undefined },
         ...this.options.mergeHints
       }
     );
