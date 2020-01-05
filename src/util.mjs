@@ -113,17 +113,18 @@ export async function templateFilesFrom(pkg, provider, repo) {
 export function actions2messages(actions, prefix, name) {
   const messages = Object.entries(actions).map(([slot, a]) => {
     const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
-    const add = a.map(x => toValue(x.add)).filter(x => x !== undefined);
-    const remove = a.map(x => toValue(x.remove)).filter(x => x !== undefined);
-
-    const verbs = Object.entries({ add, remove })
-      .filter(([name,value])=> value.length > 0)
-      .map(([name,value]) =>`${name} ${value}`).join(' ');
+    const verbs = ["add", "remove"]
+      .map(verb => [
+        verb,
+        a.map(x => toValue(x[verb])).filter(x => x !== undefined)
+      ])
+      .filter(([name, value]) => value.length > 0)
+      .map(([name, value]) => `${name} ${value}`)
+      .join(" ");
 
     return a.type
       ? `${a.type}(${a.scope}): `
-      : prefix +
-      `${verbs} (${slot.replace(/\[\d*\]/, "")})`;
+      : prefix + `${verbs} (${slot.replace(/\[\d*\]/, "")})`;
   });
 
   if (messages.length === 0) {
