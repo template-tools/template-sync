@@ -246,7 +246,7 @@ export class Package extends File {
       "",
       (action, hint) => aggregateActions(actions, action, hint),
       {
-        "*": {
+        "": {
           compare: (a, b) => compareWithDefinedOrder(a, b, sortedKeys)
         },
         repository: { compare },
