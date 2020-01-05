@@ -11,7 +11,7 @@ export class ReplaceIfEmpty extends File {
   async mergeContent(context, original, template) {
     return original === ''
       ? {
-          content: context.expand(template),
+          content: this.options.expand ? context.expand(template) : template,
           changed: template !== '',
           messages: [
             this.options.message ||
