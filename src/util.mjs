@@ -1,4 +1,4 @@
-import { merge, isScalar, compare } from "hinted-tree-merger";
+import { merge, isScalar, compare, mergeVersionsLargest } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
 
@@ -74,6 +74,8 @@ export function jspath(object, path, cb) {
 
 export function mergeTemplate(a, b) {
   return merge(a, b, "", undefined, {
+    "dependencies.*": { merge: mergeVersionsLargest },
+    "devDependencies.*": { merge: mergeVersionsLargest },
     "template.files": { key: ["merger", "pattern"] },
     "*.options.badges": {
       key: "name",
