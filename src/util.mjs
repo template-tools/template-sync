@@ -86,9 +86,16 @@ export function mergeTemplateFiles(a, b) {
   });
 }
 
-export async function templateFilesFrom(pkg, provider, repo) {
-  if (!pkg) {
-    const branch = await provider.branch(repo);
+/**
+ * load all templates and collects the files
+ * @param {RepositoryProvider} provider 
+ * @param {string|Object} source repo nmae or package content 
+ */
+export async function templateFilesFrom(provider, source) {
+  let pkg = source;
+
+  if (typeof source === 'string') {
+    const branch = await provider.branch(source);
     const pc = await branch.entry("package.json");
     pkg = JSON.parse(await pc.getString());
   }
@@ -106,7 +113,7 @@ export async function templateFilesFrom(pkg, provider, repo) {
       for (const ih of asArray(template.inheritFrom)) {
         files = mergeTemplateFiles(
           files,
-          await templateFilesFrom(undefined, provider, ih)
+          await templateFilesFrom(provider, ih)
         );
       }
     }

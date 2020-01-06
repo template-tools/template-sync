@@ -354,7 +354,7 @@ export const PreparedContext = LogLevelMixin(
       const { templatePackageJson } = await this.trackUsedModule(targetBranch);
 
       /* collect files form template cascade */
-      let templateFiles = await templateFilesFrom(templatePackageJson, this.provider, templatePackageJson.template.inheritFrom);
+      let templateFiles = await templateFilesFrom(this.provider, templatePackageJson);
 
       //console.log(templateFiles.map(f => `${f.merger}:${f.pattern}`));
     
