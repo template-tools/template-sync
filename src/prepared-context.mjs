@@ -18,7 +18,7 @@ import { YAML } from "./yaml.mjs";
 import { JSONFile } from "./json-file.mjs";
 import { JSDoc } from "./jsdoc.mjs";
 import { Context } from "./context.mjs";
-import { jspath, templateFilesFrom, mergeTemplateFiles } from "./util.mjs";
+import { jspath, templateFrom } from "./util.mjs";
 
 /**
  * context prepared to execute one package
@@ -351,10 +351,12 @@ export const PreparedContext = LogLevelMixin(
         targetBranch
       });
 
-      const { templatePackageJson } = await this.trackUsedModule(targetBranch);
+      let { templatePackageJson } = await this.trackUsedModule(targetBranch);
 
       /* collect files form template cascade */
-      let templateFiles = await templateFilesFrom(this.provider, templatePackageJson);
+      templatePackageJson = await templateFrom(this.provider, templatePackageJson);
+
+      const templateFiles = templatePackageJson.template.files;
 
       //console.log(templateFiles.map(f => `${f.merger}:${f.pattern}`));
     

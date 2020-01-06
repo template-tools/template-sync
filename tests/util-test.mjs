@@ -1,5 +1,5 @@
 import test from "ava";
-import { templateOptions, mergeTemplateFiles } from "../src/util.mjs";
+import { templateOptions, mergeTemplate } from "../src/util.mjs";
 
 test("templateOptions matching", t => {
   t.deepEqual(
@@ -44,68 +44,84 @@ test("templateOptions empty", t => {
 
 test("mergeTemplateFiles 1", t => {
   t.deepEqual(
-    mergeTemplateFiles(
-      [
-        {
-          merger: "Package"
+    mergeTemplate(
+      {
+        template: {
+          files: [
+            {
+              merger: "Package"
+            }
+          ]
         }
-      ],
-      [{ merger: "Package" }]
+      },
+      { template: { files: [{ merger: "Package" }] } }
     ),
-    [{ merger: "Package" }]
+    { template: { files: [{ merger: "Package" }] } }
   );
 });
 
 test("mergeTemplateFiles 2", t => {
   t.deepEqual(
-    mergeTemplateFiles(
-      [
-        {
-          merger: "Package",
-          options: {
-            badges: [
-              {
-                name: "npm",
-                icon: "https://img.shields.io/npm/v/{{name}}.svg",
-                url: "https://www.npmjs.com/package/{{name}}"
-              }
-            ]
-          }
-        }
-      ],
-      [
-        {
-          merger: "Package",
-          options: {
-            badges: [
-              {
-                name: "npm1",
-                icon: "https://img.shields.io/npm/v/{{name}}1.svg",
-                url: "https://www.npmjs.com/package/{{name}}1"
-              }
-            ]
-          }
-        }
-      ]
-    ),
-    [
+    mergeTemplate(
       {
-        merger: "Package",
-        options: {
-          badges: [
+        template: {
+          files: [
             {
-              name: "npm",
-              icon: "https://img.shields.io/npm/v/{{name}}.svg",
-              url: "https://www.npmjs.com/package/{{name}}"
-            },
+              merger: "Package",
+              options: {
+                badges: [
+                  {
+                    name: "npm",
+                    icon: "https://img.shields.io/npm/v/{{name}}.svg",
+                    url: "https://www.npmjs.com/package/{{name}}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        template: {
+          files: [
             {
-              name: "npm1",
-              icon: "https://img.shields.io/npm/v/{{name}}1.svg",
-              url: "https://www.npmjs.com/package/{{name}}1"
+              merger: "Package",
+              options: {
+                badges: [
+                  {
+                    name: "npm1",
+                    icon: "https://img.shields.io/npm/v/{{name}}1.svg",
+                    url: "https://www.npmjs.com/package/{{name}}1"
+                  }
+                ]
+              }
             }
           ]
         }
       }
-    ]
+    ),
+    {
+      template: {
+        files: [
+          {
+            merger: "Package",
+            options: {
+              badges: [
+                {
+                  name: "npm",
+                  icon: "https://img.shields.io/npm/v/{{name}}.svg",
+                  url: "https://www.npmjs.com/package/{{name}}"
+                },
+                {
+                  name: "npm1",
+                  icon: "https://img.shields.io/npm/v/{{name}}1.svg",
+                  url: "https://www.npmjs.com/package/{{name}}1"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
   );
 });

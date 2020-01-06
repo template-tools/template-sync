@@ -1,4 +1,4 @@
-import { mergeArrays, isScalar, compare } from "hinted-tree-merger";
+import { merge, isScalar, compare } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
 
@@ -72,9 +72,9 @@ export function jspath(object, path, cb) {
   return object[last];
 }
 
-export function mergeTemplateFiles(a, b) {
-  return mergeArrays(a, b, "", undefined, {
-    "": { key: ["merger", "pattern"] },
+export function mergeTemplate(a, b) {
+  return merge(a, b, "", undefined, {
+    "template.files": { key: ["merger", "pattern"] },
     "*.options.badges": {
       key: "name",
       compare
@@ -87,7 +87,7 @@ export function mergeTemplateFiles(a, b) {
  * @param {RepositoryProvider} provider 
  * @param {string|Object} source repo nmae or package content 
  */
-export async function templateFilesFrom(provider, source) {
+export async function templateFrom(provider, source) {
   let pkg = source;
 
   if (typeof source === 'string') {
@@ -96,26 +96,22 @@ export async function templateFilesFrom(provider, source) {
     pkg = JSON.parse(await pc.getString());
   }
 
-  let files = [];
+  let result = pkg;
 
   const template = pkg.template;
 
   if (template) {
-    if (template.files) {
-      files = template.files;
-    }
-
     if (template.inheritFrom) {
       for (const ih of asArray(template.inheritFrom)) {
-        files = mergeTemplateFiles(
-          files,
-          await templateFilesFrom(provider, ih)
+        result = mergeTemplate(
+          result,
+          await templateFrom(provider, ih)
         );
       }
     }
   }
 
-  return files;
+  return result;
 }
 
 export function actions2messages(actions, prefix, name) {
