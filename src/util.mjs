@@ -158,7 +158,7 @@ export function aggregateActions(actions, action, hint) {
       }
     }
   }
-
+ 
   if (actions[action.path] === undefined) {
     actions[action.path] = [action];
   } else {

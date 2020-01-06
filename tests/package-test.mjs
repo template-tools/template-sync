@@ -428,7 +428,7 @@ test("package devDependencies", async t => {
 
   t.true(
     merged.messages.includes("chore(package): remove 1 (devDependencies.a)") &&
-      merged.messages.includes("chore: add 1 (devDependencies.c)")
+      merged.messages.includes("chore(package): add 1 (devDependencies.c)")
   );
 });
 

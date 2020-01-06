@@ -95,7 +95,7 @@ test("travis node versions none numeric", async t => {
   );
 
   t.deepEqual(merged.messages, [
-    "chore: add 7.7.2 remove iojs (node_js)"
+    "chore(travis): add 7.7.2 remove iojs (node_js)"
   ]);
 });
 
