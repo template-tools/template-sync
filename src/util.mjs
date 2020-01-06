@@ -1,10 +1,6 @@
-import { mergeArrays, isScalar } from "hinted-tree-merger";
+import { mergeArrays, isScalar, compare } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
-
-export function compare(a, b) {
-  return a < b ? -1 : a > b ? 1 : 0;
-}
 
 export function asArray(o) {
   return Array.isArray(o) ? o : [o];

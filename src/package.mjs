@@ -1,15 +1,15 @@
 import {
   merge,
   mergeVersionsLargest,
-  mergeExpressions
+  mergeExpressions,
+  compare
 } from "hinted-tree-merger";
 import { File } from "./file.mjs";
 import {
   actions2messages,
   aggregateActions,
   jspath,
-  defaultEncodingOptions,
-  compare
+  defaultEncodingOptions
 } from "./util.mjs";
 
 function moduleNames(object) {
