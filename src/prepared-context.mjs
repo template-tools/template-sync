@@ -365,6 +365,15 @@ export const PreparedContext = LogLevelMixin(
         templateFiles
       );
 
+      
+      const pkg = files.find(f => f.name === 'package.json');
+      if(pkg) {
+        pkg.template = new StringContentEntry(
+          "package.json",
+          JSON.stringify(templatePackageJson, undefined, 2)
+        );
+      }
+
       files.forEach(f => this.addFile(f));
 
       this.trace(level =>

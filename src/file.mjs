@@ -62,7 +62,7 @@ export class File {
   }
 
   async content(context) {
-    let target, template;
+    let target;
 
     const targetName = context.expand(this.name);
 
@@ -75,13 +75,16 @@ export class File {
       target = new EmptyContentEntry(targetName);
     }
 
-    try {
-      template = await context.templateBranch.entry(this.name);
-    } catch (e) {
-      if (this.needsTemplate) {
-        throw e;
+    let template = this.template;
+    if (template === undefined) {
+      try {
+        template = await context.templateBranch.entry(this.name);
+      } catch (e) {
+        if (this.needsTemplate) {
+          throw e;
+        }
+        template = new EmptyContentEntry(this.name);
       }
-      template = new EmptyContentEntry(this.name);
     }
 
     return Promise.all([target.getString(), template.getString()]);
