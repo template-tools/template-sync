@@ -349,12 +349,14 @@ export class Package extends File {
 export async function deleteUnusedDevDependencies(context, target, template) {
   if (target.devDependencies) {
     const usedDevDependencies = await context.usedDevDependencies();
+    const allKnown = new Set([
+      ...Object.keys(target.devDependencies),
+      ...Object.keys(template.devDependencies)
+    ]);
+
     context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
-    [
-      ...context.optionalDevDependencies(
-        new Set(Object.keys(target.devDependencies))
-      )
-    ]
+    
+    [...context.optionalDevDependencies(allKnown)]
       .filter(m => !usedDevDependencies.has(m))
       .forEach(m => {
         if (template.devDependencies === undefined) {
