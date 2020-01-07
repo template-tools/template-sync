@@ -88,6 +88,10 @@ export const PreparedContext = LogLevelMixin(
       return this.constructor.mergers;
     }
 
+    get dry() {
+      return this.context.dry;
+    }
+
     get provider() {
       return this.context.provider;
     }
