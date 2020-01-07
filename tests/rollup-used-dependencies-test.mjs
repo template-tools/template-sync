@@ -6,11 +6,13 @@ test("rollup used dependencies", async t => {
 
   const modules = rollup.usedDevDependencies(`import babel from 'rollup-plugin-babel';
   import multiEntry from 'rollup-plugin-multi-entry';
+  import resolve from "@rollup/plugin-node-resolve";
 
   export default {
     entry: 'tests/**/*-test.js',
     external: ['ava', 'expression-expander'],
     plugins: [
+      resolve(),
       babel({
         babelrc: false,
         exclude: 'node_modules/**'
@@ -24,7 +26,11 @@ test("rollup used dependencies", async t => {
 
   t.deepEqual(
     modules,
-    new Set(["rollup-plugin-babel", "rollup-plugin-multi-entry"])
+    new Set([
+      "rollup-plugin-babel",
+      "rollup-plugin-multi-entry",
+      "@rollup/plugin-node-resolve"
+    ])
   );
 });
 
@@ -33,8 +39,13 @@ test("rollup optional dev modules", t => {
 
   t.deepEqual(
     file.optionalDevDependencies(
-      new Set(["a", "rollup-plugin-1", "babel-preset-xyz"])
+      new Set([
+        "a",
+        "rollup-plugin-1",
+        "babel-preset-xyz",
+        "@rollup/plugin-commonjs"
+      ])
     ),
-    new Set(["rollup-plugin-1", "babel-preset-xyz"])
+    new Set(["rollup-plugin-1", "babel-preset-xyz", "@rollup/plugin-commonjs"])
   );
 });
