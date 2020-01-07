@@ -1,7 +1,4 @@
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![Build Status](https://secure.travis-ci.org/arlac77/npm-template-sync.png)](http://travis-ci.org/arlac77/npm-template-sync)
-[![codecov.io](http://codecov.io/github/arlac77/npm-template-sync/coverage.svg?branch=master)](http://codecov.io/github/arlac77/npm-template-sync?branch=master)
-[![Coverage Status](https://coveralls.io/repos/arlac77/npm-template-sync/badge.svg)](https://coveralls.io/r/arlac77/npm-template-sync)
 [![Known Vulnerabilities](https://snyk.io/test/github/arlac77/npm-template-sync/badge.svg)](https://snyk.io/test/github/arlac77/npm-template-sync)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![npm](https://img.shields.io/npm/v/npm-template-sync.svg)](https://www.npmjs.com/package/npm-template-sync)
@@ -11,6 +8,9 @@
 [![minified size](https://badgen.net/bundlephobia/min/npm-template-sync)](https://bundlephobia.com/result?p=npm-template-sync)
 [![downloads](http://img.shields.io/npm/dm/npm-template-sync.svg?style=flat-square)](https://npmjs.org/package/npm-template-sync)
 [![GitHub Issues](https://img.shields.io/github/issues/arlac77/npm-template-sync.svg?style=flat-square)](https://github.com/arlac77/npm-template-sync/issues)
+[![Build Status](https://secure.travis-ci.org/arlac77/npm-template-sync.png)](http://travis-ci.org/arlac77/npm-template-sync)
+[![codecov.io](http://codecov.io/github/arlac77/npm-template-sync/coverage.svg?branch=master)](http://codecov.io/github/arlac77/npm-template-sync?branch=master)
+[![Coverage Status](https://coveralls.io/repos/arlac77/npm-template-sync/badge.svg)](https://coveralls.io/r/arlac77/npm-template-sync)
 
 ## npm-template-sync
 
