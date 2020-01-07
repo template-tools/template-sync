@@ -205,6 +205,13 @@ export const PreparedContext = LogLevelMixin(
 
       let alreadyPresent = new Set();
 
+      // order default patter to the last
+      mapping = mapping.sort((a,b) => {
+        if(a.pattern === '**/*') return 1;
+        if(b.pattern === '**/*') return -1;
+        return 0;
+      });
+
       return mapping
         .map(m => {
           const found = micromatch(
@@ -359,12 +366,10 @@ export const PreparedContext = LogLevelMixin(
 
       /* collect files form template cascade */
       templatePackageJson = await templateFrom(this.provider, templatePackageJson);
-
-      const templateFiles = templatePackageJson.template.files;
     
       const files = await PreparedContext.createFiles(
         templateBranch,
-        templateFiles
+        templatePackageJson.template.files
       );
 
       const pkg = files.find(f => f.name === 'package.json');
