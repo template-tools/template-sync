@@ -211,23 +211,7 @@ export class Package extends File {
       properties.module = target.module;
     }
 
-    if (target.devDependencies) {
-      const usedDevDependencies = await context.usedDevDependencies();
-      context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
-      [
-        ...context.optionalDevDependencies(
-          new Set(Object.keys(target.devDependencies))
-        )
-      ]
-        .filter(m => !usedDevDependencies.has(m))
-        .forEach(m => {
-          if (template.devDependencies === undefined) {
-            template.devDependencies = {};
-          }
-          template.devDependencies[m] = "--delete--";
-          context.debug(`delete devDependency: ${m}`);
-        });
-    }
+    await deleteUnusedDevDependencies(context, target, template);
 
     Object.entries(this.options.keywords).forEach(([r, keyword]) => {
       if (target.name.match(new RegExp(r))) {
@@ -359,5 +343,25 @@ export class Package extends File {
       messages,
       changed
     };
+  }
+}
+
+export async function deleteUnusedDevDependencies(context, target, template) {
+  if (target.devDependencies) {
+    const usedDevDependencies = await context.usedDevDependencies();
+    context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
+    [
+      ...context.optionalDevDependencies(
+        new Set(Object.keys(target.devDependencies))
+      )
+    ]
+      .filter(m => !usedDevDependencies.has(m))
+      .forEach(m => {
+        if (template.devDependencies === undefined) {
+          template.devDependencies = {};
+        }
+        template.devDependencies[m] = "--delete--";
+        context.debug(`devDependency: ${m}`);
+      });
   }
 }
