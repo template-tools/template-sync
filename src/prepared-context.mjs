@@ -357,15 +357,12 @@ export const PreparedContext = LogLevelMixin(
       templatePackageJson = await templateFrom(this.provider, templatePackageJson);
 
       const templateFiles = templatePackageJson.template.files;
-
-      //console.log(templateFiles.map(f => `${f.merger}:${f.pattern}`));
     
       const files = await PreparedContext.createFiles(
         templateBranch,
         templateFiles
       );
 
-      
       const pkg = files.find(f => f.name === 'package.json');
       if(pkg) {
         pkg.template = new StringContentEntry(
