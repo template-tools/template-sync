@@ -45,7 +45,7 @@
     "loglevel-mixin": "^5.0.3",
     "micromatch": "^4.0.2",
     "recast": "^0.18.5",
-    "remove-sensible-values": "1.0.3",
+    "remove-sensible-values": "1.0.4",
     "semver": "^7.1.1"
   },
   "devDependencies": {
