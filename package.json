@@ -38,14 +38,14 @@
     "commander": "^4.1.0",
     "content-entry": "^2.2.5",
     "expression-expander": "^7.0.3",
-    "github-repository-provider": "^7.5.2",
+    "github-repository-provider": "^7.5.3",
     "hinted-tree-merger": "^3.7.1",
     "js-yaml": "^3.13.1",
     "local-repository-provider": "^6.5.0",
     "loglevel-mixin": "^5.0.3",
     "micromatch": "^4.0.2",
     "recast": "^0.18.5",
-    "remove-sensible-values": "1.0.3",
+    "remove-sensible-values": "1.0.4",
     "semver": "^7.1.1"
   },
   "devDependencies": {
@@ -60,7 +60,7 @@
     "execa": "^4.0.0",
     "markdown-doctest": "^1.0.0",
     "mock-repository-provider": "^5.1.35",
-    "rollup": "^1.28.0",
+    "rollup": "^1.29.0",
     "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-executable": "^1.5.2",
     "semantic-release": "^15.14.0"
