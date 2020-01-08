@@ -26,6 +26,8 @@ define (initial) properties to be used in the template
 npm-template-sync --define "description=a very new fantastic module" -t myUser/myTemplate myUser/newModule
 ```
 
+[![asciicast](https://asciinema.org/a/fQ56SetIozD3KhcIylQPzKkOw.svg)](https://asciinema.org/a/fQ56SetIozD3KhcIylQPzKkOw)
+
 merges contents from template repo into destination repo handling some special cases for:
 
 -   Licenses - rewriting license years
