@@ -6,6 +6,7 @@ import { Travis } from "./travis.mjs";
 import { Readme } from "./readme.mjs";
 import { Package } from "./package.mjs";
 import { Rollup } from "./rollup.mjs";
+import { Markdown } from "./markdown.mjs";
 import { License } from "./license.mjs";
 import { MergeAndRemoveLineSet } from "./merge-and-remove-line-set.mjs";
 import { MergeLineSet } from "./merge-line-set.mjs";
@@ -35,6 +36,7 @@ export const PreparedContext = LogLevelMixin(
         TOML,
         INI,
         YAML,
+        Markdown,
         Rollup,
         Travis,
         Readme,

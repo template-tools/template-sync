@@ -44,10 +44,14 @@
     "js-yaml": "^3.13.1",
     "local-repository-provider": "^6.5.0",
     "loglevel-mixin": "^5.0.3",
+    "markdown": "^0.5.0",
     "micromatch": "^4.0.2",
     "recast": "^0.18.5",
+    "rehype-remark": "^7.0.0",
+    "remark-stringify": "^7.0.4",
     "remove-sensible-values": "1.0.4",
-    "semver": "^7.1.1"
+    "semver": "^7.1.1",
+    "unified": "^8.4.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.1",

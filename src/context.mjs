@@ -19,7 +19,11 @@ export class Context {
       { merger: "JSDoc", pattern: "**/jsdoc.json" },
       { merger: "Rollup", pattern: "**/rollup.config.js" },
       { merger: "License", pattern: "LICENSE" },
+      { merger: "Markdown", pattern: "*.md" },
       { merger: "TOML", pattern: "*.toml" },
+      { merger: "INI", pattern: "*.ini" },
+      { merger: "YAML", pattern: "*.yaml" },
+      { merger: "json", pattern: "*.json" },
       {
         merger: "MergeAndRemoveLineSet",
         pattern: ".gitignore",
