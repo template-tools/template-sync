@@ -205,7 +205,7 @@ export const PreparedContext = LogLevelMixin(
 
       let alreadyPresent = new Set();
 
-      // order default patter to the last
+      // order default pattern to the last
       mapping = mapping.sort((a,b) => {
         if(a.pattern === '**/*') return 1;
         if(b.pattern === '**/*') return -1;
@@ -400,7 +400,6 @@ export const PreparedContext = LogLevelMixin(
       this.info(merges.map(m => `${m.messages[0]}`).join(","));
 
       if (this.dry) {
-        this.info("dry run");
         return;
       }
 
