@@ -11,7 +11,7 @@ test('readme default options', t => {
   t.deepEqual(readme.options.badges, []);
 });
 
-test('readme', async t => {
+test.skip('readme', async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: {
