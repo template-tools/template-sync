@@ -1,5 +1,5 @@
 import { version, engines } from "../package.json";
-import { readFileSync } from "fs";
+import fs from "fs";
 import satisfies from "semver/functions/satisfies.js";
 import program from "commander";
 import { removeSensibleValues } from "remove-sensible-values";
@@ -102,7 +102,7 @@ program
 
       if (repos.length === 0 || repos[0] === ".") {
         const pkg = JSON.parse(
-          readFileSync("package.json", defaultEncodingOptions)
+          await fs.promises.readFile("package.json", defaultEncodingOptions)
         );
         repos.push(pkg.repository.url);
       }
