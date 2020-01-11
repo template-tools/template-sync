@@ -1,32 +1,7 @@
 import test from "ava";
-import { MockProvider } from "mock-repository-provider";
-import { Context } from "../src/context.mjs";
-import { PreparedContext } from "../src/prepared-context.mjs";
+import { createContext } from "./util.mjs";
 import { Markdown } from "../src/markdown.mjs";
 const FILE_NAME = "a.md";
-
-async function createContext(template, target) {
-  const provider = new MockProvider({
-    templateRepo: {
-      master: {
-        [FILE_NAME]: template
-      }
-    },
-    targetRepo: {
-      master: {
-        [FILE_NAME]: target
-      }
-    }
-  });
-
-  return PreparedContext.from(
-    new Context(provider, {
-      properties: { description: "value" },
-      templates: ["templateRepo"]
-    }),
-    "targetRepo"
-  );
-}
 
 
 test.skip("markdown merge", async t => {
@@ -40,7 +15,8 @@ test.skip("markdown merge", async t => {
 - a
 - b
 - c
-`
+`,
+FILE_NAME
   );
 
   const md = new Markdown(FILE_NAME, { expand: true });
