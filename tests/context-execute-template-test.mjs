@@ -18,7 +18,7 @@ test("context prepare from template", async t => {
   const pc = await PreparedContext.from(context, TEMPLATE_REPO);
 
   t.is(pc.targetBranch, undefined);
-  t.is(pc.templateBranch.fullCondensedName, TEMPLATE_REPO);
+  t.deepEqual(pc.templateBranches.map(b => b.fullCondensedName), [TEMPLATE_REPO]);
   //t.is(pc.properties.name, 'sync-test-repository');
   t.is(pc.properties.mySpecialKey, "mySpecialValue");
 });

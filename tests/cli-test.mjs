@@ -4,15 +4,9 @@ import { fileURLToPath } from "url";
 import execa from "execa";
 
 const here = dirname(fileURLToPath(import.meta.url));
-
 const nts = join(here, "..", "bin", "npm-template-sync");
 
-test.skip("cli defines", async t => {
-  const c = await execa(nts, ["-d", "test=test string", "--list-properties"]);
-  t.truthy(c.stdout.match(/test string/));
-});
-
-test("cli dryrun", async t => {
+test.only("cli dryrun", async t => {
   const c = await execa(nts, ["--dry", "arlac77/config-expander"]);
 
   /*

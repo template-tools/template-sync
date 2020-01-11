@@ -23,7 +23,7 @@ Line 2`
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: 'templateRepo'
+      templates: ["templateRepo"]
     }),
     'targetRepo'
   );

@@ -98,8 +98,8 @@ export const PreparedContext = LogLevelMixin(
       return this.context.provider;
     }
 
-    get templateBranchName() {
-      return this.context.templateBranchName;
+    get templates() {
+      return this.context.templates;
     }
 
     get properties() {
@@ -163,39 +163,33 @@ export const PreparedContext = LogLevelMixin(
 
       if (this.properties.usedBy !== undefined) {
         Object.defineProperties(this, {
-          templateBranch: { value: targetBranch }
+          templateBranches: { value: [targetBranch] }
         });
 
         return;
       }
 
-      let templateBranch;
+      if (context.templates.length === 0 && this.properties.templateRepos) {
+        context.templates.push(...this.properties.templateRepos);
+      }
 
-      if (context.templateBranchName === undefined) {
-        try {
-          templateBranch = await context.provider.branch(
-            this.properties.templateRepo
-          );
-        } catch (e) {}
+      const templateBranches = await Promise.all(context.templates.map(template => context.provider.branch(template)));
 
-        if (templateBranch === undefined) {
-          throw new Error(
-            `Unable to extract template repo url from ${targetBranch.name} ${pkg.name}`
-          );
-        }
-      } else {
-        templateBranch = await context.provider.branch(this.templateBranchName);
+      if (templateBranches.length === 0 || templateBranches[0] === undefined) {
+        throw new Error(
+          `Unable to extract template repo url from ${targetBranch.name} ${pkg.name}`
+        );
       }
 
       Object.defineProperties(this, {
         targetBranch: { value: targetBranch },
-        templateBranch: { value: templateBranch }
+        templateBranches: { value: templateBranches }
       });
 
       this.debug({
         message: "initialized for",
         targetBranch,
-        templateBranch
+        templateBranches
       });
     }
 
@@ -271,14 +265,17 @@ export const PreparedContext = LogLevelMixin(
     }
 
     async trackUsedModule(targetBranch) {
-      const templateBranch = this.templateBranch;
+      const templatePullRequests = [];
+      const templatePRBranches = [];
+      let templatePackageJson;
 
-      let templatePullRequest;
+      for(const templateBranch of this.templateBranches) {
       let newTemplatePullRequest = false;
       const templateAddBranchName = "npm-template-trac-usage/1";
       let templatePRBranch = await templateBranch.repository.branch(
         templateAddBranchName
       );
+      templatePRBranches.push(templatePRBranch);
 
       const pkg = new Package("package.json");
 
@@ -289,7 +286,7 @@ export const PreparedContext = LogLevelMixin(
 
       const templatePackageContent = await templatePackage.getString();
 
-      const templatePackageJson =
+      templatePackageJson =
         templatePackageContent === undefined || templatePackageContent === ""
           ? {}
           : JSON.parse(templatePackageContent);
@@ -323,18 +320,19 @@ export const PreparedContext = LogLevelMixin(
           ]);
 
           if (newTemplatePullRequest) {
-            templatePullRequest = await templateBranch.createPullRequest(
+            templatePullRequests.push(await templateBranch.createPullRequest(
               templatePRBranch,
               {
                 title: `add ${name}`,
                 body: `add tracking info for ${name}`
               }
-            );
+            ));
           }
         }
       }
+    }
 
-      return { templatePackageJson, templatePRBranch, templatePullRequest };
+      return { templatePackageJson, templatePRBranches, templatePullRequests };
     }
 
     async execute() {
@@ -355,7 +353,8 @@ export const PreparedContext = LogLevelMixin(
      * @return {Promise<PullRequest>}
      */
     async executeSingleRepo() {
-      const templateBranch = this.templateBranch;
+      // TODO loop over templates
+      const templateBranch = this.templateBranches[0];
       const targetBranch = this.targetBranch;
 
       this.debug({

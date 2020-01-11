@@ -78,7 +78,7 @@ export class File {
     let template = this.template;
     if (template === undefined) {
       try {
-        template = await context.templateBranch.entry(this.name);
+        template = await context.templateBranches[0].entry(this.name);
       } catch (e) {
         if (this.needsTemplate) {
           throw e;

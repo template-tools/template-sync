@@ -57,7 +57,7 @@ export default {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: 'templateRepo'
+      templates: ["templateRepo"]
     }),
     'targetRepo'
   );
@@ -120,7 +120,7 @@ export default {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: 'templateRepo'
+      templates: ["templateRepo"]
     }),
     'targetRepo'
   );
@@ -179,7 +179,7 @@ export default {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: 'templateRepo'
+      templates: ["templateRepo"]
     }),
     'targetRepo'
   );

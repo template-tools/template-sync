@@ -21,7 +21,7 @@ async function travisMerge(original, template) {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: "templateRepo"
+      templates: ["templateRepo"]
     }),
     "targetRepo"
   );
@@ -145,5 +145,4 @@ test("travis real merge", async t => {
       ]
     }
   });
-
 });

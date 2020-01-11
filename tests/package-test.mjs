@@ -29,7 +29,7 @@ async function createContext(template, target) {
 
   return await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: "templateRepo",
+      templates: ["templateRepo"],
       github: {
         repo: "the-repo-name",
         user: "the-user-name"

@@ -15,7 +15,7 @@ async function lmt(t, license, year = 2099, expected = "", messages = []) {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: "templateRepo",
+      templates: ["templateRepo"],
       properties: {
         date: { year },
         license: { owner: "xyz" }

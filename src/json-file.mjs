@@ -17,7 +17,7 @@ export class JSONFile extends File {
     }
 
     const actions = {};
-
+  
     const content = JSON.stringify(
       merge(
         original === undefined || original.length === 0 ? {} : JSON.parse(original),

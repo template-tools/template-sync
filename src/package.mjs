@@ -9,6 +9,8 @@ import {
   actions2messages,
   aggregateActions,
   jspath,
+  asScalar,
+  asArray,
   defaultEncodingOptions
 } from "./util.mjs";
 
@@ -154,7 +156,7 @@ export class Package extends File {
 
     if (pkg.template !== undefined) {
       if (pkg.template.repository !== undefined) {
-        properties.templateRepo = pkg.template.repository.url;
+        properties.templateRepos = asArray(pkg.template.repository.url);
       }
       if (pkg.template.usedBy !== undefined) {
         properties.usedBy = pkg.template.usedBy;
@@ -195,7 +197,7 @@ export class Package extends File {
       homepage: context.targetBranch.homePageURL,
       template: {
         repository: {
-          url: context.templateBranch.url
+          url: asScalar(context.templateBranches.map(branch => branch.url))
         }
       }
     });
@@ -355,7 +357,7 @@ export async function deleteUnusedDevDependencies(context, target, template) {
     ]);
 
     context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
-    
+
     [...context.optionalDevDependencies(allKnown)]
       .filter(m => !usedDevDependencies.has(m))
       .forEach(m => {

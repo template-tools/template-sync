@@ -26,7 +26,6 @@ define (initial) properties to be used in the template
 npm-template-sync --define "description=a very new fantastic module" -t myUser/myTemplate myUser/newModule
 ```
 
-
 merges contents from template repo into destination repo handling some special cases for:
 
 -   Licenses - rewriting license years
@@ -65,16 +64,16 @@ merges contents from template repo into destination repo handling some special c
     -   [Parameters](#parameters-1)
     -   [Properties](#properties-1)
 -   [Readme](#readme)
+-   [File](#file)
+    -   [Parameters](#parameters-2)
+    -   [Properties](#properties-2)
+    -   [properties](#properties-3)
+        -   [Parameters](#parameters-3)
+    -   [merge](#merge)
+        -   [Parameters](#parameters-4)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
-    -   [properties](#properties-2)
-        -   [Parameters](#parameters-2)
--   [File](#file)
-    -   [Parameters](#parameters-3)
-    -   [Properties](#properties-3)
     -   [properties](#properties-4)
-        -   [Parameters](#parameters-4)
-    -   [merge](#merge)
         -   [Parameters](#parameters-5)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
@@ -87,6 +86,8 @@ merges contents from template repo into destination repo handling some special c
     -   [Parameters](#parameters-6)
 -   [jspath](#jspath)
     -   [Parameters](#parameters-7)
+-   [templateFrom](#templatefrom)
+    -   [Parameters](#parameters-8)
 
 ## Context
 
@@ -99,7 +100,7 @@ merges contents from template repo into destination repo handling some special c
 
 -   `provider` **RepositoryProvider** 
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `options.templateBranchName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+    -   `options.templates` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 ## PreparedContext
 
@@ -120,26 +121,6 @@ context prepared to execute one package
 **Extends File**
 
 injects badges into README.md
-
-## sortedKeys
-
-order in which json keys are written
-
-## Package
-
-**Extends File**
-
-Merger for package.json
-
-### properties
-
-Deliver some key properties
-
-#### Parameters
-
--   `branch` **Branch** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ## File
 
@@ -172,6 +153,26 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 -   `context` **PreparedContect** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
+
+## sortedKeys
+
+order in which json keys are written
+
+## Package
+
+**Extends File**
+
+Merger for package.json
+
+### properties
+
+Deliver some key properties
+
+#### Parameters
+
+-   `branch` **Branch** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ## MergeAndRemoveLineSet
 
@@ -231,6 +232,15 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 -   `object`  
 -   `path`  
 -   `cb`  
+
+## templateFrom
+
+load all templates and collects the files
+
+### Parameters
+
+-   `provider` **RepositoryProvider** 
+-   `source` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
 
 # install
 

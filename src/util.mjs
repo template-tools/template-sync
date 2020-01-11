@@ -3,7 +3,11 @@ import { merge, isScalar, compare, mergeExpressions, mergeVersionsLargest } from
 export const defaultEncodingOptions = { encoding: "utf8" };
 
 export function asArray(o) {
-  return Array.isArray(o) ? o : [o];
+  return Array.isArray(o) ? o : o === undefined ? [] : [o];
+}
+
+export function asScalar(o) {
+  return Array.isArray(o) && o.length === 1 ? o[0] : o;
 }
 
 /**

@@ -34,7 +34,7 @@ test("context file targetEntry", async t => {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: "templateRepo"
+      templates: ["templateRepo"]
     }),
     "targetRepo"
   );
@@ -79,7 +79,7 @@ test("context used dev modules", async t => {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: "templateRepo"
+      templates: ["templateRepo"]
     }),
     "targetRepo"
   );
@@ -105,7 +105,7 @@ test("context optional dev modules", async t => {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templateBranchName: "templateRepo"
+      templates: ["templateRepo"]
     }),
     "targetRepo"
   );

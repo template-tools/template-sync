@@ -1,5 +1,5 @@
 import { PreparedContext } from "./prepared-context.mjs";
-
+import { asArray} from './util.mjs'; 
 export { PreparedContext };
 
 /**
@@ -8,7 +8,7 @@ export { PreparedContext };
  *
  * @property {RepositoryProvider} provider
  * @property {Object} options
- * @property {string} options.templateBranchName
+ * @property {string[]} options.templates
  */
 export class Context {
   static get defaultMapping() {
@@ -39,6 +39,7 @@ export class Context {
   }
 
   constructor(provider, options={}) {
+    options = { ...options, templates: asArray(options.templates) };
     Object.defineProperties(this, {
       trackUsedByModule: {
         value: options.trackUsedByModule || false
@@ -55,12 +56,12 @@ export class Context {
       properties: {
         value: {
           date: { year: new Date().getFullYear() },
-          license: {},  
+          license: {},
           ...options.properties
         }
       },
-      templateBranchName: {
-        value: options.templateBranchName
+      templates: {
+        value: options.templates
       }
     });
   }

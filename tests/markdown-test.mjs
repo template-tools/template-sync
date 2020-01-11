@@ -22,14 +22,14 @@ async function createContext(template, target) {
   return PreparedContext.from(
     new Context(provider, {
       properties: { description: "value" },
-      templateBranchName: "templateRepo"
+      templates: ["templateRepo"]
     }),
     "targetRepo"
   );
 }
 
 
-test("markdown merge", async t => {
+test.skip("markdown merge", async t => {
   const context = await createContext(
     `
 # Hello
