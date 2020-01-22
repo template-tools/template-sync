@@ -1,5 +1,6 @@
 import { PreparedContext } from "./prepared-context.mjs";
 import { asArray} from './util.mjs'; 
+import { Template } from "./template.mjs";
 export { PreparedContext };
 
 /**
@@ -60,10 +61,14 @@ export class Context {
           ...options.properties
         }
       },
-      templates: {
-        value: options.templates
+      template: {
+        value: new Template(provider, options.templates)
       }
     });
+  }
+
+  get templates() {
+    return this.template.templates;
   }
 
   get defaultMapping() {

@@ -1,4 +1,4 @@
-import { merge, isScalar, compare, mergeExpressions, mergeVersionsLargest } from "hinted-tree-merger";
+import { isScalar  } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
 
@@ -10,21 +10,6 @@ export function asScalar(o) {
   return Array.isArray(o) && o.length === 1 ? o[0] : o;
 }
 
-/**
- * find merger options in the template section of a package.json
- * @param {Object} json
- * @param {string} name
- * @return {Object}
- */
-export function templateOptions(json, name) {
-  if (json.template !== undefined && json.template.files !== undefined) {
-    const m = json.template.files.find(f => f.merger === name);
-    if (m !== undefined && m.options !== undefined) {
-      return m.options;
-    }
-  }
-  return {};
-}
 
 export function setProperty(properties, attributePath, value) {
   const m = attributePath.match(/^(\w+)\.(.*)/);
@@ -74,55 +59,6 @@ export function jspath(object, path, cb) {
   }
 
   return object[last];
-}
-
-export function mergeTemplate(a, b) {
-  return merge(a, b, "", undefined, {
-    "engines.*": { merge: mergeVersionsLargest },
-    "scripts.*": { merge: mergeExpressions },
-    "dependencies.*": { merge: mergeVersionsLargest },
-    "devDependencies.*": { merge: mergeVersionsLargest },
-    "pacman.depends.*": { merge: mergeVersionsLargest },
-    "config.*": { overwrite: false },
-    "pacman.*": { overwrite: false },
-    "template.files": { key: ["merger", "pattern"] },
-    "*.options.badges": {
-      key: "name",
-      compare
-    }
-  });
-}
-
-/**
- * load all templates and collects the files
- * @param {RepositoryProvider} provider 
- * @param {string|Object} source repo nmae or package content 
- */
-export async function templateFrom(provider, source) {
-  let pkg = source;
-
-  if (typeof source === 'string') {
-    const branch = await provider.branch(source);
-    const pc = await branch.entry("package.json");
-    pkg = JSON.parse(await pc.getString());
-  }
-
-  let result = pkg;
-
-  const template = pkg.template;
-
-  if (template) {
-    if (template.inheritFrom) {
-      for (const ih of asArray(template.inheritFrom)) {
-        result = mergeTemplate(
-          result,
-          await templateFrom(provider, ih)
-        );
-      }
-    }
-  }
-
-  return result;
 }
 
 export function actions2messages(actions, prefix, name) {

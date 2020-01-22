@@ -1,5 +1,5 @@
 import test from "ava";
-import { templateOptions, mergeTemplate } from "../src/util.mjs";
+import { templateOptions, mergeTemplate } from "../src/template.mjs";
 
 test("templateOptions matching", t => {
   t.deepEqual(

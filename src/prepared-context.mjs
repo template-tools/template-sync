@@ -19,7 +19,7 @@ import { YAML } from "./yaml.mjs";
 import { JSONFile } from "./json-file.mjs";
 import { JSDoc } from "./jsdoc.mjs";
 import { Context } from "./context.mjs";
-import { jspath, templateFrom } from "./util.mjs";
+import { jspath } from "./util.mjs";
 
 /**
  * context prepared to execute one package
@@ -98,6 +98,10 @@ export const PreparedContext = LogLevelMixin(
       return this.context.provider;
     }
 
+    get template() {
+      return this.context.template;
+    }
+
     get templates() {
       return this.context.templates;
     }
@@ -173,9 +177,11 @@ export const PreparedContext = LogLevelMixin(
         context.templates.push(...this.properties.templateRepos);
       }
 
-      const templateBranches = await Promise.all(context.templates.map(template => context.provider.branch(template)));
+      const templateBranches = await Promise.all(
+        context.templates.map(template => context.provider.branch(template))
+      );
 
-      if (templateBranches.length === 0 || templateBranches[0] === undefined) {
+      if (templateBranches.length === 0 || templateBranches[0] === undefined) {
         throw new Error(
           `Unable to extract template repo url from ${targetBranch.name} ${pkg.name}`
         );
@@ -188,23 +194,22 @@ export const PreparedContext = LogLevelMixin(
 
       this.debug({
         message: "initialized for",
-        targetBranch,
-        templateBranches
+        targetBranch
       });
     }
 
-    static async createFiles(branch, mapping = Context.defaultMapping) {
+    static async createFiles(template, mapping = Context.defaultMapping) {
       const files = [];
-      for await (const entry of branch) {
+      for await (const entry of template.entries()) {
         files.push(entry);
       }
 
       let alreadyPresent = new Set();
 
       // order default pattern to the last
-      mapping = mapping.sort((a,b) => {
-        if(a.pattern === '**/*') return 1;
-        if(b.pattern === '**/*') return -1;
+      mapping = mapping.sort((a, b) => {
+        if (a.pattern === "**/*") return 1;
+        if (b.pattern === "**/*") return -1;
         return 0;
       });
 
@@ -264,77 +269,6 @@ export const PreparedContext = LogLevelMixin(
         .reduce((sum, current) => new Set([...sum, ...current]), new Set());
     }
 
-    async trackUsedModule(targetBranch) {
-      const templatePullRequests = [];
-      const templatePRBranches = [];
-      let templatePackageJson;
-
-      for(const templateBranch of this.templateBranches) {
-      let newTemplatePullRequest = false;
-      const templateAddBranchName = "npm-template-trac-usage/1";
-      let templatePRBranch = await templateBranch.repository.branch(
-        templateAddBranchName
-      );
-      templatePRBranches.push(templatePRBranch);
-
-      const pkg = new Package("package.json");
-
-      const templatePackage = await (templatePRBranch
-        ? templatePRBranch
-        : templateBranch
-      ).entry(pkg.name);
-
-      const templatePackageContent = await templatePackage.getString();
-
-      templatePackageJson =
-        templatePackageContent === undefined || templatePackageContent === ""
-          ? {}
-          : JSON.parse(templatePackageContent);
-
-      if (this.context.trackUsedByModule) {
-        const name = targetBranch.fullCondensedName;
-
-        if (templatePackageJson.template === undefined) {
-          templatePackageJson.template = {};
-        }
-        if (!Array.isArray(templatePackageJson.template.usedBy)) {
-          templatePackageJson.template.usedBy = [];
-        }
-
-        if (!templatePackageJson.template.usedBy.find(n => n === name)) {
-          templatePackageJson.template.usedBy.push(name);
-          templatePackageJson.template.usedBy = templatePackageJson.template.usedBy.sort();
-
-          if (templatePRBranch === undefined) {
-            templatePRBranch = await templateBranch.createBranch(
-              templateAddBranchName
-            );
-            newTemplatePullRequest = true;
-          }
-
-          await templatePRBranch.commit(`fix: add ${name}`, [
-            new StringContentEntry(
-              "package.json",
-              JSON.stringify(templatePackageJson, undefined, 2)
-            )
-          ]);
-
-          if (newTemplatePullRequest) {
-            templatePullRequests.push(await templateBranch.createPullRequest(
-              templatePRBranch,
-              {
-                title: `add ${name}`,
-                body: `add tracking info for ${name}`
-              }
-            ));
-          }
-        }
-      }
-    }
-
-      return { templatePackageJson, templatePRBranches, templatePullRequests };
-    }
-
     async execute() {
       if (this.properties.usedBy !== undefined) {
         for (const r of this.properties.usedBy) {
@@ -353,34 +287,29 @@ export const PreparedContext = LogLevelMixin(
      * @return {Promise<PullRequest>}
      */
     async executeSingleRepo() {
-      // TODO loop over templates
-      const templateBranch = this.templateBranches[0];
       const targetBranch = this.targetBranch;
 
       this.debug({
         message: "executeSingleRepo",
-        templateBranch,
         targetBranch
       });
 
-      let { templatePackageJson } = await this.trackUsedModule(targetBranch);
+      await this.template.addUsedPackage(this, targetBranch);
 
-      /* collect files form template cascade */
-      templatePackageJson = await templateFrom(this.provider, templatePackageJson);
-    
+      let templatePackageJson = await this.template.package();
+
       const files = await PreparedContext.createFiles(
-        templateBranch,
+        this.template,
         templatePackageJson.template.files
       );
 
-      const pkg = files.find(f => f.name === 'package.json');
-      if(pkg) {
+      const pkg = files.find(f => f.name === "package.json");
+      if (pkg) {
         pkg.template = new StringContentEntry(
           "package.json",
           JSON.stringify(templatePackageJson, undefined, 2)
         );
       }
-
       files.forEach(f => this.addFile(f));
 
       this.trace(level =>
@@ -426,7 +355,7 @@ export const PreparedContext = LogLevelMixin(
       if (newPullRequestRequired) {
         try {
           const pullRequest = await targetBranch.createPullRequest(prBranch, {
-            title: `merge from ${templateBranch}`,
+            title: `merge from ${this.template}`,
             body: merges
               .map(
                 m =>

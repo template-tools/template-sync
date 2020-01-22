@@ -1,5 +1,5 @@
 import { File } from "./file.mjs";
-import { templateOptions } from "./util.mjs";
+import { templateOptions } from "./template.mjs";
 
 /**
  * injects badges into README.md
