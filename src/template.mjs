@@ -129,16 +129,10 @@ export async function templateFrom(provider, sources) {
   let result = {};
 
   for(const source of sources) {
-    let pkg = source;
-
-    if (typeof source === "string") {
-      const branch = await provider.branch(source);
-
-      const pc = await branch.entry("package.json");
-
-      pkg = JSON.parse(await pc.getString());
-      result = pkg;
-    }
+    const branch = await provider.branch(source);
+    const pc = await branch.entry("package.json");
+    const pkg = JSON.parse(await pc.getString());
+    result = mergeTemplate(result, pkg);
   
     const template = pkg.template;
   
