@@ -64,16 +64,16 @@ merges contents from template repo into destination repo handling some special c
     -   [Parameters](#parameters-1)
     -   [Properties](#properties-1)
 -   [Readme](#readme)
--   [File](#file)
-    -   [Parameters](#parameters-2)
-    -   [Properties](#properties-2)
-    -   [properties](#properties-3)
-        -   [Parameters](#parameters-3)
-    -   [merge](#merge)
-        -   [Parameters](#parameters-4)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
+    -   [properties](#properties-2)
+        -   [Parameters](#parameters-2)
+-   [File](#file)
+    -   [Parameters](#parameters-3)
+    -   [Properties](#properties-3)
     -   [properties](#properties-4)
+        -   [Parameters](#parameters-4)
+    -   [merge](#merge)
         -   [Parameters](#parameters-5)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
@@ -82,12 +82,14 @@ merges contents from template repo into destination repo handling some special c
     -   [defaultIgnoreSet](#defaultignoreset-1)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
--   [templateOptions](#templateoptions)
-    -   [Parameters](#parameters-6)
 -   [jspath](#jspath)
+    -   [Parameters](#parameters-6)
+-   [Template](#template)
     -   [Parameters](#parameters-7)
 -   [templateFrom](#templatefrom)
     -   [Parameters](#parameters-8)
+-   [templateOptions](#templateoptions)
+    -   [Parameters](#parameters-9)
 
 ## Context
 
@@ -122,6 +124,26 @@ context prepared to execute one package
 
 injects badges into README.md
 
+## sortedKeys
+
+order in which json keys are written
+
+## Package
+
+**Extends File**
+
+Merger for package.json
+
+### properties
+
+Deliver some key properties
+
+#### Parameters
+
+-   `branch` **Branch** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
 ## File
 
 Mergable File
@@ -153,26 +175,6 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 -   `context` **PreparedContect** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
-
-## sortedKeys
-
-order in which json keys are written
-
-## Package
-
-**Extends File**
-
-Merger for package.json
-
-### properties
-
-Deliver some key properties
-
-#### Parameters
-
--   `branch` **Branch** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ## MergeAndRemoveLineSet
 
@@ -214,6 +216,30 @@ Overwrites none existing file from template
 
 Replace file from template (always)
 
+## jspath
+
+### Parameters
+
+-   `object`  
+-   `path`  
+-   `cb`  
+
+## Template
+
+### Parameters
+
+-   `provider` **RepositoryProvider** 
+-   `templates` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>)** 
+
+## templateFrom
+
+load all templates and collects the files
+
+### Parameters
+
+-   `provider` **RepositoryProvider** 
+-   `sources` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
+
 ## templateOptions
 
 find merger options in the template section of a package.json
@@ -224,23 +250,6 @@ find merger options in the template section of a package.json
 -   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## jspath
-
-### Parameters
-
--   `object`  
--   `path`  
--   `cb`  
-
-## templateFrom
-
-load all templates and collects the files
-
-### Parameters
-
--   `provider` **RepositoryProvider** 
--   `source` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
 
 # install
 
