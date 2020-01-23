@@ -2,6 +2,7 @@ import {
   merge,
   mergeVersionsLargest,
   mergeExpressions,
+  mergeSkip,
   compare
 } from "hinted-tree-merger";
 import { File } from "./file.mjs";
@@ -274,6 +275,8 @@ export class Package extends File {
           type: "fix",
           scope: "pacman"
         },
+        "template.repository": { merge: mergeSkip },
+        "template.usedBy": { merge: mergeSkip },
         ...this.options.mergeHints
       }
     );

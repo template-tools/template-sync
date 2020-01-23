@@ -1,4 +1,4 @@
-import { merge, mergeVersionsLargest, mergeExpressions, compare }  from "hinted-tree-merger";
+import { merge, mergeVersionsLargest, mergeExpressions, mergeSkip, compare }  from "hinted-tree-merger";
 import { asArray } from './util.mjs';
 import { Package } from './package.mjs';
 
@@ -152,6 +152,8 @@ export function mergeTemplate(a, b) {
     "config.*": { overwrite: false },
     "pacman.*": { overwrite: false },
     "template.files": { key: ["merger", "pattern"] },
+    "template.inheritFrom": { merge: mergeSkip },
+    "template.usedBy": { merge: mergeSkip },
     "*.options.badges": {
       key: "name",
       compare
