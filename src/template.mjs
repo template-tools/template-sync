@@ -16,7 +16,10 @@ export class Template {
     });
   }
 
-  async initialize() {}
+  toString()
+  {
+    return this.templates[0];
+  }
 
   async entry(name) {
     let ec = this.entryCache(name);
@@ -25,11 +28,6 @@ export class Template {
     }
 
     templates.map(template => provider.branch(template));
-  }
-
-  toString()
-  {
-    return this.templates[0];
   }
 
   async *entries(matchingPatterns) {
