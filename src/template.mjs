@@ -18,7 +18,7 @@ export class Template {
 
   toString()
   {
-    return this.templates[0];
+    return this.templates.join(',');
   }
 
   async entry(name) {
