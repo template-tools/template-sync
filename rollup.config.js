@@ -9,9 +9,10 @@ import pkg from "./package.json";
 
 const external = [
   ...builtins,
+  "node-fetch",
   "universal-user-agent",
   "@octokit/rest",
-  "node-fetch"
+  "@octokit/plugin-throttling"
 ];
 const extensions = ["js", "mjs", "jsx", "tag"];
 const plugins = [
