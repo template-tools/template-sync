@@ -12,32 +12,6 @@ export { PreparedContext };
  * @property {string[]} options.templates
  */
 export class Context {
-  static get defaultMapping() {
-    return [
-      { merger: "Package", pattern: "**/package.json" },
-      { merger: "Travis", pattern: ".travis.yml" },
-      { merger: "Readme", pattern: "**/README.*" },
-      { merger: "JSDoc", pattern: "**/jsdoc.json" },
-      { merger: "Rollup", pattern: "**/rollup.config.js" },
-      { merger: "License", pattern: "LICENSE" },
-      { merger: "Markdown", pattern: "*.md" },
-      { merger: "TOML", pattern: "*.toml" },
-      { merger: "INI", pattern: "*.ini" },
-      { merger: "YAML", pattern: "*.yaml" },
-      { merger: "json", pattern: "*.json" },
-      {
-        merger: "MergeAndRemoveLineSet",
-        pattern: ".gitignore",
-        options: { message: "chore(git): merge {{entry.name}} with template" }
-      },
-      {
-        merger: "NpmIgnore",
-        pattern: ".npmignore",
-        options: { message: "chore(npm): merge {{entry.name}} with template" }
-      },
-      { merger: "ReplaceIfEmpty", pattern: "**/*" }
-    ];
-  }
 
   constructor(provider, options={}) {
     options = { ...options, templates: asArray(options.templates) };
@@ -62,17 +36,13 @@ export class Context {
         }
       },
       template: {
-        value: new Template(provider, options.templates)
+        value: Template.templateFor(provider, options.templates)
       }
     });
   }
 
   get templates() {
     return this.template.templates;
-  }
-
-  get defaultMapping() {
-    return this.constructor.defaultMapping;
   }
 
   log(arg) {

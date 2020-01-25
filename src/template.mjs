@@ -1,50 +1,141 @@
-import { merge, mergeVersionsLargest, mergeExpressions, mergeSkip, compare }  from "hinted-tree-merger";
-import { asArray } from './util.mjs';
-import { Package } from './package.mjs';
+import {
+  merge,
+  mergeVersionsLargest,
+  mergeExpressions,
+  mergeSkip,
+  compare
+} from "hinted-tree-merger";
+import { StringContentEntry } from "content-entry";
+import micromatch from "micromatch";
+import { asArray } from "./util.mjs";
+import { Package } from "./package.mjs";
+import { ReplaceIfEmpty } from "./replace-if-empty.mjs";
+import { mergers } from "./mergers.mjs";
 
+const templateCache = new Map();
 
 /**
  * @param {RepositoryProvider} provider
  * @param {string|string[]} templates
  */
 export class Template {
+
+  static templateFor(provider, urls) {
+    urls = asArray(urls);
+    const key = urls.join(',');
+    let template = templateCache.get(key);
+
+    if(!template) {
+      template = new Template(provider, urls);
+
+      templateCache.set(key,template);
+    }
+
+    return template;
+  }
+
   constructor(provider, templates) {
     Object.defineProperties(this, {
       provider: { value: provider },
-      templates: { value: asArray(templates) },
+      templates: { value: templates },
       entryCache: { value: new Map() }
     });
   }
 
-  toString()
-  {
-    return this.templates.join(',');
+  toString() {
+    return this.templates.join(",");
   }
 
   async entry(name) {
-    let ec = this.entryCache(name);
+    let ec = this.entryCache.get(name);
     if (ec) {
       return ec;
     }
 
-    templates.map(template => provider.branch(template));
+    if (name === "package.json") {
+      ec = new StringContentEntry(
+        name,
+        JSON.stringify(await templateFrom(this.provider, this.templates), undefined, 2)
+      );
+
+      this.entryCache.set(name,ec);
+      return ec;
+    }
+
+    const branch = await this.provider.branch(this.templates[0]);
+    return branch.entry(name);
   }
 
   async *entries(matchingPatterns) {
     const branch = await this.provider.branch(this.templates[0]);
-    yield *branch.entries(matchingPatterns);
+    yield* branch.entries(matchingPatterns);
   }
 
   async sources() {
-    return Promise.all(this.templates.map(template => this.provider.branch(template)));
+    return Promise.all(
+      this.templates.map(template => this.provider.branch(template))
+    );
   }
 
   async package() {
-    if(!this._package) {
-      this._package = await templateFrom(this.provider, this.templates);
+    const entry = await this.entry('package.json');
+    return JSON.parse(await entry.getString());
+  }
+
+  /**
+   *
+   */
+  async mergers() {
+    const factories = mergers;
+
+    const files = [];
+    for await (const entry of this.entries()) {
+      files.push(entry);
     }
 
-    return this._package;
+    const pkg = await this.package();
+
+    // order default pattern to the last
+    const mappings = pkg.template.files.sort((a, b) => {
+      if (a.pattern === "**/*") return 1;
+      if (b.pattern === "**/*") return -1;
+      return 0;
+    });
+
+    console.log(mappings);
+    
+    let alreadyPresent = new Set();
+
+    return mappings
+      .map(mapping => {
+        const found = micromatch(
+          files.map(f => f.name),
+          mapping.pattern
+        );
+
+        const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
+
+        alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
+
+        return notAlreadyProcessed.map(name => {
+          const factory =
+            factories.find(merger => merger.name === mapping.merger) ||
+            ReplaceIfEmpty;
+
+          console.log(name,factory);
+          const merger = new factory(name, mapping.options);
+
+          if (name === "package.json") {
+            merger.template = new StringContentEntry(
+              name,
+              JSON.stringify(pkg, undefined, 2)
+            );
+          }
+
+          return merger;
+        });
+      })
+      .reduce((last, current) => Array.from([...last, ...current]), []);
   }
 
   async addUsedPackage(context, targetBranch) {
@@ -126,17 +217,20 @@ export class Template {
 export async function templateFrom(provider, sources) {
   let result = {};
 
-  for(const source of sources) {
+  for (const source of sources) {
     const branch = await provider.branch(source);
     const pc = await branch.entry("package.json");
     const pkg = JSON.parse(await pc.getString());
     result = mergeTemplate(result, pkg);
-  
+
     const template = pkg.template;
-  
+
     if (template && template.inheritFrom) {
-      result = mergeTemplate(result, await templateFrom(provider, asArray(template.inheritFrom)));
-    }  
+      result = mergeTemplate(
+        result,
+        await templateFrom(provider, asArray(template.inheritFrom))
+      );
+    }
   }
 
   return result;

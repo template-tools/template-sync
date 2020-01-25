@@ -1,23 +1,7 @@
 import { createContext } from "expression-expander";
-import micromatch from "micromatch";
 import { LogLevelMixin, makeLogEvent } from "loglevel-mixin";
 import { StringContentEntry } from "content-entry";
-import { Travis } from "./travis.mjs";
-import { Readme } from "./readme.mjs";
 import { Package } from "./package.mjs";
-import { Rollup } from "./rollup.mjs";
-import { Markdown } from "./markdown.mjs";
-import { License } from "./license.mjs";
-import { MergeAndRemoveLineSet } from "./merge-and-remove-line-set.mjs";
-import { MergeLineSet } from "./merge-line-set.mjs";
-import { NpmIgnore } from "./npm-ignore.mjs";
-import { ReplaceIfEmpty } from "./replace-if-empty.mjs";
-import { Replace } from "./replace.mjs";
-import { TOML } from "./toml.mjs";
-import { INI } from "./ini.mjs";
-import { YAML } from "./yaml.mjs";
-import { JSONFile } from "./json-file.mjs";
-import { JSDoc } from "./jsdoc.mjs";
 import { Context } from "./context.mjs";
 import { jspath } from "./util.mjs";
 
@@ -31,28 +15,6 @@ import { jspath } from "./util.mjs";
  */
 export const PreparedContext = LogLevelMixin(
   class _PreparedContext {
-    static get mergers() {
-      return [
-        TOML,
-        INI,
-        YAML,
-        Markdown,
-        Rollup,
-        Travis,
-        Readme,
-        Package,
-        JSONFile,
-        JSDoc,
-        Travis,
-        MergeAndRemoveLineSet,
-        MergeLineSet,
-        NpmIgnore,
-        License,
-        ReplaceIfEmpty,
-        Replace
-      ];
-    }
-
     static async from(context, targetBranchName) {
       const pc = new PreparedContext(context, targetBranchName);
       await pc.initialize();
@@ -84,10 +46,6 @@ export const PreparedContext = LogLevelMixin(
         context: { value: context },
         targetBranchName: { value: targetBranchName }
       });
-    }
-
-    get mergers() {
-      return this.constructor.mergers;
     }
 
     get dry() {
@@ -198,42 +156,6 @@ export const PreparedContext = LogLevelMixin(
       });
     }
 
-    static async createFiles(template, mapping = Context.defaultMapping) {
-      const files = [];
-      for await (const entry of template.entries()) {
-        files.push(entry);
-      }
-
-      let alreadyPresent = new Set();
-
-      // order default pattern to the last
-      mapping = mapping.sort((a, b) => {
-        if (a.pattern === "**/*") return 1;
-        if (b.pattern === "**/*") return -1;
-        return 0;
-      });
-
-      return mapping
-        .map(m => {
-          const found = micromatch(
-            files.map(f => f.name),
-            m.pattern
-          );
-
-          const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
-
-          alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
-
-          return notAlreadyProcessed.map(f => {
-            const merger =
-              this.mergers.find(merger => merger.name === m.merger) ||
-              ReplaceIfEmpty;
-            return new merger(f, m.options);
-          });
-        })
-        .reduce((last, current) => Array.from([...last, ...current]), []);
-    }
-
     addFile(file) {
       file.logLevel = this.logLevel;
       this.files.set(file.name, file);
@@ -296,20 +218,8 @@ export const PreparedContext = LogLevelMixin(
 
       await this.template.addUsedPackage(this, targetBranch);
 
-      let templatePackageJson = await this.template.package();
+      const files = await this.template.mergers();
 
-      const files = await PreparedContext.createFiles(
-        this.template,
-        templatePackageJson.template.files
-      );
-
-      const pkg = files.find(f => f.name === "package.json");
-      if (pkg) {
-        pkg.template = new StringContentEntry(
-          "package.json",
-          JSON.stringify(templatePackageJson, undefined, 2)
-        );
-      }
       files.forEach(f => this.addFile(f));
 
       this.trace(level =>
