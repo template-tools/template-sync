@@ -15,7 +15,7 @@ export class Rollup extends File {
   optionalDevDependencies(dependencies) {
     return new Set(
       Array.from(dependencies).filter(
-        m => m.match(/@rollup\/plugin/) || m.match(/rollup-plugin/) || m.match(/babel-preset/)
+        m => m.match(/@rollup\/plugin/) || m.match(/rollup-plugin/) || m.match(/babel-preset/) || m === 'builtin-modules'
       )
     );
   }
