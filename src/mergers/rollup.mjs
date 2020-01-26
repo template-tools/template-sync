@@ -1,11 +1,10 @@
 import recast from "recast";
 import parser from "recast/parsers/babel.js";
+import { Merger } from "../merger.mjs";
 
-import { File } from "./file.mjs";
-
-export class Rollup extends File {
-  static matchesFileName(name) {
-    return name.match(/rollup\.config\.m?js/);
+export class Rollup extends Merger {
+  static get pattern() {
+    return "**/rollup.config.*js";
   }
 
   get needsTemplate() {

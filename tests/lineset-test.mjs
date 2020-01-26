@@ -1,6 +1,6 @@
 import test from "ava";
 import { createContext } from "./util.mjs";
-import { MergeLineSet } from "../src/merge-line-set.mjs";
+import { MergeLineSet } from "../src/mergers/merge-line-set.mjs";
 
 test("merge lines", async t => {
   const context = await createContext(

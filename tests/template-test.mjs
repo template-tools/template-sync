@@ -18,7 +18,11 @@ const provider = new MockProvider({
   template_b: {
     master: {
       "package.json": JSON.stringify({
-        devDependencies: { rollup: "^1.29.1" }
+        devDependencies: { rollup: "^1.29.1" },
+        template: {
+          files: [{ merger: "Travis", pattern: ".travis.yml" }],
+          inheritFrom: ["template_b"]
+        }
       })
     }
   }
@@ -26,13 +30,13 @@ const provider = new MockProvider({
 
 test("template constructor", t => {
   const template = new Template(provider, ["template"]);
-  t.deepEqual(template.templates, ["template"]);
+  t.deepEqual(template.sources, ["template"]);
   t.is(`${template}`, "template");
 });
 
 test("template cache", t => {
   const t1 = Template.templateFor(provider, ["template"]);
-  t.deepEqual(t1.templates, ["template"]);
+  t.deepEqual(t1.sources, ["template"]);
   const t2 = Template.templateFor(provider, ["template"]);
   t.is(t1, t2);
 });
@@ -42,15 +46,21 @@ test("template package content", async t => {
 
   t.deepEqual(await template.package(), {
     devDependencies: { ava: "^2.4.0", rollup: "^1.29.1" },
-    template: { files: [{ merger: "Package", pattern: "package.json" }],inheritFrom: ["template_b"] }
+    template: {
+      files: [
+        { merger: "Package", pattern: "package.json" },
+        { merger: "Travis", pattern: ".travis.yml" }
+      ],
+      inheritFrom: ["template_b"]
+    }
   });
 });
 
-test("template mergers", async t => {
+test.only("template mergers", async t => {
   const template = new Template(provider, ["template"]);
-
   const mergers = await template.mergers();
 
   t.is(mergers.length, 1);
-  t.is(mergers[0].name,"package.json");
+  t.is(mergers[0].name, "package.json");
+  t.is(mergers[0].constructor.name, "Package");
 });

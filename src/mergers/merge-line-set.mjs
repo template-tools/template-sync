@@ -1,9 +1,9 @@
-import { File } from "./file.mjs";
+import { Merger } from "../merger.mjs";
 
 /**
  * File where every line is a key
  */
-export class MergeLineSet extends File {
+export class MergeLineSet extends Merger {
   /**
    * entries to be skipped from result
    * @return {Set<string>}

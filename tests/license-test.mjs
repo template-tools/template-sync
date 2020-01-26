@@ -3,7 +3,7 @@ import { MockProvider } from "mock-repository-provider";
 
 import { Context } from "../src/context.mjs";
 import { PreparedContext } from "../src/prepared-context.mjs";
-import { License } from "../src/license.mjs";
+import { License } from "../src/mergers/license.mjs";
 
 async function lmt(t, license, year = 2099, expected = "", messages = []) {
   const provider = new MockProvider({

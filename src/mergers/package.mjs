@@ -5,7 +5,7 @@ import {
   mergeSkip,
   compare
 } from "hinted-tree-merger";
-import { File } from "./file.mjs";
+import { Merger } from "../merger.mjs";
 import {
   actions2messages,
   aggregateActions,
@@ -13,7 +13,7 @@ import {
   asScalar,
   asArray,
   defaultEncodingOptions
-} from "./util.mjs";
+} from "../util.mjs";
 
 function moduleNames(object) {
   if (object === undefined) return new Set();
@@ -106,16 +106,17 @@ const DEPENDENCY_HINT = { merge: mergeVersionsLargest };
 /**
  * Merger for package.json
  */
-export class Package extends File {
+export class Package extends Merger {
+
+  static get pattern() {
+    return "package.json";
+  }
+
   static get defaultOptions() {
     return {
       actions: [],
       keywords: []
     };
-  }
-
-  static matchesFileName(name) {
-    return name.match(/^package\.json$/);
   }
 
   optionalDevDependencies(modules = new Set()) {

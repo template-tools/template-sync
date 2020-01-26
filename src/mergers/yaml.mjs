@@ -1,11 +1,12 @@
 import yaml from "js-yaml";
 import { merge } from "hinted-tree-merger";
-import { File } from "./file.mjs";
-import { actions2messages, aggregateActions } from "./util.mjs";
+import { Merger } from "../merger.mjs";
+import { actions2messages, aggregateActions } from "../util.mjs";
 
-export class YAML extends File {
-  static matchesFileName(name) {
-    return name.match(/\.yaml$/);
+export class YAML extends Merger {
+
+  static get pattern() {
+    return "**/*.yaml";
   }
 
   static get defaultOptions() {

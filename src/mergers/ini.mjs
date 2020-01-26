@@ -1,10 +1,16 @@
+import { encode, decode } from "../ini-encoder.mjs";
 import { merge } from "hinted-tree-merger";
-import { actions2messages, aggregateActions } from "./util.mjs";
-import { File } from "./file.mjs";
+import { Merger } from "../merger.mjs";
+import { actions2messages, aggregateActions } from "../util.mjs";
 
-export class JSONFile extends File {
-  static matchesFileName(name) {
-    return name.match(/\.json$/);
+export class INI extends Merger {
+
+  static get pattern() {
+    return "**/*.ini";
+  }
+
+  static get defaultOptions() {
+    return { ...super.defaultOptions, expand: false };
   }
 
   get needsTemplate() {
@@ -17,15 +23,15 @@ export class JSONFile extends File {
     }
 
     const actions = {};
-  
-    const content = JSON.stringify(
+
+    const content = encode(
       merge(
-        original === undefined || original.length === 0 ? {} : JSON.parse(original),
-        JSON.parse(this.options.expand ? context.expand(templateRaw) : templateRaw)
+        decode(original) || {},
+        decode(this.options.expand ? context.expand(templateRaw) : templateRaw)
       ),
       "",
       (action, hint) => aggregateActions(actions, action, hint),
-      this.options.mergeHints 
+      this.options.mergeHints
     );
 
     return {

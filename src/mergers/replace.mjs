@@ -1,9 +1,9 @@
-import { File } from "./file.mjs";
+import { Merger } from "../merger.mjs";
 
 /**
  * Replace file from template (always)
  */
-export class Replace extends File {
+export class Replace extends Merger {
   async mergeContent(context, original, template) {
     const content = context.expand(template);
 

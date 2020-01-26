@@ -5,7 +5,7 @@ import { MockProvider } from "mock-repository-provider";
 
 import { Context } from "../src/context.mjs";
 import { PreparedContext } from "../src/prepared-context.mjs";
-import { Travis } from "../src/travis.mjs";
+import { Travis } from "../src/mergers/travis.mjs";
 
 async function travisMerge(template, original) {
   const provider = new MockProvider({

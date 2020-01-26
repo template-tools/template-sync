@@ -1,6 +1,6 @@
-import { JSONFile } from './json-file.mjs';
+import { JSONMerger } from './json.mjs';
 
-export class JSDoc extends JSONFile {
+export class JSDoc extends JSONMerger {
   optionalDevDependencies(dependencies) {
     return new Set(Array.from(dependencies).filter(m => m.match(/babel-preset/)));
   }

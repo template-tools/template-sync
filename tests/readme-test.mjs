@@ -3,8 +3,8 @@ import { MockProvider } from 'mock-repository-provider';
 
 import { Context } from '../src/context.mjs';
 import { PreparedContext } from '../src/prepared-context.mjs';
-import { Readme } from '../src/readme.mjs';
-import { Package } from '../src/package.mjs';
+import { Readme } from '../src/mergers/readme.mjs';
+import { Package } from '../src/mergers/package.mjs';
 
 test('readme default options', t => {
   const readme = new Readme('aFile');

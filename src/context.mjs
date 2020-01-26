@@ -12,7 +12,6 @@ export { PreparedContext };
  * @property {string[]} options.templates
  */
 export class Context {
-
   constructor(provider, options={}) {
     options = { ...options, templates: asArray(options.templates) };
     Object.defineProperties(this, {
@@ -41,8 +40,8 @@ export class Context {
     });
   }
 
-  get templates() {
-    return this.template.templates;
+  get sources() {
+    return this.template.sources;
   }
 
   log(arg) {

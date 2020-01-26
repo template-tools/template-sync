@@ -3,7 +3,7 @@ import { MockProvider } from 'mock-repository-provider';
 
 import { Context } from '../src/context.mjs';
 import { PreparedContext } from '../src/prepared-context.mjs';
-import { Rollup } from '../src/rollup.mjs';
+import { Rollup } from '../src/mergers/rollup.mjs';
 
 test('rollup', async t => {
   const provider = new MockProvider({

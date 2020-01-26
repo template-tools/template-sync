@@ -1,6 +1,6 @@
 import test from "ava";
 import { createContext } from "./util.mjs";
-import { NpmIgnore } from "../src/npm-ignore.mjs";
+import { NpmIgnore } from "../src/mergers/npm-ignore.mjs";
 
 test("NpmIgnore lines", async t => {
   const context = await createContext(

@@ -4,8 +4,9 @@ import { MergeAndRemoveLineSet } from './merge-and-remove-line-set.mjs';
  *
  */
 export class NpmIgnore extends MergeAndRemoveLineSet {
-  static matchesFileName(name) {
-    return name === '.npmignore';
+
+  static get pattern() {
+    return ".npmignore";
   }
 
   /**

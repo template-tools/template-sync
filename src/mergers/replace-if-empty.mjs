@@ -1,9 +1,9 @@
-import { File } from './file.mjs';
+import { Merger } from "../merger.mjs";
 
 /**
  * Overwrites none existing file from template
  */
-export class ReplaceIfEmpty extends File {
+export class ReplaceIfEmpty extends Merger {
   get needsTemplate() {
     return false;
   }

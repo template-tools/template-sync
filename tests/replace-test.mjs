@@ -1,6 +1,6 @@
 import test from "ava";
 import { createContext } from "./util.mjs";
-import { Replace } from "../src/replace.mjs";
+import { Replace } from "../src/mergers/replace.mjs";
 
 test("replace", async t => {
   const context = await createContext(

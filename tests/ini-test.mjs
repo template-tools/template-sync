@@ -1,7 +1,7 @@
 import test from "ava";
 import { createContext } from "./util.mjs";
 import { decode } from "../src/ini-encoder.mjs";
-import { INI } from "../src/ini.mjs";
+import { INI } from "../src/mergers/ini.mjs";
 
 test("ini merge", async t => {
   const fileName = "a.ini";

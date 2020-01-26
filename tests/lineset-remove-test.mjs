@@ -1,6 +1,6 @@
 import test from "ava";
 import { createContext } from "./util.mjs";
-import { MergeAndRemoveLineSet } from "../src/merge-and-remove-line-set.mjs";
+import { MergeAndRemoveLineSet } from "../src/mergers/merge-and-remove-line-set.mjs";
 
 test("MergeAndRemoveLineSet lines", async t => {
   const context = await createContext(

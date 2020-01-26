@@ -1,6 +1,6 @@
 import test from "ava";
 import { createContext } from "./util.mjs";
-import { TOML } from "../src/toml.mjs";
+import { TOML } from "../src/mergers/toml.mjs";
 import stringify from "@iarna/toml/stringify.js";
 import parse from "@iarna/toml/parse-string.js";
 

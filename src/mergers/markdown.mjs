@@ -2,12 +2,12 @@ import unified from "unified";
 import markdown from "remark-parse";
 import rehype2remark from "rehype-remark";
 import stringify from "remark-stringify";
-import { File } from "./file.mjs";
-import { actions2messages } from "./util.mjs";
+import { Merger } from "../merger.mjs";
+import { actions2messages } from "../util.mjs";
 
-export class Markdown extends File {
-  static matchesFileName(name) {
-    return name.match(/\.md$/);
+export class Markdown extends Merger {
+  static get pattern() {
+    return "**/*.md";
   }
 
   async mergeContent(context, original, template) {

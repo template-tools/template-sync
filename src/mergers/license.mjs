@@ -1,4 +1,4 @@
-import { File } from "./file.mjs";
+import { Merger } from "../merger.mjs";
 
 function getRanges(array) {
   const ranges = [];
@@ -50,9 +50,9 @@ export function stringToIntegers(str) {
   return years;
 }
 
-export class License extends File {
-  static matchesFileName(name) {
-    return name.match(/^LICENSE/);
+export class License extends Merger {
+  static get pattern() {
+    return "**/LICENSE*";
   }
 
   static get defaultOptions() {

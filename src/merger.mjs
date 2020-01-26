@@ -8,9 +8,10 @@ import { EmptyContentEntry } from "content-entry/src/empty-content-entry.mjs";
  * @property {string} name
  * @property {Object} options
  */
-export class File {
-  static matchesFileName(name) {
-    return false;
+export class Merger {
+
+  static get pattern() {
+    return "**/*";
   }
 
   static get defaultOptions() {

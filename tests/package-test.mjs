@@ -3,7 +3,7 @@ import { MockProvider } from "mock-repository-provider";
 
 import { Context } from "../src/context.mjs";
 import { PreparedContext } from "../src/prepared-context.mjs";
-import { Package } from "../src/package.mjs";
+import { Package } from "../src/mergers/package.mjs";
 
 const FILE_NAME = "package.json";
 

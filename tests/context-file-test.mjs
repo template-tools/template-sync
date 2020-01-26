@@ -1,26 +1,10 @@
 import test from "ava";
 import { MockProvider } from "mock-repository-provider";
-import { GithubProvider } from "github-repository-provider";
 
 import { Context } from "../src/context.mjs";
 import { PreparedContext } from "../src/prepared-context.mjs";
-import { Package } from "../src/package.mjs";
-import { Rollup } from "../src/rollup.mjs";
-
-const REPOSITORY_NAME = "arlac77/sync-test-repository";
-
-test("create files", async t => {
-  const provider = new GithubProvider(
-    GithubProvider.optionsFromEnvironment(process.env)
-  );
-
-  const files = await PreparedContext.createFiles(
-    await provider.branch(REPOSITORY_NAME + "#master")
-  );
-
-  t.is(files.find(f => f.name === "package.json").name, "package.json");
-  t.is(files.find(f => f.name === "package.json").constructor.name, "Package");
-});
+import { Package } from "../src/mergers/package.mjs";
+import { Rollup } from "../src/mergers/rollup.mjs";
 
 test("context file targetEntry", async t => {
   const provider = new MockProvider({

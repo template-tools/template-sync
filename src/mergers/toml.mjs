@@ -1,12 +1,13 @@
 import stringify from "@iarna/toml/stringify.js";
 import parse from "@iarna/toml/parse-string.js";
 import { merge } from "hinted-tree-merger";
-import { File } from "./file.mjs";
-import { actions2messages, aggregateActions } from "./util.mjs";
+import { Merger } from "../merger.mjs";
+import { actions2messages, aggregateActions } from "../util.mjs";
 
-export class TOML extends File {
-  static matchesFileName(name) {
-    return name.match(/\.toml$/);
+export class TOML extends Merger {
+
+  static get pattern() {
+    return "**/*.toml";
   }
 
   static get defaultOptions() {

@@ -8,42 +8,40 @@ import {
 import { StringContentEntry } from "content-entry";
 import micromatch from "micromatch";
 import { asArray } from "./util.mjs";
-import { Package } from "./package.mjs";
-import { ReplaceIfEmpty } from "./replace-if-empty.mjs";
+import { Package } from "./mergers/package.mjs";
+import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
 
 const templateCache = new Map();
 
 /**
  * @param {RepositoryProvider} provider
- * @param {string|string[]} templates
+ * @param {string[]} sources
  */
 export class Template {
-
   static templateFor(provider, urls) {
     urls = asArray(urls);
-    const key = urls.join(',');
+    const key = urls.join(",");
     let template = templateCache.get(key);
 
-    if(!template) {
+    if (template === undefined) {
       template = new Template(provider, urls);
-
-      templateCache.set(key,template);
+      templateCache.set(key, template);
     }
 
     return template;
   }
 
-  constructor(provider, templates) {
+  constructor(provider, sources) {
     Object.defineProperties(this, {
       provider: { value: provider },
-      templates: { value: templates },
+      sources: { value: sources },
       entryCache: { value: new Map() }
     });
   }
 
   toString() {
-    return this.templates.join(",");
+    return this.sources.join(",");
   }
 
   async entry(name) {
@@ -55,30 +53,45 @@ export class Template {
     if (name === "package.json") {
       ec = new StringContentEntry(
         name,
-        JSON.stringify(await templateFrom(this.provider, this.templates), undefined, 2)
+        JSON.stringify(
+          await _templateFrom(this.provider, this.sources, new Set()),
+          undefined,
+          2
+        )
       );
 
-      this.entryCache.set(name,ec);
+      this.entryCache.set(name, ec);
       return ec;
     }
 
-    const branch = await this.provider.branch(this.templates[0]);
+    const branch = await this.provider.branch(this.sources[0]);
     return branch.entry(name);
   }
 
   async *entries(matchingPatterns) {
-    const branch = await this.provider.branch(this.templates[0]);
-    yield* branch.entries(matchingPatterns);
+    for (const branch of await this.branches()) {
+      console.log(branch);
+      if (branch) {
+        for await ( const entry of branch.entries(matchingPatterns)) {
+          let ec = this.entryCache.get(entry.name);
+          if(!ec) {
+        //    this.entryCache.set(entry.name, entry);
+          }
+
+          yield entry;
+        }
+      }
+    }
   }
 
-  async sources() {
+  async branches() {
     return Promise.all(
-      this.templates.map(template => this.provider.branch(template))
+      this.sources.map(source => this.provider.branch(source))
     );
   }
 
   async package() {
-    const entry = await this.entry('package.json');
+    const entry = await this.entry("package.json");
     return JSON.parse(await entry.getString());
   }
 
@@ -103,7 +116,7 @@ export class Template {
     });
 
     console.log(mappings);
-    
+
     let alreadyPresent = new Set();
 
     return mappings
@@ -122,7 +135,7 @@ export class Template {
             factories.find(merger => merger.name === mapping.merger) ||
             ReplaceIfEmpty;
 
-          console.log(name,factory);
+          console.log(name, factory);
           const merger = new factory(name, mapping.options);
 
           if (name === "package.json") {
@@ -143,7 +156,7 @@ export class Template {
     const prBranches = [];
     let packageJson;
 
-    for (const templateBranch of await this.sources()) {
+    for (const templateBranch of await this.branches()) {
       let newTemplatePullRequest = false;
       const templateAddBranchName = "npm-template-trac-usage/1";
       let templatePRBranch = await templateBranch.repository.branch(
@@ -214,21 +227,28 @@ export class Template {
  * @param {RepositoryProvider} provider
  * @param {string|Object} sources repo nmae or package content
  */
-export async function templateFrom(provider, sources) {
+async function _templateFrom(provider, sources, consulted) {
   let result = {};
 
   for (const source of sources) {
     const branch = await provider.branch(source);
+
+    if (branch === undefined || consulted.has(branch)) {
+      continue;
+    }
+
+    consulted.add(branch);
+
     const pc = await branch.entry("package.json");
     const pkg = JSON.parse(await pc.getString());
     result = mergeTemplate(result, pkg);
 
     const template = pkg.template;
-
+    
     if (template && template.inheritFrom) {
       result = mergeTemplate(
         result,
-        await templateFrom(provider, asArray(template.inheritFrom))
+        await _templateFrom(provider, asArray(template.inheritFrom), consulted)
       );
     }
   }

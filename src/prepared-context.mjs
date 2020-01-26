@@ -1,7 +1,7 @@
 import { createContext } from "expression-expander";
 import { LogLevelMixin, makeLogEvent } from "loglevel-mixin";
 import { StringContentEntry } from "content-entry";
-import { Package } from "./package.mjs";
+import { Package } from "./mergers/package.mjs";
 import { Context } from "./context.mjs";
 import { jspath } from "./util.mjs";
 
@@ -56,12 +56,12 @@ export const PreparedContext = LogLevelMixin(
       return this.context.provider;
     }
 
-    get template() {
-      return this.context.template;
+    get sources() {
+      return this.context.sources;
     }
 
-    get templates() {
-      return this.context.templates;
+    get template() {
+      return this.context.template;
     }
 
     get properties() {
@@ -131,12 +131,12 @@ export const PreparedContext = LogLevelMixin(
         return;
       }
 
-      if (context.templates.length === 0 && this.properties.templateRepos) {
-        context.templates.push(...this.properties.templateRepos);
+      if (context.sources.length === 0 && this.properties.templateRepos) {
+        context.sources.push(...this.properties.templateRepos);
       }
 
       const templateBranches = await Promise.all(
-        context.templates.map(template => context.provider.branch(template))
+        context.sources.map(template => context.provider.branch(template))
       );
 
       if (templateBranches.length === 0 || templateBranches[0] === undefined) {

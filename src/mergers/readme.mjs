@@ -1,12 +1,12 @@
-import { File } from "./file.mjs";
-import { templateOptions } from "./template.mjs";
+import { Merger } from "../merger.mjs";
+import { templateOptions } from "../template.mjs";
 
 /**
  * injects badges into README.md
  */
-export class Readme extends File {
-  static matchesFileName(name) {
-    return name.match(/README\./);
+export class Readme extends Merger {
+  static get pattern() {
+    return "**/README.md";
   }
 
   static get defaultOptions() {

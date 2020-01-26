@@ -1,5 +1,5 @@
 import test from "ava";
-import { Package } from "../src/package.mjs";
+import { Package } from "../src/mergers/package.mjs";
 
 test("package optional dev dependencies", t => {
   const pkg = new Package("package.json");

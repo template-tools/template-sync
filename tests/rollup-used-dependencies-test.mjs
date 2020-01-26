@@ -1,5 +1,5 @@
 import test from "ava";
-import { Rollup } from "../src/rollup.mjs";
+import { Rollup } from "../src/mergers/rollup.mjs";
 
 test("rollup used dependencies", async t => {
   const rollup = new Rollup("rollup.config.json");

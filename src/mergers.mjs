@@ -1,19 +1,19 @@
-import { Package } from "./package.mjs";
-import { Travis } from "./travis.mjs";
-import { Readme } from "./readme.mjs";
-import { Rollup } from "./rollup.mjs";
-import { Markdown } from "./markdown.mjs";
-import { License } from "./license.mjs";
-import { MergeAndRemoveLineSet } from "./merge-and-remove-line-set.mjs";
-import { MergeLineSet } from "./merge-line-set.mjs";
-import { NpmIgnore } from "./npm-ignore.mjs";
-import { ReplaceIfEmpty } from "./replace-if-empty.mjs";
-import { Replace } from "./replace.mjs";
-import { TOML } from "./toml.mjs";
-import { INI } from "./ini.mjs";
-import { YAML } from "./yaml.mjs";
-import { JSONFile } from "./json-file.mjs";
-import { JSDoc } from "./jsdoc.mjs";
+import { Package } from "./mergers/package.mjs";
+import { Travis } from "./mergers/travis.mjs";
+import { Readme } from "./mergers/readme.mjs";
+import { Rollup } from "./mergers/rollup.mjs";
+import { Markdown } from "./mergers/markdown.mjs";
+import { License } from "./mergers/license.mjs";
+import { MergeAndRemoveLineSet } from "./mergers/merge-and-remove-line-set.mjs";
+import { MergeLineSet } from "./mergers/merge-line-set.mjs";
+import { NpmIgnore } from "./mergers/npm-ignore.mjs";
+import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
+import { Replace } from "./mergers/replace.mjs";
+import { TOML } from "./mergers/toml.mjs";
+import { INI } from "./mergers/ini.mjs";
+import { YAML } from "./mergers/yaml.mjs";
+import { JSONMerger } from "./mergers/json.mjs";
+import { JSDoc } from "./mergers/jsdoc.mjs";
 
 export const mergers = [
   TOML,
@@ -24,7 +24,7 @@ export const mergers = [
   Travis,
   Readme,
   Package,
-  JSONFile,
+  JSONMerger,
   JSDoc,
   Travis,
   MergeAndRemoveLineSet,
