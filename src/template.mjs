@@ -1,3 +1,4 @@
+import micromatch from "micromatch";
 import {
   merge,
   mergeVersionsLargest,
@@ -6,7 +7,6 @@ import {
   compare
 } from "hinted-tree-merger";
 import { StringContentEntry } from "content-entry";
-import micromatch from "micromatch";
 import { asArray } from "./util.mjs";
 import { Package } from "./mergers/package.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
@@ -36,7 +36,8 @@ export class Template {
     Object.defineProperties(this, {
       provider: { value: provider },
       sources: { value: sources },
-      entryCache: { value: new Map() }
+      entryCache: { value: new Map() },
+      branches: { value: new Set() }
     });
   }
 
@@ -45,49 +46,44 @@ export class Template {
   }
 
   async entry(name) {
-    let ec = this.entryCache.get(name);
-    if (ec) {
-      return ec;
-    }
-
-    if (name === "package.json") {
-      ec = new StringContentEntry(
-        name,
-        JSON.stringify(
-          await _templateFrom(this.provider, this.sources, new Set()),
-          undefined,
-          2
-        )
-      );
-
-      this.entryCache.set(name, ec);
-      return ec;
-    }
-
-    const branch = await this.provider.branch(this.sources[0]);
-    return branch.entry(name);
+    await this.initialize();
+    return this.entryCache.get(name);
   }
 
-  async *entries(matchingPatterns) {
-    for (const branch of await this.branches()) {
-      console.log(branch);
-      if (branch) {
-        for await ( const entry of branch.entries(matchingPatterns)) {
-          let ec = this.entryCache.get(entry.name);
-          if(!ec) {
-        //    this.entryCache.set(entry.name, entry);
-          }
+  async initialize() {
+    if (this.entryCache.size > 0) {
+      return;
+    }
 
-          yield entry;
+    this.entryCache.set(
+      "package.json",
+      new StringContentEntry(
+        "package.json",
+        JSON.stringify(
+          await _templateFrom(this.provider, this.sources, this.branches)
+        )
+      )
+    );
+
+    for (const branch of this.branches) {
+      if (branch) {
+        for await (const entry of branch.entries()) {
+          const ec = this.entryCache.get(entry.name);
+          if (ec) {
+          } else {
+            this.entryCache.set(entry.name, entry);
+          }
         }
       }
     }
   }
 
-  async branches() {
-    return Promise.all(
-      this.sources.map(source => this.provider.branch(source))
-    );
+  async *entries(matchingPatterns) {
+    await this.initialize();
+
+    for(const [name, entry] of this.entryCache) {
+      yield entry;
+    }
   }
 
   async package() {
@@ -148,12 +144,14 @@ export class Template {
       .reduce((last, current) => Array.from([...last, ...current]), []);
   }
 
-  async addUsedPackage(context, targetBranch) {
+  async addUsedPackage(targetBranch, trackUsedByModule) {
+    await this.initialize();
+
     const pullRequests = [];
     const prBranches = [];
     let packageJson;
 
-    for (const templateBranch of await this.branches()) {
+    for (const templateBranch of this.branches) {
       let newTemplatePullRequest = false;
       const templateAddBranchName = "npm-template-trac-usage/1";
       let templatePRBranch = await templateBranch.repository.branch(
@@ -175,7 +173,7 @@ export class Template {
           ? {}
           : JSON.parse(templatePackageContent);
 
-      if (context.trackUsedByModule) {
+      if (trackUsedByModule) {
         const name = targetBranch.fullCondensedName;
 
         if (packageJson.template === undefined) {
@@ -241,7 +239,7 @@ async function _templateFrom(provider, sources, consulted) {
     result = mergeTemplate(result, pkg);
 
     const template = pkg.template;
-    
+
     if (template && template.inheritFrom) {
       result = mergeTemplate(
         result,
