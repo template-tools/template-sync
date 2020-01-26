@@ -115,8 +115,6 @@ export class Template {
       return 0;
     });
 
-    console.log(mappings);
-
     let alreadyPresent = new Set();
 
     return mappings
@@ -135,7 +133,6 @@ export class Template {
             factories.find(merger => merger.name === mapping.merger) ||
             ReplaceIfEmpty;
 
-          console.log(name, factory);
           const merger = new factory(name, mapping.options);
 
           if (name === "package.json") {
