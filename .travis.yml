@@ -8,6 +8,7 @@ jobs:
         - npm run cover
         - npx codecov
         - cat ./build/coverage/lcov.info | npx coveralls
+        - npm run test
     - stage: doc
       node_js: lts/*
       skip_cleanup: 'true'
@@ -28,3 +29,7 @@ branches:
     - /^greenkeeper/.*$/
     - /^mkpr/.*$/
     - /^npm-template-sync/.*$/
+addons:
+  chrome: stable
+env:
+  - BROWSER=chrome
