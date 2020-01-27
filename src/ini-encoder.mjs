@@ -98,7 +98,7 @@ export function decode(str, opt = {}) {
 
     // Convert keys with '[]' suffix to an array
     if (key.length > 2 && key.slice(-2) === "[]") {
-      key = key.substring(0, key.length - 2);
+      key = key.slice(0, key.length - 2);
       if (!ref[key]) {
         ref[key] = [];
       } else if (!Array.isArray(ref[key])) {
