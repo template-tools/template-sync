@@ -28,13 +28,13 @@ const provider = new MockProvider({
   }
 });
 
-test("template constructor", t => {
+test.serial("template constructor", t => {
   const template = new Template(provider, ["template"]);
   t.deepEqual(template.sources, ["template"]);
   t.is(`${template}`, "template");
 });
 
-test("template cache", t => {
+test.serial("template cache", t => {
   const t1 = Template.templateFor(provider, ["template"]);
   t.deepEqual(t1.sources, ["template"]);
   const t2 = Template.templateFor(provider, ["template"]);
