@@ -95,12 +95,7 @@ export class Template {
    *
    */
   async mergers() {
-    const factories = mergers;
-
-    const files = [];
-    for await (const entry of this.entries()) {
-      files.push(entry);
-    }
+    await this.initialize();
 
     const pkg = await this.package();
 
@@ -111,15 +106,14 @@ export class Template {
       return 0;
     });
 
+    const factories = mergers;
+
     let alreadyPresent = new Set();
+    const names = [...this.entryCache.keys()];
 
     return mappings
       .map(mapping => {
-        const found = micromatch(
-          files.map(f => f.name),
-          mapping.pattern
-        );
-
+        const found = micromatch(names,mapping.pattern);
         const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
 
         alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);

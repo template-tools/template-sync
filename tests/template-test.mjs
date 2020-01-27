@@ -41,7 +41,7 @@ test("template cache", t => {
   t.is(t1, t2);
 });
 
-test("template package content", async t => {
+test.serial("template package content", async t => {
   const template = new Template(provider, ["template"]);
 
   t.deepEqual(await template.package(), {
@@ -56,7 +56,7 @@ test("template package content", async t => {
   });
 });
 
-test.only("template mergers", async t => {
+test.serial("template mergers", async t => {
   const template = new Template(provider, ["template"]);
   const mergers = await template.mergers();
 
