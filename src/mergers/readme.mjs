@@ -1,5 +1,4 @@
 import { Merger } from "../merger.mjs";
-import { templateOptions } from "../template.mjs";
 
 /**
  * injects badges into README.md
@@ -25,7 +24,7 @@ export class Readme extends Merger {
 
     const badges = this.options.badges
       .map(b => {
-        const m = templateOptions(p, this.constructor.name);
+        const m = this.options;
 
         // TODO do not alter global properties use private layer here
         if (m.badges !== undefined) {

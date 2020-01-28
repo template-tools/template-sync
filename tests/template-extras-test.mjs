@@ -1,46 +1,5 @@
 import test from "ava";
-import { templateOptions, mergeTemplate } from "../src/template.mjs";
-
-test("templateOptions matching", t => {
-  t.deepEqual(
-    templateOptions(
-      {
-        template: {
-          files: [
-            {
-              merger: "Readme"
-            },
-            {
-              merger: "Package",
-              options: { o1: 77 }
-            }
-          ]
-        }
-      },
-      "Package"
-    ),
-    { o1: 77 }
-  );
-});
-
-test("templateOptions empty", t => {
-  t.deepEqual(
-    templateOptions(
-      {
-        template: {
-          files: [
-            {
-              merger: "Package",
-              options: { o1: 77 }
-            }
-          ]
-        }
-      },
-      "Readme"
-    ),
-    {}
-  );
-});
+import { mergeTemplate } from "../src/template.mjs";
 
 test("mergeTemplateFiles 1", t => {
   t.deepEqual(

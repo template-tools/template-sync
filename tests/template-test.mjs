@@ -9,7 +9,7 @@ const provider = new MockProvider({
       "package.json": JSON.stringify({
         devDependencies: { ava: "^2.4.0" },
         template: {
-          files: [{ merger: "Package", pattern: "package.json" }],
+          files: [{ merger: "Package", pattern: "package.json", options: { o1: 77 } }],
           inheritFrom: ["template_b"]
         }
       })
@@ -28,16 +28,20 @@ const provider = new MockProvider({
   }
 });
 
-test.serial("template constructor", t => {
+test.serial("template constructor", async t => {
   const template = new Template(provider, ["template"]);
   t.deepEqual(template.sources, ["template"]);
   t.is(`${template}`, "template");
+
+  const m = await template.mergers();
+
+  t.deepEqual(m[0].options, { actions: [], keywords: [], o1: 77 });
 });
 
-test.serial("template cache", t => {
-  const t1 = Template.templateFor(provider, ["template"]);
+test.serial("template cache", async t => {
+  const t1 = await Template.templateFor(provider, ["template"]);
   t.deepEqual(t1.sources, ["template"]);
-  const t2 = Template.templateFor(provider, ["template"]);
+  const t2 = await Template.templateFor(provider, ["template"]);
   t.is(t1, t2);
 });
 
@@ -48,7 +52,7 @@ test.serial("template package content", async t => {
     devDependencies: { ava: "^2.4.0", rollup: "^1.29.1" },
     template: {
       files: [
-        { merger: "Package", pattern: "package.json" },
+        { merger: "Package", pattern: "package.json", options: { o1: 77 } },
         { merger: "Travis", pattern: ".travis.yml" }
       ],
       inheritFrom: ["template_b"]
