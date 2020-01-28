@@ -10,7 +10,7 @@ export class YAML extends Merger {
   }
 
   static get defaultOptions() {
-    return { ...super.defaultOptions, expand: false, messagePrefix: "chore:" };
+    return { ...super.defaultOptions, expand: false, messagePrefix: "chore: " };
   }
 
   async mergeContent(context, original, template) {
