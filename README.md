@@ -63,33 +63,33 @@ merges contents from template repo into destination repo handling some special c
 -   [PreparedContext](#preparedcontext)
     -   [Parameters](#parameters-1)
     -   [Properties](#properties-1)
--   [Readme](#readme)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-2)
         -   [Parameters](#parameters-2)
--   [File](#file)
+-   [jspath](#jspath)
     -   [Parameters](#parameters-3)
+-   [Template](#template)
+    -   [Parameters](#parameters-4)
     -   [Properties](#properties-3)
-    -   [properties](#properties-4)
-        -   [Parameters](#parameters-4)
-    -   [merge](#merge)
+    -   [\_templateFrom](#_templatefrom)
         -   [Parameters](#parameters-5)
+    -   [mergers](#mergers)
+-   [ReplaceIfEmpty](#replaceifempty)
+-   [Merger](#merger)
+    -   [Parameters](#parameters-6)
+    -   [Properties](#properties-4)
+    -   [properties](#properties-5)
+        -   [Parameters](#parameters-7)
+    -   [merge](#merge)
+        -   [Parameters](#parameters-8)
+-   [Readme](#readme)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
     -   [defaultIgnoreSet](#defaultignoreset)
 -   [NpmIgnore](#npmignore)
     -   [defaultIgnoreSet](#defaultignoreset-1)
--   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
--   [jspath](#jspath)
-    -   [Parameters](#parameters-6)
--   [Template](#template)
-    -   [Parameters](#parameters-7)
--   [templateFrom](#templatefrom)
-    -   [Parameters](#parameters-8)
--   [templateOptions](#templateoptions)
-    -   [Parameters](#parameters-9)
 
 ## Context
 
@@ -118,19 +118,13 @@ context prepared to execute one package
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
 
-## Readme
-
-**Extends File**
-
-injects badges into README.md
-
 ## sortedKeys
 
 order in which json keys are written
 
 ## Package
 
-**Extends File**
+**Extends Merger**
 
 Merger for package.json
 
@@ -144,7 +138,46 @@ Deliver some key properties
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
-## File
+## jspath
+
+### Parameters
+
+-   `object`  
+-   `path`  
+-   `cb`  
+
+## Template
+
+### Parameters
+
+-   `provider` **RepositoryProvider** 
+-   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+### Properties
+
+-   `provider` **RepositoryProvider** 
+-   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+-   `branches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** 
+-   `initialBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** 
+
+### \_templateFrom
+
+load all templates and collects the files
+
+#### Parameters
+
+-   `sources` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
+-   `isInitialSource`  
+
+### mergers
+
+## ReplaceIfEmpty
+
+**Extends Merger**
+
+Overwrites none existing file from template
+
+## Merger
 
 Mergable File
 
@@ -176,13 +209,19 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
 
+## Readme
+
+**Extends Merger**
+
+injects badges into README.md
+
 ## MergeAndRemoveLineSet
 
 **Extends MergeLineSet**
 
 ## MergeLineSet
 
-**Extends File**
+**Extends Merger**
 
 File where every line is a key
 
@@ -204,52 +243,11 @@ entries to be skipped from result
 
 Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
-## ReplaceIfEmpty
-
-**Extends File**
-
-Overwrites none existing file from template
-
 ## Replace
 
-**Extends File**
+**Extends Merger**
 
 Replace file from template (always)
-
-## jspath
-
-### Parameters
-
--   `object`  
--   `path`  
--   `cb`  
-
-## Template
-
-### Parameters
-
--   `provider` **RepositoryProvider** 
--   `templates` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>)** 
-
-## templateFrom
-
-load all templates and collects the files
-
-### Parameters
-
--   `provider` **RepositoryProvider** 
--   `sources` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
-
-## templateOptions
-
-find merger options in the template section of a package.json
-
-### Parameters
-
--   `json` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 # install
 

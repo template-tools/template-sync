@@ -17,8 +17,11 @@ const templateCache = new Map();
 /**
  * @param {RepositoryProvider} provider
  * @param {string[]} sources
- * @param {Set<Branch>} branches
- * @param {Set<Branch>} initialBranches
+ * 
+ * @property {RepositoryProvider} provider
+ * @property {string[]} sources
+ * @property {Set<Branch>} branches
+ * @property {Set<Branch>} initialBranches
  */
 export class Template {
   static templateFor(provider, urls) {
