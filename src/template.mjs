@@ -17,6 +17,8 @@ const templateCache = new Map();
 /**
  * @param {RepositoryProvider} provider
  * @param {string[]} sources
+ * @param {Set<Branch>} branches
+ * @param {Set<Branch>} initialBranches
  */
 export class Template {
   static templateFor(provider, urls) {
@@ -36,9 +38,9 @@ export class Template {
     Object.defineProperties(this, {
       provider: { value: provider },
       sources: { value: sources },
-      entryCache: { value: new Map() },
       branches: { value: new Set() },
-      initialBranches: { value: new Set() }
+      initialBranches: { value: new Set() },
+      entryCache: { value: new Map() }
     });
   }
 
