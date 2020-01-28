@@ -44,11 +44,15 @@ export class Template {
     });
   }
 
-  toString() {
+  get name() {
     return (this.initialBranches.size > 0
       ? [...this.initialBranches].map(b => b.fullCondensedName)
       : this.sources
     ).join(",");
+  }
+
+  toString() {
+    return this.name;
   }
 
   async entry(name) {

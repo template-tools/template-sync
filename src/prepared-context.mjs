@@ -244,7 +244,7 @@ export const PreparedContext = LogLevelMixin(
       }
 
       let newPullRequestRequired = false;
-      const prBranchName = "npm-template-sync/1";
+      const prBranchName = `npm-template-sync/${this.template.name}`;
       let prBranch = await this.targetBranch.repository.branch(prBranchName);
 
       if (prBranch === undefined) {
@@ -265,7 +265,7 @@ export const PreparedContext = LogLevelMixin(
       if (newPullRequestRequired) {
         try {
           const pullRequest = await targetBranch.createPullRequest(prBranch, {
-            title: `merge from ${this.template}`,
+            title: `merge from ${this.template.name}`,
             body: merges
               .map(
                 m =>
