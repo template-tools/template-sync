@@ -4,7 +4,6 @@ import { GithubProvider } from "github-repository-provider";
 import { Context } from "../src/context.mjs";
 import { PreparedContext } from "../src/prepared-context.mjs";
 
-const REPOSITORY_NAME = "arlac77/sync-test-repository";
 const TEMPLATE_REPO = "Kronos-Tools/npm-package-template";
 
 test("context prepare from template", async t => {
