@@ -80,6 +80,7 @@ export class Merger {
     if (template === undefined) {
       try {
         template = await context.templateBranches[0].entry(this.name);
+       // template = await context.template.entry(this.name);
       } catch (e) {
         if (this.needsTemplate) {
           throw e;

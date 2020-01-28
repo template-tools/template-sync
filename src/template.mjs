@@ -37,12 +37,16 @@ export class Template {
       provider: { value: provider },
       sources: { value: sources },
       entryCache: { value: new Map() },
-      branches: { value: new Set() }
+      branches: { value: new Set() },
+      initialBranches: { value: new Set() }
     });
   }
 
   toString() {
-    return this.sources.join(",");
+    return (this.initialBranches.size > 0
+      ? [...this.initialBranches].map(b => b.fullCondensedName)
+      : this.sources
+    ).join(",");
   }
 
   async entry(name) {
@@ -59,9 +63,7 @@ export class Template {
       "package.json",
       new StringContentEntry(
         "package.json",
-        JSON.stringify(
-          await _templateFrom(this.provider, this.sources, this.branches)
-        )
+        JSON.stringify(await this._templateFrom(this.sources, true))
       )
     );
 
@@ -78,10 +80,46 @@ export class Template {
     }
   }
 
+  /**
+   * load all templates and collects the files
+   * @param {string|Object} sources repo nmae or package content
+   */
+  async _templateFrom(sources, isInitialSource) {
+    let result = {};
+
+    for (const source of sources) {
+      const branch = await this.provider.branch(source);
+
+      if (branch === undefined || this.branches.has(branch)) {
+        continue;
+      }
+
+      this.branches.add(branch);
+      if (isInitialSource) {
+        this.initialBranches.add(branch);
+      }
+
+      const pc = await branch.entry("package.json");
+      const pkg = JSON.parse(await pc.getString());
+      result = mergeTemplate(result, pkg);
+
+      const template = pkg.template;
+
+      if (template && template.inheritFrom) {
+        result = mergeTemplate(
+          result,
+          await this._templateFrom(asArray(template.inheritFrom))
+        );
+      }
+    }
+
+    return result;
+  }
+
   async *entries(matchingPatterns) {
     await this.initialize();
 
-    for(const [name, entry] of this.entryCache) {
+    for (const [name, entry] of this.entryCache) {
       yield entry;
     }
   }
@@ -113,7 +151,7 @@ export class Template {
 
     return mappings
       .map(mapping => {
-        const found = micromatch(names,mapping.pattern);
+        const found = micromatch(names, mapping.pattern);
         const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
 
         alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
@@ -209,40 +247,6 @@ export class Template {
 
     return { packageJson, prBranches, pullRequests };
   }
-}
-
-/**
- * load all templates and collects the files
- * @param {RepositoryProvider} provider
- * @param {string|Object} sources repo nmae or package content
- */
-async function _templateFrom(provider, sources, consulted) {
-  let result = {};
-
-  for (const source of sources) {
-    const branch = await provider.branch(source);
-
-    if (branch === undefined || consulted.has(branch)) {
-      continue;
-    }
-
-    consulted.add(branch);
-
-    const pc = await branch.entry("package.json");
-    const pkg = JSON.parse(await pc.getString());
-    result = mergeTemplate(result, pkg);
-
-    const template = pkg.template;
-
-    if (template && template.inheritFrom) {
-      result = mergeTemplate(
-        result,
-        await _templateFrom(provider, asArray(template.inheritFrom), consulted)
-      );
-    }
-  }
-
-  return result;
 }
 
 export function mergeTemplate(a, b) {
