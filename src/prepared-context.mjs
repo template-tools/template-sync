@@ -243,8 +243,7 @@ export const PreparedContext = LogLevelMixin(
         return;
       }
 
-      const prBranchName = `npm-template-sync/${this.template.name}`;
-      const prBranch = await this.targetBranch.createBranch(prBranchName);
+      const prBranch = await this.targetBranch.createBranch(`npm-template-sync/${this.template.name}`);
 
       const messages = merges.reduce((result, merge) => {
         merge.messages.forEach(m => result.push(m));
