@@ -185,6 +185,13 @@ export class Package extends Merger {
     let target =
       original === undefined || original === "" ? {} : JSON.parse(original);
 
+    const unknownKeys = new Set();
+    propertyKeys.forEach(key => {
+      if (target[key] === "{{" + key + "}}") {
+        unknownKeys.add(key);
+      }
+    });
+    
     target = context.expand(target);
 
     const template = context.expand({
@@ -324,9 +331,11 @@ export class Package extends Merger {
       if (target[key] === "{{" + key + "}}") {
         delete target[key];
 
-        messages.push(
-          `chore(package): remove unknown value for ${key} ({{${key}}})`
-        );
+        if(unknownKeys.has(key)) {
+          messages.push(
+            `chore(package): remove unknown value for ${key} ({{${key}}})`
+          );
+        }
       }
     });
 
