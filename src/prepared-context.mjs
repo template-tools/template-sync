@@ -243,14 +243,8 @@ export const PreparedContext = LogLevelMixin(
         return;
       }
 
-      let newPullRequestRequired = false;
       const prBranchName = `npm-template-sync/${this.template.name}`;
-      let prBranch = await this.targetBranch.repository.branch(prBranchName);
-
-      if (prBranch === undefined) {
-        newPullRequestRequired = true;
-        prBranch = await this.targetBranch.createBranch(prBranchName);
-      }
+      const prBranch = await this.targetBranch.createBranch(prBranchName);
 
       const messages = merges.reduce((result, merge) => {
         merge.messages.forEach(m => result.push(m));
@@ -262,35 +256,24 @@ export const PreparedContext = LogLevelMixin(
         merges.map(m => new StringContentEntry(m.name, m.content))
       );
 
-      if (newPullRequestRequired) {
-        try {
-          const pullRequest = await targetBranch.createPullRequest(prBranch, {
-            title: `merge from ${this.template.name}`,
-            body: merges
-              .map(
-                m =>
-                  `${m.name}
+      try {
+        const pullRequest = await targetBranch.createPullRequest(prBranch, {
+          title: `merge from ${this.template.name}`,
+          body: merges
+            .map(
+              m =>
+                `${m.name}
 ---
 - ${m.messages.join("\n- ")}
 `
-              )
-              .join("\n")
-          });
-          this.info({ message: "new PR", pr: pullRequest });
+            )
+            .join("\n")
+        });
+        this.info({ message: "PR", pr: pullRequest });
 
-          return pullRequest;
-        } catch (err) {
-          this.error(err);
-        }
-      } else {
-        const pullRequest = new targetBranch.provider.pullRequestClass(
-          targetBranch,
-          prBranch,
-          "old"
-        );
-
-        this.info({ message: "update PR", pr: pullRequest });
         return pullRequest;
+      } catch (err) {
+        this.error(err);
       }
     }
   }
