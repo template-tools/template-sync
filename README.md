@@ -44,12 +44,12 @@ merges contents from template repo into destination repo handling some special c
 ## Some templates
 
 -   [list by _npm-package-template_ keyword](https://www.npmjs.com/browse/keyword/npm-package-template)
--   [arlac77 npm-package-template](https://github.com/arlac77/npm-package-template) _rollup_ _ava_ _travis_
--   [arlac77 npm-package-template-esm-only](https://github.com/arlac77/npm-package-template) _ava_ _travis_
--   [arlac77 npm-package-template-svelte](https://github.com/arlac77/npm-package-template) _svelte_ _rollup_ _testcafe_ _travis_
--   [arlac77 npm-package-template-svelte-app](https://github.com/arlac77/npm-package-template) _svelte_ _rollup_ _pkgbuild_ _travis_
--   [Kronos-Tools npm-package-template](https://github.com/Kronos-Tools/npm-package-template) _mocha_
--   [Kronos-Tools npm-package-template-minimal](https://github.com/Kronos-Tools/npm-package-template-minimal)
+-   [arlac77/npm-package-template](https://github.com/arlac77/npm-package-template) _rollup_ _ava_ _travis_
+-   [arlac77/npm-package-template-esm-only](https://github.com/arlac77/npm-package-template) _ava_ _travis_
+-   [arlac77/npm-package-template-svelte](https://github.com/arlac77/npm-package-template) _svelte_ _rollup_ _testcafe_ _travis_
+-   [arlac77/npm-package-template-svelte-app](https://github.com/arlac77/npm-package-template) _svelte_ _rollup_ _pkgbuild_ _travis_
+-   [Kronos-Tools/npm-package-template](https://github.com/Kronos-Tools/npm-package-template) _mocha_
+-   [Kronos-Tools/npm-package-template-minimal](https://github.com/Kronos-Tools/npm-package-template-minimal)
 
 # API
 
