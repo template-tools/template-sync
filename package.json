@@ -50,7 +50,7 @@
     "rehype-remark": "^7.0.0",
     "remark-stringify": "^7.0.4",
     "remove-sensible-values": "1.0.4",
-    "semver": "^7.1.1",
+    "semver": "^7.1.2",
     "unified": "^8.4.2"
   },
   "devDependencies": {
