@@ -194,7 +194,9 @@ export const PreparedContext = LogLevelMixin(
         targetBranch
       });
 
-      await this.template.addUsedPackage(targetBranch, this.trackUsedByModule);
+      if(this.trackUsedByModule) {
+        await this.template.addUsedPackage(targetBranch);
+      }
 
       const files = await this.template.mergers();
 
