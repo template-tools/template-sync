@@ -86,7 +86,7 @@ program
       }
 
       const context = new Context(provider, {
-        templates: program.template,
+        templateSources: program.template,
         dry: program.dry,
         trackUsedByModule: program.track,
         console,

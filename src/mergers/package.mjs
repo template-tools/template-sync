@@ -107,7 +107,6 @@ const DEPENDENCY_HINT = { merge: mergeVersionsLargest };
  * Merger for package.json
  */
 export class Package extends Merger {
-
   static get pattern() {
     return "package.json";
   }
@@ -119,30 +118,13 @@ export class Package extends Merger {
     };
   }
 
-  optionalDevDependencies(modules = new Set()) {
-    return new Set(["cracks", "dont-crack"].filter(m => modules.has(m)));
-  }
-
-  async usedDevDependencies(content) {
-    content = await content;
-
-    const pkg = content.length === 0 ? {} : JSON.parse(content);
-
-    return moduleNames(pkg.release);
-  }
-
   /**
    * Deliver some key properties
-   * @param {Branch} branch
+   * @param {ContentEntry} entry
    * @return {Object}
    */
-  async properties(branch) {
-    const content = await branch.maybeEntry(this.name);
-    if (content === undefined) {
-      return {};
-    }
-
-    const pkg = JSON.parse(await content.getString(defaultEncodingOptions));
+  static async properties(entry) {
+    const pkg = JSON.parse(await entry.getString(defaultEncodingOptions));
 
     const properties = {
       npm: { name: pkg.name, fullName: pkg.name }
@@ -158,7 +140,7 @@ export class Package extends Merger {
 
     if (pkg.template !== undefined) {
       if (pkg.template.repository !== undefined) {
-        properties.templateRepos = asArray(pkg.template.repository.url);
+        properties.templateSources = asArray(pkg.template.repository.url);
       }
       if (pkg.template.usedBy !== undefined) {
         properties.usedBy = pkg.template.usedBy;
@@ -178,6 +160,18 @@ export class Package extends Merger {
     return properties;
   }
 
+  optionalDevDependencies(modules = new Set()) {
+    return new Set(["cracks", "dont-crack"].filter(m => modules.has(m)));
+  }
+
+  async usedDevDependencies(content) {
+    content = await content;
+
+    const pkg = content.length === 0 ? {} : JSON.parse(content);
+
+    return moduleNames(pkg.release);
+  }
+
   async mergeContent(context, original, templateContent) {
     const originalLastChar = original[original.length - 1];
     const targetRepository = context.targetBranch.repository;
@@ -191,7 +185,7 @@ export class Package extends Merger {
         unknownKeys.add(key);
       }
     });
-    
+
     target = context.expand(target);
 
     const template = context.expand({
@@ -206,7 +200,9 @@ export class Package extends Merger {
       homepage: context.targetBranch.homePageURL,
       template: {
         repository: {
-          url: asScalar(context.templateBranches.map(branch => branch.url))
+          url: asScalar(
+            [...context.template.branches].map(branch => branch.url)
+          )
         }
       }
     });
@@ -331,7 +327,7 @@ export class Package extends Merger {
       if (target[key] === "{{" + key + "}}") {
         delete target[key];
 
-        if(unknownKeys.has(key)) {
+        if (unknownKeys.has(key)) {
           messages.push(
             `chore(package): remove unknown value for ${key} ({{${key}}})`
           );

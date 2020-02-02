@@ -12,15 +12,15 @@ test("context prepare", async t => {
     GithubProvider.optionsFromEnvironment(process.env)
   );
   const context = new Context(provider, {
-    templates: [TEMPLATE_REPO],
+    templateSources: [TEMPLATE_REPO],
     properties: { mySpecialKey: "mySpecialValue" }
   });
 
   const pc = await PreparedContext.from(context, REPOSITORY_NAME);
 
-  t.deepEqual(pc.templateBranches.map(b => b.fullCondensedName), [TEMPLATE_REPO]);
   t.is(pc.targetBranch.fullCondensedName, REPOSITORY_NAME);
 
+  t.is(pc.template.name, TEMPLATE_REPO);
   t.is(pc.properties.mySpecialKey, "mySpecialValue");
   t.is(pc.properties.name, "sync-test-repository");
 });
@@ -33,7 +33,7 @@ test("context execute - PR", async t => {
   const context = await PreparedContext.from(
     new Context(provider, {
       console,
-      templates: [TEMPLATE_REPO]
+      templateSources: [TEMPLATE_REPO]
     }),
     REPOSITORY_NAME
   );

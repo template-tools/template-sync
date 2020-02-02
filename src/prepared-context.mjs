@@ -3,6 +3,7 @@ import { LogLevelMixin, makeLogEvent } from "loglevel-mixin";
 import { StringContentEntry } from "content-entry";
 import { Package } from "./mergers/package.mjs";
 import { Context } from "./context.mjs";
+import { Template } from "./template.mjs";
 import { jspath } from "./util.mjs";
 
 /**
@@ -19,12 +20,6 @@ export const PreparedContext = LogLevelMixin(
       const pc = new PreparedContext(context, targetBranchName);
       await pc.initialize();
       return pc;
-    }
-
-    static async execute(context, targetBranchName) {
-      const pc = new PreparedContext(context, targetBranchName);
-      await pc.initialize();
-      return pc.execute();
     }
 
     constructor(context, targetBranchName) {
@@ -54,14 +49,6 @@ export const PreparedContext = LogLevelMixin(
 
     get provider() {
       return this.context.provider;
-    }
-
-    get sources() {
-      return this.context.sources;
-    }
-
-    get template() {
-      return this.context.template;
     }
 
     get properties() {
@@ -114,32 +101,22 @@ export const PreparedContext = LogLevelMixin(
         this.properties.description = targetBranch.repository.description;
       }
 
-      const pkg = new Package("package.json");
-
-      Object.assign(this.properties, await pkg.properties(targetBranch));
+      try {
+        const entry = await targetBranch.entry("package.json");
+        Object.assign(this.properties, await Package.properties(entry));
+      } catch {}
 
       this.debug({
         message: "detected properties",
         properties: this.properties
       });
 
-      if (this.properties.usedBy !== undefined) {
-        Object.defineProperties(this, {
-          templateBranches: { value: [targetBranch] }
-        });
-
-        return;
-      }
-
-      if (context.sources.length === 0 && this.properties.templateRepos) {
-        context.sources.push(...this.properties.templateRepos);
-      }
-
-      const templateBranches = await Promise.all(
-        context.sources.map(template => context.provider.branch(template))
+      const template = await Template.templateFor(
+        this.provider,
+        this.properties.templateSources
       );
 
-      if (templateBranches.length === 0 || templateBranches[0] === undefined) {
+      if (template === undefined) {
         throw new Error(
           `Unable to extract template repo url from ${targetBranch.name} ${pkg.name}`
         );
@@ -147,7 +124,7 @@ export const PreparedContext = LogLevelMixin(
 
       Object.defineProperties(this, {
         targetBranch: { value: targetBranch },
-        templateBranches: { value: templateBranches }
+        template: { value: template }
       });
 
       this.debug({
@@ -195,7 +172,8 @@ export const PreparedContext = LogLevelMixin(
       if (this.properties.usedBy !== undefined) {
         for (const r of this.properties.usedBy) {
           try {
-            await PreparedContext.execute(this.context, r);
+            const pc = await PreparedContext.from(this.context, r);
+            await pc.execute();
           } catch (e) {
             this.error(e);
           }
@@ -216,7 +194,7 @@ export const PreparedContext = LogLevelMixin(
         targetBranch
       });
 
-      await this.template.addUsedPackage( targetBranch, this.trackUsedByModule);
+      await this.template.addUsedPackage(targetBranch, this.trackUsedByModule);
 
       const files = await this.template.mergers();
 
@@ -243,7 +221,9 @@ export const PreparedContext = LogLevelMixin(
         return;
       }
 
-      const prBranch = await this.targetBranch.createBranch(`npm-template-sync/${this.template.name}`);
+      const prBranch = await this.targetBranch.createBranch(
+        `npm-template-sync/${this.template.name}`
+      );
 
       const messages = merges.reduce((result, merge) => {
         merge.messages.forEach(m => result.push(m));

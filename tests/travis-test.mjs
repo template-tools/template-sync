@@ -23,7 +23,7 @@ async function travisMerge(template, original) {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templates: ["templateRepo"]
+      templateSources: ["templateRepo"]
     }),
     "targetRepo"
   );
@@ -62,7 +62,7 @@ ${targetVersions
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templates: ["templateRepo"]
+      templateSources: ["templateRepo"]
     }),
     "targetRepo"
   );
@@ -185,7 +185,7 @@ test("travis remove before_script", async t => {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templates: ["templateRepo"]
+      templateSources: ["templateRepo"]
     }),
     "targetRepo"
   );
@@ -221,7 +221,7 @@ before_script:
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templates: ["templateRepo"]
+      templateSources: ["templateRepo"]
     }),
     "targetRepo"
   );

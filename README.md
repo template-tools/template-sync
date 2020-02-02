@@ -67,22 +67,20 @@ merges contents from template repo into destination repo handling some special c
 -   [Package](#package)
     -   [properties](#properties-2)
         -   [Parameters](#parameters-2)
--   [jspath](#jspath)
+-   [Merger](#merger)
     -   [Parameters](#parameters-3)
--   [Template](#template)
-    -   [Parameters](#parameters-4)
     -   [Properties](#properties-3)
-    -   [\_templateFrom](#_templatefrom)
+    -   [merge](#merge)
+        -   [Parameters](#parameters-4)
+    -   [properties](#properties-4)
         -   [Parameters](#parameters-5)
+-   [Template](#template)
+    -   [Parameters](#parameters-6)
+    -   [Properties](#properties-5)
+    -   [\_templateFrom](#_templatefrom)
+        -   [Parameters](#parameters-7)
     -   [mergers](#mergers)
 -   [ReplaceIfEmpty](#replaceifempty)
--   [Merger](#merger)
-    -   [Parameters](#parameters-6)
-    -   [Properties](#properties-4)
-    -   [properties](#properties-5)
-        -   [Parameters](#parameters-7)
-    -   [merge](#merge)
-        -   [Parameters](#parameters-8)
 -   [Readme](#readme)
 -   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
@@ -90,6 +88,8 @@ merges contents from template repo into destination repo handling some special c
 -   [NpmIgnore](#npmignore)
     -   [defaultIgnoreSet](#defaultignoreset-1)
 -   [Replace](#replace)
+-   [jspath](#jspath)
+    -   [Parameters](#parameters-8)
 
 ## Context
 
@@ -134,17 +134,41 @@ Deliver some key properties
 
 #### Parameters
 
--   `branch` **Branch** 
+-   `entry` **ContentEntry** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
-## jspath
+## Merger
+
+Mergable File
 
 ### Parameters
 
--   `object`  
--   `path`  
--   `cb`  
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
+
+### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### merge
+
+#### Parameters
+
+-   `context` **PreparedContect** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
+
+### properties
+
+Deliver some key properties
+
+#### Parameters
+
+-   `entry` **ContentEntry** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ## Template
 
@@ -176,38 +200,6 @@ load all templates and collects the files
 **Extends Merger**
 
 Overwrites none existing file from template
-
-## Merger
-
-Mergable File
-
-### Parameters
-
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
-
-### Properties
-
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-### properties
-
-Deliver some key properties
-
-#### Parameters
-
--   `branch` **Branch** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-### merge
-
-#### Parameters
-
--   `context` **PreparedContect** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
 
 ## Readme
 
@@ -248,6 +240,14 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 **Extends Merger**
 
 Replace file from template (always)
+
+## jspath
+
+### Parameters
+
+-   `object`  
+-   `path`  
+-   `cb`  
 
 # install
 

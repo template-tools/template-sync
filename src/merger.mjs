@@ -9,13 +9,21 @@ import { EmptyContentEntry } from "content-entry/src/empty-content-entry.mjs";
  * @property {Object} options
  */
 export class Merger {
-
   static get pattern() {
     return "**/*";
   }
 
   static get defaultOptions() {
     return { messagePrefix: "", expand: true, mergeHints: {} };
+  }
+
+  /**
+   * Deliver some key properties
+   * @param {ContentEntry} entry
+   * @return {Object}
+   */
+  static async properties(entry) {
+    return {};
   }
 
   constructor(name, options = {}) {
@@ -49,21 +57,12 @@ export class Merger {
     return new Set();
   }
 
-  /**
-   * Deliver some key properties
-   * @param {Branch} branch
-   * @return {Object}
-   */
-  async properties(branch) {
-    return {};
-  }
-
   async targetEntry(context, options) {
     return (await context.targetBranch.entry(this.name, options)).getString();
   }
 
   async content(context) {
-    let target;
+    let target,template;
 
     const targetName = context.expand(this.name);
 
@@ -76,17 +75,13 @@ export class Merger {
       target = new EmptyContentEntry(targetName);
     }
 
-    let template = this.template;
-    if (template === undefined) {
-      try {
-        template = await context.templateBranches[0].entry(this.name);
-       // template = await context.template.entry(this.name);
-      } catch (e) {
-        if (this.needsTemplate) {
-          throw e;
-        }
-        template = new EmptyContentEntry(this.name);
+    try {
+      template = await context.template.entry(this.name);
+    } catch (e) {
+      if (this.needsTemplate) {
+        throw e;
       }
+      template = new EmptyContentEntry(this.name);
     }
 
     return Promise.all([target.getString(), template.getString()]);

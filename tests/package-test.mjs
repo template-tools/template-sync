@@ -29,7 +29,7 @@ async function createContext(template, target) {
 
   return await PreparedContext.from(
     new Context(provider, {
-      templates: ["templateRepo"],
+      templateSources: ["templateRepo"],
       github: {
         repo: "the-repo-name",
         user: "the-user-name"
@@ -162,8 +162,7 @@ test(
       }
     }
   },
-  ["chore(package): (dependencies)",
-  "chore(package): (repository)"]
+  ["chore(package): (dependencies)", "chore(package): (repository)"]
 );
 
 test("default options", t => {
@@ -192,9 +191,10 @@ test("package extract properties", async t => {
     }
   );
 
-  const pkg = new Package("package.json");
   const targetBranch = await context.provider.branch("tragetUser/targetRepo");
-  const properties = await pkg.properties(targetBranch);
+  const properties = await Package.properties(
+    await targetBranch.entry("package.json")
+  );
 
   t.deepEqual(properties, {
     npm: { name: "aName", fullName: "aName" },
@@ -216,9 +216,10 @@ test("package extract properties not 0.0.0-semantic-release", async t => {
     }
   );
 
-  const pkg = new Package("package.json");
   const targetBranch = await context.provider.branch("tragetUser/targetRepo");
-  const properties = await pkg.properties(targetBranch);
+  const properties = await Package.properties(
+    await targetBranch.entry("package.json")
+  );
 
   t.deepEqual(properties, {
     npm: { name: "aName", fullName: "aName" },
@@ -379,13 +380,13 @@ test("package devDependencies remove cracks", async t => {
   const context = await createContext(
     {
       devDependencies: {
-        "special" : "1.0.0"
+        special: "1.0.0"
       }
     },
     {
       devDependencies: {
         cracks: "3.1.2",
-        "dont-crack": "1.0.0",
+        "dont-crack": "1.0.0"
       }
     }
   );
@@ -394,7 +395,7 @@ test("package devDependencies remove cracks", async t => {
   context.addFile(pkg);
   const merged = await pkg.merge(context);
 
-  t.deepEqual(JSON.parse(merged.content).devDependencies, { special : "1.0.0"});
+  t.deepEqual(JSON.parse(merged.content).devDependencies, { special: "1.0.0" });
   //t.true(merged.messages.includes('chore(devDependencies): remove cracks'));
 });
 
@@ -558,7 +559,7 @@ test("package remove null keyword", async t => {
     },
     {
       name: "abc_xxx_1",
-      keywords: [null,""]
+      keywords: [null, ""]
     }
   );
 

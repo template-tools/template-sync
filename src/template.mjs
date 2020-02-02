@@ -17,20 +17,21 @@ const templateCache = new Map();
 /**
  * @param {RepositoryProvider} provider
  * @param {string[]} sources
- * 
+ *
  * @property {RepositoryProvider} provider
  * @property {string[]} sources
  * @property {Set<Branch>} branches
  * @property {Set<Branch>} initialBranches
  */
 export class Template {
-  static templateFor(provider, urls) {
+  static async templateFor(provider, urls) {
     urls = asArray(urls);
     const key = urls.join(",");
     let template = templateCache.get(key);
 
     if (template === undefined) {
       template = new Template(provider, urls);
+      await template.initialize();
       templateCache.set(key, template);
     }
 
@@ -60,7 +61,17 @@ export class Template {
 
   async entry(name) {
     await this.initialize();
-    return this.entryCache.get(name);
+
+    /*console.log("ENTRY", name, this.entryCache.get(name), [
+      ...this.entryCache.keys()
+    ]);*/
+
+    const entry = this.entryCache.get(name);
+    if (entry === undefined) {
+      throw new Error(`No such entry ${name}`);
+    }
+
+    return entry;
   }
 
   async initialize() {
@@ -108,18 +119,20 @@ export class Template {
         this.initialBranches.add(branch);
       }
 
-      const pc = await branch.entry("package.json");
-      const pkg = JSON.parse(await pc.getString());
-      result = mergeTemplate(result, pkg);
+      try {
+        const pc = await branch.entry("package.json");
+        const pkg = JSON.parse(await pc.getString());
+        result = mergeTemplate(result, pkg);
 
-      const template = pkg.template;
+        const template = pkg.template;
 
-      if (template && template.inheritFrom) {
-        result = mergeTemplate(
-          result,
-          await this._templateFrom(asArray(template.inheritFrom))
-        );
-      }
+        if (template && template.inheritFrom) {
+          result = mergeTemplate(
+            result,
+            await this._templateFrom(asArray(template.inheritFrom))
+          );
+        }
+      } catch {}
     }
 
     return result;
@@ -156,7 +169,7 @@ export class Template {
     const factories = mergers;
 
     let alreadyPresent = new Set();
-    const names = [...this.entryCache.keys()];
+    const names = [...this.entryCache.values()].filter(entry => entry.isBlob).map(entry => entry.name);
 
     return mappings
       .map(mapping => {
@@ -170,16 +183,7 @@ export class Template {
             factories.find(merger => merger.name === mapping.merger) ||
             ReplaceIfEmpty;
 
-          const merger = new factory(name, mapping.options);
-
-          if (name === "package.json") {
-            merger.template = new StringContentEntry(
-              name,
-              JSON.stringify(pkg, undefined, 2)
-            );
-          }
-
-          return merger;
+          return new factory(name, mapping.options);
         });
       })
       .reduce((last, current) => Array.from([...last, ...current]), []);
@@ -262,7 +266,7 @@ export function mergeTemplate(a, b) {
   return merge(a, b, "", undefined, {
     "engines.*": { merge: mergeVersionsLargest },
     "scripts.*": { merge: mergeExpressions },
-    "dependencies.*": { merge: mergeVersionsLargest },
+    "dependencies.*": {  merge: mergeVersionsLargest },
     "devDependencies.*": { merge: mergeVersionsLargest },
     "peerDependencies.*": { merge: mergeVersionsLargest },
     "optionalDependencies.*": { merge: mergeVersionsLargest },
@@ -274,7 +278,11 @@ export function mergeTemplate(a, b) {
     "template.usedBy": { merge: mergeSkip },
     "*.options.badges": {
       key: "name",
-      compare
+      compare,
+      keepHints: true
+    },
+    "*": {
+      keepHints: true
     }
   });
 }

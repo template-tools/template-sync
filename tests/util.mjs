@@ -27,7 +27,7 @@ export async function createContext(
   return PreparedContext.from(
     new Context(provider, {
       properties,
-      templates: [TEMPLATE_REPO]
+      templateSources: [TEMPLATE_REPO]
     }),
     TARGET_REPO
   );

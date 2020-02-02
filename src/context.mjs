@@ -1,7 +1,5 @@
-import { PreparedContext } from "./prepared-context.mjs";
-import { asArray} from './util.mjs'; 
-import { Template } from "./template.mjs";
-export { PreparedContext };
+export * from "./prepared-context.mjs";
+import { asArray } from './util.mjs'; 
 
 /**
  * @param {RepositoryProvider} provider
@@ -13,7 +11,6 @@ export { PreparedContext };
  */
 export class Context {
   constructor(provider, options={}) {
-    options = { ...options, templates: asArray(options.templates) };
     Object.defineProperties(this, {
       trackUsedByModule: {
         value: options.trackUsedByModule || false
@@ -31,17 +28,11 @@ export class Context {
         value: {
           date: { year: new Date().getFullYear() },
           license: {},
+          templateSources: asArray(options.templateSources),
           ...options.properties
         }
-      },
-      template: {
-        value: Template.templateFor(provider, options.templates)
       }
     });
-  }
-
-  get sources() {
-    return this.template.sources;
   }
 
   log(arg) {

@@ -21,7 +21,7 @@ async function travisMerge(original, template) {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templates: ["templateRepo"]
+      templateSources: ["templateRepo"]
     }),
     "targetRepo"
   );

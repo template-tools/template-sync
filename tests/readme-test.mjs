@@ -37,7 +37,7 @@ body`,
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templates: ["templateRepo"]
+      templateSources: ["templateRepo"]
     }),
     'targetRepo'
   );

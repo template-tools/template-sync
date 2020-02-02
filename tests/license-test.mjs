@@ -15,7 +15,7 @@ async function lmt(t, license, year = 2099, expected = "", messages = []) {
 
   const context = await PreparedContext.from(
     new Context(provider, {
-      templates: ["templateRepo"],
+      templateSources: ["templateRepo"],
       properties: {
         date: { year },
         license: { owner: "xyz" }
@@ -65,7 +65,6 @@ test(
   "Copyright (c) 2015,2017-2020 by xyz",
   ["chore(license): update"]
 );
-
 
 test(
   lmt,
