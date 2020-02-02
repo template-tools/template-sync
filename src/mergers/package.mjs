@@ -243,10 +243,11 @@ export class Package extends Merger {
         repository: { compare },
         files: { compare, scope: "files", removeEmpty: true },
         bin: { compare, removeEmpty: true },
-        "bin.*": { scope: "bin" },
+        "bin.*": { removeEmpty: true, scope: "bin" },
         "scripts.*": {
           compare,
           merge: mergeExpressions,
+          removeEmpty: true,
           scope: "scripts"
         },
         dependencies: REMOVE_HINT,
@@ -260,8 +261,9 @@ export class Package extends Merger {
         bundeledDependencies: REMOVE_HINT,
         "bundeledDependencies.*": DEPENDENCY_HINT,
         "engines.*": {
-          merge: mergeVersionsLargest,
           compare,
+          merge: mergeVersionsLargest,
+          removeEmpty: true,
           type: "fix",
           scope: "engines"
         },
