@@ -169,7 +169,9 @@ export class Template {
     const factories = mergers;
 
     let alreadyPresent = new Set();
-    const names = [...this.entryCache.values()].filter(entry => entry.isBlob).map(entry => entry.name);
+    const names = [...this.entryCache.values()]
+      .filter(entry => entry.isBlob)
+      .map(entry => entry.name);
 
     return mappings
       .map(mapping => {
@@ -189,84 +191,53 @@ export class Template {
       .reduce((last, current) => Array.from([...last, ...current]), []);
   }
 
-  async addUsedPackage(targetBranch, trackUsedByModule) {
+  async addUsedPackage(targetBranch) {
     await this.initialize();
 
-    const pullRequests = [];
-    const prBranches = [];
-    let packageJson;
-
-    for (const templateBranch of this.branches) {
-      let newTemplatePullRequest = false;
-      const templateAddBranchName = "npm-template-trac-usage/1";
-      let templatePRBranch = await templateBranch.repository.branch(
-        templateAddBranchName
-      );
-      prBranches.push(templatePRBranch);
-
-      const pkg = new Package("package.json");
-
-      const templatePackage = await (templatePRBranch
-        ? templatePRBranch
-        : templateBranch
-      ).entry(pkg.name);
-
-      const templatePackageContent = await templatePackage.getString();
-
-      packageJson =
-        templatePackageContent === undefined || templatePackageContent === ""
-          ? {}
-          : JSON.parse(templatePackageContent);
-
-      if (trackUsedByModule) {
+    return Promise.all(
+      [...this.initialBranches].map(async sourceBranch => {
         const name = targetBranch.fullCondensedName;
 
-        if (packageJson.template === undefined) {
-          packageJson.template = {};
+        const prBranch = await sourceBranch.createBranch(
+          `npm-template-sync-track/${name}`
+        );
+
+        const entry = await prBranch.entry("package.json");
+        const pkg = JSON.parse(await entry.getString());
+
+        if (pkg.template === undefined) {
+          pkg.template = {};
         }
-        if (!Array.isArray(packageJson.template.usedBy)) {
-          packageJson.template.usedBy = [];
+        if (!Array.isArray(pkg.template.usedBy)) {
+          pkg.template.usedBy = [];
         }
 
-        if (!packageJson.template.usedBy.find(n => n === name)) {
-          packageJson.template.usedBy.push(name);
-          packageJson.template.usedBy = packageJson.template.usedBy.sort();
+        if (!pkg.template.usedBy.find(n => n === name)) {
+          pkg.template.usedBy.push(name);
+          pkg.template.usedBy = pkg.template.usedBy.sort();
 
-          if (templatePRBranch === undefined) {
-            templatePRBranch = await templateBranch.createBranch(
-              templateAddBranchName
-            );
-            newTemplatePullRequest = true;
-          }
-
-          await templatePRBranch.commit(`fix: add ${name}`, [
+          await prBranch.commit(`fix: add ${name}`, [
             new StringContentEntry(
               "package.json",
               JSON.stringify(packageJson, undefined, 2)
             )
           ]);
 
-          if (newTemplatePullRequest) {
-            pullRequests.push(
-              await templateBranch.createPullRequest(templatePRBranch, {
-                title: `add ${name}`,
-                body: `add tracking info for ${name}`
-              })
-            );
-          }
+          return sourceBranch.createPullRequest(prBranch, {
+            title: `add ${name}`,
+            body: `add tracking info for ${name}`
+          });
         }
-      }
-    }
-
-    return { packageJson, prBranches, pullRequests };
+      })
+    );
   }
 }
 
 export function mergeTemplate(a, b) {
   return merge(a, b, "", undefined, {
-    "engines.*": { merge: mergeVersionsLargest },
-    "scripts.*": { merge: mergeExpressions },
-    "dependencies.*": {  merge: mergeVersionsLargest },
+    "engines.*": { keepHints: true, merge: mergeVersionsLargest },
+    "scripts.*": { keepHints: true, merge: mergeExpressions },
+    "dependencies.*": { merge: mergeVersionsLargest },
     "devDependencies.*": { merge: mergeVersionsLargest },
     "peerDependencies.*": { merge: mergeVersionsLargest },
     "optionalDependencies.*": { merge: mergeVersionsLargest },
