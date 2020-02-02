@@ -197,12 +197,7 @@ export class Template {
     return Promise.all(
       [...this.initialBranches].map(async sourceBranch => {
         const name = targetBranch.fullCondensedName;
-
-        const prBranch = await sourceBranch.createBranch(
-          `npm-template-sync-track/${name}`
-        );
-
-        const entry = await prBranch.entry("package.json");
+        const entry = await sourceBranch.entry("package.json");
         const pkg = JSON.parse(await entry.getString());
 
         if (pkg.template === undefined) {
@@ -216,6 +211,10 @@ export class Template {
           pkg.template.usedBy.push(name);
           pkg.template.usedBy = pkg.template.usedBy.sort();
 
+          const prBranch = await sourceBranch.createBranch(
+            `npm-template-sync-track/${name}`
+          );
+    
           await prBranch.commit(`fix: add ${name}`, [
             new StringContentEntry(
               "package.json",
