@@ -236,15 +236,14 @@ export const PreparedContext = LogLevelMixin(
         `npm-template-sync/${this.template.name}`
       );
 
-      const messages = merges.reduce((result, merge) => {
-        merge.messages.forEach(m => result.push(m));
-        return result;
-      }, []);
+      const messages = [];
 
-      await prBranch.commit(
-        messages.join("\n"),
-        merges.map(m => new StringContentEntry(m.name, m.content))
-      );
+      for(const m of merges) {
+        messages.push(...m.messages);
+        await prBranch.commit(
+          m.messages.join("\n"),
+          [new StringContentEntry(m.name, m.content)]);
+      }
 
       try {
         const pullRequest = await targetBranch.createPullRequest(prBranch, {
