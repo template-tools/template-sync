@@ -1,4 +1,6 @@
 export * from "./prepared-context.mjs";
+export * from "./template.mjs";
+
 import { asArray } from './util.mjs'; 
 
 /**
