@@ -4,7 +4,6 @@ import { Readme } from "./mergers/readme.mjs";
 import { Rollup } from "./mergers/rollup.mjs";
 import { Markdown } from "./mergers/markdown.mjs";
 import { License } from "./mergers/license.mjs";
-import { MergeAndRemoveLineSet } from "./mergers/merge-and-remove-line-set.mjs";
 import { MergeLineSet } from "./mergers/merge-line-set.mjs";
 import { NpmIgnore } from "./mergers/npm-ignore.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
@@ -27,7 +26,6 @@ export const mergers = [
   JSONMerger,
   JSDoc,
   Travis,
-  MergeAndRemoveLineSet,
   MergeLineSet,
   NpmIgnore,
   License,

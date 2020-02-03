@@ -4,7 +4,7 @@ import { NpmIgnore } from "../src/mergers/npm-ignore.mjs";
 
 test("NpmIgnore lines", async t => {
   const context = await createContext(
-    ["- Line 1", "Line 2"].join("\n"),
+    ["-Line 1", "Line 2"].join("\n"),
     ["Line 1", ".DS_Store"].join("\n"),
     ".npmignore"
   );

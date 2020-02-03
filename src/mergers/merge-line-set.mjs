@@ -1,7 +1,17 @@
+import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
+import { actions2messages, aggregateActions } from "../util.mjs";
+
+function lines2set(content) {
+  return new Set(content.split(/\r?\n/));
+}
+
+function set2lines(values) {
+  return Array.from(values).join("\n");
+}
 
 /**
- * File where every line is a key
+ *
  */
 export class MergeLineSet extends Merger {
   /**
@@ -13,19 +23,22 @@ export class MergeLineSet extends Merger {
   }
 
   async mergeContent(context, original, template) {
-    const result = new Set(template.split(/\n/));
-    original.split(/\r?\n/).forEach(line => result.add(line));
+    const actions = {};
 
-    this.defaultIgnoreSet.forEach(entry => result.delete(entry));
-
-    const content = Array.from(result.values()).join("\n");
+    const content = set2lines(
+      merge(lines2set(original), [
+        ...lines2set(this.options.expand ? context.expand(template) : template),
+        ...[...this.defaultIgnoreSet].map(p => `-${p}`)
+      ]),
+      "",
+      (action, hint) => aggregateActions(actions, action, hint),
+      this.options.mergeHints
+    );
 
     return {
       content,
       changed: content !== original,
-      messages: [
-        this.options.message || "fix: update {{entry.name}} from template"
-      ]
+      messages: actions2messages(actions, this.options.messagePrefix, this.name)
     };
   }
 }

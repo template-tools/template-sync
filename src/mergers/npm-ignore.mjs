@@ -1,9 +1,9 @@
-import { MergeAndRemoveLineSet } from './merge-and-remove-line-set.mjs';
+import { MergeLineSet } from './merge-line-set.mjs';
 
 /**
  *
  */
-export class NpmIgnore extends MergeAndRemoveLineSet {
+export class NpmIgnore extends MergeLineSet {
 
   static get pattern() {
     return ".npmignore";
