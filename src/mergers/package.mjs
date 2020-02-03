@@ -281,7 +281,6 @@ export class Package extends Merger {
           type: "fix",
           scope: "pacman"
         },
-     //   "template.repository": { merge: mergeSkip },
         "template.usedBy": { merge: mergeSkip },
         ...this.options.mergeHints
       }
