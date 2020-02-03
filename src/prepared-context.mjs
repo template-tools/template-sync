@@ -47,6 +47,10 @@ export const PreparedContext = LogLevelMixin(
       return this.context.dry;
     }
 
+    get trackUsedByModule() {
+      return this.context.trackUsedByModule;
+    }
+  
     get provider() {
       return this.context.provider;
     }
@@ -102,8 +106,13 @@ export const PreparedContext = LogLevelMixin(
       }
 
       try {
+        const templateSources = this.properties.templateSources;
         const entry = await targetBranch.entry("package.json");
         Object.assign(this.properties, await Package.properties(entry));
+
+        if(templateSources.length > 0) {
+          this.properties.templateSources = templateSources;
+        }
       } catch {}
 
       this.debug({
@@ -194,10 +203,6 @@ export const PreparedContext = LogLevelMixin(
         targetBranch
       });
 
-      if(this.trackUsedByModule) {
-        await this.template.addUsedPackage(targetBranch);
-      }
-
       const files = await this.template.mergers();
 
       files.forEach(f => this.addFile(f));
@@ -223,7 +228,11 @@ export const PreparedContext = LogLevelMixin(
         return;
       }
 
-      const prBranch = await this.targetBranch.createBranch(
+      if (this.trackUsedByModule) {
+        await this.template.addUsedPackage(targetBranch);
+      }
+
+      const prBranch = await targetBranch.createBranch(
         `npm-template-sync/${this.template.name}`
       );
 

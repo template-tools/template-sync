@@ -127,6 +127,7 @@ export class Template {
       try {
         const pc = await branch.entry("package.json");
         const pkg = JSON.parse(await pc.getString());
+
         result = mergeTemplate(result, pkg);
 
         const template = pkg.template;
@@ -223,7 +224,7 @@ export class Template {
           await prBranch.commit(`fix: add ${name}`, [
             new StringContentEntry(
               "package.json",
-              JSON.stringify(packageJson, undefined, 2)
+              JSON.stringify(pkg, undefined, 2)
             )
           ]);
 

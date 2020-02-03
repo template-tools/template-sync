@@ -201,7 +201,7 @@ export class Package extends Merger {
       template: {
         repository: {
           url: asScalar(
-            [...context.template.branches].map(branch => branch.url)
+            [...context.template.initialBranches].map(branch => branch.url)
           )
         }
       }
@@ -281,7 +281,7 @@ export class Package extends Merger {
           type: "fix",
           scope: "pacman"
         },
-        "template.repository": { merge: mergeSkip },
+     //   "template.repository": { merge: mergeSkip },
         "template.usedBy": { merge: mergeSkip },
         ...this.options.mergeHints
       }
