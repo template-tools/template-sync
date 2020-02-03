@@ -17,8 +17,8 @@ export class INI extends Merger {
     return false;
   }
 
-  async mergeContent(context, original, templateRaw) {
-    if (templateRaw === "" || templateRaw === undefined) {
+  async mergeContent(context, original, template) {
+    if (template === "" || template === undefined) {
       return undefined;
     }
 
@@ -27,7 +27,7 @@ export class INI extends Merger {
     const content = encode(
       merge(
         decode(original) || {},
-        decode(this.options.expand ? context.expand(templateRaw) : templateRaw)
+        decode(this.options.expand ? context.expand(template) : template)
       ),
       "",
       (action, hint) => aggregateActions(actions, action, hint),
