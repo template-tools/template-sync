@@ -12,8 +12,8 @@ export class JSONMerger extends Merger {
     return false;
   }
 
-  async mergeContent(context, original, templateRaw) {
-    if (templateRaw === "" || templateRaw === undefined) {
+  async mergeContent(context, original, template) {
+    if (template === "" || template === undefined) {
       return undefined;
     }
 
@@ -22,7 +22,7 @@ export class JSONMerger extends Merger {
     const content = JSON.stringify(
       merge(
         original === undefined || original.length === 0 ? {} : JSON.parse(original),
-        JSON.parse(this.options.expand ? context.expand(templateRaw) : templateRaw)
+        JSON.parse(this.options.expand ? context.expand(template) : template)
       ),
       "",
       (action, hint) => aggregateActions(actions, action, hint),
