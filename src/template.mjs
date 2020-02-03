@@ -24,6 +24,11 @@ const templateCache = new Map();
  * @property {Set<Branch>} initialBranches
  */
 export class Template {
+
+  static clearCache() {
+    templateCache.clear();
+  }
+  
   static async templateFor(provider, urls) {
     urls = asArray(urls);
     const key = urls.join(",");
