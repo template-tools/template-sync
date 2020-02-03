@@ -18,8 +18,8 @@ export class TOML extends Merger {
     return false;
   }
 
-  async mergeContent(context, original, templateRaw) {
-    if (templateRaw === "" || templateRaw === undefined) {
+  async mergeContent(context, original, template) {
+    if (template === "" || template === undefined) {
       return undefined;
     }
 
@@ -28,7 +28,7 @@ export class TOML extends Merger {
     const content = stringify(
       merge(
         parse(original) || {},
-        parse(this.options.expand ? context.expand(templateRaw) : templateRaw)
+        parse(this.options.expand ? context.expand(template) : template)
       ),
       "",
       (action, hint) => aggregateActions(actions, action, hint),
