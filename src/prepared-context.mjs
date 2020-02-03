@@ -203,6 +203,10 @@ export const PreparedContext = LogLevelMixin(
         targetBranch
       });
 
+      if (this.trackUsedByModule && !this.dry) {
+        await this.template.addUsedPackage(targetBranch);
+      }
+
       const files = await this.template.mergers();
 
       files.forEach(f => this.addFile(f));
@@ -226,10 +230,6 @@ export const PreparedContext = LogLevelMixin(
 
       if (this.dry) {
         return;
-      }
-
-      if (this.trackUsedByModule) {
-        await this.template.addUsedPackage(targetBranch);
       }
 
       const prBranch = await targetBranch.createBranch(
