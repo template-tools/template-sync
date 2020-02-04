@@ -91,6 +91,10 @@ export class Template {
       )
     );
 
+/*
+console.log(await this.entryCache.get('package.json').getString());
+*/
+
     for (const branch of this.branches) {
       if (branch) {
         for await (const entry of branch.entries()) {
@@ -238,16 +242,17 @@ export class Template {
 }
 
 export function mergeTemplate(a, b) {
+  const mvl = { keepHints: true, merge: mergeVersionsLargest };
   return merge(a, b, "", undefined, {
-    "engines.*": { keepHints: true, merge: mergeVersionsLargest },
+    "engines.*": mvl,
     "scripts.*": { keepHints: true, merge: mergeExpressions },
-    "dependencies.*": { merge: mergeVersionsLargest },
-    "devDependencies.*": { merge: mergeVersionsLargest },
-    "peerDependencies.*": { merge: mergeVersionsLargest },
-    "optionalDependencies.*": { merge: mergeVersionsLargest },
+    "dependencies.*": mvl,
+    "devDependencies.*": mvl,
+    "peerDependencies.*": mvl,
+    "optionalDependencies.*": mvl,
     "config.*": { overwrite: false },
     "pacman.*": { overwrite: false },
-    "pacman.depends.*": { merge: mergeVersionsLargest },
+    "pacman.depends.*": mvl,
     "template.files": { key: ["merger", "pattern"] },
     "template.inheritFrom": { merge: mergeSkip },
     "template.usedBy": { merge: mergeSkip },
