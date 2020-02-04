@@ -45,10 +45,6 @@ export class Merger {
     return true;
   }
 
-  get needsOriginal() {
-    return false;
-  }
-
   optionalDevDependencies(modules) {
     return new Set();
   }
@@ -69,9 +65,6 @@ export class Merger {
     try {
       target = await context.targetBranch.entry(targetName);
     } catch (e) {
-      if (this.needsOriginal) {
-        throw e;
-      }
       target = new EmptyContentEntry(targetName);
     }
 

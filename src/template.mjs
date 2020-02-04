@@ -8,7 +8,6 @@ import {
 } from "hinted-tree-merger";
 import { StringContentEntry } from "content-entry";
 import { asArray } from "./util.mjs";
-import { Package } from "./mergers/package.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
 
