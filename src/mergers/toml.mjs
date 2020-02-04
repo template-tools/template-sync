@@ -14,15 +14,7 @@ export class TOML extends Merger {
     return { ...super.defaultOptions, expand: false };
   }
 
-  get needsTemplate() {
-    return false;
-  }
-
   async mergeContent(context, original, template) {
-    if (template === "" || template === undefined) {
-      return undefined;
-    }
-
     const actions = {};
 
     const content = stringify(
