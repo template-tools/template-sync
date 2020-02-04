@@ -28,7 +28,6 @@
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/context.mjs --section=API",
     "lint": "documentation lint src/context.mjs",
-    "posttest": "npm run prepare && markdown-doctest",
     "prepare": "rollup -c",
     "pretest": "rollup -c",
     "test": "ava"

@@ -17,6 +17,7 @@
 Keep npm package in sync with its template.
 
 Generate pull requests to bring a repository back in sync with the template
+
 ```shell
 export GH_TOKEN='token providing repositroy write access' # for github repos
 
@@ -87,7 +88,6 @@ merges contents from template repo into destination repo handling some special c
     -   [mergers](#mergers)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
--   [MergeAndRemoveLineSet](#mergeandremovelineset)
 -   [MergeLineSet](#mergelineset)
     -   [defaultIgnoreSet](#defaultignoreset)
 -   [NpmIgnore](#npmignore)
@@ -212,15 +212,9 @@ Overwrites none existing file from template
 
 injects badges into README.md
 
-## MergeAndRemoveLineSet
-
-**Extends MergeLineSet**
-
 ## MergeLineSet
 
 **Extends Merger**
-
-File where every line is a key
 
 ### defaultIgnoreSet
 
@@ -230,7 +224,7 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 
 ## NpmIgnore
 
-**Extends MergeAndRemoveLineSet**
+**Extends MergeLineSet**
 
 ### defaultIgnoreSet
 
