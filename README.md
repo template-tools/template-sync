@@ -14,15 +14,20 @@
 
 ## npm-template-sync
 
-Keep npm package in sync with its template
+Keep npm package in sync with its template.
 
+Generate pull requests to bring a repository back in sync with the template
 ```shell
+export GH_TOKEN='token providing repositroy write access' # for github repos
+
 npm-template-sync --template aTemplateGithubUser/aRepo myGithubUser/myRepo
 ```
 
 define (initial) properties to be used in the template
 
 ```shell
+export GH_TOKEN='token providing repositroy write access' # for github repos
+
 npm-template-sync --define "description=a very new fantastic module" -t myUser/myTemplate myUser/newModule
 ```
 
