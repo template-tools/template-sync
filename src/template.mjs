@@ -19,8 +19,8 @@ const templateCache = new Map();
  *
  * @property {RepositoryProvider} provider
  * @property {string[]} sources
- * @property {Set<Branch>} branches
- * @property {Set<Branch>} initialBranches
+ * @property {Set<Branch>} branches all used branches direct and inherited
+ * @property {Set<Branch>} initialBranches root branches used to define the template
  */
 export class Template {
 
