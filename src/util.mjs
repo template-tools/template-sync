@@ -61,6 +61,10 @@ export function jspath(object, path, cb) {
   return object[last];
 }
 
+export function actions2message(actions, prefix, name) {
+  return actions2messages(actions, prefix, name).join('\n');
+}
+
 export function actions2messages(actions, prefix, name) {
   const messages = Object.entries(actions).map(([slot, action]) => {
 

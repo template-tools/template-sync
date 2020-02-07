@@ -10,6 +10,7 @@ import { StringContentEntry } from "content-entry";
 import { asArray } from "./util.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
+import { Travis } from "./mergers/travis.mjs";
 
 const templateCache = new Map();
 
@@ -23,11 +24,10 @@ const templateCache = new Map();
  * @property {Set<Branch>} initialBranches root branches used to define the template
  */
 export class Template {
-
   static clearCache() {
     templateCache.clear();
   }
-  
+
   static async templateFor(provider, urls) {
     urls = asArray(urls);
     const key = urls.join(",");
@@ -91,17 +91,32 @@ export class Template {
       )
     );
 
-/*
+    /*
 console.log(await this.entryCache.get('package.json').getString());
 */
 
     for (const branch of this.branches) {
       if (branch) {
         for await (const entry of branch.entries()) {
+          const name = entry.name;
+          if (name === "package.json") {
+            continue;
+          }
+
           const ec = this.entryCache.get(entry.name);
           if (ec) {
+            if (name === ".travis.yml") {
+              const commit = await Travis.merge(undefined, ec, entry, {
+                ...Travis.defaultOptions,
+                mergeHints: {
+                  "*": { keepHints: true },
+                  "*.node_js": { keepHints: true }
+                }
+              });
+              this.entryCache.set(name, commit.entry);
+            }
           } else {
-            this.entryCache.set(entry.name, entry);
+            this.entryCache.set(name, entry);
           }
         }
       }
@@ -223,7 +238,7 @@ console.log(await this.entryCache.get('package.json').getString());
           const prBranch = await sourceBranch.createBranch(
             `npm-template-sync-track/${name}`
           );
-    
+
           await prBranch.commit(`fix: add ${name}`, [
             new StringContentEntry(
               "package.json",
