@@ -1,5 +1,5 @@
 import test from "ava";
-import { createContext } from "./util.mjs";
+import { createContext } from "./helpers/util.mjs";
 import { Markdown } from "../src/mergers/markdown.mjs";
 const FILE_NAME = "a.md";
 

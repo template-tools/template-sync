@@ -1,5 +1,5 @@
 import test from "ava";
-import { createContext } from "./util.mjs";
+import { createContext } from "./helpers/util.mjs";
 import { MergeLineSet } from "../src/mergers/merge-line-set.mjs";
 
 test("MergeLineSet lines remove", async t => {

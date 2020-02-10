@@ -1,5 +1,5 @@
 import test from "ava";
-import { createContext } from "./util.mjs";
+import { createContext } from "./helpers/util.mjs";
 import { Replace } from "../src/mergers/replace.mjs";
 
 test("replace", async t => {

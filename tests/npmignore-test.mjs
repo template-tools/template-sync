@@ -1,5 +1,5 @@
 import test from "ava";
-import { createContext } from "./util.mjs";
+import { createContext } from "./helpers/util.mjs";
 import { NpmIgnore } from "../src/mergers/npm-ignore.mjs";
 
 test("NpmIgnore lines", async t => {

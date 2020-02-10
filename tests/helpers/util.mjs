@@ -1,6 +1,6 @@
 import { MockProvider } from "mock-repository-provider";
-import { Context } from "../src/context.mjs";
-import { PreparedContext } from "../src/prepared-context.mjs";
+import { Context } from "../../src/context.mjs";
+import { PreparedContext } from "../../src/prepared-context.mjs";
 
 export const TARGET_REPO = "targetRepo";
 export const TEMPLATE_REPO = "templateRepo";

@@ -1,5 +1,5 @@
 import test from "ava";
-import { createContext } from "./util.mjs";
+import { createContext } from "./helpers/util.mjs";
 import { decode } from "../src/ini-encoder.mjs";
 import { INI } from "../src/mergers/ini.mjs";
 
