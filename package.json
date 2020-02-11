@@ -22,14 +22,12 @@
   ],
   "license": "BSD-2-Clause",
   "bin": {
-    "npm-template-sync": "bin/npm-template-sync"
+    "npm-template-sync": "src/npm-template-sync-cli.mjs"
   },
   "scripts": {
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/context.mjs --section=API",
     "lint": "documentation lint src/context.mjs",
-    "prepare": "rollup -c",
-    "pretest": "rollup -c",
     "test": "ava"
   },
   "dependencies": {
@@ -50,26 +48,18 @@
     "rehype-remark": "^7.0.0",
     "remark-stringify": "^7.0.4",
     "remove-sensible-values": "1.0.4",
-    "semver": "^7.1.2",
     "unified": "^8.4.2"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^11.0.2",
-    "@rollup/plugin-json": "^4.0.2",
-    "@rollup/plugin-node-resolve": "^7.1.1",
     "ava": "^3.3.0",
-    "builtin-modules": "^3.1.0",
     "c8": "^7.1.0",
     "documentation": "^12.1.4",
     "execa": "^4.0.0",
     "mock-repository-provider": "^5.1.38",
-    "rollup": "^1.31.0",
-    "rollup-plugin-cleanup": "^3.1.1",
-    "rollup-plugin-executable": "^1.5.2",
     "semantic-release": "^17.0.2"
   },
   "engines": {
-    "node": ">=12.15.0"
+    "node": ">=13.8.0"
   },
   "repository": {
     "type": "git",
@@ -81,7 +71,7 @@
   "homepage": "https://github.com/arlac77/npm-template-sync#readme",
   "template": {
     "repository": {
-      "url": "https://github.com/arlac77/npm-package-template.git"
+      "url": "https://github.com/arlac77/npm-package-template-esm-only.git"
     }
   }
 }

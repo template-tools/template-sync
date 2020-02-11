@@ -1,6 +1,7 @@
-import { version, engines } from "../package.json";
+#!/bin/sh
+":" //# comment; exec /usr/bin/env node --experimental-modules --experimental-json-modules "$0" "$@"
+
 import fs from "fs";
-import satisfies from "semver/functions/satisfies.js";
 import program from "commander";
 import { removeSensibleValues } from "remove-sensible-values";
 import { GithubProvider } from "github-repository-provider";
@@ -9,13 +10,7 @@ import { AggregationProvider } from "aggregation-repository-provider";
 import { Context } from "./context.mjs";
 import { PreparedContext } from "./prepared-context.mjs";
 import { setProperty, defaultEncodingOptions } from "./util.mjs";
-
-if (!satisfies(process.versions.node, engines.node)) {
-  console.error(
-    `require node ${engines.node} (running with ${process.versions.node})`
-  );
-  process.exit(-1);
-}
+import pkg from "../package.json";
 
 process.on("uncaughtException", e => console.error(e));
 process.on("unhandledRejection", reason => console.error(reason));
@@ -24,7 +19,7 @@ const properties = {};
 
 program
   .usage("Keep npm package in sync with its template")
-  .version(version)
+  .version(pkg.version)
   .command("[repos...]", "repos to merge")
   .option("--dry", "do not create branch/pull request")
   .option("--trace", "log level trace")
