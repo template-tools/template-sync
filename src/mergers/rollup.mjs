@@ -1,5 +1,8 @@
 import recast from "recast";
 import parser from "recast/parsers/babel.js";
+import transform from "@babel/core/lib/transform.js";
+//import pluginObjectRestSpread from "@babel/plugin-proposal-object-rest-spread";
+
 import { Merger } from "../merger.mjs";
 
 export class Rollup extends Merger {
@@ -11,7 +14,7 @@ export class Rollup extends Merger {
     return false;
   }
 
-  optionalDevDependencies(dependencies) {
+  static optionalDevDependencies(dependencies) {
     return new Set(
       Array.from(dependencies).filter(
         m =>
@@ -23,10 +26,20 @@ export class Rollup extends Merger {
     );
   }
 
-  usedDevDependencies(content) {
-    const dependencies = new Set();
+  static usedDevDependencies(content) {
+    const ast = recast.parse(content, {
+      parser: {
+        parse: source =>
+          transform.transform(source, {
+            code: false,
+            ast: true,
+            sourceMap: false,
+          //  plugins: [pluginObjectRestSpread]
+          }).ast
+      }
+    });
 
-    const ast = recast.parse(content, parser);
+    const dependencies = new Set();
 
     for (const decl of ast.program.body) {
       if (decl.type === "ImportDeclaration") {
@@ -225,7 +238,6 @@ function importDeclarationsByLocalName(ast) {
 
   for (const decl of ast.program.body) {
     if (decl.type === "ImportDeclaration") {
-      //console.log("IMPORT", decl.specifiers[0].local.name);
       declarations.set(decl.specifiers[0].local.name, decl);
     }
   }

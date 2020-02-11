@@ -26,6 +26,14 @@ export class Merger {
     return {};
   }
 
+  static optionalDevDependencies(modules) {
+    return new Set();
+  }
+
+  static usedDevDependencies(content) {
+    return new Set();
+  }
+
   constructor(name, options = {}) {
     Object.defineProperties(this, {
       name: {
@@ -43,14 +51,6 @@ export class Merger {
 
   get needsTemplate() {
     return true;
-  }
-
-  optionalDevDependencies(modules) {
-    return new Set();
-  }
-
-  usedDevDependencies(content) {
-    return new Set();
   }
 
   async targetEntry(context, options) {

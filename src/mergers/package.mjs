@@ -160,11 +160,11 @@ export class Package extends Merger {
     return properties;
   }
 
-  optionalDevDependencies(modules = new Set()) {
+  static optionalDevDependencies(modules = new Set()) {
     return new Set(["cracks", "dont-crack"].filter(m => modules.has(m)));
   }
 
-  async usedDevDependencies(content) {
+  static async usedDevDependencies(content) {
     content = await content;
 
     const pkg = content.length === 0 ? {} : JSON.parse(content);
