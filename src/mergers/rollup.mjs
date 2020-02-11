@@ -14,7 +14,11 @@ export class Rollup extends Merger {
   optionalDevDependencies(dependencies) {
     return new Set(
       Array.from(dependencies).filter(
-        m => m.match(/@rollup\/plugin/) || m.match(/rollup-plugin/) || m.match(/babel-preset/) || m === 'builtin-modules'
+        m =>
+          m.match(/@rollup\/plugin/) ||
+          m.match(/rollup-plugin/) ||
+          m.match(/babel-preset/) ||
+          m === "builtin-modules"
       )
     );
   }
@@ -22,17 +26,14 @@ export class Rollup extends Merger {
   usedDevDependencies(content) {
     const dependencies = new Set();
 
-    try {
-      const ast = recast.parse(content, parser);
+    const ast = recast.parse(content, parser);
 
-      for (const decl of ast.program.body) {
-        if (decl.type === "ImportDeclaration") {
-          dependencies.add(decl.source.value);
-        }
+    for (const decl of ast.program.body) {
+      if (decl.type === "ImportDeclaration") {
+        dependencies.add(decl.source.value);
       }
-    } catch (e) {
-      console.log(e);
     }
+
     return dependencies;
   }
 
@@ -194,7 +195,7 @@ export class Rollup extends Merger {
         messages
       };
     } catch (e) {
-        context.warn(`unable to parse ${this.name}`);
+      context.warn(`unable to parse ${this.name}`);
       // context.error(e);
     }
 

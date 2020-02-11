@@ -360,22 +360,26 @@ export class Package extends Merger {
 
 export async function deleteUnusedDevDependencies(context, target, template) {
   if (target.devDependencies) {
-    const usedDevDependencies = await context.usedDevDependencies();
-    const allKnown = new Set([
-      ...Object.keys(target.devDependencies),
-      ...Object.keys(template.devDependencies)
-    ]);
+    try {
+      const usedDevDependencies = await context.usedDevDependencies();
+      const allKnown = new Set([
+        ...Object.keys(target.devDependencies),
+        ...Object.keys(template.devDependencies)
+      ]);
 
-    context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
+      context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
 
-    [...context.optionalDevDependencies(allKnown)]
-      .filter(m => !usedDevDependencies.has(m))
-      .forEach(m => {
-        if (template.devDependencies === undefined) {
-          template.devDependencies = {};
-        }
-        template.devDependencies[m] = "--delete--";
-        context.debug(`devDependency: ${m}`);
-      });
+      [...context.optionalDevDependencies(allKnown)]
+        .filter(m => !usedDevDependencies.has(m))
+        .forEach(m => {
+          if (template.devDependencies === undefined) {
+            template.devDependencies = {};
+          }
+          template.devDependencies[m] = "--delete--";
+          context.debug(`devDependency: ${m}`);
+        });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
