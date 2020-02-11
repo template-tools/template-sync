@@ -4,6 +4,8 @@
   "publishConfig": {
     "access": "public"
   },
+  "sideEffects": false,
+  "type": "module",
   "main": "src/context.mjs",
   "module": "src/context.mjs",
   "description": "Keep npm package in sync with its template",
@@ -25,10 +27,10 @@
     "npm-template-sync": "src/npm-template-sync-cli.mjs"
   },
   "scripts": {
-    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
+    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/context.mjs --section=API",
     "lint": "documentation lint src/context.mjs",
-    "test": "ava"
+    "test": "ava --timeout 2m"
   },
   "dependencies": {
     "@babel/core": "^7.8.4",
