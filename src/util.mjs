@@ -36,8 +36,6 @@ export function jspath(object, path, cb) {
     return m ? [...a, m[1], m[2]] : [...a, c];
   }, []);
 
-  //console.log(parts);
-
   const last = parts.pop();
 
   for (const p of parts) {
