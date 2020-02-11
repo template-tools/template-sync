@@ -47,6 +47,7 @@
     "micromatch": "^4.0.2",
     "recast": "^0.18.5",
     "rehype-remark": "^7.0.0",
+    "remark-parse": "^7.0.2",
     "remark-stringify": "^7.0.4",
     "remove-sensible-values": "1.0.4",
     "unified": "^8.4.2"
