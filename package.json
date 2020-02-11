@@ -31,6 +31,7 @@
     "test": "ava"
   },
   "dependencies": {
+    "@babel/core": "^7.8.4",
     "@iarna/toml": "^2.2.3",
     "aggregation-repository-provider": "^2.6.41",
     "babylon": "^6.18.0",
