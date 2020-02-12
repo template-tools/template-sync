@@ -14,7 +14,7 @@ export class NpmIgnore extends MergeLineSet {
    * @see https://docs.npmjs.com/misc/developers
    * @return {Set<string>}
    */
-  get defaultIgnoreSet() {
+  static get defaultIgnoreSet() {
     return new Set([
       '',
       '.*.swp',
