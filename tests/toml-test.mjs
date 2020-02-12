@@ -1,28 +1,31 @@
 import test from "ava";
+import { StringContentEntry } from "content-entry";
 import { createContext } from "./helpers/util.mjs";
 import { TOML } from "../src/mergers/toml.mjs";
 import stringify from "@iarna/toml/stringify.js";
 import parse from "@iarna/toml/parse-string.js";
 
-
 test("toml merge", async t => {
-  const fileName = "a.toml";
-
-  const context = await createContext(
-    stringify({
-      key: "{{description}}"
+  const commit = await TOML.merge(
+    await createContext(undefined, undefined, "a.toml", {
+      description: "value"
     }),
-    stringify({
-      oldKey: "oldValue"
-    }),
-    fileName,
-    { description: "value" }
-    );
+    new StringContentEntry(
+      "a.toml",
+      stringify({
+        key: "{{description}}"
+      })
+    ),
+    new StringContentEntry(
+      "a.toml",
+      stringify({
+        oldKey: "oldValue"
+      })
+    ),
+    { ...TOML.defaultOptions, expand: true }
+  );
 
-  const json = new TOML(fileName, { expand: true });
-  const merged = await json.merge(context);
-
-  t.deepEqual(parse(merged.content), {
+  t.deepEqual(parse(await commit.entry.getString()), {
     key: "value",
     oldKey: "oldValue"
   });
