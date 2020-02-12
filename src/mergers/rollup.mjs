@@ -1,7 +1,6 @@
 import recast from "recast";
 import parser from "recast/parsers/babel.js";
 import transform from "@babel/core/lib/transform.js";
-//import pluginObjectRestSpread from "@babel/plugin-proposal-object-rest-spread";
 
 import { Merger } from "../merger.mjs";
 
@@ -34,7 +33,6 @@ export class Rollup extends Merger {
             code: false,
             ast: true,
             sourceMap: false,
-          //  plugins: [pluginObjectRestSpread]
           }).ast
       }
     });
