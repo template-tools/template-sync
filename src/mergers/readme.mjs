@@ -23,6 +23,7 @@ export class Readme extends Merger {
     const pTemplate = JSON.parse(pkgTemplate);
 
     const badges = this.options.badges
+      .sort((a, b) => (a.order > b.order ? 1 : a.order < b.order ? -1 : 0))
       .map(b => {
         const m = this.options;
 

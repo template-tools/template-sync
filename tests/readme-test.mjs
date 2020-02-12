@@ -49,7 +49,8 @@ body`,
       {
         name: 'Badge 1',
         icon: 'http://domain.net/somewhere1.svg',
-        url: 'http://domain.net/somewhere1'
+        url: 'http://domain.net/somewhere1',
+        order: 0.1
       }
     ]
   });
