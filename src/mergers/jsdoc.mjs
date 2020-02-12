@@ -1,11 +1,11 @@
 import { JSONMerger } from './json.mjs';
 
 export class JSDoc extends JSONMerger {
-  optionalDevDependencies(dependencies) {
+  static optionalDevDependencies(dependencies) {
     return new Set(Array.from(dependencies).filter(m => m.match(/babel-preset/)));
   }
 
-  usedDevDependencies(content) {
+  static usedDevDependencies(content) {
     const modules = new Set();
 
     const json = JSON.parse(content);
