@@ -15,19 +15,18 @@ import { JSONMerger } from "./mergers/json.mjs";
 import { JSDoc } from "./mergers/jsdoc.mjs";
 
 export const mergers = [
+  Travis,
+  NpmIgnore,
   TOML,
   INI,
   YAML,
   Markdown,
   Rollup,
-  Travis,
   Readme,
   Package,
   JSONMerger,
   JSDoc,
-  Travis,
   MergeLineSet,
-  NpmIgnore,
   License,
   ReplaceIfEmpty,
   Replace
