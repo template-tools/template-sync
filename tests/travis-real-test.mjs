@@ -40,7 +40,7 @@ test("travis real merge", async t => {
       jobs: {
         include: [
           {
-            stage: "docs",
+            stage: "doc",
             node_js: "lts/*",
             skip_cleanup: "true",
             script: [
@@ -72,7 +72,7 @@ test("travis real merge", async t => {
       jobs: {
         include: [
           {
-            stage: "docs",
+            stage: "doc",
             node_js: "lts/*",
             skip_cleanup: "true",
             script: [
@@ -121,7 +121,7 @@ test("travis real merge", async t => {
     jobs: {
       include: [
         {
-          stage: "docs",
+          stage: "doc",
           node_js: "lts/*",
           skip_cleanup: "true",
           script: [

@@ -15,7 +15,7 @@ export class Travis extends YAML {
         "*node_js": { merge: mergeVersionsPreferNumeric },
         "jobs.include": {
           key: "stage",
-          orderBy: ["test", "docs", "release"]
+          orderBy: ["test", "doc", "release"]
         }
       }
     };
