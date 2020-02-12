@@ -8,6 +8,18 @@ export class ReplaceIfEmpty extends Merger {
     return false;
   }
 
+  static async merge(
+    context,
+    destinationEntry,
+    sourceEntry,
+    options = this.defaultOptions
+  ) {    
+    return await destinationEntry.isEmpty() ? {
+      message: `${options.messagePrefix}add missing {{entry.name}} from template`,
+      entry: sourceEntry
+    } : undefined;
+  }
+
   async mergeContent(context, original, template) {
     return original === ''
       ? {
