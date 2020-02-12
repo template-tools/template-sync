@@ -29,7 +29,7 @@ export class YAML extends Merger {
 
     const ymlOptions = { schema: yaml.FAILSAFE_SCHEMA };
     const actions = {};
-
+    
     return {
       message: actions2message(actions, options.messagePrefix, name),
       entry: new StringContentEntry(

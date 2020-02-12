@@ -10,7 +10,6 @@ import { StringContentEntry } from "content-entry";
 import { asArray } from "./util.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
-import { Travis } from "./mergers/travis.mjs";
 
 const templateCache = new Map();
 
@@ -105,15 +104,20 @@ console.log(await this.entryCache.get('package.json').getString());
 
           const ec = this.entryCache.get(entry.name);
           if (ec) {
-            if (name === ".travis.yml") {
-              const commit = await Travis.merge(undefined, ec, entry, {
-                ...Travis.defaultOptions,
-                mergeHints: {
-                  "*": { keepHints: true },
-                  "*.node_js": { keepHints: true }
-                }
-              });
-              this.entryCache.set(name, commit.entry);
+            for (const m of mergers) {
+              const found = micromatch([entry.name], m.pattern);
+              if (found.length) {
+                const commit = await m.merge(undefined, ec, entry, {
+                  ...m.defaultOptions,
+                  mergeHints: Object.fromEntries(
+                    Object.entries(
+                      m.defaultOptions.mergeHints
+                    ).map(([k, v]) => [k, { ...v, keepHints: true }])
+                  )
+                });
+                this.entryCache.set(name, commit.entry);
+                break;
+              }
             }
           } else {
             this.entryCache.set(name, entry);
