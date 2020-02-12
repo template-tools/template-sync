@@ -2,7 +2,6 @@ import { mergeVersionsPreferNumeric } from "hinted-tree-merger";
 import { YAML } from "./yaml.mjs";
 
 export class Travis extends YAML {
-
   static get pattern() {
     return ".travis.yml";
   }
@@ -15,7 +14,8 @@ export class Travis extends YAML {
         "*": { scope: "travis", removeEmpty: true },
         "*node_js": { merge: mergeVersionsPreferNumeric },
         "jobs.include": {
-          key: "stage"
+          key: "stage",
+          orderBy: ["test", "docs", "release"]
         }
       }
     };
