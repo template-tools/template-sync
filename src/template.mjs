@@ -94,6 +94,8 @@ export class Template {
 console.log(await this.entryCache.get('package.json').getString());
 */
 
+    const ctx = { expand: x => x };
+
     for (const branch of this.branches) {
       if (branch) {
         for await (const entry of branch.entries()) {
@@ -107,7 +109,7 @@ console.log(await this.entryCache.get('package.json').getString());
             for (const m of mergers) {
               const found = micromatch([entry.name], m.pattern);
               if (found.length) {
-                const commit = await m.merge(undefined, ec, entry, {
+                const commit = await m.merge(ctx, ec, entry, {
                   ...m.defaultOptions,
                   mergeHints: Object.fromEntries(
                     Object.entries(
