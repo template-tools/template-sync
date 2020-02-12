@@ -109,6 +109,7 @@ console.log(await this.entryCache.get('package.json').getString());
             for (const m of mergers) {
               const found = micromatch([entry.name], m.pattern);
               if (found.length) {
+                //console.log(entry.name,m.name);
                 const commit = await m.merge(ctx, ec, entry, {
                   ...m.defaultOptions,
                   mergeHints: Object.fromEntries(

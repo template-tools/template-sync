@@ -27,7 +27,7 @@ export class MergeLineSet extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = YAML.defaultOptions
+    options = this.defaultOptions
   ) {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();

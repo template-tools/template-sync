@@ -2,9 +2,8 @@ import test from 'ava';
 import { JSDoc } from '../src/mergers/jsdoc.mjs';
 
 test('optional dev modules', t => {
-  const jsdoc = new JSDoc('jsdoc.json');
   t.deepEqual(
-    jsdoc.optionalDevDependencies(new Set(['a', 'babel-preset-latest'])),
+    JSDoc.optionalDevDependencies(new Set(['a', 'babel-preset-latest'])),
     new Set(['babel-preset-latest'])
   );
 });
@@ -22,9 +21,8 @@ const FILE_CONTENT = `{
 }`;
 
 test('used dev modules', async t => {
-  const jsdoc = new JSDoc('jsdoc.json');
   t.deepEqual(
-    await jsdoc.usedDevDependencies(FILE_CONTENT),
+    await JSDoc.usedDevDependencies(FILE_CONTENT),
     new Set(['babel-preset-es2015', 'babel-preset-stage-3'])
   );
 });
