@@ -32,7 +32,8 @@ test("mergeTemplateFiles 2", t => {
                   {
                     name: "npm",
                     icon: "https://img.shields.io/npm/v/{{name}}.svg",
-                    url: "https://www.npmjs.com/package/{{name}}"
+                    url: "https://www.npmjs.com/package/{{name}}",
+                    order: 0.1
                   }
                 ]
               }
@@ -50,7 +51,8 @@ test("mergeTemplateFiles 2", t => {
                   {
                     name: "npm1",
                     icon: "https://img.shields.io/npm/v/{{name}}1.svg",
-                    url: "https://www.npmjs.com/package/{{name}}1"
+                    url: "https://www.npmjs.com/package/{{name}}1",
+                    order: 0.05
                   }
                 ]
               }
@@ -69,12 +71,14 @@ test("mergeTemplateFiles 2", t => {
                 {
                   name: "npm",
                   icon: "https://img.shields.io/npm/v/{{name}}.svg",
-                  url: "https://www.npmjs.com/package/{{name}}"
+                  url: "https://www.npmjs.com/package/{{name}}",
+                  order: 0.1
                 },
                 {
                   name: "npm1",
                   icon: "https://img.shields.io/npm/v/{{name}}1.svg",
-                  url: "https://www.npmjs.com/package/{{name}}1"
+                  url: "https://www.npmjs.com/package/{{name}}1",
+                  order: 0.05
                 }
               ]
             }
