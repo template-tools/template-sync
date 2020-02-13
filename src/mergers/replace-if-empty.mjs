@@ -1,7 +1,7 @@
 import { Merger } from "../merger.mjs";
 
 /**
- * Overwrites none existing file from template
+ * Overwrites none existing entries from template
  */
 export class ReplaceIfEmpty extends Merger {
   get needsTemplate() {
@@ -13,18 +13,20 @@ export class ReplaceIfEmpty extends Merger {
     destinationEntry,
     sourceEntry,
     options = this.defaultOptions
-  ) {    
-    return await destinationEntry.isEmpty() ? {
-      message: `${options.messagePrefix}add missing {{entry.name}} from template`,
-      entry: sourceEntry
-    } : undefined;
+  ) {
+    return (await destinationEntry.isEmpty())
+      ? {
+          message: `${options.messagePrefix}add missing {{entry.name}} from template`,
+          entry: sourceEntry
+        }
+      : undefined;
   }
 
   async mergeContent(context, original, template) {
-    return original === ''
+    return original === ""
       ? {
           content: this.options.expand ? context.expand(template) : template,
-          changed: template !== '',
+          changed: template !== "",
           messages: [
             this.options.message ||
               `chore: add missing ${this.name} from template`
