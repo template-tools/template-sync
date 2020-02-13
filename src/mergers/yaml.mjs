@@ -14,7 +14,12 @@ export class YAML extends Merger {
   }
 
   static get defaultOptions() {
-    return { ...super.defaultOptions, expand: false, messagePrefix: "chore: " };
+    return {
+      ...super.defaultOptions,
+      expand: false,
+      yaml: { lineWith: 128 },
+      messagePrefix: "chore: "
+    };
   }
 
   static async merge(
@@ -29,7 +34,7 @@ export class YAML extends Merger {
 
     const ymlOptions = { schema: yaml.FAILSAFE_SCHEMA };
     const actions = {};
-    
+
     return {
       message: actions2message(actions, options.messagePrefix, name),
       entry: new StringContentEntry(
@@ -45,9 +50,7 @@ export class YAML extends Merger {
             (action, hint) => aggregateActions(actions, action, hint),
             options.mergeHints
           ),
-          {
-            lineWidth: 128
-          }
+          options.yaml
         )
       )
     };
@@ -68,9 +71,7 @@ export class YAML extends Merger {
         (action, hint) => aggregateActions(actions, action, hint),
         this.options.mergeHints
       ),
-      {
-        lineWidth: 128
-      }
+      this.options.yaml
     );
 
     return {
