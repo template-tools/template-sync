@@ -37,7 +37,7 @@ merges contents from template repo into destination repo handling some special c
 -   package.json - merge (.\*)[Dd]ependencies, engines and scripts
 -   rollup.conf.js - copy / rewrite
 -   \*.yml - merge
--   .travis.yml - merge with hints
+-   [.travis.yml - merge with hints](doc/travis)
 -   \*.toml - merge
 -   \*.ini - merge
 -   \*.json - merge
