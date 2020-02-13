@@ -106,28 +106,36 @@ console.log(await this.entryCache.get('package.json').getString());
 
           const ec = this.entryCache.get(entry.name);
           if (ec) {
-            for (const m of mergers) {
-              const found = micromatch([entry.name], m.pattern);
-              if (found.length) {
-                //console.log(entry.name,m.name);
-                const commit = await m.merge(ctx, ec, entry, {
-                  ...m.defaultOptions,
-                  mergeHints: Object.fromEntries(
-                    Object.entries(
-                      m.defaultOptions.mergeHints
-                    ).map(([k, v]) => [k, { ...v, keepHints: true }])
-                  )
-                });
-                this.entryCache.set(name, commit.entry);
-                break;
-              }
-            }
+            this.entryCache.set(name, await this.mergeEntry(ctx, entry, ec));
           } else {
             this.entryCache.set(name, entry);
           }
         }
       }
     }
+  }
+
+  async mergeEntry(ctx, a, b) {
+    for (const merger of mergers) {
+      const found = micromatch([a.name], merger.pattern);
+      if (found.length) {
+        const commit = await merger.merge(ctx, a, b, {
+          ...merger.defaultOptions,
+          mergeHints: Object.fromEntries(
+            Object.entries(merger.defaultOptions.mergeHints).map(([k, v]) => [
+              k,
+              { ...v, keepHints: true }
+            ])
+          )
+        });
+        /*if(a.name === '.travis.yml') {
+          console.log(await commit.entry.getString());
+        }*/
+        return commit.entry;
+      }
+    }
+
+    return a;
   }
 
   /**

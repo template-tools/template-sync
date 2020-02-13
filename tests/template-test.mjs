@@ -1,5 +1,6 @@
 import test from "ava";
 import { MockProvider } from "mock-repository-provider";
+import { StringContentEntry } from "content-entry";
 
 import { Template } from "../src/template.mjs";
 
@@ -42,7 +43,7 @@ test.serial("template constructor", async t => {
 
   //console.log(m);
   //t.is(m.length, 2);
-  
+
   t.deepEqual(m[0].options, { actions: [], keywords: [], o1: 77 });
 
   for (const i of ["a", "b"]) {
@@ -81,4 +82,40 @@ test.serial("template mergers", async t => {
   t.is(mergers.length, 1);
   t.is(mergers[0].name, "package.json");
   t.is(mergers[0].constructor.name, "Package");
+});
+
+test("template merge travis", async t => {
+  const template = new Template(provider, ["template"]);
+  const t1 = new StringContentEntry(
+    ".travis.yml",
+    `jobs:
+  include:
+    - stage: test
+      node_js:
+        - 13.8.0
+`
+  );
+  const t2 = new StringContentEntry(
+    ".travis.yml",
+    `jobs:
+  include:
+    - stage: test
+      script:
+        - npm run cover
+        - npx codecov
+`
+  );
+
+  const tm = await template.mergeEntry(undefined, t2, t1);
+  t.is(
+    await tm.getString(),
+    `jobs:
+  include:
+    - stage: test
+      script:
+        - npm run cover
+        - npx codecov
+      node_js: 13.8.0
+`
+  );
 });

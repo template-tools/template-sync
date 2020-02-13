@@ -16,7 +16,10 @@ export class Travis extends YAML {
         "jobs.include": {
           key: "stage",
           orderBy: ["test", "doc", "release"]
-        }
+        }/*,
+        "*stage": {
+          orderBy: ["node_js", "script"]
+        }*/
       }
     };
   }
