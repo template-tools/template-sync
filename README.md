@@ -36,11 +36,11 @@ merges contents from template repo into destination repo handling some special c
 -   line set files like .npmignore and .gitignore - by merging both sets together
 -   package.json - merge (.\*)[Dd]ependencies, engines and scripts
 -   rollup.conf.js - copy / rewrite
--   \*.yml - merge
+-   [\*.yaml - merge](doc/yaml)
 -   [.travis.yml - merge with hints](doc/travis)
--   \*.toml - merge
--   \*.ini - merge
--   \*.json - merge
+-   [\*.toml - merge](doc/toml)
+-   [\*.ini - merge](doc/ini)
+-   [\*.json - merge](doc/json)
 -   README.md - merge badges
 
 ![generated pull request](doc/pr_sample.png)
