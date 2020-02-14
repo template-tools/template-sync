@@ -15,12 +15,9 @@ function set2lines(values) {
  *
  */
 export class MergeLineSet extends Merger {
-  /**
-   * entries to be skipped from result
-   * @return {Set<string>}
-   */
-  static get defaultIgnoreSet() {
-    return new Set([""]);
+
+  static get defaultOptions() {
+    return { ...super.defaultOptions, defaultIgnore: [""] };
   }
 
   static async merge(
@@ -32,6 +29,7 @@ export class MergeLineSet extends Merger {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();
     const template = await sourceEntry.getString();
+    const ignore = new Set(options.defaultIgnore);
 
     const actions = {};
     
@@ -44,7 +42,7 @@ export class MergeLineSet extends Merger {
             lines2set(original),
             [
               ...lines2set(options.expand ? context.expand(template) : template),
-              ...[...this.defaultIgnoreSet].map(p => `-${p}`)
+              ...[...ignore].map(p => `-${p}`)
             ],
             "",
             (action, hint) => aggregateActions(actions, action, hint),
@@ -57,11 +55,12 @@ export class MergeLineSet extends Merger {
 
   async mergeContent(context, original, template) {
     const actions = {};
+    const ignore = new Set(this.options.defaultIgnore);
 
     const content = set2lines(
       merge(lines2set(original), [
         ...lines2set(this.options.expand ? context.expand(template) : template),
-        ...[...this.constructor.defaultIgnoreSet].map(p => `-${p}`)
+        ...[...ignore].map(p => `-${p}`)
       ]),
       "",
       (action, hint) => aggregateActions(actions, action, hint),
