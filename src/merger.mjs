@@ -70,10 +70,6 @@ export class Merger {
     return this.constructor.defaultOptions;
   }
 
-  get needsTemplate() {
-    return true;
-  }
-
   async targetEntry(context, options) {
     return (await context.targetBranch.entry(this.name, options)).getString();
   }
@@ -89,14 +85,7 @@ export class Merger {
       target = new EmptyContentEntry(targetName);
     }
 
-    try {
-      template = await context.template.entry(this.name);
-    } catch (e) {
-      if (this.needsTemplate) {
-        throw e;
-      }
-      template = new EmptyContentEntry(this.name);
-    }
+    template = await context.template.entry(this.name);
 
     return Promise.all([target.getString(), template.getString()]);
   }

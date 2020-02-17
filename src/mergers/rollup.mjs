@@ -9,10 +9,6 @@ export class Rollup extends Merger {
     return "**/rollup.config.*js";
   }
 
-  get needsTemplate() {
-    return false;
-  }
-
   static optionalDevDependencies(dependencies) {
     return new Set(
       Array.from(dependencies).filter(
