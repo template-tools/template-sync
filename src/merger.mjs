@@ -43,10 +43,14 @@ export class Merger {
   ) {
     const name = destinationEntry.name;
     const merger = new this(context, name, options);
-    const result = await merger.mergeContent(context, await destinationEntry.getString(), await sourceEntry.getString());
+    const result = await merger.mergeContent(
+      context,
+      await destinationEntry.getString(),
+      await sourceEntry.getString()
+    );
 
     return {
-      message: result.messages.join(''),
+      message: result.messages.join(""),
       entry: new StringContentEntry(name, result.content)
     };
   }
@@ -75,7 +79,7 @@ export class Merger {
   }
 
   async content(context) {
-    let target,template;
+    let target, template;
 
     const targetName = context.expand(this.name);
 
