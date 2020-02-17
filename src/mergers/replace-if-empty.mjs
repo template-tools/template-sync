@@ -4,9 +4,6 @@ import { Merger } from "../merger.mjs";
  * Overwrites none existing entries from template
  */
 export class ReplaceIfEmpty extends Merger {
-  get needsTemplate() {
-    return false;
-  }
 
   static async merge(
     context,
