@@ -244,7 +244,7 @@ export class Package extends Merger {
         files: { compare, scope: "files", removeEmpty: true },
         bin: { compare, removeEmpty: true },
         "bin.*": { removeEmpty: true, scope: "bin" },
-        "scripts.*": {
+        "scripts": {
           orderBy: [
             "install",
             "pack",
@@ -255,9 +255,14 @@ export class Package extends Merger {
             "start",
             "stop",
             "test",
+            "cover",
             "uninstall",
-            "version"
-          ],
+            "version",
+            "docs",
+            "lint"
+          ]
+        },
+        "scripts.*": {
           merge: mergeExpressions,
           removeEmpty: true,
           scope: "scripts"
