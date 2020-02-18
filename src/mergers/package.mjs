@@ -91,6 +91,20 @@ const sortedKeys = [
   "template"
 ];
 
+const sortedScriptKeys = [
+  'install',
+  'pack',
+  'prepare',
+  'publish',
+  'restart',
+  'shrinkwrap',
+  'start',
+  'stop',
+  'test',
+  'uninstall',
+  'version'
+];
+  
 const propertyKeys = [
   "description",
   "version",
@@ -246,6 +260,7 @@ export class Package extends Merger {
         "bin.*": { removeEmpty: true, scope: "bin" },
         "scripts.*": {
           compare,
+          orderBy: sortedScriptKeys,
           merge: mergeExpressions,
           removeEmpty: true,
           scope: "scripts"
