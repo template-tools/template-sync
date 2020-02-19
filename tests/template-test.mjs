@@ -24,6 +24,7 @@ const provider = new MockProvider({
       "package.json": JSON.stringify({
         devDependencies: { rollup: "^1.29.1" },
         template: {
+          properties: {"a" : 1},
           files: [{ merger: "Travis", pattern: ".travis.yml" }],
           inheritFrom: ["template_b"]
         }
@@ -66,12 +67,21 @@ test.serial("template package content", async t => {
   t.deepEqual(await template.package(), {
     devDependencies: { ava: "^2.4.0", rollup: "^1.29.1" },
     template: {
+      properties: { a: 1 },
       files: [
         { merger: "Package", pattern: "package.json", options: { o1: 77 } },
         { merger: "Travis", pattern: ".travis.yml" }
       ],
       inheritFrom: ["template_b"]
     }
+  });
+});
+
+test.serial("template properties", async t => {
+  const template = new Template(provider, ["template"]);
+
+  t.deepEqual(await template.properties(), {
+    a : 1
   });
 });
 
