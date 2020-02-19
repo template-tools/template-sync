@@ -77,7 +77,7 @@ test.serial("template package content", async t => {
   });
 });
 
-test.serial("template properties", async t => {
+test("template properties", async t => {
   const template = new Template(provider, ["template"]);
 
   t.deepEqual(await template.properties(), {

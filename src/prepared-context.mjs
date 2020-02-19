@@ -115,11 +115,6 @@ export const PreparedContext = LogLevelMixin(
         }
       } catch {}
 
-      this.debug({
-        message: "detected properties",
-        properties: this.properties
-      });
-
       const template = await Template.templateFor(
         this.provider,
         this.properties.templateSources
@@ -130,6 +125,13 @@ export const PreparedContext = LogLevelMixin(
           `Unable to extract template repo url from ${targetBranch.name} ${pkg.name}`
         );
       }
+      
+      Object.assign(this.properties, await template.properties());
+
+      this.debug({
+        message: "detected properties",
+        properties: this.properties
+      });
 
       Object.defineProperties(this, {
         targetBranch: { value: targetBranch },

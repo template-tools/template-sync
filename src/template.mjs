@@ -192,7 +192,7 @@ console.log(await this.entryCache.get('package.json').getString());
 
   async properties() {
      const pkg = await this.package();
-     return pkg.template.properties;
+     return pkg.template ? pkg.template.properties : undefined;
   }
   
   /**
