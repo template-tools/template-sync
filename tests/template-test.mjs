@@ -116,7 +116,7 @@ test("template merge travis", async t => {
 `
   );
 
-  const tm = await template.mergeEntry(undefined, t2, t1);
+  const tm = await template.mergeEntry({ expand: x => x }, t2, t1);
   t.is(
     await tm.getString(),
     `jobs:

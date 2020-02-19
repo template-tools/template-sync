@@ -16,7 +16,7 @@ export class YAML extends Merger {
   static get defaultOptions() {
     return {
       ...super.defaultOptions,
-      expand: false,
+      expand: true,
       yaml: { lineWith: 128 },
       messagePrefix: "chore: "
     };

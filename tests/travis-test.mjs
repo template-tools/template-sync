@@ -205,7 +205,7 @@ test("start fresh", async t => {
     templateRepo: {
       master: {
         aFile: `node_js:
-  - 7.7.2
+  - {{node_version}}
 before_script:
   - npm prune
   - -npm install -g codecov
@@ -225,6 +225,8 @@ before_script:
     }),
     "targetRepo"
   );
+
+  context.properties.node_version = '7.7.2';
 
   const merger = new Travis("aFile");
   const merged = await merger.merge(context);
