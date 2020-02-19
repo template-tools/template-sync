@@ -190,6 +190,11 @@ console.log(await this.entryCache.get('package.json').getString());
     return JSON.parse(await entry.getString());
   }
 
+  async properties() {
+     const pkg = await this.package();
+     return pkg.template.properties;
+  }
+  
   /**
    *
    */
