@@ -1,6 +1,5 @@
 import unified from "unified";
 import markdown from "remark-parse";
-import rehype2remark from "rehype-remark";
 import stringify from "remark-stringify";
 import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
@@ -25,7 +24,6 @@ export class Markdown extends Merger {
 
     const processor = unified()
       .use(markdown)
-    //  .use(rehype2remark)
       .use(stringify);
 
     let content;
