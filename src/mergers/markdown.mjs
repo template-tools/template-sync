@@ -25,12 +25,16 @@ export class Markdown extends Merger {
 
     const processor = unified()
       .use(markdown)
-      .use(rehype2remark)
+    //  .use(rehype2remark)
       .use(stringify);
 
     let content;
 
-    processor.process(original, function(err, file) {
+    /*processor.process(original, (err, file) => {
+      content = file.contents;
+    });*/
+
+    processor.process(template, (err, file) => {
       content = file.contents;
     });
 

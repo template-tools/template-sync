@@ -2,7 +2,7 @@ import test from "ava";
 import { StringContentEntry } from "content-entry";
 import { Markdown } from "../src/mergers/markdown.mjs";
 
-test.skip("markdown merge", async t => {
+test("markdown merge", async t => {
   const merged = await Markdown.merge(
     undefined,
     new StringContentEntry(
@@ -14,16 +14,20 @@ test.skip("markdown merge", async t => {
       "a.md",
       `# Hello
   
-  - a
-  - b
-  - c
-  `
+- a
+- b
+- c
+`
     )
   );
 
   t.is(
     await merged.entry.getString(),
     `# Hello
+
+-   a
+-   b
+-   c
 `
   );
 });
