@@ -27,8 +27,8 @@
     "npm-template-sync": "src/npm-template-sync-cli.mjs"
   },
   "scripts": {
-    "test": "ava --timeout 2m",
-    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
+    "test": "ava --node-arguments '--experimental-modules' --timeout 2m",
+    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --node-arguments '--experimental-modules' --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/context.mjs --section=API",
     "lint": "documentation lint src/context.mjs"
   },
@@ -54,7 +54,7 @@
     "unified": "^8.4.2"
   },
   "devDependencies": {
-    "ava": "^3.3.0",
+    "ava": "^3.4.0",
     "c8": "^7.1.0",
     "documentation": "^12.1.4",
     "execa": "^4.0.0",
