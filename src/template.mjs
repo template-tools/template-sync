@@ -90,9 +90,7 @@ export class Template {
       )
     );
 
-    /*
-console.log(await this.entryCache.get('package.json').getString());
-*/
+    console.log(await this.entryCache.get("package.json").getString());
 
     const ctx = { expand: x => x };
 
@@ -171,7 +169,10 @@ console.log(await this.entryCache.get('package.json').getString());
             await this._templateFrom(asArray(template.inheritFrom))
           );
         }
-      } catch {}
+      } catch (e) {
+        // TODO
+        console.log(branch.fullCondensedName, e);
+      }
     }
 
     return result;
@@ -191,10 +192,10 @@ console.log(await this.entryCache.get('package.json').getString());
   }
 
   async properties() {
-     const pkg = await this.package();
-     return pkg.template ? pkg.template.properties : undefined;
+    const pkg = await this.package();
+    return pkg.template ? pkg.template.properties : undefined;
   }
-  
+
   /**
    *
    */
