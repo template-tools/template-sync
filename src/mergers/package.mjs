@@ -259,7 +259,8 @@ export class Package extends Merger {
             "uninstall",
             "version",
             "docs",
-            "lint"
+            "lint",
+            "package"
           ]
         },
         "scripts.*": {
