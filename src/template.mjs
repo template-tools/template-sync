@@ -90,7 +90,7 @@ export class Template {
       )
     );
 
-    console.log(await this.entryCache.get("package.json").getString());
+    //console.log(await this.entryCache.get("package.json").getString());
 
     const ctx = { expand: x => x };
 
