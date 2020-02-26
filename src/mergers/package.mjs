@@ -300,6 +300,7 @@ export class Package extends Merger {
           scope: "pacman"
         },
         "template.usedBy": { merge: mergeSkip },
+        "template.repository": { merge: mergeSkip },
         ...this.options.mergeHints
       }
     );
