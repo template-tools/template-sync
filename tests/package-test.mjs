@@ -84,7 +84,7 @@ test(
     homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
     template: {
       repository: {
-        url: "http://mock-provider.com/templateRepo"
+        url: "templateRepo"
       }
     }
   },
@@ -102,7 +102,7 @@ test(
     },
     template: {
       repository: {
-        url: "http://mock-provider.com/templateRepo"
+        url: "templateRepo"
       }
     }
   },
@@ -118,7 +118,7 @@ test(
     },
     template: {
       repository: {
-        url: "http://mock-provider.com/templateRepo"
+        url: "templateRepo"
       }
     }
   },
@@ -142,7 +142,7 @@ test(
     },
     template: {
       repository: {
-        url: "http://mock-provider.com/templateRepo"
+        url: "templateRepo"
       }
     }
   },
@@ -158,7 +158,7 @@ test(
     },
     template: {
       repository: {
-        url: "http://mock-provider.com/templateRepo"
+        url: "templateRepo"
       }
     }
   },
@@ -665,7 +665,7 @@ test("package start fresh", async t => {
     },
     template: {
       repository: {
-        url: "http://mock-provider.com/templateRepo"
+        url: "templateRepo"
       }
     }
   });

@@ -201,7 +201,7 @@ export class Package extends Merger {
       template: {
         repository: {
           url: asScalar(
-            [...context.template.initialBranches].map(branch => branch.url)
+            [...context.template.initialBranches].map(branch => branch.fullCondensedName)
           )
         }
       }
