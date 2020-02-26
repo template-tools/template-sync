@@ -1,6 +1,5 @@
 import { MockProvider } from "mock-repository-provider";
 import { Context } from "../../src/context.mjs";
-import { PreparedContext } from "../../src/prepared-context.mjs";
 
 export const TARGET_REPO = "targetRepo";
 export const TEMPLATE_REPO = "templateRepo";
@@ -24,11 +23,8 @@ export async function createContext(
     }
   });
 
-  return PreparedContext.from(
-    new Context(provider, {
-      properties,
-      templateSources: [TEMPLATE_REPO]
-    }),
-    TARGET_REPO
-  );
+  return Context.from(provider, TARGET_REPO, {
+    properties,
+    templateSources: [TEMPLATE_REPO]
+  });
 }

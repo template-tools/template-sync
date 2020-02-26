@@ -1,5 +1,5 @@
 #!/bin/sh
-":" //# comment; exec /usr/bin/env node --experimental-modules --experimental-json-modules "$0" "$@"
+":"; //# comment; exec /usr/bin/env node --experimental-modules --experimental-json-modules "$0" "$@"
 
 import fs from "fs";
 import program from "commander";
@@ -8,7 +8,6 @@ import { GithubProvider } from "github-repository-provider";
 import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { Context } from "./context.mjs";
-import { PreparedContext } from "./prepared-context.mjs";
 import { setProperty, defaultEncodingOptions } from "./util.mjs";
 import pkg from "../package.json";
 
@@ -80,14 +79,6 @@ program
         return;
       }
 
-      const context = new Context(provider, {
-        templateSources: program.template,
-        dry: program.dry,
-        trackUsedByModule: program.track,
-        console,
-        properties
-      });
-
       if (repos.length === 0 && program.listProperties) {
         console.log(
           JSON.stringify(removeSensibleValues(context.properties), undefined, 2)
@@ -103,18 +94,28 @@ program
       }
 
       for (const repo of repos) {
-        const pc = new PreparedContext(context, repo);
-        pc.logLevel = logLevel;
-        await pc.initialize();
+        const context = new Context(provider, repo, {
+          templateSources: program.template,
+          dry: program.dry,
+          trackUsedByModule: program.track,
+          console,
+          properties
+        });
+        context.logLevel = logLevel;
+        await context.initialize();
 
         if (program.listProperties) {
           console.log(
-            JSON.stringify(removeSensibleValues(pc.properties), undefined, 2)
+            JSON.stringify(
+              removeSensibleValues(context.properties),
+              undefined,
+              2
+            )
           );
           return;
         }
 
-        await pc.execute();
+        await context.execute();
       }
     } catch (err) {
       console.error(err);

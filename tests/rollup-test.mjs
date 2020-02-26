@@ -1,15 +1,14 @@
-import test from 'ava';
-import { MockProvider } from 'mock-repository-provider';
+import test from "ava";
+import { MockProvider } from "mock-repository-provider";
 
-import { Context } from '../src/context.mjs';
-import { PreparedContext } from '../src/prepared-context.mjs';
-import { Rollup } from '../src/mergers/rollup.mjs';
+import { Context } from "../src/context.mjs";
+import { Rollup } from "../src/mergers/rollup.mjs";
 
-test('rollup', async t => {
+test("rollup", async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: {
-        'rollup.config.json': `import babel from 'rollup-plugin-babel';
+        "rollup.config.json": `import babel from 'rollup-plugin-babel';
 import pkg from './package.json';
 
 export default {
@@ -31,7 +30,7 @@ export default {
     },
     targetRepo: {
       master: {
-        'rollup.config.json': `'use strict';
+        "rollup.config.json": `'use strict';
 import babel from 'rollup-plugin-babel';
 export default {
   banner: '#!/usr/bin/env node',
@@ -55,14 +54,11 @@ export default {
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    'targetRepo'
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
-  const rollup = new Rollup('rollup.config.json');
+  const rollup = new Rollup("rollup.config.json");
   const merged = await rollup.merge(context);
   t.is(
     merged.content,
@@ -92,12 +88,12 @@ export default {
   );
 });
 
-test('rollup empty template', async t => {
+test("rollup empty template", async t => {
   const provider = new MockProvider({
-    templateRepo: { master: { 'rollup.config.json': '' } },
+    templateRepo: { master: { "rollup.config.json": "" } },
     targetRepo: {
       master: {
-        'rollup.config.json': `import pkg from './package.json';
+        "rollup.config.json": `import pkg from './package.json';
 import babel from 'rollup-plugin-babel';
 
 export default {
@@ -118,14 +114,11 @@ export default {
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    'targetRepo'
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
-  const rollup = new Rollup('rollup.config.json');
+  const rollup = new Rollup("rollup.config.json");
   const merged = await rollup.merge(context);
   t.deepEqual(
     merged.content,
@@ -149,11 +142,11 @@ export default {
   );
 });
 
-test('rollup without imports and complex target expression', async t => {
+test("rollup without imports and complex target expression", async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: {
-        'rollup.config.json': `
+        "rollup.config.json": `
 export default {
   input: "input.js",
   output: {
@@ -165,7 +158,7 @@ export default {
     },
     targetRepo: {
       master: {
-        'rollup.config.json': `export default ['base'].map(name => {
+        "rollup.config.json": `export default ['base'].map(name => {
   return {
     input: 'tests/xx-test.js',
     output: {
@@ -177,14 +170,11 @@ export default {
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    'targetRepo'
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
-  const rollup = new Rollup('rollup.config.json');
+  const rollup = new Rollup("rollup.config.json");
   const merged = await rollup.merge(context);
   t.deepEqual(
     merged.content,

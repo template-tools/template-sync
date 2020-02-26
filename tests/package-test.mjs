@@ -2,7 +2,6 @@ import test from "ava";
 import { MockProvider } from "mock-repository-provider";
 
 import { Context } from "../src/context.mjs";
-import { PreparedContext } from "../src/prepared-context.mjs";
 import { Package } from "../src/mergers/package.mjs";
 
 const FILE_NAME = "package.json";
@@ -27,17 +26,14 @@ async function createContext(template, target) {
     }
   });
 
-  return await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"],
-      github: {
-        repo: "the-repo-name",
-        user: "the-user-name"
-      },
-      user: "x-user"
-    }),
-    "tragetUser/targetRepo"
-  );
+  return Context.from(provider, "tragetUser/targetRepo", {
+    templateSources: ["templateRepo"],
+    github: {
+      repo: "the-repo-name",
+      user: "the-user-name"
+    },
+    user: "x-user"
+  });
 }
 
 async function pkgt(t, template, content, expected, messages = [], changed) {

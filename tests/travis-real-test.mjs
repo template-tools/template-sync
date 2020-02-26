@@ -2,7 +2,6 @@ import test from "ava";
 import yaml from "js-yaml";
 import { MockProvider } from "mock-repository-provider";
 import { Context } from "../src/context.mjs";
-import { PreparedContext } from "../src/prepared-context.mjs";
 import { Travis } from "../src/mergers/travis.mjs";
 
 async function travisMerge(original, template) {
@@ -19,12 +18,9 @@ async function travisMerge(original, template) {
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    "targetRepo"
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
   const merger = new Travis("aFile");
   return await merger.merge(context);
@@ -111,8 +107,8 @@ test("travis real merge", async t => {
     }
   );
 
- // t.log(merged.content);
- // t.log(merged.messages);
+  // t.log(merged.content);
+  // t.log(merged.messages);
   t.deepEqual(yaml.safeLoad(merged.content), {
     language: "node_js",
     node_js: ["10.15.3", "11.12.0"],

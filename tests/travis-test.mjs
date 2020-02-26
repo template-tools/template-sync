@@ -4,7 +4,6 @@ import yaml from "js-yaml";
 import { MockProvider } from "mock-repository-provider";
 
 import { Context } from "../src/context.mjs";
-import { PreparedContext } from "../src/prepared-context.mjs";
 import { Travis } from "../src/mergers/travis.mjs";
 
 async function travisMerge(template, original) {
@@ -21,12 +20,9 @@ async function travisMerge(template, original) {
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    "targetRepo"
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
   const merger = new Travis("aFile");
   return await merger.merge(context);
@@ -60,12 +56,9 @@ ${targetVersions
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    "targetRepo"
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
   const merger = new Travis("aFile");
   return merger.merge(context);
@@ -183,12 +176,9 @@ test("travis remove before_script", async t => {
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    "targetRepo"
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
   const merger = new Travis("aFile");
   const merged = await merger.merge(context);
@@ -219,14 +209,11 @@ before_script:
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    "targetRepo"
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
-  context.properties.node_version = '7.7.2';
+  context.properties.node_version = "7.7.2";
 
   const merger = new Travis("aFile");
   const merged = await merger.merge(context);

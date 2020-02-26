@@ -2,7 +2,6 @@ import test from "ava";
 import { MockProvider } from "mock-repository-provider";
 
 import { Context } from "../src/context.mjs";
-import { PreparedContext } from "../src/prepared-context.mjs";
 import { Package } from "../src/mergers/package.mjs";
 import { Rollup } from "../src/mergers/rollup.mjs";
 
@@ -16,12 +15,9 @@ test("context file targetEntry", async t => {
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    "targetRepo"
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
   const f = new Package("package.json");
 
@@ -61,12 +57,9 @@ test("context used dev modules", async t => {
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    "targetRepo"
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
   context.addFile(new Rollup("rollup.config.js"));
   context.addFile(new Package("package.json"));
@@ -87,12 +80,9 @@ test("context optional dev modules", async t => {
     }
   });
 
-  const context = await PreparedContext.from(
-    new Context(provider, {
-      templateSources: ["templateRepo"]
-    }),
-    "targetRepo"
-  );
+  const context = await Context.from(provider, "targetRepo", {
+    templateSources: ["templateRepo"]
+  });
 
   context.addFile(new Rollup("rollup.config.js"));
 
