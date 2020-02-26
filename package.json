@@ -50,7 +50,7 @@
     "recast": "^0.18.5",
     "remark-parse": "^7.0.2",
     "remark-stringify": "^7.0.4",
-    "remove-sensible-values": "1.0.4",
+    "remove-sensible-values": "^1.0.5",
     "unified": "^8.4.2"
   },
   "devDependencies": {
