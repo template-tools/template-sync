@@ -3,7 +3,7 @@ import { LogLevelMixin } from "loglevel-mixin";
 import { StringContentEntry } from "content-entry";
 import { Package } from "./mergers/package.mjs";
 import { Template } from "./template.mjs";
-import { jspath, asArray } from "./util.mjs";
+import { jspath, asArray, log } from "./util.mjs";
 
 export { Template };
 
@@ -60,44 +60,6 @@ export const Context = LogLevelMixin(
         },
         targetBranchName: { value: targetBranchName }
       });
-    }
-
-    log(arg) {
-      const prefixKeys = {
-        branch: 1,
-        severity: "info"
-      };
-      const valueKeys = {
-        message: "v",
-        timestamp: "d"
-      };
-
-      const prefix = Object.keys(prefixKeys).reduce((a, c) => {
-        if (arg[c]) {
-          if (prefixKeys[c] !== arg[c]) {
-            a.push(arg[c]);
-          }
-          delete arg[c];
-        }
-        return a;
-      }, []);
-
-      const values = Object.keys(arg).reduce((a, c) => {
-        if (arg[c] !== undefined) {
-          switch (valueKeys[c]) {
-            case "v":
-              a.push(arg[c]);
-              break;
-            case "d":
-              break;
-            default:
-              a.push(`${c}=${JSON.stringify(arg[c])}`);
-          }
-        }
-        return a;
-      }, []);
-
-      console.log(`${prefix.join(",")}: ${values.join(" ")}`);
     }
 
     expand(...args) {
@@ -303,6 +265,10 @@ export const Context = LogLevelMixin(
       }
 
       return pullRequests;
+    }
+
+    log(...args) {
+      log(...args);
     }
   }
 );
