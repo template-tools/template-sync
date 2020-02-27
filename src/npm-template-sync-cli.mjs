@@ -48,9 +48,7 @@ program
 
     try {
       const logOptions = {
-        logger: (...args) => {
-          console.log(...args);
-        },
+        logger: (...args) => console.log(...args),
         logLevel
       };
 
@@ -91,7 +89,6 @@ program
           templateSources: program.template,
           dry: program.dry,
           trackUsedByModule: program.track,
-          console,
           properties
         });
         context.logLevel = logLevel;

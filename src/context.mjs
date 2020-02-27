@@ -30,9 +30,6 @@ export const Context = LogLevelMixin(
         dry: {
           value: options.dry || false
         },
-        logger: {
-          value: options.logger || console
-        },
         provider: {
           value: provider
         },
