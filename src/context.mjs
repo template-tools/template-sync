@@ -213,8 +213,8 @@ export const Context = LogLevelMixin(
       if (this.properties.usedBy !== undefined) {
         for (const r of this.properties.usedBy) {
           try {
-            const pc = await Context.from(this, r);
-            await pc.execute();
+            const context = await Context.from(this.provider, r);
+            await context.execute();
           } catch (e) {
             this.error(e);
           }
