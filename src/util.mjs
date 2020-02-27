@@ -113,7 +113,6 @@ export function aggregateActions(actions, action, hint) {
 }
 
 
-
 export function log(arg) {
   const prefixKeys = {
     branch: 1,
