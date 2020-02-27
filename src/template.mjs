@@ -157,6 +157,8 @@ export class Template {
 
       try {
         const pc = await branch.entry("package.json");
+
+      try {
         const pkg = JSON.parse(await pc.getString());
 
         result = mergeTemplate(result, pkg);
@@ -172,6 +174,9 @@ export class Template {
       } catch (e) {
         // TODO
         console.log(branch.fullCondensedName, e);
+      }
+      } catch (e) {
+        continue;
       }
     }
 
