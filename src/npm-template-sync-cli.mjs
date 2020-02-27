@@ -27,10 +27,7 @@ program
   .option(
     "-d --define <key=value>",
     "set provider option",
-    (value, properties) => {
-      const [k, v] = value.split(/=/);
-      setProperty(properties, k, v);
-    },
+    (value, properties) => setProperty(properties, ...(value.split(/=/))),
     properties
   )
   .option("--list-providers", "list providers with options and exit")
@@ -89,9 +86,9 @@ program
           templateSources: program.template,
           dry: program.dry,
           trackUsedByModule: program.track,
-          properties
+          properties,
+          ...logOptions
         });
-        context.logLevel = logLevel;
         await context.initialize();
 
         if (program.listProperties) {
