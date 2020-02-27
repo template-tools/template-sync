@@ -66,56 +66,36 @@ merges contents from template repo into destination repo handling some special c
 -   [Context](#context)
     -   [Parameters](#parameters)
     -   [Properties](#properties)
--   [PreparedContext](#preparedcontext)
-    -   [Parameters](#parameters-1)
-    -   [Properties](#properties-1)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
-    -   [properties](#properties-2)
-        -   [Parameters](#parameters-2)
+    -   [properties](#properties-1)
+        -   [Parameters](#parameters-1)
 -   [Merger](#merger)
-    -   [Parameters](#parameters-3)
-    -   [Properties](#properties-3)
+    -   [Parameters](#parameters-2)
+    -   [Properties](#properties-2)
     -   [merge](#merge)
+        -   [Parameters](#parameters-3)
+    -   [properties](#properties-3)
         -   [Parameters](#parameters-4)
-    -   [properties](#properties-4)
-        -   [Parameters](#parameters-5)
 -   [Template](#template)
-    -   [Parameters](#parameters-6)
-    -   [Properties](#properties-5)
+    -   [Parameters](#parameters-5)
+    -   [Properties](#properties-4)
     -   [\_templateFrom](#_templatefrom)
-        -   [Parameters](#parameters-7)
+        -   [Parameters](#parameters-6)
     -   [mergers](#mergers)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
-    -   [defaultIgnoreSet](#defaultignoreset)
--   [NpmIgnore](#npmignore)
-    -   [defaultIgnoreSet](#defaultignoreset-1)
 -   [Replace](#replace)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-8)
+    -   [Parameters](#parameters-7)
 
 ## Context
-
-### Parameters
-
--   `provider` **RepositoryProvider** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-
-### Properties
-
--   `provider` **RepositoryProvider** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `options.templates` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
-
-## PreparedContext
 
 context prepared to execute one package
 
 ### Parameters
 
--   `context` **[Context](#context)** 
 -   `targetBranchName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ### Properties
@@ -186,8 +166,8 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 -   `provider` **RepositoryProvider** 
 -   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
--   `branches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** 
--   `initialBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** 
+-   `branches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** all used branches direct and inherited
+-   `initialBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** root branches used to define the template
 
 ### \_templateFrom
 
@@ -204,7 +184,7 @@ load all templates and collects the files
 
 **Extends Merger**
 
-Overwrites none existing file from template
+Overwrites none existing entries from template
 
 ## Readme
 
@@ -215,24 +195,6 @@ injects badges into README.md
 ## MergeLineSet
 
 **Extends Merger**
-
-### defaultIgnoreSet
-
-entries to be skipped from result
-
-Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
-
-## NpmIgnore
-
-**Extends MergeLineSet**
-
-### defaultIgnoreSet
-
--   **See: <https://docs.npmjs.com/misc/developers>**
-
-entries to be skipped from result
-
-Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 ## Replace
 

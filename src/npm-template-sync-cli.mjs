@@ -79,13 +79,6 @@ program
         return;
       }
 
-      if (repos.length === 0 && program.listProperties) {
-        console.log(
-          JSON.stringify(removeSensibleValues(context.properties), undefined, 2)
-        );
-        return;
-      }
-
       if (repos.length === 0 || repos[0] === ".") {
         const pkg = JSON.parse(
           await fs.promises.readFile("package.json", defaultEncodingOptions)
