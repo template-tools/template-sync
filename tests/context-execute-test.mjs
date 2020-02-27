@@ -32,14 +32,18 @@ test("context execute - PR", async t => {
     templateSources: [TEMPLATE_REPO]
   });
 
-  const pullRequest = await context.execute();
+  const pullRequests = await context.execute();
+  t.truthy(pullRequests.length > 0);
 
+  const pullRequest = pullRequests[0];
   t.truthy(pullRequest && pullRequest.name);
 
   /*
   console.log("SOURCE",pullRequest.source.name);
   console.log("DSTINATION",pullRequest.destination.name);
   */
-  await pullRequest.destination.delete();
-  await pullRequest.delete();
+  for(const pr of pullRequests) {
+    await pr.destination.delete();
+    await pr.delete();
+  }
 });

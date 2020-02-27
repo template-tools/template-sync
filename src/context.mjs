@@ -211,24 +211,29 @@ export const Context = LogLevelMixin(
 
     async execute() {
       if (this.properties.usedBy !== undefined) {
+        const pullRequests = [];
+
         for (const r of this.properties.usedBy) {
           try {
             const context = await Context.from(this.provider, r);
-            await context.execute();
+            pullRequests.push(...(await context.execute()));
           } catch (e) {
             this.error(e);
           }
         }
+        return pullRequests;
       } else {
         return this.executeSingleRepo();
       }
     }
 
     /**
-     * @return {Promise<PullRequest>}
+     * @return {[Promise<PullRequest>]}
      */
     async executeSingleRepo() {
       const targetBranch = this.targetBranch;
+
+      const pullRequests = [];
 
       this.debug({
         message: "executeSingleRepo",
@@ -236,7 +241,7 @@ export const Context = LogLevelMixin(
       });
 
       if (this.trackUsedByModule && !this.dry) {
-        await this.template.addUsedPackage(targetBranch);
+        pullRequests.push(await this.template.addUsedPackage(targetBranch));
       }
 
       const files = await this.template.mergers();
@@ -255,13 +260,13 @@ export const Context = LogLevelMixin(
 
       if (merges.length === 0) {
         this.info("-");
-        return;
+        return pullRequests;
       }
 
       this.info(merges.map(m => `${m.messages[0]}`).join(","));
 
       if (this.dry) {
-        return;
+        return pullRequests;
       }
 
       const prBranch = await targetBranch.createBranch(
@@ -292,10 +297,12 @@ export const Context = LogLevelMixin(
         });
         this.info({ message: "PR", pr: pullRequest });
 
-        return pullRequest;
+        pullRequests.push(pullRequest);
       } catch (err) {
         this.error(err);
       }
+
+      return pullRequests;
     }
   }
 );
