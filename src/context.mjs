@@ -5,6 +5,8 @@ import { Package } from "./mergers/package.mjs";
 import { Template } from "./template.mjs";
 import { jspath, asArray } from "./util.mjs";
 
+export { Template };
+
 /**
  * context prepared to execute one package
  * @param {string} targetBranchName
