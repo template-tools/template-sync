@@ -246,7 +246,7 @@ export class Package extends Merger {
         keywords: { removeEmpty: true, compare, type: "docs" },
         repository: { compare },
         files: { compare, scope: "files", removeEmpty: true },
-        bin: { compare, removeEmpty: true },
+        bin: REMOVE_HINT,
         "bin.*": { removeEmpty: true, scope: "bin" },
         scripts: {
           orderBy: [
@@ -289,6 +289,7 @@ export class Package extends Merger {
           type: "fix",
           scope: "engines"
         },
+        release: REMOVE_HINT,
         config: REMOVE_HINT,
         "config.*": {
           compare,
