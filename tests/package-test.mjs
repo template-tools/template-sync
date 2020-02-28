@@ -79,9 +79,7 @@ test(
     bugs: { url: "http://mock-provider.com/tragetUser/targetRepo/issues" },
     homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
     template: {
-      repository: {
-        url: "templateRepo"
-      }
+      inheritFrom: "templateRepo"
     }
   },
   false
@@ -97,9 +95,7 @@ test(
       url: "http://mock-provider.com/tragetUser/targetRepo/issues"
     },
     template: {
-      repository: {
-        url: "templateRepo"
-      }
+      inheritFrom: "templateRepo"
     }
   },
   {
@@ -113,9 +109,7 @@ test(
       url: "http://mock-provider.com/tragetUser/targetRepo"
     },
     template: {
-      repository: {
-        url: "templateRepo"
-      }
+      inheritFrom: "templateRepo"
     }
   },
   ["chore(package): (repository)"]
@@ -137,9 +131,7 @@ test(
       url: "http://mock-provider.com/tragetUser/targetRepo/issues"
     },
     template: {
-      repository: {
-        url: "templateRepo"
-      }
+      inheritFrom: "templateRepo"
     }
   },
   {
@@ -153,9 +145,7 @@ test(
       url: "http://mock-provider.com/tragetUser/targetRepo"
     },
     template: {
-      repository: {
-        url: "templateRepo"
-      }
+      inheritFrom: "templateRepo"
     }
   },
   ["chore(package): (dependencies)", "chore(package): (repository)"]
@@ -509,9 +499,7 @@ test("package keywords", async t => {
     {
       name: "abc_xxx_1",
       template: {
-        repository: {
-          url: `https://github.com/.git`
-        }
+        inheritFrom: "https://github.com/.git"
       },
       keywords: ["A", "B"]
     }
@@ -660,9 +648,7 @@ test("package start fresh", async t => {
       url: "http://mock-provider.com/tragetUser/targetRepo"
     },
     template: {
-      repository: {
-        url: "templateRepo"
-      }
+      inheritFrom: "templateRepo"
     }
   });
 });

@@ -203,7 +203,6 @@ export class Package extends Merger {
       },
       homepage: context.targetBranch.homePageURL,
       template: {
-        repository: {},
         inheritFrom: asScalar(
           [...context.template.initialBranches].map(
             branch => branch.fullCondensedName
