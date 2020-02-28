@@ -11,8 +11,8 @@ const provider = new MockProvider({
       "package.json": JSON.stringify({
         devDependencies: { ava: "^2.4.0" },
         template: {
-          files: [
-            { merger: "Package", pattern: "package.json", options: { o1: 77 } }
+          mergers: [
+            { type: "Package", pattern: "package.json", options: { o1: 77 } }
           ],
           inheritFrom: ["template_b"]
         }
@@ -26,7 +26,7 @@ const provider = new MockProvider({
         devDependencies: { rollup: "^1.29.1" },
         template: {
           properties: {"a" : 1},
-          files: [{ merger: "Travis", pattern: ".travis.yml" }],
+          mergers: [{ type: "Travis", pattern: ".travis.yml" }],
           inheritFrom: ["template_b"]
         }
       }),
@@ -71,9 +71,9 @@ test.serial("template package content", async t => {
     devDependencies: { ava: "^2.4.0", rollup: "^1.29.1" },
     template: {
       properties: { a: 1 },
-      files: [
-        { merger: "Package", pattern: "package.json", options: { o1: 77 } },
-        { merger: "Travis", pattern: ".travis.yml" }
+      mergers: [
+        { type: "Package", pattern: "package.json", options: { o1: 77 } },
+        { type: "Travis", pattern: ".travis.yml" }
       ],
       inheritFrom: ["template_b"]
     }

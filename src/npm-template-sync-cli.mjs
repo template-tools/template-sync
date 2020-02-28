@@ -89,6 +89,7 @@ program
           properties,
           ...logOptions
         });
+
         await context.initialize();
 
         if (program.listProperties) {

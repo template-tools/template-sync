@@ -3,7 +3,7 @@ import { GithubProvider } from "github-repository-provider";
 import { Context } from "../src/context.mjs";
 
 const REPOSITORY_NAME = "arlac77/sync-test-repository";
-const TEMPLATE_REPO = "Kronos-Tools/npm-package-template";
+const TEMPLATE_REPO = "arlac77/template-cli-app";
 
 test("context prepare", async t => {
   const provider = new GithubProvider(

@@ -6,16 +6,16 @@ test("mergeTemplateFiles 1", t => {
     mergeTemplate(
       {
         template: {
-          files: [
+          mergers: [
             {
-              merger: "Package"
+              type: "Package"
             }
           ]
         }
       },
-      { template: { files: [{ merger: "Package" }] } }
+      { template: { mergers: [{ type: "Package" }] } }
     ),
-    { template: { files: [{ merger: "Package" }] } }
+    { template: { mergers: [{ type: "Package" }] } }
   );
 });
 
@@ -24,9 +24,9 @@ test("mergeTemplateFiles 2", t => {
     mergeTemplate(
       {
         template: {
-          files: [
+          mergers: [
             {
-              merger: "Package",
+              type: "Package",
               options: {
                 badges: [
                   {
@@ -43,9 +43,9 @@ test("mergeTemplateFiles 2", t => {
       },
       {
         template: {
-          files: [
+          mergers: [
             {
-              merger: "Package",
+              type: "Package",
               options: {
                 badges: [
                   {
@@ -63,9 +63,9 @@ test("mergeTemplateFiles 2", t => {
     ),
     {
       template: {
-        files: [
+        mergers: [
           {
-            merger: "Package",
+            type: "Package",
             options: {
               badges: [
                 {

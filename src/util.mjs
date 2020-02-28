@@ -1,4 +1,4 @@
-import { isScalar  } from "hinted-tree-merger";
+import { isScalar } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
 
@@ -9,7 +9,6 @@ export function asArray(o) {
 export function asScalar(o) {
   return Array.isArray(o) && o.length === 1 ? o[0] : o;
 }
-
 
 export function setProperty(properties, attributePath, value) {
   const m = attributePath.match(/^(\w+)\.(.*)/);
@@ -60,12 +59,11 @@ export function jspath(object, path, cb) {
 }
 
 export function actions2message(actions, prefix, name) {
-  return actions2messages(actions, prefix, name).join('\n');
+  return actions2messages(actions, prefix, name).join("\n");
 }
 
 export function actions2messages(actions, prefix, name) {
   const messages = Object.entries(actions).map(([slot, action]) => {
-
     const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
     const verbs = ["add", "remove", "update"]
       .map(verb => [
@@ -77,16 +75,16 @@ export function actions2messages(actions, prefix, name) {
 
     verbs.push(`(${slot.replace(/\[\d*\]/, "")})`);
 
-    const a = action.reduce((a,c)=> Object.assign(a,c),{ type: 'chore'});
+    const a = action.reduce((a, c) => Object.assign(a, c), { type: "chore" });
 
-    if(a.type) {
+    if (a.type) {
       prefix = a.type;
-      if(a.scope) {
+      if (a.scope) {
         prefix += `(${a.scope})`;
       }
-      prefix += ': ';
+      prefix += ": ";
     }
-    
+
     return prefix + verbs.join(" ");
   });
 
@@ -103,7 +101,7 @@ export function aggregateActions(actions, action, hint) {
       }
     }
   }
- 
+
   if (actions[action.path] === undefined) {
     actions[action.path] = [action];
   } else {
@@ -112,8 +110,16 @@ export function aggregateActions(actions, action, hint) {
   delete action.path;
 }
 
-
-export function log(arg) {
+export function log(level, ...args) {
+  switch (level) {
+    case "warn":
+      console.warn(...args);
+      break;
+    default:
+      console.log(...args);
+      break;
+  }
+  /*
   const prefixKeys = {
     branch: 1,
     severity: "info"
@@ -149,4 +155,5 @@ export function log(arg) {
   }, []);
 
   console.log(`${prefix.join(",")}: ${values.join(" ")}`);
+  */
 }
