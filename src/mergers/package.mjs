@@ -142,6 +142,10 @@ export class Package extends Merger {
       if (pkg.template.repository !== undefined) {
         properties.templateSources = asArray(pkg.template.repository.url);
       }
+      if (pkg.template.inheritFrom !== undefined) {
+        properties.templateSources = asArray(pkg.template.inheritFrom);
+      }
+
       if (pkg.template.usedBy !== undefined) {
         properties.usedBy = pkg.template.usedBy;
       }
@@ -199,11 +203,12 @@ export class Package extends Merger {
       },
       homepage: context.targetBranch.homePageURL,
       template: {
-        repository: {
-          url: asScalar(
-            [...context.template.initialBranches].map(branch => branch.fullCondensedName)
+        repository: {},
+        inheritFrom: asScalar(
+          [...context.template.initialBranches].map(
+            branch => branch.fullCondensedName
           )
-        }
+        )
       }
     });
 
@@ -244,7 +249,7 @@ export class Package extends Merger {
         files: { compare, scope: "files", removeEmpty: true },
         bin: { compare, removeEmpty: true },
         "bin.*": { removeEmpty: true, scope: "bin" },
-        "scripts": {
+        scripts: {
           orderBy: [
             "install",
             "pack",
@@ -300,7 +305,7 @@ export class Package extends Merger {
           scope: "pacman"
         },
         "template.usedBy": { merge: mergeSkip },
-       // "template.repository": { merge: mergeSkip },
+        "template.repository": { remove: true },
         ...this.options.mergeHints
       }
     );
