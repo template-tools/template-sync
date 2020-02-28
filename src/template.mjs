@@ -30,13 +30,13 @@ export const Template = LogLevelMixin(
       templateCache.clear();
     }
 
-    static async templateFor(provider, urls) {
+    static async templateFor(context, urls) {
       urls = asArray(urls);
       const key = urls.join(",");
       let template = templateCache.get(key);
 
       if (template === undefined) {
-        template = new Template(provider, urls);
+        template = new Template(context, urls);
         await template.initialize();
         templateCache.set(key, template);
       }
@@ -44,9 +44,10 @@ export const Template = LogLevelMixin(
       return template;
     }
 
-    constructor(provider, sources) {
+    constructor(context, sources) {
       Object.defineProperties(this, {
-        provider: { value: provider },
+        context: { value: context },
+        provider: { value: context.provider },
         sources: { value: sources },
         branches: { value: new Set() },
         initialBranches: { value: new Set() },
@@ -99,8 +100,6 @@ export const Template = LogLevelMixin(
 
       //console.log(await this.entryCache.get("package.json").getString());
 
-      const ctx = { expand: x => x };
-
       for (const branch of this.branches) {
         if (branch) {
           for await (const entry of branch.entries()) {
@@ -111,7 +110,7 @@ export const Template = LogLevelMixin(
 
             const ec = this.entryCache.get(entry.name);
             if (ec) {
-              this.entryCache.set(name, await this.mergeEntry(ctx, entry, ec));
+              this.entryCache.set(name, await this.mergeEntry(this.context, entry, ec));
             } else {
               this.entryCache.set(name, entry);
             }

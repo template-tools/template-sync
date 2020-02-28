@@ -105,7 +105,7 @@ export const Context = LogLevelMixin(
       } catch {}
 
       const template = await Template.templateFor(
-        this.provider,
+        this,
         this.properties.templateSources
       );
 

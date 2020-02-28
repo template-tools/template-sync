@@ -3,6 +3,7 @@ import { MockProvider } from "mock-repository-provider";
 import { StringContentEntry } from "content-entry";
 
 import { Template } from "../src/template.mjs";
+import { Context } from '../src/context.mjs';
 
 const provider = new MockProvider({
   template: {
@@ -34,8 +35,10 @@ const provider = new MockProvider({
   }
 });
 
+const context = new Context(provider);
+
 test.serial("template constructor", async t => {
-  const template = new Template(provider, ["template"]);
+  const template = new Template(context, ["template"]);
   t.deepEqual(template.sources, ["template"]);
   t.is(`${template}`, "template");
   t.is(template.name, "template");
@@ -55,14 +58,14 @@ test.serial("template constructor", async t => {
 });
 
 test.serial("template cache", async t => {
-  const t1 = await Template.templateFor(provider, ["template"]);
+  const t1 = await Template.templateFor(context, ["template"]);
   t.deepEqual(t1.sources, ["template"]);
-  const t2 = await Template.templateFor(provider, ["template"]);
+  const t2 = await Template.templateFor(context, ["template"]);
   t.is(t1, t2);
 });
 
 test.serial("template package content", async t => {
-  const template = new Template(provider, ["template"]);
+  const template = new Template(context, ["template"]);
 
   t.deepEqual(await template.package(), {
     devDependencies: { ava: "^2.4.0", rollup: "^1.29.1" },
@@ -78,7 +81,7 @@ test.serial("template package content", async t => {
 });
 
 test("template properties", async t => {
-  const template = new Template(provider, ["template"]);
+  const template = new Template(context, ["template"]);
 
   t.deepEqual(await template.properties(), {
     a : 1
@@ -86,7 +89,7 @@ test("template properties", async t => {
 });
 
 test.serial("template mergers", async t => {
-  const template = new Template(provider, ["template"]);
+  const template = new Template(context, ["template"]);
   const mergers = await template.mergers();
 
   t.is(mergers.length, 1);
@@ -95,7 +98,7 @@ test.serial("template mergers", async t => {
 });
 
 test("template merge travis", async t => {
-  const template = new Template(provider, ["template"]);
+  const template = new Template(context, ["template"]);
   const t1 = new StringContentEntry(
     ".travis.yml",
     `jobs:
