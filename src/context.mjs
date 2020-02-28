@@ -182,9 +182,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
       for (const r of this.properties.usedBy) {
         try {
           const context = await Context.from(this.provider, r, this.options);
-console.log(this.options);
-console.log(context.options);
-
           pullRequests.push(...(await context.execute()));
         } catch (e) {
           this.error(e);
