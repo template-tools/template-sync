@@ -9,7 +9,7 @@ import {
 import { StringContentEntry } from "content-entry";
 import { LogLevelMixin } from "loglevel-mixin";
 
-import { asArray, log } from "./util.mjs";
+import { asArray } from "./util.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
 
@@ -67,7 +67,7 @@ export const Template = LogLevelMixin(
     }
 
     log(...args) {
-      log(...args);
+      this.context.log(...args);
     }
 
     async entry(name) {
