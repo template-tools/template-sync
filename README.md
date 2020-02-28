@@ -80,15 +80,12 @@ merges contents from template repo into destination repo handling some special c
 -   [Template](#template)
     -   [Parameters](#parameters-5)
     -   [Properties](#properties-4)
-    -   [\_templateFrom](#_templatefrom)
-        -   [Parameters](#parameters-6)
-    -   [mergers](#mergers)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-7)
+    -   [Parameters](#parameters-6)
 
 ## Context
 
@@ -168,17 +165,6 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 -   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 -   `branches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** all used branches direct and inherited
 -   `initialBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** root branches used to define the template
-
-### \_templateFrom
-
-load all templates and collects the files
-
-#### Parameters
-
--   `sources` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
--   `isInitialSource`  
-
-### mergers
 
 ## ReplaceIfEmpty
 
