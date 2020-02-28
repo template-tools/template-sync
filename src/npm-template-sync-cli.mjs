@@ -85,7 +85,7 @@ program
         const context = new Context(provider, repo, {
           templateSources: program.template,
           dry: program.dry,
-          trackUsedByModule: program.track,
+          track: program.track,
           properties,
           ...logOptions
         });

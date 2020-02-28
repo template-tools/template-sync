@@ -24,8 +24,14 @@ export class Context extends LogLevelMixin(class _Context {}) {
   constructor(provider, targetBranchName, options = {}) {
     super();
     Object.defineProperties(this, {
-      trackUsedByModule: {
-        value: options.trackUsedByModule || false
+      options: {
+        value: options
+      },
+      templateSources: {
+        value: asArray(options.templateSources)
+      },
+      track: {
+        value: options.track || false
       },
       dry: {
         value: options.dry || false
@@ -37,7 +43,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
         value: {
           date: { year: new Date().getFullYear() },
           license: {},
-          templateSources: asArray(options.templateSources),
           ...options.properties
         }
       },
@@ -97,18 +102,17 @@ export class Context extends LogLevelMixin(class _Context {}) {
     }
 
     try {
-      const templateSources = this.properties.templateSources;
       const entry = await targetBranch.entry("package.json");
       Object.assign(this.properties, await Package.properties(entry));
 
-      if (templateSources.length > 0) {
-        this.properties.templateSources = templateSources;
+      if (this.templateSources.length === 0) {
+        this.templateSources.push(...this.properties.templateSources);
       }
     } catch {}
 
     const template = await Template.templateFor(
       this,
-      this.properties.templateSources,
+      this.templateSources,
       { logLevel: this.logLevel }
     );
 
@@ -177,9 +181,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
       for (const r of this.properties.usedBy) {
         try {
-          const context = await Context.from(this.provider, r, {
-            logLevel: this.logLevel
-          });
+          const context = await Context.from(this.provider, r, this.options);
+console.log(this.options);
+console.log(context.options);
+
           pullRequests.push(...(await context.execute()));
         } catch (e) {
           this.error(e);
@@ -204,7 +209,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       targetBranch
     });
 
-    if (this.trackUsedByModule && !this.dry) {
+    if (this.track && !this.dry) {
       pullRequests.push(await this.template.addUsedPackage(targetBranch));
     }
 

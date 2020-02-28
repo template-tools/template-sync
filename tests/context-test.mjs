@@ -13,10 +13,11 @@ test('context create', t => {
     }
   });
 
-  const context = new Context(provider);
+  const context = new Context(provider,'', { templateSources: 'a'});
 
   t.is(context.provider, provider);
   t.is(context.dry, false);
-  t.is(context.trackUsedByModule, false);
+  t.is(context.track, false);
+  t.deepEqual(context.templateSources, ['a']);
   t.deepEqual(context.properties.date, { year: new Date().getFullYear() });
 });
