@@ -49,11 +49,10 @@ merges contents from template repo into destination repo handling some special c
 
 ## Some templates
 
--   [list by _npm-package-template_ keyword](https://www.npmjs.com/browse/keyword/npm-package-template)
--   [arlac77/npm-package-template](https://github.com/arlac77/npm-package-template) _rollup_ _ava_ _travis_
--   [arlac77/npm-package-template-esm-only](https://github.com/arlac77/npm-package-template) _ava_ _travis_
--   [arlac77/npm-package-template-svelte](https://github.com/arlac77/npm-package-template) _svelte_ _rollup_ _testcafe_ _travis_
--   [arlac77/npm-package-template-svelte-app](https://github.com/arlac77/npm-package-template) _svelte_ _rollup_ _pkgbuild_ _travis_
+-   [arlac77/template-cli-app](https://github.com/arlac77/template-cli-app) _rollup_ _ava_ _travis_
+-   [arlac77/template-esm-only](https://github.com/arlac77/template-esm-only) _ava_ _travis_
+-   [arlac77/template-svelte](https://github.com/arlac77/template-svelte) _svelte_ _rollup_ _testcafe_ _travis_
+-   [arlac77/template-svelte-app](https://github.com/arlac77/template-svelte-app) _svelte_ _rollup_ _pkgbuild_ _travis_
 -   [Kronos-Tools/npm-package-template](https://github.com/Kronos-Tools/npm-package-template) _mocha_
 -   [Kronos-Tools/npm-package-template-minimal](https://github.com/Kronos-Tools/npm-package-template-minimal)
 
@@ -66,6 +65,8 @@ merges contents from template repo into destination repo handling some special c
 -   [Context](#context)
     -   [Parameters](#parameters)
     -   [Properties](#properties)
+    -   [usedDevDependencies](#useddevdependencies)
+    -   [executeSingleRepo](#executesinglerepo)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-1)
@@ -80,25 +81,42 @@ merges contents from template repo into destination repo handling some special c
 -   [Template](#template)
     -   [Parameters](#parameters-5)
     -   [Properties](#properties-4)
+    -   [\_templateFrom](#_templatefrom)
+        -   [Parameters](#parameters-6)
+    -   [mergers](#mergers)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-6)
+    -   [Parameters](#parameters-7)
 
 ## Context
+
+**Extends LogLevelMixin(class \_Context {})**
 
 context prepared to execute one package
 
 ### Parameters
 
+-   `provider`  
 -   `targetBranchName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `options`   (optional, default `{}`)
 
 ### Properties
 
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
+
+### usedDevDependencies
+
+all used dev modules
+
+Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+### executeSingleRepo
+
+Returns **\[[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>]** 
 
 ## sortedKeys
 
@@ -154,17 +172,31 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ## Template
 
+**Extends LogLevelMixin(class {})**
+
 ### Parameters
 
--   `provider` **RepositoryProvider** 
+-   `context` **Conext** 
 -   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
 
 ### Properties
 
--   `provider` **RepositoryProvider** 
+-   `context` **Conext** 
 -   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 -   `branches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** all used branches direct and inherited
 -   `initialBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** root branches used to define the template
+
+### \_templateFrom
+
+load all templates and collects the files
+
+#### Parameters
+
+-   `sources` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
+-   `isInitialSource`  
+
+### mergers
 
 ## ReplaceIfEmpty
 

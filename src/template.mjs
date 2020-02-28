@@ -16,10 +16,11 @@ import { mergers } from "./mergers.mjs";
 const templateCache = new Map();
 
 /**
- * @param {RepositoryProvider} provider
+ * @param {Conext} context
  * @param {string[]} sources
+ * @param {Object} options
  *
- * @property {RepositoryProvider} provider
+ * @property {Conext} context
  * @property {string[]} sources
  * @property {Set<Branch>} branches all used branches direct and inherited
  * @property {Set<Branch>} initialBranches root branches used to define the template
@@ -29,13 +30,13 @@ export class Template extends LogLevelMixin(class {}) {
     templateCache.clear();
   }
 
-  static async templateFor(context, urls, options) {
-    urls = asArray(urls);
-    const key = urls.join(",");
+  static async templateFor(context, sources, options) {
+    sources = asArray(sources);
+    const key = sources.join(",");
     let template = templateCache.get(key);
 
     if (template === undefined) {
-      template = new Template(context, urls, options);
+      template = new Template(context, sources, options);
       await template.initialize();
       templateCache.set(key, template);
     }
