@@ -15,6 +15,7 @@ process.on("uncaughtException", e => console.error(e));
 process.on("unhandledRejection", reason => console.error(reason));
 
 const properties = {};
+const templates = [];
 
 program
   .usage("Keep npm package in sync with its template")
@@ -38,7 +39,7 @@ program
   .option(
     "-t, --template <identifier>",
     "template repository",
-    /^([\w\-]+\/[\w\-]+)|((git|ssh|https?):\/\/.*)$/
+    value => { templates.push(value); return templates; }
   )
   .action(async (commander, repos) => {
     const logLevel = program.trace ? "trace" : program.debug ? "debug" : "info";
