@@ -33,12 +33,12 @@
     "lint": "documentation lint src/context.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.8.4",
+    "@babel/core": "^7.8.6",
     "@iarna/toml": "^2.2.3",
     "aggregation-repository-provider": "^2.6.41",
     "babylon": "^6.18.0",
     "commander": "^4.1.1",
-    "content-entry": "^2.3.0",
+    "content-entry": "^2.3.1",
     "expression-expander": "^7.0.4",
     "github-repository-provider": "^7.6.6",
     "hinted-tree-merger": "^3.12.1",
