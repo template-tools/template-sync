@@ -15,7 +15,12 @@ export class Merger {
   }
 
   static get defaultOptions() {
-    return { messagePrefix: "", expand: true, mergeHints: {} };
+    return {
+      messagePrefix: "",
+      expand: true,
+      mergeHints: {},
+      optionalDevDependencies: []
+    };
   }
 
   /**
@@ -27,8 +32,18 @@ export class Merger {
     return {};
   }
 
-  static optionalDevDependencies(modules) {
-    return new Set();
+  static optionalDevDependencies(
+    dependencies,
+    options = { optionalDevDependencies: [] }
+  ) {
+    return new Set(
+      Array.from(dependencies).filter(dep => {
+        for (const r of options.optionalDevDependencies) {
+          if (dep.match(r)) return true;
+        }
+        return false;
+      })
+    );
   }
 
   static usedDevDependencies(content) {

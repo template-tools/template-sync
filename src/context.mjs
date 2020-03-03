@@ -110,11 +110,9 @@ export class Context extends LogLevelMixin(class _Context {}) {
       }
     } catch {}
 
-    const template = await Template.templateFor(
-      this,
-      this.templateSources,
-      { logLevel: this.logLevel }
-    );
+    const template = await Template.templateFor(this, this.templateSources, {
+      logLevel: this.logLevel
+    });
 
     if (template === undefined) {
       throw new Error(
@@ -171,7 +169,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
   optionalDevDependencies(dependencies) {
     return Array.from(this.files.values())
-      .map(file => file.constructor.optionalDevDependencies(dependencies))
+      .map(file => file.constructor.optionalDevDependencies(dependencies, {}))
       .reduce((sum, current) => new Set([...sum, ...current]), new Set());
   }
 

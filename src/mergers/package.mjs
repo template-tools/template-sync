@@ -113,8 +113,10 @@ export class Package extends Merger {
 
   static get defaultOptions() {
     return {
+      ...super.defaultOptions,
       actions: [],
-      keywords: []
+      keywords: [],
+      optionalDevDependencies: ["cracks", "dont-crack"]
     };
   }
 

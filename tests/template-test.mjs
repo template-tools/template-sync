@@ -3,7 +3,7 @@ import { MockProvider } from "mock-repository-provider";
 import { StringContentEntry } from "content-entry";
 
 import { Template } from "../src/template.mjs";
-import { Context } from '../src/context.mjs';
+import { Context } from "../src/context.mjs";
 
 const provider = new MockProvider({
   template: {
@@ -25,7 +25,7 @@ const provider = new MockProvider({
       "package.json": JSON.stringify({
         devDependencies: { rollup: "^1.29.1" },
         template: {
-          properties: {"a" : 1},
+          properties: { a: 1 },
           mergers: [{ type: "Travis", pattern: ".travis.yml" }],
           inheritFrom: ["template_b"]
         }
@@ -48,7 +48,15 @@ test.serial("template constructor", async t => {
   //console.log(m);
   //t.is(m.length, 2);
 
-  t.deepEqual(m[0].options, { actions: [], keywords: [], o1: 77 });
+  t.deepEqual(m[0].options, {
+    messagePrefix: "",
+    mergeHints: {},
+    expand: true,
+    actions: [],
+    keywords: [],
+    optionalDevDependencies: ["cracks", "dont-crack"],
+    o1: 77
+  });
 
   for (const i of ["a", "b"]) {
     const f = await template.entry(`file_${i}`);
@@ -84,7 +92,7 @@ test("template properties", async t => {
   const template = new Template(context, ["template"]);
 
   t.deepEqual(await template.properties(), {
-    a : 1
+    a: 1
   });
 });
 
