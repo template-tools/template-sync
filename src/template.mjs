@@ -262,6 +262,13 @@ export class Template extends LogLevelMixin(class {}) {
     return Promise.all(
       [...this.initialBranches].map(async sourceBranch => {
         const name = targetBranch.fullCondensedName;
+        const usedByBranchName = `npm-template-sync-used-by`;
+
+        let prBranch = await sourceBranch.repository.branch(usedByBranchName);
+        if (prBranch) {
+          sourceBranch = prBranch;
+        }
+
         const entry = await sourceBranch.entry("package.json");
         const pkg = JSON.parse(await entry.getString());
 
@@ -276,9 +283,9 @@ export class Template extends LogLevelMixin(class {}) {
           pkg.template.usedBy.push(name);
           pkg.template.usedBy = pkg.template.usedBy.sort();
 
-          const prBranch = await sourceBranch.createBranch(
-            `npm-template-sync-track/${name}`
-          );
+          if(prBranch === undefined) {
+            prBranch = await sourceBranch.createBranch(usedByBranchName);
+          }
 
           await prBranch.commit(`fix: add ${name}`, [
             new StringContentEntry(
@@ -287,9 +294,13 @@ export class Template extends LogLevelMixin(class {}) {
             )
           ]);
 
+          if(sourceBranch === prBranch) {
+            return undefined;
+          }
+
           return sourceBranch.createPullRequest(prBranch, {
             title: `add ${name}`,
-            body: `add tracking info for ${name}`
+            body: `add ${name} to usedBy`
           });
         }
       })
