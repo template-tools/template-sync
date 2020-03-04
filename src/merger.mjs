@@ -18,8 +18,7 @@ export class Merger {
     return {
       messagePrefix: "",
       expand: true,
-      mergeHints: {},
-      optionalDevDependencies: []
+      mergeHints: {}
     };
   }
 
@@ -32,14 +31,13 @@ export class Merger {
     return {};
   }
 
-  static optionalDevDependencies(
-    dependencies,
-    options = { optionalDevDependencies: [] }
-  ) {
+  static optionalDevDependencies(dependencies, options = {}) {
     return new Set(
       Array.from(dependencies).filter(dep => {
-        for (const r of options.optionalDevDependencies) {
-          if (dep.match(r)) return true;
+        if (options.optionalDevDependencies) {
+          for (const r of options.optionalDevDependencies) {
+            if (dep.match(r)) return true;
+          }
         }
         return false;
       })
