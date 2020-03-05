@@ -260,50 +260,52 @@ export class Template extends LogLevelMixin(class {}) {
     await this.initialize();
 
     return Promise.all(
-      [...this.initialBranches].map(async sourceBranch => {
-        const name = targetBranch.fullCondensedName;
-        const usedByBranchName = `npm-template-sync-used-by`;
+      [...this.initialBranches]
+        .map(async sourceBranch => {
+          const name = targetBranch.fullCondensedName;
+          const usedByBranchName = "npm-template-sync-used-by";
 
-        let prBranch = await sourceBranch.repository.branch(usedByBranchName);
-        if (prBranch) {
-          sourceBranch = prBranch;
-        }
-
-        const entry = await sourceBranch.entry("package.json");
-        const pkg = JSON.parse(await entry.getString());
-
-        if (pkg.template === undefined) {
-          pkg.template = {};
-        }
-        if (!Array.isArray(pkg.template.usedBy)) {
-          pkg.template.usedBy = [];
-        }
-
-        if (!pkg.template.usedBy.find(n => n === name)) {
-          pkg.template.usedBy.push(name);
-          pkg.template.usedBy = pkg.template.usedBy.sort();
-
-          if(prBranch === undefined) {
-            prBranch = await sourceBranch.createBranch(usedByBranchName);
+          let prBranch = await sourceBranch.repository.branch(usedByBranchName);
+          if (prBranch) {
+            sourceBranch = prBranch;
           }
 
-          await prBranch.commit(`fix: add ${name}`, [
-            new StringContentEntry(
-              "package.json",
-              JSON.stringify(pkg, undefined, 2)
-            )
-          ]);
+          const entry = await sourceBranch.entry("package.json");
+          const pkg = JSON.parse(await entry.getString());
 
-          if(sourceBranch === prBranch) {
-            return undefined;
+          if (pkg.template === undefined) {
+            pkg.template = {};
+          }
+          if (!Array.isArray(pkg.template.usedBy)) {
+            pkg.template.usedBy = [];
           }
 
-          return sourceBranch.createPullRequest(prBranch, {
-            title: `add ${name}`,
-            body: `add ${name} to usedBy`
-          });
-        }
-      })
+          if (!pkg.template.usedBy.find(n => n === name)) {
+            pkg.template.usedBy.push(name);
+            pkg.template.usedBy = pkg.template.usedBy.sort();
+
+            if (prBranch === undefined) {
+              prBranch = await sourceBranch.createBranch(usedByBranchName);
+            }
+
+            await prBranch.commit(`fix: add ${name}`, [
+              new StringContentEntry(
+                "package.json",
+                JSON.stringify(pkg, undefined, 2)
+              )
+            ]);
+
+            if (sourceBranch === prBranch) {
+              return undefined;
+            }
+
+            return sourceBranch.createPullRequest(prBranch, {
+              title: `add ${name}`,
+              body: `add ${name} to usedBy`
+            });
+          }
+        })
+        .filter(x => x !== undefined)
     );
   }
 }
