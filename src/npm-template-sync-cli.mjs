@@ -8,7 +8,11 @@ import { GithubProvider } from "github-repository-provider";
 import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { Context } from "./context.mjs";
-import { setProperty, defaultEncodingOptions } from "./util.mjs";
+import {
+  setProperty,
+  defaultEncodingOptions,
+  dumpTemplateEntries
+} from "./util.mjs";
 import pkg from "../package.json";
 
 process.on("uncaughtException", e => console.error(e));
@@ -26,9 +30,9 @@ program
   .option("--debug", "log level debug")
   .option("--track", "track packages in templates package.json")
   .option(
-    "-d --define <key=value>",
+    "-d, --define <key=value>",
     "set provider option",
-    (value, properties) => setProperty(properties, ...(value.split(/=/))),
+    (value, properties) => setProperty(properties, ...value.split(/=/)),
     properties
   )
   .option("--list-providers", "list providers with options and exit")
@@ -36,11 +40,11 @@ program
     "--list-properties",
     "list all properties (if given of the first repo) and exit"
   )
-  .option(
-    "-t, --template <identifier>",
-    "template repository",
-    value => { templates.push(value); return templates; }
-  )
+  .option("-t, --template <identifier>", "template repository", value => {
+    templates.push(value);
+    return templates;
+  })
+  .option("-u, --dump-template <directory>", "copy template entries")
   .action(async (commander, repos) => {
     const logLevel = program.trace ? "trace" : program.debug ? "debug" : "info";
 
@@ -92,6 +96,12 @@ program
         });
 
         await context.initialize();
+
+        if (program.dumpTemplate) {
+          console.log(program.dumpTemplate);
+          await dumpTemplateEntries(context.template, program.dumpTemplate);
+          return;
+        }
 
         if (program.listProperties) {
           console.log(
