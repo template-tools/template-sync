@@ -98,7 +98,6 @@ program
         await context.initialize();
 
         if (program.dumpTemplate) {
-          console.log(program.dumpTemplate);
           await dumpTemplateEntries(context.template, program.dumpTemplate);
           return;
         }
