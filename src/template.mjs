@@ -325,6 +325,7 @@ export function mergeTemplate(a, b) {
     "template.mergers": { key: ["type", "pattern"] },
     "template.inheritFrom": { merge: mergeSkip },
     "template.usedBy": { merge: mergeSkip },
+    "template.properties.node_version": mvl,
     "*.options.badges": {
       key: "name",
       compare,
