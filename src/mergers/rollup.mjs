@@ -16,6 +16,7 @@ export class Rollup extends Merger {
           m.match(/@rollup\/plugin/) ||
           m.match(/rollup-plugin/) ||
           m.match(/babel-preset/) ||
+          m.match(/postcss/) ||
           m === "builtin-modules"
       )
     );
