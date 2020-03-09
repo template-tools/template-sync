@@ -108,6 +108,10 @@ export class Template extends LogLevelMixin(class {}) {
     for (const branch of this.branches) {
       if (branch) {
         for await (const entry of branch.entries()) {
+          if(!entry.isBlob) {
+            continue;
+          }
+          
           const name = entry.name;
           if (name === "package.json") {
             continue;
