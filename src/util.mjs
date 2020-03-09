@@ -164,7 +164,7 @@ export async function dumpTemplateEntries(template, dest) {
   for (const entry of template.entryCache.values()) {
     if (entry.isBlob) {
       const d = join(dest, entry.name);
-      fs.promises.mkdir(dirname(d), { recursive: true });
+      await fs.promises.mkdir(dirname(d), { recursive: true });
       const s = await entry.getReadStream();
       s.pipe(createWriteStream(d));
     }
