@@ -25,6 +25,6 @@ export async function createContext(
 
   return Context.from(provider, TARGET_REPO, {
     properties,
-    template: [TEMPLATE_REPO]
+    template: TEMPLATE_REPO
   });
 }

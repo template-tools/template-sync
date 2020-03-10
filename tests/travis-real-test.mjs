@@ -19,7 +19,7 @@ async function travisMerge(original, template) {
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    template: ["templateRepo"]
+    template: "templateRepo"
   });
 
   const merger = new Travis("aFile");

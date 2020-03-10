@@ -21,7 +21,7 @@ async function travisMerge(template, original) {
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    template: ["templateRepo"]
+    template: "templateRepo"
   });
 
   const merger = new Travis("aFile");
@@ -57,7 +57,7 @@ ${targetVersions
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    template: ["templateRepo"]
+    template: "templateRepo"
   });
 
   const merger = new Travis("aFile");
@@ -177,7 +177,7 @@ test("travis remove before_script", async t => {
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    template: ["templateRepo"]
+    template: "templateRepo"
   });
 
   const merger = new Travis("aFile");
@@ -210,7 +210,7 @@ before_script:
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    template: ["templateRepo"]
+    template: "templateRepo"
   });
 
   context.properties.node_version = "7.7.2";
