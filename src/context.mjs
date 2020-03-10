@@ -43,6 +43,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
         value: {
           date: { year: new Date().getFullYear() },
           license: {},
+          templateSources: [],
           ...options.properties
         }
       },
@@ -106,9 +107,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       Object.assign(this.properties, await Package.properties(entry));
     } catch {}
 
-    if(this.properties.templateSources) {
-      this.templateSources.push(...this.properties.templateSources);
-    }
+    this.templateSources.push(...this.properties.templateSources);
 
     const template = await Template.templateFor(this, this.templateSources, {
       logLevel: this.logLevel
