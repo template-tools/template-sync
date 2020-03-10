@@ -104,11 +104,11 @@ export class Context extends LogLevelMixin(class _Context {}) {
     try {
       const entry = await targetBranch.entry("package.json");
       Object.assign(this.properties, await Package.properties(entry));
-
-      if (this.templateSources.length === 0) {
-        this.templateSources.push(...this.properties.templateSources);
-      }
     } catch {}
+
+    if(this.properties.templateSources) {
+      this.templateSources.push(...this.properties.templateSources);
+    }
 
     const template = await Template.templateFor(this, this.templateSources, {
       logLevel: this.logLevel

@@ -11,7 +11,7 @@ test("context prepare", async t => {
   );
 
   const context = await Context.from(provider, REPOSITORY_NAME, {
-    template: [TEMPLATE_REPO],
+    template: TEMPLATE_REPO,
     properties: { mySpecialKey: "mySpecialValue" }
   });
 
@@ -29,7 +29,7 @@ test("context execute - PR", async t => {
 
   const context = await Context.from(provider, REPOSITORY_NAME, {
     console,
-    template: [TEMPLATE_REPO]
+    template: TEMPLATE_REPO
   });
 
   const pullRequests = await context.execute();
