@@ -27,7 +27,7 @@ async function createContext(template, target) {
   });
 
   return Context.from(provider, "tragetUser/targetRepo", {
-    templateSources: ["templateRepo"],
+    template: ["templateRepo"],
     github: {
       repo: "the-repo-name",
       user: "the-user-name"

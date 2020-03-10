@@ -13,7 +13,7 @@ test('context create', t => {
     }
   });
 
-  const context = new Context(provider,'', { templateSources: 'a'});
+  const context = new Context(provider,'', { template: 'a'});
 
   t.is(context.provider, provider);
   t.is(context.dry, false);

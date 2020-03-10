@@ -28,7 +28,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
         value: options
       },
       templateSources: {
-        value: asArray(options.templateSources)
+        value: asArray(options.template)
       },
       track: {
         value: options.track || false

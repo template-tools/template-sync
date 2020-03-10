@@ -35,7 +35,7 @@ body`,
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    templateSources: ["templateRepo"]
+    template: ["templateRepo"]
   });
 
   context.addFile(new Package("package.json"));

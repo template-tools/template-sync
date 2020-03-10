@@ -13,7 +13,7 @@ async function lmt(t, license, year = 2099, expected = "", messages = []) {
   });
 
   const context = await Context.from(provider, "myOwner/targetRepo", {
-    templateSources: ["templateRepo"],
+    template: ["templateRepo"],
     properties: {
       date: { year },
       license: { owner: "xyz" }

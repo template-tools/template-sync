@@ -11,7 +11,7 @@ test("context prepare from template", async t => {
   );
 
   const context = await Context.from(provider, TEMPLATE_REPO, {
-    templateSources: [TEMPLATE_REPO],
+    template: [TEMPLATE_REPO],
     properties: { mySpecialKey: "mySpecialValue" }
   });
 

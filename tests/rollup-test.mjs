@@ -55,7 +55,7 @@ export default {
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    templateSources: ["templateRepo"]
+    template: ["templateRepo"]
   });
 
   const rollup = new Rollup("rollup.config.json");
@@ -115,7 +115,7 @@ export default {
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    templateSources: ["templateRepo"]
+    template: ["templateRepo"]
   });
 
   const rollup = new Rollup("rollup.config.json");
@@ -171,7 +171,7 @@ export default {
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    templateSources: ["templateRepo"]
+    template: ["templateRepo"]
   });
 
   const rollup = new Rollup("rollup.config.json");

@@ -16,7 +16,7 @@ test("context file targetEntry", async t => {
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    templateSources: ["templateRepo"]
+    template: ["templateRepo"]
   });
 
   const f = new Package("package.json");
@@ -58,7 +58,7 @@ test("context used dev modules", async t => {
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    templateSources: ["templateRepo"]
+    template: ["templateRepo"]
   });
 
   context.addFile(new Rollup("rollup.config.js"));
@@ -81,7 +81,7 @@ test("context optional dev modules", async t => {
   });
 
   const context = await Context.from(provider, "targetRepo", {
-    templateSources: ["templateRepo"]
+    template: ["templateRepo"]
   });
 
   context.addFile(new Rollup("rollup.config.js"));

@@ -88,7 +88,7 @@ program
 
       for (const repo of repos) {
         const context = new Context(provider, repo, {
-          templateSources: program.template,
+          template: program.template,
           dry: program.dry,
           track: program.track,
           properties,
