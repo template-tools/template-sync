@@ -65,14 +65,14 @@ test.serial("template constructor", async t => {
   }
 });
 
-test.serial("template cache", async t => {
-  const t1 = await Template.templateFor(context, ["template"]);
+test("template cache", async t => {
+  const t1 = await Template.templateFor(context, "template");
   t.deepEqual(t1.sources, ["template"]);
-  const t2 = await Template.templateFor(context, ["template"]);
+  const t2 = await Template.templateFor(context, "template");
   t.is(t1, t2);
 });
 
-test.serial("template package content", async t => {
+test("template package content", async t => {
   const template = new Template(context, ["template"]);
 
   t.deepEqual(await template.package(), {
