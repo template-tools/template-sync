@@ -65,6 +65,14 @@ test.serial("template constructor", async t => {
   }
 });
 
+test("template source expression", async t => {
+  const t1t2 = await Template.templateFor(context, ["t1", "t2", "t1", "-t3"]);
+  t.deepEqual(t1t2.sources, ["t1", "t2"]);
+
+  const tx = await Template.templateFor(context, ["t1", "t2", "-t2"]);
+  t.deepEqual(tx.sources, ["t1"]);
+});
+
 test("template cache", async t => {
   const t1 = await Template.templateFor(context, "template");
   t.deepEqual(t1.sources, ["template"]);

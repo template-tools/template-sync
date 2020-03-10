@@ -30,9 +30,21 @@ export class Template extends LogLevelMixin(class {}) {
     templateCache.clear();
   }
 
+  /**
+   * Remove duplicate sources
+   * sources staring wit '-' will be removed
+   * @param {Context} context 
+   * @param {String[]} sources 
+   * @param options 
+   */
   static async templateFor(context, sources, options) {
-    sources = asArray(sources);
+    sources = [...new Set(asArray(sources))];
+
+    const remove = sources.filter(s => s[0] === '-').map(s => s.slice(1));
+    sources = sources.filter(s => remove.indexOf(s) < 0).filter(s => s[0] !== '-');
+
     const key = sources.join(",");
+
     let template = templateCache.get(key);
 
     if (template === undefined) {
@@ -108,10 +120,10 @@ export class Template extends LogLevelMixin(class {}) {
     for (const branch of this.branches) {
       if (branch) {
         for await (const entry of branch.entries()) {
-          if(!entry.isBlob) {
+          if (!entry.isBlob) {
             continue;
           }
-          
+
           const name = entry.name;
           if (name === "package.json") {
             continue;
