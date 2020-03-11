@@ -65,6 +65,11 @@ test.serial("template constructor", async t => {
   }
 });
 
+test("template source sort", async t => {
+  const t1 = await Template.templateFor(context, ["t2", "t1"]);
+  t.deepEqual(t1.sources, ["t1", "t2"]);
+});
+
 test("template source expression", async t => {
   const t1t2 = await Template.templateFor(context, ["t1", "t2", "t1", "-t3"]);
   t.deepEqual(t1t2.sources, ["t1", "t2"]);

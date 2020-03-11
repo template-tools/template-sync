@@ -42,6 +42,7 @@ export class Template extends LogLevelMixin(class {}) {
 
     const remove = sources.filter(s => s[0] === '-').map(s => s.slice(1));
     sources = sources.filter(s => remove.indexOf(s) < 0).filter(s => s[0] !== '-');
+    sources = sources.sort();
 
     const key = sources.join(",");
 
