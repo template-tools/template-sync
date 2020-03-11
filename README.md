@@ -11,7 +11,6 @@
 [![codecov.io](http://codecov.io/github/arlac77/npm-template-sync/coverage.svg?branch=master)](http://codecov.io/github/arlac77/npm-template-sync?branch=master)
 [![Coverage Status](https://coveralls.io/repos/arlac77/npm-template-sync/badge.svg)](https://coveralls.io/r/arlac77/npm-template-sync)
 
-
 ## npm-template-sync
 
 Keep npm package in sync with its template.
@@ -84,12 +83,14 @@ merges contents from template repo into destination repo handling some special c
     -   [\_templateFrom](#_templatefrom)
         -   [Parameters](#parameters-6)
     -   [mergers](#mergers)
+    -   [templateFor](#templatefor)
+        -   [Parameters](#parameters-7)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-7)
+    -   [Parameters](#parameters-8)
 
 ## Context
 
@@ -197,6 +198,17 @@ load all templates and collects the files
 -   `isInitialSource`  
 
 ### mergers
+
+### templateFor
+
+Remove duplicate sources
+sources staring wit '-' will be removed
+
+#### Parameters
+
+-   `context` **[Context](#context)** 
+-   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+-   `options`  
 
 ## ReplaceIfEmpty
 

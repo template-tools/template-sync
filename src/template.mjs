@@ -34,7 +34,7 @@ export class Template extends LogLevelMixin(class {}) {
    * Remove duplicate sources
    * sources staring wit '-' will be removed
    * @param {Context} context 
-   * @param {String[]} sources 
+   * @param {string[]} sources 
    * @param options 
    */
   static async templateFor(context, sources, options) {
