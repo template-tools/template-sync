@@ -1,6 +1,5 @@
 import { createContext } from "expression-expander";
 import { LogLevelMixin } from "loglevel-mixin";
-import { StringContentEntry } from "content-entry";
 import { Package } from "./mergers/package.mjs";
 import { Template } from "./template.mjs";
 import { jspath, asArray, log } from "./util.mjs";
@@ -203,22 +202,29 @@ export class Context extends LogLevelMixin(class _Context {}) {
       targetBranch
     });
 
+    const template = this.template;
+
     if (this.track && !this.dry) {
-      pullRequests.push(await this.template.addUsedPackage(targetBranch));
+      pullRequests.push(await template.addUsedPackage(targetBranch));
     }
 
-    const mergers = await this.template.mergers();
-
-    mergers.forEach(f => this.addFile(f));
-
-    this.trace(level =>
-      mergers.map(merger => {
-        return { name: merger.name, merger: merger.constructor.name };
-      })
-    );
+    const mergers = await template.mergers();
 
     const commits = (
-      await Promise.all(mergers.map(async merger => merger.merge(this)))
+      await Promise.all(mergers.map(async ([name,merger,options]) => {
+        let targetEntry = await targetBranch.entry(name);
+        if(targetEntry === undefined) {
+          targetEntry = new EmptyContentEntry(name);
+        }
+
+        return merger.merge(
+          this,
+          targetEntry,
+          await template.entry(name),
+          options
+        );
+      }
+      ))
     ).filter(c => c !== undefined && c.changed);
 
     if (commits.length === 0) {
@@ -226,34 +232,29 @@ export class Context extends LogLevelMixin(class _Context {}) {
       return pullRequests;
     }
 
-    this.info(commits.map(c => `${c.messages[0]}`).join(","));
+    this.info(commits.map(c => `${c.message}`).join(","));
 
     if (this.dry) {
       return pullRequests;
     }
 
     const prBranch = await targetBranch.createBranch(
-      `npm-template-sync/${this.template.name}`
+      `npm-template-sync/${template.name}`
     );
 
-    const messages = [];
-
-    for (const c of commits) {
-      messages.push(...c.messages);
-      await prBranch.commit(c.messages.join("\n"), [
-        new StringContentEntry(c.name, c.content)
-      ]);
+    for (const commit of commits) {
+      await prBranch.commit(commit.message, [commit.entry]);
     }
 
     try {
       const pullRequest = await targetBranch.createPullRequest(prBranch, {
-        title: `merge from ${this.template.name}`,
+        title: `merge from ${template.name}`,
         body: commits
           .map(
             c =>
-              `${c.name}
+              `${c.entry.name}
 ---
-- ${c.messages.join("\n- ")}
+- ${c.message}
 `
           )
           .join("\n")

@@ -1,3 +1,4 @@
+import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
 
 function getRanges(array) {
@@ -62,10 +63,18 @@ export class License extends Merger {
     };
   }
 
-  async mergeContent(context, original, template) {
-    const messages = [];
+  static async merge(
+    context,
+    destinationEntry,
+    sourceEntry,
+    options = this.defaultOptions
+  ) {
+    let message;
+
     const year = context.evaluate("date.year");
     let years = new Set();
+
+    const original = await destinationEntry.getString();
 
     const m = original.match(
       /opyright\s*\(c\)\s*((\d+)([,\-\d]+)*)(\s*(,|by)\s*(.*))?/
@@ -80,31 +89,26 @@ export class License extends Merger {
 
       if (!years.has(year)) {
         years.add(year);
-        messages.push(`${this.options.messagePrefix}add year ${year}`);
+        message = `${options.messagePrefix}add year ${year}`;
       }
     }
 
-    if (messages.length === 0) {
-      messages.push(`${this.options.messagePrefix}update`);
+    if (!message) {
+      message = `${options.messagePrefix}update`;
     }
 
+    let entry = await sourceEntry;
+
     if (original !== "") {
-      const content = original.replace(
+      entry = new StringContentEntry(destinationEntry.name, original.replace(
         /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
         `opyright (c) ${yearsToString(years)}`
-      );
-
-      return {
-        changed: content !== original,
-        messages,
-        content
-      };
+      ));
     }
 
     return {
-      content: context.expand(template),
-      changed: true,
-      messages: [`${this.options.messagePrefix}add LICENSE`]
+      entry,
+      message
     };
   }
 }

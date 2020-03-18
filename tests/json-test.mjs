@@ -1,57 +1,46 @@
 import test from "ava";
 import { createContext } from "./helpers/util.mjs";
+import { StringContentEntry, EmptyContentEntry } from "content-entry";
 import { JSONMerger } from "../src/mergers/json.mjs";
 
 const FILE_NAME = "a.json";
 
 test("json merge", async t => {
-  const context = await createContext(
-    JSON.stringify({
-      key: "value"
-    }),
-    JSON.stringify({
-      oldKey: "oldValue"
-    }),
-    FILE_NAME
+  const commit = await JSONMerger.merge(
+    await createContext(),
+    new StringContentEntry(
+      FILE_NAME,
+      JSON.stringify({
+        key: "value"
+      })
+    ),
+    new StringContentEntry(
+      FILE_NAME,
+      JSON.stringify({
+        oldKey: "oldValue"
+      })
+    )
   );
 
-  const json = new JSONMerger(FILE_NAME);
-  const merged = await json.merge(context);
-
-  t.deepEqual(JSON.parse(merged.content), {
+  t.deepEqual(JSON.parse(await commit.entry.getString()), {
     key: "value",
     oldKey: "oldValue"
   });
 });
 
-test("json empty template", async t => {
-  const context = await createContext(
-    undefined,
-    JSON.stringify({
-      oldKey: "oldValue"
-    }),
-    FILE_NAME
-  );
-
-  const json = new JSONMerger(FILE_NAME);
-  const merged = await json.merge(context);
-  t.is(merged.changed, false);
-  //t.is(merged, undefined);
-});
-
 test("json empty target", async t => {
-  const context = await createContext(
-    JSON.stringify({
-      key: "value"
-    }),
-    undefined,
-    FILE_NAME
+  const commit = await JSONMerger.merge(
+    await createContext(),
+    new EmptyContentEntry(FILE_NAME),
+    new StringContentEntry(
+      FILE_NAME,
+      JSON.stringify({
+        key: "value"
+      })
+    ),
   );
 
-  const json = new JSONMerger(FILE_NAME);
-  const merged = await json.merge(context);
-
-  t.deepEqual(JSON.parse(merged.content), {
+  t.deepEqual(JSON.parse(await commit.entry.getString()), {
     key: "value"
   });
 });

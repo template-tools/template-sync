@@ -1,7 +1,7 @@
 import { StringContentEntry } from "content-entry";
 import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
-import { actions2messages, actions2message, aggregateActions } from "../util.mjs";
+import { actions2message, aggregateActions } from "../util.mjs";
 
 function lines2set(content) {
   return new Set(content.split(/\r?\n/));
@@ -50,27 +50,6 @@ export class MergeLineSet extends Merger {
           )
         )
       )
-    };
-  }
-
-  async mergeContent(context, original, template) {
-    const actions = {};
-    const ignore = new Set(this.options.defaultIgnore);
-
-    const content = set2lines(
-      merge(lines2set(original), [
-        ...lines2set(this.options.expand ? context.expand(template) : template),
-        ...[...ignore].map(p => `-${p}`)
-      ]),
-      "",
-      (action, hint) => aggregateActions(actions, action, hint),
-      this.options.mergeHints
-    );
-
-    return {
-      content,
-      changed: content !== original,
-      messages: actions2messages(actions, this.options.messagePrefix, this.name)
     };
   }
 }

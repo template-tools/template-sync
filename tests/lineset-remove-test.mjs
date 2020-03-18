@@ -1,19 +1,17 @@
 import test from "ava";
 import { createContext } from "./helpers/util.mjs";
+import { StringContentEntry, EmptyContentEntry } from "content-entry";
 import { MergeLineSet } from "../src/mergers/merge-line-set.mjs";
 
 test("MergeLineSet lines remove", async t => {
-  const context = await createContext(
-    ["-Line 1", "Line 2"].join("\n"),
-    ["Line 1", "Line 3"].join("\n"),
-    "aFile"
-  );
+  const context = await createContext();
 
-  const merger = new MergeLineSet("aFile", {
+  const commit = await MergeLineSet.merge(context,
+    new StringContentEntry('a',["-Line 1", "Line 2"].join("\n")),
+    new StringContentEntry('a',["Line 1", "Line 3"].join("\n")), {
     messagePrefix: "chore(something): "
   });
-  const merged = await merger.merge(context);
 
-  t.deepEqual(merged.content, ["Line 3", "Line 2"].join("\n"));
-  t.deepEqual(merged.messages, ["chore(something): merge from template aFile"]);
+  t.is(await commit.entry.getString(), ["Line 3", "Line 2"].join("\n"));
+  t.is(commit.message, "chore(something): merge from template aFile");
 });

@@ -48,7 +48,7 @@ test.serial("template constructor", async t => {
   //console.log(m);
   //t.is(m.length, 2);
 
-  t.deepEqual(m[0].options, {
+  t.deepEqual(m[0][2], {
     messagePrefix: "",
     mergeHints: {},
     expand: true,
@@ -109,13 +109,13 @@ test("template properties", async t => {
   });
 });
 
-test.serial("template mergers", async t => {
+test("template mergers", async t => {
   const template = new Template(context, ["template"]);
   const mergers = await template.mergers();
 
   t.is(mergers.length, 1);
-  t.is(mergers[0].name, "package.json");
-  t.is(mergers[0].constructor.name, "Package");
+  t.is(mergers[0][0], "package.json");
+  t.is(mergers[0][1].name, "Package");
 });
 
 test("template merge travis", async t => {

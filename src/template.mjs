@@ -33,15 +33,17 @@ export class Template extends LogLevelMixin(class {}) {
   /**
    * Remove duplicate sources
    * sources staring wit '-' will be removed
-   * @param {Context} context 
-   * @param {string[]} sources 
-   * @param options 
+   * @param {Context} context
+   * @param {string[]} sources
+   * @param options
    */
   static async templateFor(context, sources, options) {
     sources = [...new Set(asArray(sources))];
 
-    const remove = sources.filter(s => s[0] === '-').map(s => s.slice(1));
-    sources = sources.filter(s => remove.indexOf(s) < 0).filter(s => s[0] !== '-');
+    const remove = sources.filter(s => s[0] === "-").map(s => s.slice(1));
+    sources = sources
+      .filter(s => remove.indexOf(s) < 0)
+      .filter(s => s[0] !== "-");
     sources = sources.sort();
 
     const key = sources.join(",");
@@ -267,7 +269,11 @@ export class Template extends LogLevelMixin(class {}) {
           const factory =
             factories.find(f => f.name === mapping.type) || ReplaceIfEmpty;
 
-          return new factory(name, mapping.options);
+          return [
+            name,
+            factory,
+            { ...factory.defaultOptions, ...mapping.options }
+          ];
         });
       })
       .reduce((last, current) => Array.from([...last, ...current]), []);

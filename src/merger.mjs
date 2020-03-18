@@ -1,4 +1,3 @@
-import { EmptyContentEntry } from "content-entry/src/empty-content-entry.mjs";
 import { StringContentEntry } from "content-entry";
 
 /**
@@ -66,82 +65,5 @@ export class Merger {
       message: result.messages.join(""),
       entry: new StringContentEntry(name, result.content)
     };
-  }
-
-  constructor(name, options = {}) {
-    Object.defineProperties(this, {
-      name: {
-        value: name
-      },
-      options: {
-        value: { ...this.defaultOptions, ...options }
-      }
-    });
-  }
-
-  get defaultOptions() {
-    return this.constructor.defaultOptions;
-  }
-
-  async targetEntry(context, options) {
-    return (await context.targetBranch.entry(this.name, options)).getString();
-  }
-
-  async content(context) {
-    let target, template;
-
-    const targetName = context.expand(this.name);
-
-    try {
-      target = await context.targetBranch.entry(targetName);
-    } catch (e) {
-      target = new EmptyContentEntry(targetName);
-    }
-
-    template = await context.template.entry(this.name);
-
-    return Promise.all([target.getString(), template.getString()]);
-  }
-
-  async mergeContent(context, original, template) {
-    return {
-      changed: false,
-      content: original
-    };
-  }
-
-  /**
-   * @param {PreparedContect} context
-   * @return {Object} merged content
-   */
-  async merge(context) {
-    try {
-      const targetName = context.expand(this.name);
-
-      context.debug({ message: "merge", name: this.name });
-      const [original, template] = await this.content(context);
-      const result = await this.mergeContent(context, original, template);
-      if (result === undefined) {
-        return {
-          name: targetName,
-          changed: false
-        };
-      }
-      result.name = targetName;
-
-      context.properties.entry = { name: targetName };
-      result.messages = context.expand(result.messages);
-
-      context.debug({ name: this.name, changes: result.changed });
-
-      return result;
-    } catch (err) {
-      context.error(err);
-
-      return {
-        name: this.name,
-        changed: false
-      };
-    }
   }
 }

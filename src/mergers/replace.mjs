@@ -16,14 +16,4 @@ export class Replace extends Merger {
       entry: sourceEntry
     };
   }
-
-  async mergeContent(context, original, template) {
-    const content = context.expand(template);
-
-    return {
-      content,
-      changed: content !== original,
-      messages: [`chore: overwrite {{entry.name}} with template content`]
-    };
-  }
 }

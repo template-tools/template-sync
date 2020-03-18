@@ -1,7 +1,6 @@
 import { StringContentEntry } from "content-entry";
 import { merge } from "hinted-tree-merger";
 import {
-  actions2messages,
   actions2message,
   aggregateActions
 } from "../util.mjs";
@@ -27,7 +26,7 @@ export class JSONMerger extends Merger {
     options = this.defaultOptions
   ) {
     const name = destinationEntry.name;
-    const original = await destinationEntry.getString();
+    const original = (await destinationEntry.isEmpty()) ? {} : JSON.parse(await destinationEntry.getString());
     const template = await sourceEntry.getString();
 
     const actions = {};
@@ -38,7 +37,7 @@ export class JSONMerger extends Merger {
         name,
         JSON.stringify(
           merge(
-            JSON.parse(original) || {},
+            original,
             JSON.parse(options.expand ? context.expand(template) : template),
             "",
             (action, hint) => aggregateActions(actions, action, hint),
@@ -48,30 +47,6 @@ export class JSONMerger extends Merger {
           options.space
         )
       )
-    };
-  }
-
-  async mergeContent(context, original, template) {
-    const actions = {};
-
-    const content = JSON.stringify(
-      merge(
-        original === undefined || original.length === 0
-          ? {}
-          : JSON.parse(original),
-        JSON.parse(this.options.expand ? context.expand(template) : template),
-        "",
-        (action, hint) => aggregateActions(actions, action, hint),
-        this.options.mergeHints
-      ),
-      this.options.replacer,
-      this.options.space
-    );
-
-    return {
-      content,
-      changed: content !== original,
-      messages: actions2messages(actions, this.options.messagePrefix, this.name)
     };
   }
 }

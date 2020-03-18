@@ -5,9 +5,10 @@ import {
   mergeSkip,
   compare
 } from "hinted-tree-merger";
+import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
 import {
-  actions2messages,
+  actions2message,
   aggregateActions,
   jspath,
   asScalar,
@@ -178,7 +179,15 @@ export class Package extends Merger {
     return moduleNames(pkg.release);
   }
 
-  async mergeContent(context, original, templateContent) {
+  static async merge(
+    context,
+    destinationEntry,
+    sourceEntry,
+    options = this.defaultOptions
+  ) {
+    const name = destinationEntry.name;
+    const templateContent = await sourceEntry.getString();
+    const original = await destinationEntry.getString();
     const originalLastChar = original[original.length - 1];
     const targetRepository = context.targetBranch.repository;
 
@@ -226,7 +235,7 @@ export class Package extends Merger {
 
     await deleteUnusedDevDependencies(context, target, template);
 
-    Object.entries(this.options.keywords).forEach(([r, keyword]) => {
+    Object.entries(options.keywords).forEach(([r, keyword]) => {
       if (target.name.match(new RegExp(r))) {
         if (template.keywords === undefined) {
           template.keywords = [];
@@ -310,11 +319,9 @@ export class Package extends Merger {
         },
         "template.usedBy": { merge: mergeSkip },
         "template.repository": { remove: true },
-        ...this.options.mergeHints
+        ...options.mergeHints
       }
     );
-
-    let messages = actions2messages(actions, "chore(package): ", this.name);
 
     if (
       target.contributors !== undefined &&
@@ -334,7 +341,7 @@ export class Package extends Merger {
       }
     }
 
-    this.options.actions.forEach(action => {
+    options.actions.forEach(action => {
       if (action.op === "replace") {
         const templateValue = jspath(template, action.path);
 
@@ -372,16 +379,9 @@ export class Package extends Merger {
       newContent += "\n";
     }
 
-    const changed = original !== newContent;
-
-    if (changed && messages.length === 0) {
-      messages.push("chore(package): update package.json from template");
-    }
-
     return {
-      content: newContent,
-      messages,
-      changed
+      entry: new StringContentEntry(name,newContent),
+      message: actions2message(actions, options.messagePrefix, name),
     };
   }
 }

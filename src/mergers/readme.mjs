@@ -1,4 +1,5 @@
 import { Merger } from "../merger.mjs";
+import { StringContentEntry } from "content-entry";
 
 /**
  * injects badges into README.md
@@ -14,18 +15,18 @@ export class Readme extends Merger {
     };
   }
 
-  async mergeContent(context, original, template) {
-    const [pkg, pkgTemplate] = await context.files
-      .get("package.json")
-      .content(context);
-
-    const p = pkg.length === 0 ? {} : JSON.parse(pkg);
-    const pTemplate = JSON.parse(pkgTemplate);
-
-    const badges = this.options.badges
+  static async merge(
+    context,
+    destinationEntry,
+    sourceEntry,
+    options = this.defaultOptions
+  ) {
+    const original = await destinationEntry.getString();
+    
+    const badges = options.badges
       .sort((a, b) => (a.order > b.order ? 1 : a.order < b.order ? -1 : 0))
       .map(b => {
-        const m = this.options;
+        const m = options;
 
         // TODO do not alter global properties use private layer here
         if (m.badges !== undefined) {
@@ -49,11 +50,9 @@ export class Readme extends Merger {
       body = body.filter(l => !l.match(/^\[\!\[.*\)$/));
     }
 
-    const content = [...badges, ...body].join("\n");
     return {
-      content,
-      changed: content !== original,
-      messages: ["docs(README): update from template"]
+      entry: new StringContentEntry(destinationEntry.name,[...badges, ...body].join("\n")),
+      message: "docs(README): update from template"
     };
   }
 }
