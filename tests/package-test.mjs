@@ -1,32 +1,13 @@
 import test from "ava";
-import { MockProvider } from "mock-repository-provider";
+import { StringContentEntry } from "content-entry";
+import { createContext } from "./helpers/util.mjs";
 
-import { Context } from "../src/context.mjs";
 import { Package } from "../src/mergers/package.mjs";
 
 const FILE_NAME = "package.json";
 
-async function createContext(template, target) {
-  const provider = new MockProvider({
-    templateRepo: {
-      master: {
-        [FILE_NAME]:
-          template !== undefined
-            ? JSON.stringify(template, undefined, 2)
-            : undefined
-      }
-    },
-    "tragetUser/targetRepo": {
-      master: {
-        [FILE_NAME]:
-          target !== undefined
-            ? JSON.stringify(target, undefined, 2)
-            : undefined
-      }
-    }
-  });
-
-  return Context.from(provider, "tragetUser/targetRepo", {
+async function pkgt(t, template, content, expected, message) {
+  const context = await createContext({
     template: "templateRepo",
     github: {
       repo: "the-repo-name",
@@ -34,39 +15,27 @@ async function createContext(template, target) {
     },
     user: "x-user"
   });
+
+  const commit = await Package.merge(
+    context,
+    new StringContentEntry(FILE_NAME, JSON.stringify(content)),
+    new StringContentEntry(FILE_NAME, JSON.stringify(template))
+  );
+
+  t.is(commit.message, message);
+
+  t.deepEqual(
+    JSON.parse(await commit.entry.getString()),
+    expected === undefined ? content : expected
+  );
 }
 
-async function pkgt(t, template, content, expected, messages = [], changed) {
-  const context = await createContext(template, content);
-
-  const pkg = new Package("package.json");
-  const merged = await pkg.merge(context);
-
-  switch (changed) {
-    case true:
-      t.true(merged.changed);
-    case false:
-      t.false(merged.changed);
-  }
-
-  if (merged.changed) {
-    t.deepEqual(merged.messages, messages);
-
-    t.deepEqual(
-      JSON.parse(merged.content),
-      expected === undefined ? content : expected
-    );
-  } else {
-    t.true(true);
-  }
-}
-
-pkgt.title = (providedTitle = "", template, content, expected, messages = []) =>
+pkgt.title = (providedTitle = "", template, content, expected, message = []) =>
   `package ${providedTitle} ${JSON.stringify(
     template
   )} ${content} ${expected}`.trim();
 
-test(
+test.only(
   "empty bugs results in no change",
   pkgt,
   {},
@@ -82,7 +51,7 @@ test(
       inheritFrom: "templateRepo"
     }
   },
-  false
+  ""
 );
 
 test(
@@ -112,7 +81,7 @@ test(
       inheritFrom: "templateRepo"
     }
   },
-  ["chore(package): (repository)"]
+  "chore(package): (repository)"
 );
 
 test(
