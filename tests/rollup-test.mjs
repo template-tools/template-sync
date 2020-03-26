@@ -128,7 +128,7 @@ export default {
   );
 });
 
-test.only("rollup without imports and complex target expression", async t => {
+test("rollup without imports and complex target expression", async t => {
   const commit = await Rollup.merge(
     await createContext(),
     new StringContentEntry(
