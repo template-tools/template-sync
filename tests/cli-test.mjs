@@ -6,7 +6,7 @@ import execa from "execa";
 const here = dirname(fileURLToPath(import.meta.url));
 const nts = join(here, "..", "src", "npm-template-sync-cli.mjs");
 
-test.only("cli dryrun", async t => {
+test("cli dryrun", async t => {
   const c = await execa(nts, ["--dry", "arlac77/config-expander"]);
 
   /*
