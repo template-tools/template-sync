@@ -1,6 +1,7 @@
 import recast from "recast";
 import parser from "recast/parsers/babel.js";
 import transform from "@babel/core/lib/transform.js";
+import { StringContentEntry } from "content-entry";
 
 import { Merger } from "../merger.mjs";
 
@@ -45,25 +46,20 @@ export class Rollup extends Merger {
     return dependencies;
   }
 
-  async mergeContent(context, original, template) {
-    if (template === "") {
-      return {
-        content: original,
-        changed: false
-      };
-    }
-    if (original === "") {
-      return {
-        content: template,
-        messages: ["chore(rollup): copy from template"],
-        changed: true
-      };
-    }
+  static async merge(
+    context,
+    destinationEntry,
+    sourceEntry,
+    options = this.defaultOptions
+  ) {
+    const name = destinationEntry.name;
+    const templateContent = await sourceEntry.getString();
+    const original = await destinationEntry.getString();
 
-    const messages = [];
+    let message;
 
     try {
-      const templateAST = recast.parse(template, parser);
+      const templateAST = recast.parse(templateContent, parser);
       const ast = recast.parse(original, parser);
 
       removeUseStrict(ast);
@@ -166,7 +162,7 @@ export class Rollup extends Merger {
       });
 
       if (addedImports.length > 0) {
-        messages.push(`chore(rollup): import ${addedImports.join(",")}`);
+        message = `chore(rollup): import ${addedImports.join(",")}`;
       }
 
       const addedPlugins = [];
@@ -187,30 +183,21 @@ export class Rollup extends Merger {
         }
       });
       if (addedPlugins.length > 0) {
-        messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
+        message = `chore(rollup): add ${addedPlugins.join(",")}`;
       }
 
       const content = recast.print(ast).code;
-      const changed = content !== original;
-
-      if (changed && messages.length === 0) {
-        messages.push("chore(rollup): update from template");
-      }
-
       return {
-        content,
-        changed,
-        messages
+        entry: new StringContentEntry(name,content),
+        message: actions2message(actions, options.messagePrefix, name),
       };
+
     } catch (e) {
       context.warn(`unable to parse ${this.name}`);
       // context.error(e);
     }
 
-    return {
-      content: original,
-      changed: false
-    };
+    return {};
   }
 }
 
