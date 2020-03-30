@@ -47,11 +47,11 @@
     "loglevel-mixin": "^5.0.5",
     "markdown": "^0.5.0",
     "micromatch": "^4.0.2",
-    "recast": "^0.18.7",
-    "remark-parse": "^7.0.2",
-    "remark-stringify": "^7.0.4",
+    "recast": "^0.18.8",
+    "remark-parse": "^8.0.0",
+    "remark-stringify": "^8.0.0",
     "remove-sensible-values": "^1.0.5",
-    "unified": "^8.4.2"
+    "unified": "^9.0.0"
   },
   "devDependencies": {
     "ava": "^3.5.2",
