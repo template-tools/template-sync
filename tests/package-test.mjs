@@ -35,7 +35,7 @@ pkgt.title = (providedTitle = "", template, content, expected, message = []) =>
     template
   )} ${content} ${expected}`.trim();
 
-test.only(
+test(
   "empty bugs results in no change",
   pkgt,
   {},
@@ -43,15 +43,16 @@ test.only(
     name: "targetRepo",
     repository: {
       type: "git",
-      url: "http://mock-provider.com/tragetUser/targetRepo"
+      url: "http://mock-provider.com/targetUser/targetRepo"
     },
-    bugs: { url: "http://mock-provider.com/tragetUser/targetRepo/issues" },
-    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    bugs: { url: "http://mock-provider.com/targetUser/targetRepo/issues" },
+    homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
     template: {
       inheritFrom: "templateRepo"
     }
   },
-  ""
+  undefined,
+  "merge from template package.json"
 );
 
 test(
@@ -59,9 +60,9 @@ test(
   pkgt,
   {},
   {
-    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
     bugs: {
-      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+      url: "http://mock-provider.com/targetUser/targetRepo/issues"
     },
     template: {
       inheritFrom: "templateRepo"
@@ -69,13 +70,13 @@ test(
   },
   {
     name: "targetRepo",
-    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
     bugs: {
-      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+      url: "http://mock-provider.com/targetUser/targetRepo/issues"
     },
     repository: {
       type: "git",
-      url: "http://mock-provider.com/tragetUser/targetRepo"
+      url: "http://mock-provider.com/targetUser/targetRepo"
     },
     template: {
       inheritFrom: "templateRepo"
@@ -91,13 +92,13 @@ test(
     dependencies: {},
     repository: {
       type: "git",
-      url: "http://mock-provider.com/tragetUser/targetRepo"
+      url: "http://mock-provider.com/targetUser/targetRepo"
     }
   },
   {
-    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
     bugs: {
-      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+      url: "http://mock-provider.com/targetUser/targetRepo/issues"
     },
     template: {
       inheritFrom: "templateRepo"
@@ -105,50 +106,35 @@ test(
   },
   {
     name: "targetRepo",
-    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+    homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
     bugs: {
-      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+      url: "http://mock-provider.com/targetUser/targetRepo/issues"
     },
     repository: {
       type: "git",
-      url: "http://mock-provider.com/tragetUser/targetRepo"
+      url: "http://mock-provider.com/targetUser/targetRepo"
     },
     template: {
       inheritFrom: "templateRepo"
     }
   },
-  ["chore(package): (dependencies)", "chore(package): (repository)"]
+  ["chore(package): (dependencies)", "chore(package): (repository)"].join("\n")
 );
 
-test("default options", t => {
-  const pkg = new Package("package.json");
-  t.deepEqual(pkg.options.actions, []);
-
-  const pkg2 = new Package("package.json", {
-    actions: [{ path: "$.nyc['report-dir']", op: "replace" }]
-  });
-  t.deepEqual(pkg2.options.actions, [
-    { path: "$.nyc['report-dir']", op: "replace" }
-  ]);
-});
-
 test("package extract properties", async t => {
-  const context = await createContext(
-    {},
-    {
-      name: "aName",
-      version: "1.2.3",
-      description: "a description",
-      module: "a module",
-      config: {
-        api: "/some/path"
-      }
-    }
-  );
-
-  const targetBranch = await context.provider.branch("tragetUser/targetRepo");
   const properties = await Package.properties(
-    await targetBranch.entry("package.json")
+    new StringContentEntry(
+      "package.json",
+      JSON.stringify({
+        name: "aName",
+        version: "1.2.3",
+        description: "a description",
+        module: "a module",
+        config: {
+          api: "/some/path"
+        }
+      })
+    )
   );
 
   t.deepEqual(properties, {
@@ -163,17 +149,11 @@ test("package extract properties", async t => {
 });
 
 test("package extract properties not 0.0.0-semantic-release", async t => {
-  const context = await createContext(
-    {},
-    {
-      name: "aName",
-      version: "0.0.0-semantic-release"
-    }
-  );
-
-  const targetBranch = await context.provider.branch("tragetUser/targetRepo");
   const properties = await Package.properties(
-    await targetBranch.entry("package.json")
+    new StringContentEntry(
+      "package.json",
+      JSON.stringify({ name: "aName", version: "0.0.0-semantic-release" })
+    )
   );
 
   t.deepEqual(properties, {
