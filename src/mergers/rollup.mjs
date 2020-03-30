@@ -30,7 +30,7 @@ export class Rollup extends Merger {
           transform.transform(source, {
             code: false,
             ast: true,
-            sourceMap: false,
+            sourceMap: false
           }).ast
       }
     });
@@ -56,148 +56,140 @@ export class Rollup extends Merger {
     const templateContent = await sourceEntry.getString();
     const original = await destinationEntry.getString();
 
-    let message;
+    let messages = [];
 
-    try {
-      const templateAST = recast.parse(templateContent, parser);
-      const ast = recast.parse(original, parser);
+    const templateAST = recast.parse(templateContent, parser);
+    const ast = recast.parse(original, parser);
 
-      removeUseStrict(ast);
+    removeUseStrict(ast);
 
-      const exp = exportDefaultDeclaration(ast);
-      const templateExp = exportDefaultDeclaration(templateAST);
+    const exp = exportDefaultDeclaration(ast);
+    const templateExp = exportDefaultDeclaration(templateAST);
 
-      if (exp !== undefined && exp.properties !== undefined) {
-        let output, dest;
+    if (exp !== undefined && exp.properties !== undefined && templateExp !== undefined) {
+      let output, dest;
 
-        const banner = removePropertiesKey(exp.properties, "banner");
+      const banner = removePropertiesKey(exp.properties, "banner");
 
-        for (const p of exp.properties) {
-          switch (p.key.name) {
-            case "targets":
-              dest = p.value.elements[0].properties[0]; //.find(x => x.name === 'dest');
-              const op = findProperty(templateExp.properties, "output");
-              if (op !== undefined) {
-                p.key.name = "output";
-                p.value = op.value;
-                output = p;
-              }
-              break;
-            case "entry":
-              const ip = findProperty(templateExp.properties, "input");
-              if (ip !== undefined) {
-                p.key.name = "input";
-                p.value = ip.value;
-              }
-          }
-        }
-
-        if (findProperty(exp.properties, "input") === undefined) {
-          exp.properties.push(findProperty(templateExp.properties, "input"));
-        }
-
-        const originalOutput = findProperty(exp.properties, "output");
-        const templateOutput = findProperty(templateExp.properties, "output");
-
-        if (originalOutput === undefined) {
-          exp.properties.push(templateOutput);
-        } else {
-          mergeKeys(
-            templateOutput,
-            originalOutput,
-            [
-              "format",
-              "file",
-              "dir",
-              "name",
-              "globals",
-              "paths",
-              "banner",
-              "footer",
-              "intro",
-              "outro",
-              "sourcemap",
-              "sourcemapFile",
-              "interop",
-              "extend",
-              "exports",
-              "amd",
-              "indent",
-              "strict",
-              "freeze",
-              "legacy",
-              "namespaceToStringTag"
-            ],
-            messages
-          );
-
-          if (output !== undefined) {
-            if (banner !== undefined) {
-              output.value.properties.push(banner);
+      for (const p of exp.properties) {
+        switch (p.key.name) {
+          case "targets":
+            dest = p.value.elements[0].properties[0]; //.find(x => x.name === 'dest');
+            const op = findProperty(templateExp.properties, "output");
+            if (op !== undefined) {
+              p.key.name = "output";
+              p.value = op.value;
+              output = p;
             }
-
-            if (dest !== undefined) {
-              const file = findProperty(output.value.properties, "file");
-              if (file !== undefined) {
-                file.value = dest.value;
-              }
+            break;
+          case "entry":
+            const ip = findProperty(templateExp.properties, "input");
+            if (ip !== undefined) {
+              p.key.name = "input";
+              p.value = ip.value;
             }
+        }
+      }
+
+      if (findProperty(exp.properties, "input") === undefined) {
+        exp.properties.push(findProperty(templateExp.properties, "input"));
+      }
+
+      const originalOutput = findProperty(exp.properties, "output");
+      const templateOutput = findProperty(templateExp.properties, "output");
+
+      if (originalOutput === undefined) {
+        exp.properties.push(templateOutput);
+      } else {
+        mergeKeys(
+          templateOutput,
+          originalOutput,
+          [
+            "format",
+            "file",
+            "dir",
+            "name",
+            "globals",
+            "paths",
+            "banner",
+            "footer",
+            "intro",
+            "outro",
+            "sourcemap",
+            "sourcemapFile",
+            "interop",
+            "extend",
+            "exports",
+            "amd",
+            "indent",
+            "strict",
+            "freeze",
+            "legacy",
+            "namespaceToStringTag"
+          ],
+          messages
+        );
+
+        if (output !== undefined) {
+          if (banner !== undefined) {
+            output.value.properties.push(banner);
           }
 
-          removePropertiesKey(exp.properties, "format");
-          removePropertiesKey(exp.properties, "sourceMap");
-          removePropertiesKey(exp.properties, "dest");
+          if (dest !== undefined) {
+            const file = findProperty(output.value.properties, "file");
+            if (file !== undefined) {
+              file.value = dest.value;
+            }
+          }
         }
+
+        removePropertiesKey(exp.properties, "format");
+        removePropertiesKey(exp.properties, "sourceMap");
+        removePropertiesKey(exp.properties, "dest");
       }
-      const originalImports = importDeclarationsByLocalName(ast);
-      const templateImports = importDeclarationsByLocalName(templateAST);
+    }
+    const originalImports = importDeclarationsByLocalName(ast);
+    const templateImports = importDeclarationsByLocalName(templateAST);
 
-      const addedImports = [];
+    const addedImports = [];
 
-      templateImports.forEach((value, key) => {
-        if (originalImports.get(key) === undefined) {
-          ast.program.body = [value, ...ast.program.body];
-          addedImports.push(key);
-        }
-      });
-
-      if (addedImports.length > 0) {
-        message = `chore(rollup): import ${addedImports.join(",")}`;
+    templateImports.forEach((value, key) => {
+      if (originalImports.get(key) === undefined) {
+        ast.program.body = [value, ...ast.program.body];
+        addedImports.push(key);
       }
+    });
 
-      const addedPlugins = [];
-      const originalPlugins = pluginsFromExpression(exp);
-      const templatePlugins = pluginsFromExpression(templateExp);
-
-      templatePlugins.forEach(templatePlugin => {
-        if (
-          templatePlugin.callee !== undefined &&
-          originalPlugins.find(
-            op =>
-              op.callee !== undefined &&
-              op.callee.name === templatePlugin.callee.name
-          ) === undefined
-        ) {
-          originalPlugins.push(templatePlugin);
-          addedPlugins.push(templatePlugin.callee.name);
-        }
-      });
-      if (addedPlugins.length > 0) {
-        message = `chore(rollup): add ${addedPlugins.join(",")}`;
-      }
-
-      const content = recast.print(ast).code;
-      return {
-        entry: new StringContentEntry(name,content),
-        message: actions2message(actions, options.messagePrefix, name),
-      };
-
-    } catch (e) {
-      context.warn(`unable to parse ${this.name}`);
-      // context.error(e);
+    if (addedImports.length > 0) {
+      messages.push(`chore(rollup): import ${addedImports.join(",")}`);
     }
 
-    return {};
+    const addedPlugins = [];
+    const originalPlugins = pluginsFromExpression(exp);
+    const templatePlugins = pluginsFromExpression(templateExp);
+
+    templatePlugins.forEach(templatePlugin => {
+      if (
+        templatePlugin.callee !== undefined &&
+        originalPlugins.find(
+          op =>
+            op.callee !== undefined &&
+            op.callee.name === templatePlugin.callee.name
+        ) === undefined
+      ) {
+        originalPlugins.push(templatePlugin);
+        addedPlugins.push(templatePlugin.callee.name);
+      }
+    });
+    if (addedPlugins.length > 0) {
+      messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
+    }
+
+    const content = recast.print(ast).code;
+    return {
+      entry: new StringContentEntry(name, content),
+      message: messages.join("\n")
+    };
   }
 }
 

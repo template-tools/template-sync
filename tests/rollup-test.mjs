@@ -86,22 +86,22 @@ test("rollup empty template", async t => {
     new StringContentEntry(
       "rollup.config.js",
       `import pkg from './package.json';
-      import babel from 'rollup-plugin-babel';
-      
-      export default {
-        plugins: [
-          babel({
-            babelrc: false,
-            presets: ['stage-3'],
-            exclude: 'node_modules/**'
-          })
-        ],
-        targets: [{
-          dest: pkg.main,
-          format: 'cjs'
-        }],
-        external: ['url-resolver-fs']
-      };`
+import babel from 'rollup-plugin-babel';
+
+export default {
+  plugins: [
+    babel({
+      babelrc: false,
+      presets: ['stage-3'],
+      exclude: 'node_modules/**'
+    })
+  ],
+  targets: [{
+    dest: pkg.main,
+    format: 'cjs'
+  }],
+  external: ['url-resolver-fs']
+};`
     ),
     new EmptyContentEntry("rollup.config.js")
   );
@@ -134,24 +134,24 @@ test("rollup without imports and complex target expression", async t => {
     new StringContentEntry(
       "rollup.config.js",
       `export default ['base'].map(name => {
-        return {
-          input: 'tests/xx-test.js',
-          output: {
-            file: 'build/xx-test.js',
-            format: 'cjs'
-          }
-        };`
+  return {
+    input: 'tests/xx-test.js',
+    output: {
+      file: 'build/xx-test.js',
+      format: 'cjs'
+    }
+  };
+});`
     ),
     new StringContentEntry(
       "rollup.config.js",
-      `
-        export default {
-          input: "input.js",
-          output: {
-            file: "output.js",
-            format: 'cjs'
-          }
-        };`
+      `export default {
+  input: "input.js",
+    output: {
+      file: "output.js",
+      format: 'cjs'
+    }
+};`
     )
   );
 
@@ -164,6 +164,7 @@ test("rollup without imports and complex target expression", async t => {
       file: 'build/xx-test.js',
       format: 'cjs'
     }
-  };`
+  };
+});`
   );
 });
