@@ -7,8 +7,8 @@ import parse from "@iarna/toml/parse-string.js";
 
 test("toml merge", async t => {
   const commit = await TOML.merge(
-    await createContext(undefined, undefined, "a.toml", {
-      description: "value"
+    await createContext( {
+      description: "the description"
     }),
     new StringContentEntry(
       "a.toml",
@@ -26,7 +26,7 @@ test("toml merge", async t => {
   );
 
   t.deepEqual(parse(await commit.entry.getString()), {
-    key: "value",
+    key: "the description",
     oldKey: "oldValue"
   });
 });
