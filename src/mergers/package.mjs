@@ -205,7 +205,7 @@ export class Package extends Merger {
     target = context.expand(target);
 
     const template = context.expand({
-      ...JSON.parse(templateContent),
+      ...(templateContent.length ? JSON.parse(templateContent) : {}),
       repository: {
         type: targetRepository.type,
         url: targetRepository.url
