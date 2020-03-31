@@ -6,14 +6,23 @@ import { Package } from "../src/mergers/package.mjs";
 
 const FILE_NAME = "package.json";
 
-async function pkgt(t, template, content, options, expected, message) {
+async function pkgt(
+  t,
+  template,
+  content,
+  properties,
+  options,
+  expected,
+  message
+) {
   const context = await createContext({
     template: "templateRepo",
     github: {
       repo: "the-repo-name",
       user: "the-user-name"
     },
-    user: "x-user"
+    user: "x-user",
+    ...properties
   });
 
   const commit = await Package.merge(
@@ -45,6 +54,7 @@ pkgt.title = (
   providedTitle = "",
   template,
   content,
+  properties,
   options,
   expected,
   message = []
@@ -71,6 +81,7 @@ test(
   },
   undefined,
   undefined,
+  undefined,
   "merge from template package.json"
 );
 
@@ -88,6 +99,8 @@ test(
     }
   },
   undefined,
+  undefined,
+
   {
     name: "targetRepo",
     homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
@@ -125,6 +138,8 @@ test(
     }
   },
   undefined,
+  undefined,
+
   {
     name: "targetRepo",
     homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
@@ -156,6 +171,8 @@ test(
     }
   },
   undefined,
+  undefined,
+
   (t, merged) => {
     t.deepEqual(merged.engines, {
       node: ">=10"
@@ -181,6 +198,7 @@ test(
       preserve: 3
     }
   },
+  undefined,
   undefined,
   (t, merged) => {
     t.deepEqual(merged.slot, {
@@ -210,6 +228,7 @@ test(
     }
   },
   undefined,
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.scripts, {
       prepare: "rollup x y && chmod +x bin/xx",
@@ -227,6 +246,7 @@ test(
     }
   },
   {},
+  undefined,
   undefined,
   (t, merged) => {
     t.deepEqual(merged.scripts, {
@@ -249,7 +269,8 @@ test(
       "{{name}}-systemd": "bin/{{name}}-systemd"
     }
   },
-  { properties: { name: "myName" } }, // TODO
+  { name: "myName" },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.bin, {
       a: "bin/a",
@@ -275,6 +296,7 @@ test(
     }
   },
   undefined,
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
       cracks: "3.1.2"
@@ -296,6 +318,7 @@ test(
       "dont-crack": "1.0.0"
     }
   },
+  undefined,
   undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, { special: "1.0.0" });
@@ -320,6 +343,7 @@ test(
       e: "2"
     }
   },
+  undefined,
   undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
@@ -351,6 +375,7 @@ test(
     }
   },
   undefined,
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
       a: "^0.25.1",
@@ -375,6 +400,7 @@ test(
     }
   },
   undefined,
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
       a: "^1.0.0-rc.1"
@@ -395,6 +421,7 @@ test(
       a: "^1.0.0-rc.1"
     }
   },
+  undefined,
   undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
@@ -419,6 +446,7 @@ test(
       _xxx_: "X"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.keywords, ["A", "B", "X"]);
   }
@@ -437,6 +465,7 @@ test(
       _xxx_: "XXX"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.keywords, ["XXX"]);
   }
@@ -455,6 +484,7 @@ test(
     keywords: [null, ""]
   },
   undefined,
+  undefined,
   (t, merged) => {
     t.is(merged.keywords, undefined);
   }
@@ -471,6 +501,7 @@ test(
     browser: "{{browser}}",
     main: "a value"
   },
+  undefined,
   undefined,
   (t, merged) => {
     t.true(merged.browser === undefined);
@@ -493,6 +524,7 @@ test(
     }
   },
   undefined,
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.xo, {
       space: true
@@ -514,6 +546,7 @@ test(
     }
   },
   { actions: [{ path: "$.nyc['report-dir']", op: "replace" }] },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.nyc, {
       "report-dir": "./build/coverage"
@@ -522,15 +555,15 @@ test(
   //    "chore(package): add ./build/coverage (nyc.report-dir)"
 );
 
-test("package start fresh", pkgt, undefined, undefined, {
+test("package start fresh", pkgt, undefined, undefined, undefined, undefined, {
   name: "targetRepo",
-  homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+  homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
   bugs: {
-    url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+    url: "http://mock-provider.com/targetUser/targetRepo/issues"
   },
   repository: {
     type: "git",
-    url: "http://mock-provider.com/tragetUser/targetRepo"
+    url: "http://mock-provider.com/targetUser/targetRepo"
   },
   template: {
     inheritFrom: "templateRepo"
