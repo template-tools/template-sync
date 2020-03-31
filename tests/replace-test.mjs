@@ -1,21 +1,15 @@
 import test from "ava";
 import { createContext } from "./helpers/util.mjs";
+import { StringContentEntry } from "content-entry";
+
 import { Replace } from "../src/mergers/replace.mjs";
 
 test("replace", async t => {
-  const context = await createContext(
-    `Line 1x
-Line 2x`,
-    `Line 1
-Line 2`,
-    "aFile"
+  const merged = await Replace.merge(
+    await createContext(),
+    new StringContentEntry("aFile", "Line 1"),
+    new StringContentEntry("aFile", "Line 1x")
   );
 
-  const replace = new Replace("aFile");
-  const merged = await replace.merge(context);
-  t.deepEqual(
-    merged.content,
-    `Line 1x
-Line 2x`
-  );
+  t.is(await merged.entry.getString(), "Line 1x");
 });

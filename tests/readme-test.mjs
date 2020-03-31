@@ -1,11 +1,9 @@
 import test from "ava";
-import { MockProvider } from "mock-repository-provider";
 
 import { createContext } from "./helpers/util.mjs";
-import { StringContentEntry, EmptyContentEntry } from "content-entry";
+import { StringContentEntry } from "content-entry";
 
 import { Readme } from "../src/mergers/readme.mjs";
-import { Package } from "../src/mergers/package.mjs";
 
 test("readme default options", t => {
   t.deepEqual(Readme.defaultOptions.badges, []);
