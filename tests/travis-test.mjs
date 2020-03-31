@@ -1,32 +1,153 @@
 import test from "ava";
 import yaml from "js-yaml";
-
-import { MockProvider } from "mock-repository-provider";
-
-import { Context } from "../src/context.mjs";
+import { StringContentEntry, EmptyContentEntry } from "content-entry";
+import { createContext } from "./helpers/util.mjs";
 import { Travis } from "../src/mergers/travis.mjs";
 
-async function travisMerge(template, original) {
-  const provider = new MockProvider({
-    templateRepo: {
-      master: {
-        aFile: yaml.safeDump(template)
-      }
+const FILE_NAME = ".travis.yml";
+
+async function yamlt(
+  t,
+  factory,
+  template,
+  content,
+  options,
+  expected,
+  message
+) {
+  const context = await createContext({
+    template: "templateRepo",
+    github: {
+      repo: "the-repo-name",
+      user: "the-user-name"
     },
-    targetRepo: {
-      master: {
-        aFile: yaml.safeDump(original)
+    user: "x-user"
+  });
+
+  const commit = await factory.merge(
+    context,
+    content === undefined
+      ? new EmptyContentEntry(FILE_NAME)
+      : new StringContentEntry(
+          FILE_NAME,
+          typeof content === "string" ? content : yaml.safeDump(content)
+        ),
+    template === undefined
+      ? new EmptyContentEntry(FILE_NAME)
+      : new StringContentEntry(
+          FILE_NAME,
+          typeof template === "string" ? template : yaml.safeDump(template)
+        ),
+    { ...factory.defaultOptions, ...options }
+  );
+
+  if (message !== undefined) {
+    t.is(commit.message, message);
+  }
+
+  const result = await commit.entry.getString();
+
+  if (typeof expected === "function") {
+    expected(t, yaml.safeLoad(result));
+  } else {
+    t.deepEqual(
+      typeof expected === "string" ? result : yaml.safeLoad(result),
+      expected === undefined ? content : expected
+    );
+  }
+}
+
+yamlt.title = (
+  providedTitle = "",
+  factory,
+  template,
+  content,
+  options,
+  expected,
+  message = []
+) =>
+  `${factory.name} ${providedTitle} ${JSON.stringify(
+    template
+  )} ${content} ${expected}`.trim();
+
+test(
+  "remove before_script",
+  yamlt,
+  Travis,
+  `before_script:
+    - npm prune
+    - -npm install -g codecov
+  `,
+  `before_script:
+    - npm prune
+    - npm install -g codecov
+  `,
+  undefined,
+  `before_script:
+  - npm prune
+`
+);
+
+test(
+  "scripts",
+  yamlt,
+  Travis,
+  {
+    language: "node_js",
+    jobs: {
+      include: {
+        script: [
+          "cat ./coverage/lcov.info | coveralls",
+          "npm install -g --production codecov",
+          "npm test",
+          "-npm install -g --production coveralls codecov"
+        ]
       }
     }
-  });
+  },
+  {
+    language: "node_js",
+    jobs: {
+      include: {
+        script: ["npm install -g --production coveralls codecov", "npm test"]
+      }
+    }
+  },
+  undefined,
+  `language: node_js
+jobs:
+  include:
+    script:
+      - npm install -g --production codecov
+      - npm test
+      - cat ./coverage/lcov.info | coveralls
+`,
+  [
+    "chore(travis): add cat ./coverage/lcov.info | coveralls (jobs.include.script)",
+    "chore(travis): add npm install -g --production codecov (jobs.include.script)",
+    "chore(travis): remove npm install -g --production coveralls codecov (jobs.include.script)"
+  ].join("\n")
+);
 
-  const context = await Context.from(provider, "targetRepo", {
-    template: "templateRepo"
-  });
-
-  const merger = new Travis("aFile");
-  return await merger.merge(context);
-}
+test(
+  "start fresh",
+  yamlt,
+  Travis,
+  `node_js:
+  - {{node_version}}
+before_script:
+  - npm prune
+  - -npm install -g codecov
+`,
+  undefined,
+  {
+    properties: { node_version: "7.7.2" }
+  },
+  `node_js: 7.7.2
+before_script:
+  - npm prune
+`
+);
 
 async function mockYmlVersions(templateVersions, targetVersions) {
   const provider = new MockProvider({
@@ -154,119 +275,4 @@ test("travis node semver two digits", async t => {
   - '8.10'
 `
   );
-});
-
-test("travis remove before_script", async t => {
-  const provider = new MockProvider({
-    templateRepo: {
-      master: {
-        aFile: `before_script:
-  - npm prune
-  - -npm install -g codecov
-`
-      }
-    },
-    targetRepo: {
-      master: {
-        aFile: `before_script:
-  - npm prune
-  - npm install -g codecov
-`
-      }
-    }
-  });
-
-  const context = await Context.from(provider, "targetRepo", {
-    template: "templateRepo"
-  });
-
-  const merger = new Travis("aFile");
-  const merged = await merger.merge(context);
-  t.deepEqual(
-    merged.content,
-    `before_script:
-  - npm prune
-`
-  );
-});
-
-test("start fresh", async t => {
-  const provider = new MockProvider({
-    templateRepo: {
-      master: {
-        aFile: `node_js:
-  - {{node_version}}
-before_script:
-  - npm prune
-  - -npm install -g codecov
-`
-      }
-    },
-    targetRepo: {
-      master: {
-        aFile: ""
-      }
-    }
-  });
-
-  const context = await Context.from(provider, "targetRepo", {
-    template: "templateRepo"
-  });
-
-  context.properties.node_version = "7.7.2";
-
-  const merger = new Travis("aFile");
-  const merged = await merger.merge(context);
-
-  t.deepEqual(
-    merged.content,
-    `node_js: 7.7.2
-before_script:
-  - npm prune
-`
-  );
-});
-
-test("travis scripts", async t => {
-  const merged = await travisMerge(
-    {
-      language: "node_js",
-      jobs: {
-        include: {
-          script: [
-            "cat ./coverage/lcov.info | coveralls",
-            "npm install -g --production codecov",
-            "npm test",
-            "-npm install -g --production coveralls codecov"
-          ]
-        }
-      }
-    },
-    {
-      language: "node_js",
-      jobs: {
-        include: {
-          script: ["npm install -g --production coveralls codecov", "npm test"]
-        }
-      }
-    }
-  );
-
-  t.deepEqual(
-    merged.content,
-    `language: node_js
-jobs:
-  include:
-    script:
-      - npm install -g --production codecov
-      - npm test
-      - cat ./coverage/lcov.info | coveralls
-`
-  );
-
-  t.deepEqual(merged.messages, [
-    "chore(travis): add cat ./coverage/lcov.info | coveralls (jobs.include.script)",
-    "chore(travis): add npm install -g --production codecov (jobs.include.script)",
-    "chore(travis): remove npm install -g --production coveralls codecov (jobs.include.script)"
-  ]);
 });
