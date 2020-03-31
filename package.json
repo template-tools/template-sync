@@ -56,7 +56,7 @@
   "devDependencies": {
     "ava": "^3.5.2",
     "c8": "^7.1.0",
-    "documentation": "^12.1.4",
+    "documentation": "^12.2.0",
     "execa": "^4.0.0",
     "mock-repository-provider": "^5.1.40",
     "semantic-release": "^17.0.4"
