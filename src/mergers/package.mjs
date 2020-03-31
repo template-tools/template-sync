@@ -8,7 +8,7 @@ import {
 import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
 import {
-  actions2message,
+  actions2messages,
   aggregateActions,
   jspath,
   asScalar,
@@ -185,6 +185,7 @@ export class Package extends Merger {
     sourceEntry,
     options = this.defaultOptions
   ) {
+    const messages = [];
     const name = destinationEntry.name;
     const templateContent = await sourceEntry.getString();
     const original = await destinationEntry.getString();
@@ -380,8 +381,11 @@ export class Package extends Merger {
     }
 
     return {
-      entry: new StringContentEntry(name,newContent),
-      message: actions2message(actions, options.messagePrefix, name),
+      entry: new StringContentEntry(name, newContent),
+      message: [
+        ...messages,
+        ...actions2messages(actions, options.messagePrefix, name)
+      ].join("\n")
     };
   }
 }
