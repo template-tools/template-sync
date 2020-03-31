@@ -68,16 +68,17 @@ export class License extends Merger {
     sourceEntry,
     options = this.defaultOptions
   ) {
-    const year = context.evaluate("date.year");
     let years = new Set();
-    let addedYears = new Set();
+    const addedYears = new Set();
     const original = await destinationEntry.getString();
+    const source = await sourceEntry.getString();
 
     const m = original.match(
       /opyright\s*\(c\)\s*((\d+)([,\-\d]+)*)(\s*(,|by)\s*(.*))?/
     );
 
     if (m) {
+      const year = context.evaluate("date.year");
       years = stringToIntegers(m[1]);
 
       if (m[5] !== undefined) {
@@ -90,20 +91,16 @@ export class License extends Merger {
       }
     }
 
-    let entry = await sourceEntry;
-
-    if (original !== "") {
-      entry = new StringContentEntry(
-        destinationEntry.name,
-        original.replace(
-          /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
-          `opyright (c) ${yearsToString(years)}`
-        )
-      );
-    }
-
     return {
-      entry,
+      entry: new StringContentEntry(
+        destinationEntry.name,
+        original.length > 0
+          ? original.replace(
+              /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
+              `opyright (c) ${yearsToString(years)}`
+            )
+          : context.expand(source)
+      ),
       message: addedYears.size
         ? `${options.messagePrefix}add year ${[...addedYears]}`
         : `${options.messagePrefix}update from template`
