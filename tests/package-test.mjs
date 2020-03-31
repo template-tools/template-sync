@@ -49,7 +49,8 @@ async function pkgt(
   } else {
     t.deepEqual(
       JSON.parse(await commit.entry.getString()),
-      expected === undefined ? content : expected
+      expected === undefined ? content : expected,
+      "commit content"
     );
   }
 }
@@ -441,16 +442,16 @@ test(
     },
     keywords: ["A", "B"]
   },
+  undefined,
   {
     keywords: {
       _xxx_: "X"
     }
   },
-  undefined,
   (t, merged) => {
     t.deepEqual(merged.keywords, ["A", "B", "X"]);
-  }
-  // .messages.includes("docs(package): add X (keywords)"));
+  },
+  /add X.*keywords/
 );
 
 test(
@@ -460,17 +461,16 @@ test(
   {
     name: "abc_xxx_1"
   },
+  undefined,
   {
     keywords: {
       _xxx_: "XXX"
     }
   },
-  undefined,
   (t, merged) => {
     t.deepEqual(merged.keywords, ["XXX"]);
-  }
-
-  //t.true(merged.messages.includes("docs(package): (keywords)"));
+  },
+  /docs\(package\): \(keywords/
 );
 
 test(
@@ -487,8 +487,8 @@ test(
   undefined,
   (t, merged) => {
     t.is(merged.keywords, undefined);
-  }
-  //t.true(merged.messages.includes("docs(package): remove  (keywords)"));
+  },
+  /docs\(package\):\s+remove\s+\(keywords/
 );
 
 test(
@@ -506,8 +506,8 @@ test(
   (t, merged) => {
     t.true(merged.browser === undefined);
     t.true(merged.main === "a value");
-  }
-  //  "chore(package): remove unknown value for browser ({{browser}})"
+  },
+  /chore\(package\): remove unknown value for browser \({{browser}}\)/
 );
 
 test(
@@ -552,7 +552,7 @@ test(
       "report-dir": "./build/coverage"
     });
   },
-   /add .\/build\/coverage.*nyc.report-dir/
+  /add .\/build\/coverage.*nyc.report-dir/
 );
 
 test("package start fresh", pkgt, undefined, undefined, undefined, undefined, {
