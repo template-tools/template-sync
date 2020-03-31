@@ -5,25 +5,6 @@ import { Context } from "../src/context.mjs";
 import { Package } from "../src/mergers/package.mjs";
 import { Rollup } from "../src/mergers/rollup.mjs";
 
-test("context file targetEntry", async t => {
-  const provider = new MockProvider({
-    templateRepo: {
-      master: { "package.json": '{"name":"a"}' }
-    },
-    targetRepo: {
-      master: { "package.json": '{"name":"b"}' }
-    }
-  });
-
-  const context = await Context.from(provider, "targetRepo", {
-    template: ["templateRepo"]
-  });
-
-  const f = new Package("package.json");
-
-  t.is(await f.targetEntry(context), '{"name":"b"}');
-});
-
 const ROLLUP_FILE_CONTENT = `import babel from 'rollup-plugin-babel';
 
 export default {
