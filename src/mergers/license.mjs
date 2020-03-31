@@ -43,8 +43,7 @@ export function stringToIntegers(str) {
           years.add(y);
         }
       }
-    }
-    else {
+    } else {
       break;
     }
   }
@@ -69,11 +68,9 @@ export class License extends Merger {
     sourceEntry,
     options = this.defaultOptions
   ) {
-    let message;
-
     const year = context.evaluate("date.year");
     let years = new Set();
-
+    let addedYears = new Set();
     const original = await destinationEntry.getString();
 
     const m = original.match(
@@ -89,26 +86,27 @@ export class License extends Merger {
 
       if (!years.has(year)) {
         years.add(year);
-        message = `${options.messagePrefix}add year ${year}`;
+        addedYears.add(year);
       }
-    }
-
-    if (!message) {
-      message = `${options.messagePrefix}update`;
     }
 
     let entry = await sourceEntry;
 
     if (original !== "") {
-      entry = new StringContentEntry(destinationEntry.name, original.replace(
-        /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
-        `opyright (c) ${yearsToString(years)}`
-      ));
+      entry = new StringContentEntry(
+        destinationEntry.name,
+        original.replace(
+          /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
+          `opyright (c) ${yearsToString(years)}`
+        )
+      );
     }
 
     return {
       entry,
-      message
+      message: addedYears.size
+        ? `${options.messagePrefix}add year ${[...addedYears]}`
+        : `${options.messagePrefix}update from template`
     };
   }
 }
