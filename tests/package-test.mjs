@@ -1,12 +1,12 @@
 import test from "ava";
-import { StringContentEntry } from "content-entry";
+import { StringContentEntry, EmptyContentEntry } from "content-entry";
 import { createContext } from "./helpers/util.mjs";
 
 import { Package } from "../src/mergers/package.mjs";
 
 const FILE_NAME = "package.json";
 
-async function pkgt(t, template, content, expected, message) {
+async function pkgt(t, template, content, options, expected, message) {
   const context = await createContext({
     template: "templateRepo",
     github: {
@@ -18,8 +18,13 @@ async function pkgt(t, template, content, expected, message) {
 
   const commit = await Package.merge(
     context,
-    new StringContentEntry(FILE_NAME, JSON.stringify(content)),
-    new StringContentEntry(FILE_NAME, JSON.stringify(template))
+    content === undefined
+      ? new EmptyContentEntry(FILE_NAME)
+      : new StringContentEntry(FILE_NAME, JSON.stringify(content)),
+    template === undefined
+      ? new EmptyContentEntry(FILE_NAME)
+      : new StringContentEntry(FILE_NAME, JSON.stringify(template)),
+    { ...Package.defaultOptions, ...options }
   );
 
   if (message !== undefined) {
@@ -36,7 +41,14 @@ async function pkgt(t, template, content, expected, message) {
   }
 }
 
-pkgt.title = (providedTitle = "", template, content, expected, message = []) =>
+pkgt.title = (
+  providedTitle = "",
+  template,
+  content,
+  options,
+  expected,
+  message = []
+) =>
   `package ${providedTitle} ${JSON.stringify(
     template
   )} ${content} ${expected}`.trim();
@@ -58,6 +70,7 @@ test(
     }
   },
   undefined,
+  undefined,
   "merge from template package.json"
 );
 
@@ -74,6 +87,7 @@ test(
       inheritFrom: "templateRepo"
     }
   },
+  undefined,
   {
     name: "targetRepo",
     homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
@@ -110,6 +124,7 @@ test(
       inheritFrom: "templateRepo"
     }
   },
+  undefined,
   {
     name: "targetRepo",
     homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
@@ -140,6 +155,7 @@ test(
       node: ">=10"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.engines, {
       node: ">=10"
@@ -165,6 +181,7 @@ test(
       preserve: 3
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.slot, {
       add: 2,
@@ -192,6 +209,7 @@ test(
       preprocess: "rollup a && chmod +x bin/yy"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.scripts, {
       prepare: "rollup x y && chmod +x bin/xx",
@@ -209,6 +227,7 @@ test(
     }
   },
   {},
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.scripts, {
       prepare: "rollup"
@@ -216,7 +235,7 @@ test(
   }
 );
 
-test.skip(
+test(
   "package bin with expander",
   pkgt,
   {
@@ -230,6 +249,7 @@ test.skip(
       "{{name}}-systemd": "bin/{{name}}-systemd"
     }
   },
+  { properties: { name: "myName" } }, // TODO
   (t, merged) => {
     t.deepEqual(merged.bin, {
       a: "bin/a",
@@ -237,10 +257,9 @@ test.skip(
       "myName-systemd": "bin/myName-systemd"
     });
   }
-  //context.properties.name = "myName";
 );
 
-test.skip(
+test(
   "package devDependencies keep cracks",
   pkgt,
   {
@@ -255,6 +274,7 @@ test.skip(
       "dont-crack": "1.0.0"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
       cracks: "3.1.2"
@@ -262,7 +282,7 @@ test.skip(
   }
 );
 
-test.skip(
+test(
   "package devDependencies remove cracks",
   pkgt,
   {
@@ -276,6 +296,7 @@ test.skip(
       "dont-crack": "1.0.0"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, { special: "1.0.0" });
   }
@@ -299,6 +320,7 @@ test(
       e: "2"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
       b: "1",
@@ -328,6 +350,7 @@ test(
       d: "~0.24.9"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
       a: "^0.25.1",
@@ -351,6 +374,7 @@ test(
       a: "^1.0.0-beta.8"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
       a: "^1.0.0-rc.1"
@@ -371,6 +395,7 @@ test(
       a: "^1.0.0-rc.1"
     }
   },
+  undefined,
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
       a: "git+https://github.com/arlac77/light-server.git"
@@ -378,161 +403,136 @@ test(
   }
 );
 
-test.skip(
+test(
   "package keywords",
   pkgt,
-    {},
-    {
-      name: "abc_xxx_1",
-      template: {
-        inheritFrom: "https://github.com/.git"
-      },
-      keywords: ["A", "B"]
+  {},
+  {
+    name: "abc_xxx_1",
+    template: {
+      inheritFrom: "https://github.com/.git"
     },
-(t,merged) => {
-  t.deepEqual(merged.keywords, ["A", "B", "X"]);
-}
-// .messages.includes("docs(package): add X (keywords)"));
-/*
-keywords: {
-  _xxx_: "X"
-}
-*/
-  );
-
-test("package keywords empty", async t => {
-  const context = await createContext(
-    {},
-    {
-      name: "abc_xxx_1"
+    keywords: ["A", "B"]
+  },
+  {
+    keywords: {
+      _xxx_: "X"
     }
-  );
+  },
+  (t, merged) => {
+    t.deepEqual(merged.keywords, ["A", "B", "X"]);
+  }
+  // .messages.includes("docs(package): add X (keywords)"));
+);
 
-  const pkg = new Package("package.json", {
+test(
+  "package keywords empty",
+  pkgt,
+  {},
+  {
+    name: "abc_xxx_1"
+  },
+  {
     keywords: {
       _xxx_: "XXX"
     }
-  });
-  const merged = await pkg.merge(context);
+  },
+  (t, merged) => {
+    t.deepEqual(merged.keywords, ["XXX"]);
+  }
 
-  t.deepEqual(JSON.parse(merged.content).keywords, ["XXX"]);
+  //t.true(merged.messages.includes("docs(package): (keywords)"));
+);
 
-  t.true(merged.messages.includes("docs(package): (keywords)"));
-});
+test(
+  "package remove null keyword",
+  pkgt,
+  {
+    template: {}
+  },
+  {
+    name: "abc_xxx_1",
+    keywords: [null, ""]
+  },
+  undefined,
+  (t, merged) => {
+    t.is(merged.keywords, undefined);
+  }
+  //t.true(merged.messages.includes("docs(package): remove  (keywords)"));
+);
 
-test("package remove null keyword", async t => {
-  const context = await createContext(
-    {
-      template: {}
-    },
-    {
-      name: "abc_xxx_1",
-      keywords: [null, ""]
+test(
+  "package remove unexpanded {{xxx}}",
+  pkgt,
+  {
+    template: {}
+  },
+  {
+    browser: "{{browser}}",
+    main: "a value"
+  },
+  undefined,
+  (t, merged) => {
+    t.true(merged.browser === undefined);
+    t.true(merged.main === "a value");
+  }
+  //  "chore(package): remove unknown value for browser ({{browser}})"
+);
+
+test(
+  "add xo/space=true",
+  pkgt,
+  {
+    xo: {
+      space: true
     }
-  );
-
-  const pkg = new Package("package.json");
-  const merged = await pkg.merge(context);
-
-  t.is(JSON.parse(merged.content).keywords, undefined);
-  t.true(merged.messages.includes("docs(package): remove  (keywords)"));
-});
-
-test("package remove unexpanded {{xxx}}", async t => {
-  const context = await createContext(
-    {
-      template: {}
-    },
-    {
-      browser: "{{browser}}",
-      main: "a value"
+  },
+  {
+    xo: {
+      space: true
     }
-  );
+  },
+  undefined,
+  (t, merged) => {
+    t.deepEqual(merged.xo, {
+      space: true
+    });
+  }
+);
 
-  const pkg = new Package("package.json");
-  const merged = await pkg.merge(context);
-
-  const result = JSON.parse(merged.content);
-
-  t.true(result.browser === undefined);
-  t.true(result.main === "a value");
-  t.true(
-    merged.messages.includes(
-      "chore(package): remove unknown value for browser ({{browser}})"
-    )
-  );
-});
-
-test("add xo/space=true", async t => {
-  const context = await createContext(
-    {
-      xo: {
-        space: true
-      }
-    },
-    {
-      xo: {
-        space: true
-      }
+test(
+  "jsonpath",
+  pkgt,
+  {
+    nyc: {
+      "report-dir": "./build/coverage"
     }
-  );
-
-  const pkg = new Package("package.json");
-  const merged = await pkg.merge(context);
-
-  t.deepEqual(JSON.parse(merged.content).xo, {
-    space: true
-  });
-  //t.true(merged.messages.includes('chore: update package.json'));
-});
-
-test("jsonpath", async t => {
-  const context = await createContext(
-    {
-      nyc: {
-        "report-dir": "./build/coverage"
-      }
-    },
-    {
-      nyc: {
-        "report-dir": "./coverage"
-      }
+  },
+  {
+    nyc: {
+      "report-dir": "./coverage"
     }
-  );
+  },
+  { actions: [{ path: "$.nyc['report-dir']", op: "replace" }] },
+  (t, merged) => {
+    t.deepEqual(merged.nyc, {
+      "report-dir": "./build/coverage"
+    });
+  }
+  //    "chore(package): add ./build/coverage (nyc.report-dir)"
+);
 
-  const pkg = new Package("package.json", {
-    actions: [{ path: "$.nyc['report-dir']", op: "replace" }]
-  });
-  const merged = await pkg.merge(context);
-
-  t.deepEqual(JSON.parse(merged.content).nyc, {
-    "report-dir": "./build/coverage"
-  });
-
-  t.true(
-    merged.messages.includes(
-      "chore(package): add ./build/coverage (nyc.report-dir)"
-    )
-  );
-});
-
-test("package start fresh", async t => {
-  const context = await createContext({});
-  const pkg = new Package("package.json");
-  const merged = await pkg.merge(context);
-
-  t.deepEqual(JSON.parse(merged.content), {
-    name: "targetRepo",
-    homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
-    bugs: {
-      url: "http://mock-provider.com/tragetUser/targetRepo/issues"
-    },
-    repository: {
-      type: "git",
-      url: "http://mock-provider.com/tragetUser/targetRepo"
-    },
-    template: {
-      inheritFrom: "templateRepo"
-    }
-  });
+test("package start fresh", pkgt, undefined, undefined, {
+  name: "targetRepo",
+  homepage: "http://mock-provider.com/tragetUser/targetRepo#readme",
+  bugs: {
+    url: "http://mock-provider.com/tragetUser/targetRepo/issues"
+  },
+  repository: {
+    type: "git",
+    url: "http://mock-provider.com/tragetUser/targetRepo"
+  },
+  template: {
+    inheritFrom: "templateRepo"
+  }
 });
