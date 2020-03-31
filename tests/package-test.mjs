@@ -1,6 +1,6 @@
 import test from "ava";
 import { StringContentEntry, EmptyContentEntry } from "content-entry";
-import { createContext } from "./helpers/util.mjs";
+import { createContext, asArray } from "./helpers/util.mjs";
 
 import { Package } from "../src/mergers/package.mjs";
 
@@ -36,8 +36,12 @@ async function pkgt(
     { ...Package.defaultOptions, ...options }
   );
 
-  if (message !== undefined) {
-    t.is(commit.message, message);
+  for (const e of asArray(message)) {
+    if (e instanceof RegExp) {
+      t.regex(commit.message, e, "commit message");
+    } else if (message !== undefined) {
+      t.is(commit.message, e, "commit message");
+    }
   }
 
   if (typeof expected === "function") {
@@ -57,7 +61,7 @@ pkgt.title = (
   properties,
   options,
   expected,
-  message = []
+  message
 ) =>
   `package ${providedTitle} ${JSON.stringify(
     template
@@ -205,11 +209,8 @@ test(
       add: 2,
       preserve: 3
     });
-  }
-  /*
-  t.false(merged.messages.includes("chore(package): delete other"));
-  t.true(merged.messages.includes("chore(package): (slot.something)"));
-*/
+  },
+  /slot.something/
 );
 
 test(
@@ -351,9 +352,8 @@ test(
       c: "1",
       e: "2"
     });
-  }
-  //  merged.messages.includes("chore(package): remove 1 (devDependencies.a)") &&
-  //    merged.messages.includes("chore(package): add 1 (devDependencies.c)")
+  },
+  [/remove\s+1.+devDependencies.a/, /add\s+1.+devDependencies.c/]
 );
 
 test(
@@ -551,8 +551,8 @@ test(
     t.deepEqual(merged.nyc, {
       "report-dir": "./build/coverage"
     });
-  }
-  //    "chore(package): add ./build/coverage (nyc.report-dir)"
+  },
+   /add .\/build\/coverage.*nyc.report-dir/
 );
 
 test("package start fresh", pkgt, undefined, undefined, undefined, undefined, {

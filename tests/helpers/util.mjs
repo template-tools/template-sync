@@ -3,6 +3,10 @@ import { MockProvider } from "mock-repository-provider";
 import { Context } from "../../src/context.mjs";
 import yaml from "js-yaml";
 
+export function asArray(o) {
+  return Array.isArray(o) ? o : o === undefined ? [] : [o];
+}
+
 export const TARGET_REPO = "targetUser/targetRepo";
 export const TEMPLATE_REPO = "templateRepo";
 
