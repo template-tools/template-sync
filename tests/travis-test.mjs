@@ -88,6 +88,43 @@ test(
 `
 );
 
+async function travist(t, template, content, expected, message) {
+  return yamlt(
+    t,
+    Travis,
+    `node_js:
+${template
+  .map(
+    v => `  - ${v}
+`
+  )
+  .join("")}
+`,
+    `node_js:
+${content
+  .map(
+    v => `  - ${v}
+`
+  )
+  .join("")}
+`,
+    undefined,
+    expected,
+    message
+  );
+}
+
+travist.title = (
+  providedTitle = "",
+  template,
+  content,
+  expected,
+  message = []
+) =>
+  `Travis node versions ${providedTitle} ${JSON.stringify(
+    template
+  )} ${content} ${expected}`.trim();
+
 test(
   "scripts",
   yamlt,
@@ -149,130 +186,82 @@ before_script:
 `
 );
 
-async function mockYmlVersions(templateVersions, targetVersions) {
-  const provider = new MockProvider({
-    templateRepo: {
-      master: {
-        aFile: `node_js:
-${templateVersions
-  .map(
-    v => `  - ${v}
-`
-  )
-  .join("")}
-`
-      }
-    },
-    targetRepo: {
-      master: {
-        aFile: `node_js:
-${targetVersions
-  .map(
-    v => `  - ${v}
-`
-  )
-  .join("")}
-`
-      }
-    }
-  });
-
-  const context = await Context.from(provider, "targetRepo", {
-    template: "templateRepo"
-  });
-
-  const merger = new Travis("aFile");
-  return merger.merge(context);
-}
-
-test("travis node versions merge", async t => {
-  const merged = await mockYmlVersions(["8.9.3", "9"], ["8.9.3"]);
-
-  t.deepEqual(
-    merged.content,
-    `node_js:
+test(
+  "travis node versions merge",
+  travist,
+  ["8.9.3", "9"],
+  ["8.9.3"],
+  `node_js:
   - 8.9.3
   - 9
 `
-  );
-});
+);
 
-test("travis node versions none numeric", async t => {
-  const merged = await mockYmlVersions(["7.7.2", "-iojs"], ["7.7.1", "iojs"]);
+test(
+  "travis node versions none numeric",
+  travist,
+  ["7.7.2", "-iojs"],
+  ["7.7.1", "iojs"],
 
-  t.deepEqual(
-    merged.content,
-    `node_js:
+  `node_js:
+  - 7.7.1
+  - 7.7.2
+`,
+  "chore(travis): add 7.7.2 remove iojs (node_js)"
+);
+
+test(
+  "travis node versions simple",
+  travist,
+  ["7.7.2"],
+  ["7.7.1"],
+  `node_js:
   - 7.7.1
   - 7.7.2
 `
-  );
+);
 
-  t.deepEqual(merged.messages, [
-    "chore(travis): add 7.7.2 remove iojs (node_js)"
-  ]);
-});
-
-test("travis node versions simple", async t => {
-  const merged = await mockYmlVersions(["7.7.2"], ["7.7.1"]);
-
-  t.deepEqual(
-    merged.content,
-    `node_js:
-  - 7.7.1
-  - 7.7.2
-`
-  );
-});
-
-test("travis node versions complex", async t => {
-  const merged = await mockYmlVersions(["7.7.2"], ["6.10.1", "7.7.1"]);
-
-  t.deepEqual(
-    merged.content,
-    `node_js:
+test(
+  "travis node versions complex",
+  travist,
+  ["7.7.2"],
+  ["6.10.1", "7.7.1"],
+  `node_js:
   - 6.10.1
   - 7.7.1
   - 7.7.2
 `
-  );
-});
+);
 
-test("travis node semver mayor only", async t => {
-  const merged = await mockYmlVersions(["7.7.2"], ["5", "6.2"]);
-
-  t.deepEqual(
-    merged.content,
-    `node_js:
+test(
+  "travis node semver mayor only",
+  travist,
+  ["7.7.2"],
+  ["5", "6.2"],
+  `node_js:
   - 5
   - 6.2
   - 7.7.2
 `
-  );
-});
+);
 
-test("travis node semver remove", async t => {
-  const merged = await mockYmlVersions(
-    ["-4", "-5", "-7", "7.7.2"],
-    ["4.2", "4.2.3", "5.1", "7.7.0", "7.7.1", "9.3"]
-  );
-
-  t.deepEqual(
-    merged.content,
-    `node_js:
+test(
+  "travis node semver remove",
+  travist,
+  ["-4", "-5", "-7", "7.7.2"],
+  ["4.2", "4.2.3", "5.1", "7.7.0", "7.7.1", "9.3"],
+  `node_js:
   - 7.7.2
   - 9.3
 `
-  );
-});
+);
 
-test("travis node semver two digits", async t => {
-  const merged = await mockYmlVersions(["'8.10'", "-8"], ["8.9.4"]);
-
-  t.deepEqual(
-    merged.content,
-    `node_js:
+test(
+  "travis node semver two digits",
+  travist,
+  ["'8.10'", "-8"],
+  ["8.9.4"],
+  `node_js:
   - '8.10'
 `
-  );
-});
+);
