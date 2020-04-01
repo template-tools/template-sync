@@ -1,12 +1,20 @@
 import test from "ava";
+import { StringContentEntry } from "content-entry";
 import { Rollup } from "../src/mergers/rollup.mjs";
 
 async function rudt(t, content, dependencies) {
-  t.deepEqual(Rollup.usedDevDependencies(content), new Set(dependencies));
+  t.deepEqual(
+    await Rollup.usedDevDependencies(
+      new StringContentEntry("rolloup.config.mjs", content)
+    ),
+    new Set(dependencies)
+  );
 }
 
 rudt.title = (providedTitle = "", content, dependencies) =>
-  `rollup used dependencies ${providedTitle} ${content.slice(50)} ${dependencies}`.trim();
+  `rollup used dependencies ${providedTitle} ${content.slice(
+    50
+  )} ${dependencies}`.trim();
 
 test(
   rudt,

@@ -171,9 +171,8 @@ export class Package extends Merger {
     return new Set(["cracks", "dont-crack"].filter(m => modules.has(m)));
   }
 
-  static async usedDevDependencies(content) {
-    content = await content;
-
+  static async usedDevDependencies(entry) {
+    const content = await entry.getString();
     const pkg = content.length === 0 ? {} : JSON.parse(content);
 
     return moduleNames(pkg.release);

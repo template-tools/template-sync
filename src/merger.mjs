@@ -43,7 +43,7 @@ export class Merger {
     );
   }
 
-  static usedDevDependencies(content) {
+  static usedDevDependencies(entry) {
     return new Set();
   }
 

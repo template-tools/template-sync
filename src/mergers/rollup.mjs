@@ -23,7 +23,8 @@ export class Rollup extends Merger {
     );
   }
 
-  static usedDevDependencies(content) {
+  static async usedDevDependencies(entry) {
+    const content = await entry.getString();
     const ast = recast.parse(content, {
       parser: {
         parse: source =>

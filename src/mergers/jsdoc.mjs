@@ -5,7 +5,8 @@ export class JSDoc extends JSONMerger {
     return new Set(Array.from(dependencies).filter(m => m.match(/babel-preset/)));
   }
 
-  static usedDevDependencies(content) {
+  static async usedDevDependencies(entry) {
+    const content = await entry.getString();
     const modules = new Set();
 
     const json = JSON.parse(content);
