@@ -47,7 +47,7 @@ test("used dev dependencies", async t => {
 
   t.deepEqual(
     await usedDevDependencies(mergers, await provider.branch("targetRepo")),
-    new Set(["rollup-plugin-babel", "cracks"])
+    new Set([ "cracks", "rollup-plugin-babel"])
   );
 });
 

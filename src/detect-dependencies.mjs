@@ -7,7 +7,6 @@ export async function usedDevDependencies(mergers,branch) {
 
   for (const [merger, pattern] of mergers) {
     for await (const entry of branch.entries(pattern)) {
-        console.log(merger.name,pattern,entry.name,await entry.getString());
       all.push(await merger.usedDevDependencies(entry));
     }
   }
