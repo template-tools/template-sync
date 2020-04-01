@@ -18,11 +18,11 @@ test("package used dev dependencies", async t => {
     await Package.usedDevDependencies(
       new StringContentEntry(
         "package.json",
-        `{
-      "release": {
-        "verifyRelease": "cracks"
-      }
-    }`
+        JSON.stringify({
+          release: {
+            verifyRelease: "cracks"
+          }
+        })
       )
     ),
     new Set(["cracks"])
