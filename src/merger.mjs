@@ -1,5 +1,3 @@
-import { StringContentEntry } from "content-entry";
-
 /**
  * Mergable content
  */
@@ -42,23 +40,7 @@ export class Merger {
     return new Set();
   }
 
-  static async merge(
-    context,
-    destinationEntry,
-    sourceEntry,
-    options = this.defaultOptions
-  ) {
-    const name = destinationEntry.name;
-    const merger = new this(context, name, options);
-    const result = await merger.mergeContent(
-      context,
-      await destinationEntry.getString(),
-      await sourceEntry.getString()
-    );
-
-    return {
-      message: result.messages.join(""),
-      entry: new StringContentEntry(name, result.content)
-    };
+  static async merge(context, destinationEntry, sourceEntry, options) {
+    return undefined;
   }
 }
