@@ -8,39 +8,6 @@ test(
   Travis,
   {
     language: "node_js",
-    node_js: ["10.15.3", "11.11.0"],
-    script: ["npm run cover"],
-    branches: { only: ["master", "/^greenkeeper/.*$/"] },
-    jobs: {
-      include: [
-        {
-          stage: "doc",
-          node_js: "lts/*",
-          skip_cleanup: "true",
-          script: [
-            "npm install -g --production coveralls codecov",
-            "npm run cover",
-            "codecov",
-            "cat ./coverage/lcov.info | coveralls",
-            "npm run lint",
-            "npm run docs"
-          ]
-        },
-        {
-          stage: "release",
-          node_js: "lts/*",
-          script: "skip",
-          deploy: {
-            provider: "script",
-            skip_cleanup: "true",
-            script: ["npx semantic-release"]
-          }
-        }
-      ]
-    }
-  },
-  {
-    language: "node_js",
     node_js: ["-10", "-11", "10.15.3", "11.12.0"],
     script: ["npm run cover", "-npm run lint", "-npm run docs"],
     jobs: {
@@ -81,7 +48,39 @@ test(
       '-npm run travis-deploy-once "npm run semantic-release"',
       "-npm run semantic-release"
     ]
-    //   notifications: { email: ["-markus.felten@gmx.de"] }
+  },
+  {
+    language: "node_js",
+    node_js: ["10.15.3", "11.11.0"],
+    script: ["npm run cover"],
+    branches: { only: ["master", "/^greenkeeper/.*$/"] },
+    jobs: {
+      include: [
+        {
+          stage: "doc",
+          node_js: "lts/*",
+          skip_cleanup: "true",
+          script: [
+            "npm install -g --production coveralls codecov",
+            "npm run cover",
+            "codecov",
+            "cat ./coverage/lcov.info | coveralls",
+            "npm run lint",
+            "npm run docs"
+          ]
+        },
+        {
+          stage: "release",
+          node_js: "lts/*",
+          script: "skip",
+          deploy: {
+            provider: "script",
+            skip_cleanup: "true",
+            script: ["npx semantic-release"]
+          }
+        }
+      ]
+    }
   },
   undefined,
   undefined,
