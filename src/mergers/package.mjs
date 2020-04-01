@@ -378,21 +378,23 @@ export class Package extends Merger {
       }
     });
 
-    let newContent = JSON.stringify(target, undefined, 2);
-    const lastChar = newContent[newContent.length - 1];
+    let merged = JSON.stringify(target, undefined, 2);
+    const lastChar = merged[merged.length - 1];
 
     // keep trailing newline
     if (originalLastChar === "\n" && lastChar === "}") {
-      newContent += "\n";
+      merged += "\n";
     }
 
-    return {
-      entry: new StringContentEntry(name, newContent),
-      message: [
-        ...messages,
-        ...actions2messages(actions, options.messagePrefix, name)
-      ].join("\n")
-    };
+    return merged === original
+      ? undefined
+      : {
+          entry: new StringContentEntry(name, merged),
+          message: [
+            ...messages,
+            ...actions2messages(actions, options.messagePrefix, name)
+          ].join("\n")
+        };
   }
 }
 
@@ -401,10 +403,10 @@ export async function deleteUnusedDevDependencies(context, target, template) {
     [Package, "package.json"],
     [Rollup, "rollup.config.*"]
   ];
-  
+
   if (target.devDependencies) {
     try {
-      const udd = await usedDevDependencies(mergers,context.targetBranch);
+      const udd = await usedDevDependencies(mergers, context.targetBranch);
       const allKnown = new Set([
         ...Object.keys(target.devDependencies),
         ...Object.keys(template.devDependencies)

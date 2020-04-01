@@ -203,7 +203,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
           );
         })
       )
-    ).filter(c => c !== undefined && c.message.length > 0);
+    ).filter(c => c !== undefined);
 
     if (commits.length === 0) {
       this.info("-");

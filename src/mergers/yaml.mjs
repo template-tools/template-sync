@@ -31,24 +31,25 @@ export class YAML extends Merger {
     const ymlOptions = { schema: yaml.FAILSAFE_SCHEMA };
     const actions = {};
 
-    return {
-      entry: new StringContentEntry(
-        name,
-        yaml.safeDump(
-          merge(
-            yaml.safeLoad(original, ymlOptions) || {},
-            yaml.safeLoad(
-              options.expand ? context.expand(template) : template,
-              ymlOptions
-            ),
-            "",
-            (action, hint) => aggregateActions(actions, action, hint),
-            options.mergeHints
-          ),
-          options.yaml
-        )
+    const merged = yaml.safeDump(
+      merge(
+        yaml.safeLoad(original, ymlOptions) || {},
+        yaml.safeLoad(
+          options.expand ? context.expand(template) : template,
+          ymlOptions
+        ),
+        "",
+        (action, hint) => aggregateActions(actions, action, hint),
+        options.mergeHints
       ),
-      message: actions2message(actions, options.messagePrefix, name)
-    };
+      options.yaml
+    );
+
+    return original === merged
+      ? undefined
+      : {
+          entry: new StringContentEntry(name, merged),
+          message: actions2message(actions, options.messagePrefix, name)
+        };
   }
 }
