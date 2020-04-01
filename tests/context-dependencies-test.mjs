@@ -1,9 +1,6 @@
 import test from "ava";
 import { MockProvider } from "mock-repository-provider";
-
 import { Context } from "../src/context.mjs";
-import { Package } from "../src/mergers/package.mjs";
-import { Rollup } from "../src/mergers/rollup.mjs";
 
 const ROLLUP_FILE_CONTENT = `import babel from 'rollup-plugin-babel';
 
@@ -42,9 +39,6 @@ test("context used dev modules", async t => {
     template: ["templateRepo"]
   });
 
-  context.addFile(new Rollup("rollup.config.js"));
-  context.addFile(new Package("package.json"));
-
   t.deepEqual(
     await context.usedDevDependencies(),
     new Set(["rollup-plugin-babel", "cracks"])
@@ -64,8 +58,6 @@ test("context optional dev modules", async t => {
   const context = await Context.from(provider, "targetRepo", {
     template: ["templateRepo"]
   });
-
-  context.addFile(new Rollup("rollup.config.js"));
 
   t.deepEqual(
     context.optionalDevDependencies(new Set(["rollup-plugin-babel"])),
