@@ -1,12 +1,7 @@
 import { StringContentEntry } from "content-entry";
 
 /**
- * Mergable File
- * @param {string} name location in the repository
- * @param {Object} options mergin options
- *
- * @property {string} name
- * @property {Object} options
+ * Mergable content
  */
 export class Merger {
   static get pattern() {

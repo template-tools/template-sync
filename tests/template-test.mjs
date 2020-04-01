@@ -4,6 +4,7 @@ import { StringContentEntry } from "content-entry";
 
 import { Template } from "../src/template.mjs";
 import { Context } from "../src/context.mjs";
+import { Package } from "../src/mergers/package.mjs";
 
 const provider = new MockProvider({
   template: {
@@ -43,20 +44,21 @@ test.serial("template constructor", async t => {
   t.is(`${template}`, "template");
   t.is(template.name, "template");
 
-  const m = await template.mergers();
+  const mergers = await template.mergers();
 
-  //console.log(m);
-  //t.is(m.length, 2);
-
-  t.deepEqual(m[0][2], {
-    messagePrefix: "",
-    mergeHints: {},
-    expand: true,
-    actions: [],
-    keywords: [],
-    optionalDevDependencies: ["cracks", "dont-crack"],
-    o1: 77
-  });
+  t.deepEqual(mergers[0], [
+    'package.json',
+    Package,
+    {
+      messagePrefix: "",
+      mergeHints: {},
+      expand: true,
+      actions: [],
+      keywords: [],
+      optionalDevDependencies: ["cracks", "dont-crack"],
+      o1: 77
+    }
+  ]);
 
   for (const i of ["a", "b"]) {
     const f = await template.entry(`file_${i}`);

@@ -7,6 +7,13 @@ import {
 } from "hinted-tree-merger";
 import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
+import { Rollup } from "./rollup.mjs";
+
+import {
+  optionalDevDependencies,
+  usedDevDependencies
+} from "../detect-dependencies.mjs";
+
 import {
   actions2messages,
   aggregateActions,
@@ -390,18 +397,23 @@ export class Package extends Merger {
 }
 
 export async function deleteUnusedDevDependencies(context, target, template) {
+  const mergers = [
+    [Package, "package.json"],
+    [Rollup, "rollup.config.*"]
+  ];
+  
   if (target.devDependencies) {
     try {
-      const usedDevDependencies = await context.usedDevDependencies();
+      const udd = await usedDevDependencies(mergers,context.targetBranch);
       const allKnown = new Set([
         ...Object.keys(target.devDependencies),
         ...Object.keys(template.devDependencies)
       ]);
 
-      context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
+      context.debug(`used devDependencies: ${[...udd]}`);
 
-      [...context.optionalDevDependencies(allKnown)]
-        .filter(m => !usedDevDependencies.has(m))
+      [...(await optionalDevDependencies(mergers, allKnown))]
+        .filter(m => !udd.has(m))
         .forEach(m => {
           if (template.devDependencies === undefined) {
             template.devDependencies = {};
