@@ -159,10 +159,9 @@ export class Template extends LogLevelMixin(class {}) {
             ])
           )
         });
-        /*if(a.name === '.travis.yml') {
-          console.log(await commit.entry.getString());
-        }*/
-        return commit.entry;
+        if(commit !== undefined) {
+          return commit.entry;
+        }
       }
     }
 
