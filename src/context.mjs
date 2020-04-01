@@ -57,9 +57,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
             jspath(this.properties, expression)
         })
       },
-      files: {
-        value: new Map()
-      },
       targetBranchName: { value: targetBranchName }
     });
 
@@ -139,11 +136,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
     });
   }
 
-  addFile(file) {
-    file.logLevel = this.logLevel;
-    this.files.set(file.name, file);
-  }
-
   /**
    * all used dev modules
    * @return {Set<string>}
@@ -213,13 +205,25 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
     const mergers = await template.mergers();
 
+    /*
+    const targetEntries = new Map();
+    await Promise.all(
+      mergers.map(async ([name]) => {
+        name = this.expand(name);
+        targetEntries.set(
+          name,
+          (await targetBranch.entry(name)) || new EmptyContentEntry(name)
+        );
+      })
+    );*/
+
     const commits = (
       await Promise.all(
         mergers.map(async ([name, merger, options]) => {
-          let targetEntry = await targetBranch.entry(name);
-          if (targetEntry === undefined) {
-            targetEntry = new EmptyContentEntry(name);
-          }
+          const targetName = this.expand(name);
+          const targetEntry =
+            (await targetBranch.entry(targetName)) ||
+            new EmptyContentEntry(targetName);
 
           return merger.merge(
             this,
@@ -229,7 +233,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
           );
         })
       )
-    ).filter(c => c !== undefined && c.changed);
+    ).filter(c => c !== undefined && c.message.length > 0);
 
     if (commits.length === 0) {
       this.info("-");
