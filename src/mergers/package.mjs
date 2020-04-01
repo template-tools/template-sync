@@ -399,14 +399,11 @@ export class Package extends Merger {
 }
 
 export async function deleteUnusedDevDependencies(context, target, template) {
-  const mergers = [
-    [Package, "package.json"],
-    [Rollup, "rollup.config.*"]
-  ];
-
   if (target.devDependencies) {
+    const mm = [Package, Rollup].map(m => [m, m.pattern]);
+
     try {
-      const udd = await usedDevDependencies(mergers, context.targetBranch);
+      const udd = await usedDevDependencies(mm, context.targetBranch);
       const allKnown = new Set([
         ...Object.keys(target.devDependencies),
         ...Object.keys(template.devDependencies)
@@ -414,7 +411,7 @@ export async function deleteUnusedDevDependencies(context, target, template) {
 
       context.debug(`used devDependencies: ${[...udd]}`);
 
-      [...(await optionalDevDependencies(mergers, allKnown))]
+      [...(await optionalDevDependencies(mm, allKnown))]
         .filter(m => !udd.has(m))
         .forEach(m => {
           if (template.devDependencies === undefined) {

@@ -2,7 +2,7 @@
  * all used dev modules
  * @return {Set<string>}
  */
-export async function usedDevDependencies(mergers,branch) {
+export async function usedDevDependencies(mergers, branch) {
   const all = [];
 
   for (const [merger, pattern] of mergers) {
@@ -11,7 +11,7 @@ export async function usedDevDependencies(mergers,branch) {
     }
   }
 
-  return all.reduce((sum, current) => new Set([...sum, ...current]), new Set());
+  return oneSet(all);
 }
 
 export async function optionalDevDependencies(mergers, dependencies) {
@@ -21,5 +21,14 @@ export async function optionalDevDependencies(mergers, dependencies) {
     all.push(await merger.optionalDevDependencies(dependencies));
   }
 
-  return all.reduce((sum, current) => new Set([...sum, ...current]), new Set());
+  return oneSet(all);
+}
+
+function oneSet(all)
+{
+  const combined = new Set();
+  all.forEach(element => element.forEach(e => combined.add(e)));
+  return combined;
+
+  //return all.reduce((sum, current) => new Set([...sum, ...current]), new Set());
 }
