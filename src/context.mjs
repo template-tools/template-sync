@@ -88,7 +88,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
       };
     }
 
-    if (targetBranch.repository.owner !== undefined) {
+    if (
+      targetBranch.repository.owner !== undefined &&
+      this.properties.license.owner === undefined
+    ) {
       Object.assign(this.properties.license, {
         owner: targetBranch.owner.name
       });
@@ -211,20 +214,21 @@ export class Context extends LogLevelMixin(class _Context {}) {
     const mergers = await template.mergers();
 
     const commits = (
-      await Promise.all(mergers.map(async ([name,merger,options]) => {
-        let targetEntry = await targetBranch.entry(name);
-        if(targetEntry === undefined) {
-          targetEntry = new EmptyContentEntry(name);
-        }
+      await Promise.all(
+        mergers.map(async ([name, merger, options]) => {
+          let targetEntry = await targetBranch.entry(name);
+          if (targetEntry === undefined) {
+            targetEntry = new EmptyContentEntry(name);
+          }
 
-        return merger.merge(
-          this,
-          targetEntry,
-          await template.entry(name),
-          options
-        );
-      }
-      ))
+          return merger.merge(
+            this,
+            targetEntry,
+            await template.entry(name),
+            options
+          );
+        })
+      )
     ).filter(c => c !== undefined && c.changed);
 
     if (commits.length === 0) {
