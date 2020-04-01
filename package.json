@@ -41,7 +41,7 @@
     "content-entry": "^2.3.1",
     "expression-expander": "^7.0.4",
     "github-repository-provider": "^7.6.7",
-    "hinted-tree-merger": "^3.12.1",
+    "hinted-tree-merger": "^3.12.2",
     "js-yaml": "^3.13.1",
     "local-repository-provider": "^6.5.11",
     "loglevel-mixin": "^5.0.5",
