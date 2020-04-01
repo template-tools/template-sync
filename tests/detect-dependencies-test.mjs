@@ -1,6 +1,16 @@
 import test from "ava";
 import { MockProvider } from "mock-repository-provider";
-import { Context } from "../src/context.mjs";
+import {
+  optionalDevDependencies,
+  usedDevDependencies
+} from "../src/detect-dependencies.mjs";
+import { Package } from "../src/mergers/package.mjs";
+import { Rollup } from "../src/mergers/rollup.mjs";
+
+const mergers = [
+  [Package, "package.json"],
+  [Rollup, "rollup.config.*"]
+];
 
 const ROLLUP_FILE_CONTENT = `import babel from 'rollup-plugin-babel';
 
@@ -19,7 +29,7 @@ const PACKAGE_FILE_CONTENT = `{
   }
 }`;
 
-test("context used dev modules", async t => {
+test("used dev dependencies", async t => {
   const provider = new MockProvider({
     templateRepo: {
       master: {
@@ -35,32 +45,15 @@ test("context used dev modules", async t => {
     }
   });
 
-  const context = await Context.from(provider, "targetRepo", {
-    template: ["templateRepo"]
-  });
-
   t.deepEqual(
-    await context.usedDevDependencies(),
+    await usedDevDependencies(mergers, await provider.branch("targetRepo")),
     new Set(["rollup-plugin-babel", "cracks"])
   );
 });
 
-test("context optional dev modules", async t => {
-  const provider = new MockProvider({
-    templateRepo: { master: { "rollup.config.js": ROLLUP_FILE_CONTENT } },
-    targetRepo: {
-      master: {
-        "rollup.config.js": ROLLUP_FILE_CONTENT
-      }
-    }
-  });
-
-  const context = await Context.from(provider, "targetRepo", {
-    template: ["templateRepo"]
-  });
-
+test("optional dev dependencies", async t => {
   t.deepEqual(
-    context.optionalDevDependencies(new Set(["rollup-plugin-babel"])),
+    await optionalDevDependencies(mergers, new Set(["rollup-plugin-babel"])),
     new Set(["rollup-plugin-babel"])
   );
 });

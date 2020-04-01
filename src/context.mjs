@@ -136,36 +136,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
     });
   }
 
-  /**
-   * all used dev modules
-   * @return {Set<string>}
-   */
-  async usedDevDependencies() {
-    const usedModuleSets = await Promise.all(
-      Array.from(this.files.values()).map(async file => {
-        if (file.name === "package.json") {
-          return file.constructor.usedDevDependencies(
-            file.targetEntry(this, { ignoreMissing: true })
-          );
-        } else {
-          const m = await file.merge(this);
-          return file.constructor.usedDevDependencies(m.content);
-        }
-      })
-    );
-
-    return usedModuleSets.reduce(
-      (sum, current) => new Set([...sum, ...current]),
-      new Set()
-    );
-  }
-
-  optionalDevDependencies(dependencies) {
-    return Array.from(this.files.values())
-      .map(file => file.constructor.optionalDevDependencies(dependencies, {}))
-      .reduce((sum, current) => new Set([...sum, ...current]), new Set());
-  }
-
   async execute() {
     if (this.properties.usedBy !== undefined) {
       const pullRequests = [];
