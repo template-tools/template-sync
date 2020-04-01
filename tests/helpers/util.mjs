@@ -38,6 +38,7 @@ export async function yamlt(
   factory,
   template,
   content,
+  properties,
   options,
   expected,
   message
@@ -48,7 +49,8 @@ export async function yamlt(
       repo: "the-repo-name",
       user: "the-user-name"
     },
-    user: "x-user"
+    user: "x-user",
+    ...properties
   });
 
   const commit = await factory.merge(
@@ -89,6 +91,7 @@ yamlt.title = (
   factory,
   template,
   content,
+  properties,
   options,
   expected,
   message = []

@@ -2,10 +2,7 @@ import yaml from "js-yaml";
 import { StringContentEntry } from "content-entry";
 import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
-import {
-  actions2message,
-  aggregateActions
-} from "../util.mjs";
+import { actions2message, aggregateActions } from "../util.mjs";
 
 export class YAML extends Merger {
   static get pattern() {
@@ -35,7 +32,6 @@ export class YAML extends Merger {
     const actions = {};
 
     return {
-      message: actions2message(actions, options.messagePrefix, name),
       entry: new StringContentEntry(
         name,
         yaml.safeDump(
@@ -51,7 +47,8 @@ export class YAML extends Merger {
           ),
           options.yaml
         )
-      )
+      ),
+      message: actions2message(actions, options.messagePrefix, name)
     };
   }
 }
