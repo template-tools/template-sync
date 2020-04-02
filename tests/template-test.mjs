@@ -45,7 +45,7 @@ test("template constructor", async t => {
   t.is(template.name, "template");
 });
 
-test.skip("template merged entries", async t => {
+test("template merged entries", async t => {
   const template = new Template(context, ["template"]);
 
   for (const i of ["a", "b"]) {

@@ -160,7 +160,7 @@ export class Template extends LogLevelMixin(class {}) {
             ])
           )
         });
-        if(commit !== undefined) {
+        if (commit !== undefined) {
           return commit.entry;
         }
       }
