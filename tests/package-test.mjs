@@ -25,6 +25,12 @@ async function pkgt(
     ...properties
   });
 
+  // also fill mock repo
+  if(content !== undefined) {
+    const branch = await context.provider.branch('targetUser/targetRepo');
+    branch.files[FILE_NAME] = JSON.stringify(content);
+  }
+
   const commit = await Package.merge(
     context,
     content === undefined

@@ -400,10 +400,10 @@ export class Package extends Merger {
 
 export async function deleteUnusedDevDependencies(context, target, template) {
   if (target.devDependencies) {
-    const mm = [Package, Rollup].map(m => [m, m.pattern]);
-
     try {
+      const mm = [Package, Rollup].map(m => [m, m.pattern]);
       const udd = await usedDevDependencies(mm, context.targetBranch);
+
       const allKnown = new Set([
         ...Object.keys(target.devDependencies),
         ...Object.keys(template.devDependencies)
