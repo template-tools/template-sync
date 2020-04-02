@@ -68,7 +68,8 @@ export class Template extends LogLevelMixin(class {}) {
       sources: { value: sources },
       branches: { value: new Set() },
       initialBranches: { value: new Set() },
-      entryCache: { value: new Map() }
+      entryCache: { value: new Map() },
+      options: { value: options }
     });
 
     this.logLevel = options.logLevel;
@@ -104,31 +105,34 @@ export class Template extends LogLevelMixin(class {}) {
     return entry;
   }
 
-  async initialize() {
+  initialize() {
+    if (this._duringInitialization) {
+      return this._duringInitialization;
+    }
+
     if (this.entryCache.size > 0) {
       return;
     }
 
-    this.trace(`Initialize template from ${this.sources}`);
+    this._duringInitialization = new Promise(async (resolve, reject) => {
+      //console.log("A", this.options.key);
+      this.trace(`Initialize template from ${this.sources}`);
 
-    this.entryCache.set(
-      "package.json",
-      new StringContentEntry(
+      const pkg = new StringContentEntry(
         "package.json",
         JSON.stringify(await this._templateFrom(this.sources, true))
-      )
-    );
+      );
 
-    //console.log(await this.entryCache.get("package.json").getString());
+      this.entryCache.set(pkg.name, pkg);
 
-    for (const branch of this.branches) {
-      if (branch) {
+      for (const branch of this.branches) {
         for await (const entry of branch.entries()) {
           if (!entry.isBlob) {
             continue;
           }
 
           const name = entry.name;
+          this.trace(`template entry ${branch.fullName}/${name}`);
           if (name === "package.json") {
             continue;
           }
@@ -144,7 +148,14 @@ export class Template extends LogLevelMixin(class {}) {
           }
         }
       }
-    }
+
+      this._duringInitialization = undefined;
+      //console.log("B", this.options.key, [...this.entryCache.keys()]);
+
+      resolve();
+    });
+
+    return this._duringInitialization;
   }
 
   async mergeEntry(ctx, a, b) {
