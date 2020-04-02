@@ -38,27 +38,15 @@ const provider = new MockProvider({
 
 const context = new Context(provider);
 
-test.serial("template constructor", async t => {
+test("template constructor", async t => {
   const template = new Template(context, ["template"]);
   t.deepEqual(template.sources, ["template"]);
   t.is(`${template}`, "template");
   t.is(template.name, "template");
+});
 
-  const mergers = await template.mergers();
-
-  t.deepEqual(mergers[0], [
-    'package.json',
-    Package,
-    {
-      messagePrefix: "",
-      mergeHints: {},
-      expand: true,
-      actions: [],
-      keywords: [],
-      optionalDevDependencies: ["cracks", "dont-crack"],
-      o1: 77
-    }
-  ]);
+test.skip("template merged entries", async t => {
+  const template = new Template(context, ["template"]);
 
   for (const i of ["a", "b"]) {
     const f = await template.entry(`file_${i}`);
@@ -87,7 +75,7 @@ test("template cache", async t => {
   t.is(t1, t2);
 });
 
-test("template package content", async t => {
+test.serial("template package content", async t => {
   const template = new Template(context, ["template"]);
 
   t.deepEqual(await template.package(), {
@@ -115,9 +103,19 @@ test("template mergers", async t => {
   const template = new Template(context, ["template"]);
   const mergers = await template.mergers();
 
-  t.is(mergers.length, 1);
-  t.is(mergers[0][0], "package.json");
-  t.is(mergers[0][1].name, "Package");
+  t.deepEqual(mergers[0], [
+    "package.json",
+    Package,
+    {
+      messagePrefix: "",
+      mergeHints: {},
+      expand: true,
+      actions: [],
+      keywords: [],
+      optionalDevDependencies: ["cracks", "dont-crack"],
+      o1: 77
+    }
+  ]);
 });
 
 test("template merge travis", async t => {

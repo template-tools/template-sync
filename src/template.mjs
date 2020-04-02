@@ -35,7 +35,7 @@ export class Template extends LogLevelMixin(class {}) {
    * sources staring wit '-' will be removed
    * @param {Context} context
    * @param {string[]} sources
-   * @param options
+   * @param {Object} options
    */
   static async templateFor(context, sources, options) {
     sources = [...new Set(asArray(sources))];
@@ -43,8 +43,8 @@ export class Template extends LogLevelMixin(class {}) {
     const remove = sources.filter(s => s[0] === "-").map(s => s.slice(1));
     sources = sources
       .filter(s => remove.indexOf(s) < 0)
-      .filter(s => s[0] !== "-");
-    sources = sources.sort();
+      .filter(s => s[0] !== "-")
+      .sort();
 
     const key = sources.join(",");
 
@@ -52,9 +52,10 @@ export class Template extends LogLevelMixin(class {}) {
 
     if (template === undefined) {
       template = new Template(context, sources, options);
-      await template.initialize();
       templateCache.set(key, template);
     }
+
+    await template.initialize();
 
     return template;
   }
