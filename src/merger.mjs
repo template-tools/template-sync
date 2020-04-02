@@ -1,12 +1,5 @@
-import { StringContentEntry } from "content-entry";
-
 /**
- * Mergable File
- * @param {string} name location in the repository
- * @param {Object} options mergin options
- *
- * @property {string} name
- * @property {Object} options
+ * Mergable content
  */
 export class Merger {
   static get pattern() {
@@ -43,27 +36,11 @@ export class Merger {
     );
   }
 
-  static usedDevDependencies(content) {
+  static usedDevDependencies(entry) {
     return new Set();
   }
 
-  static async merge(
-    context,
-    destinationEntry,
-    sourceEntry,
-    options = this.defaultOptions
-  ) {
-    const name = destinationEntry.name;
-    const merger = new this(context, name, options);
-    const result = await merger.mergeContent(
-      context,
-      await destinationEntry.getString(),
-      await sourceEntry.getString()
-    );
-
-    return {
-      message: result.messages.join(""),
-      entry: new StringContentEntry(name, result.content)
-    };
+  static async merge(context, destinationEntry, sourceEntry, options) {
+    return undefined;
   }
 }

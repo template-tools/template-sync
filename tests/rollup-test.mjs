@@ -106,26 +106,7 @@ export default {
     new EmptyContentEntry("rollup.config.js")
   );
 
-  t.deepEqual(
-    await commit.entry.getString(),
-    `import pkg from './package.json';
-import babel from 'rollup-plugin-babel';
-
-export default {
-  plugins: [
-    babel({
-      babelrc: false,
-      presets: ['stage-3'],
-      exclude: 'node_modules/**'
-    })
-  ],
-  targets: [{
-    dest: pkg.main,
-    format: 'cjs'
-  }],
-  external: ['url-resolver-fs']
-};`
-  );
+  t.is(commit, undefined);
 });
 
 test("rollup without imports and complex target expression", async t => {
@@ -155,16 +136,5 @@ test("rollup without imports and complex target expression", async t => {
     )
   );
 
-  t.deepEqual(
-    await commit.entry.getString(),
-    `export default ['base'].map(name => {
-  return {
-    input: 'tests/xx-test.js',
-    output: {
-      file: 'build/xx-test.js',
-      format: 'cjs'
-    }
-  };
-});`
-  );
+  t.is(commit, undefined);
 });

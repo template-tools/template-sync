@@ -1,7 +1,9 @@
 #!/bin/sh
-":"; //# comment; exec /usr/bin/env node --experimental-modules --experimental-json-modules "$0" "$@"
+":"; //# comment; exec /usr/bin/env node "$0" "$@"
 
-import fs from "fs";
+import fs, { readFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import program from "commander";
 import { removeSensibleValues } from "remove-sensible-values";
 import { GithubProvider } from "github-repository-provider";
@@ -13,7 +15,13 @@ import {
   defaultEncodingOptions,
   dumpTemplateEntries
 } from "./util.mjs";
-import pkg from "../package.json";
+
+const { version, description } = JSON.parse(
+  readFileSync(
+    join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"),
+    defaultEncodingOptions
+  )
+);
 
 process.on("uncaughtException", e => console.error(e));
 process.on("unhandledRejection", reason => console.error(reason));
@@ -22,8 +30,8 @@ const properties = {};
 const templates = [];
 
 program
-  .usage("Keep npm package in sync with its template")
-  .version(pkg.version)
+  .usage(description)
+  .version(version)
   .command("[repos...]", "repos to merge")
   .option("--dry", "do not create branch/pull request")
   .option("--trace", "log level trace")

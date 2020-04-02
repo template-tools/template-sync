@@ -23,7 +23,8 @@ export class Rollup extends Merger {
     );
   }
 
-  static usedDevDependencies(content) {
+  static async usedDevDependencies(entry) {
+    const content = await entry.getString();
     const ast = recast.parse(content, {
       parser: {
         parse: source =>
@@ -66,7 +67,11 @@ export class Rollup extends Merger {
     const exp = exportDefaultDeclaration(ast);
     const templateExp = exportDefaultDeclaration(templateAST);
 
-    if (exp !== undefined && exp.properties !== undefined && templateExp !== undefined) {
+    if (
+      exp !== undefined &&
+      exp.properties !== undefined &&
+      templateExp !== undefined
+    ) {
       let output, dest;
 
       const banner = removePropertiesKey(exp.properties, "banner");
@@ -185,11 +190,13 @@ export class Rollup extends Merger {
       messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
     }
 
-    const content = recast.print(ast).code;
-    return {
-      entry: new StringContentEntry(name, content),
-      message: messages.join("\n")
-    };
+    const merged = recast.print(ast).code;
+    return original === merged
+      ? undefined
+      : {
+          entry: new StringContentEntry(name, merged),
+          message: messages.join("\n")
+        };
   }
 }
 

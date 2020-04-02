@@ -15,7 +15,6 @@ function set2lines(values) {
  *
  */
 export class MergeLineSet extends Merger {
-
   static get defaultOptions() {
     return { ...super.defaultOptions, defaultIgnore: [""] };
   }
@@ -32,24 +31,25 @@ export class MergeLineSet extends Merger {
     const ignore = new Set(options.defaultIgnore);
 
     const actions = {};
-    
-    return {
-      message: actions2message(actions, options.messagePrefix, name),
-      entry: new StringContentEntry(
-        name,
-        set2lines(
-          merge(
-            lines2set(original),
-            [
-              ...lines2set(options.expand ? context.expand(template) : template),
-              ...[...ignore].map(p => `-${p}`)
-            ],
-            "",
-            (action, hint) => aggregateActions(actions, action, hint),
-            options.mergeHints
-          )
-        )
+
+    const merged = set2lines(
+      merge(
+        lines2set(original),
+        [
+          ...lines2set(options.expand ? context.expand(template) : template),
+          ...[...ignore].map(p => `-${p}`)
+        ],
+        "",
+        (action, hint) => aggregateActions(actions, action, hint),
+        options.mergeHints
       )
-    };
+    );
+
+    return merged === original
+      ? undefined
+      : {
+          entry: new StringContentEntry(name, merged),
+          message: actions2message(actions, options.messagePrefix, name)
+        };
   }
 }

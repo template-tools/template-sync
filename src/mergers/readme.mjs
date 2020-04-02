@@ -22,7 +22,7 @@ export class Readme extends Merger {
     options = this.defaultOptions
   ) {
     const original = await destinationEntry.getString();
-    
+
     const badges = options.badges
       .sort((a, b) => (a.order > b.order ? 1 : a.order < b.order ? -1 : 0))
       .map(b => {
@@ -49,10 +49,13 @@ export class Readme extends Merger {
     } else {
       body = body.filter(l => !l.match(/^\[\!\[.*\)$/));
     }
+    const merged = [...badges, ...body].join("\n");
 
-    return {
-      entry: new StringContentEntry(destinationEntry.name,[...badges, ...body].join("\n")),
-      message: "docs(README): update from template"
-    };
+    return merged === original
+      ? undefined
+      : {
+          entry: new StringContentEntry(destinationEntry.name, merged),
+          message: "docs(README): update from template"
+        };
   }
 }

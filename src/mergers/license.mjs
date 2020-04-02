@@ -91,19 +91,21 @@ export class License extends Merger {
       }
     }
 
-    return {
-      entry: new StringContentEntry(
-        destinationEntry.name,
-        original.length > 0
-          ? original.replace(
-              /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
-              `opyright (c) ${yearsToString(years)}`
-            )
-          : context.expand(source)
-      ),
-      message: addedYears.size
-        ? `${options.messagePrefix}add year ${[...addedYears]}`
-        : `${options.messagePrefix}update from template`
-    };
+    const merged =
+      original.length > 0
+        ? original.replace(
+            /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
+            `opyright (c) ${yearsToString(years)}`
+          )
+        : context.expand(source);
+
+    return merged === original
+      ? undefined
+      : {
+          entry: new StringContentEntry(destinationEntry.name, merged),
+          message: addedYears.size
+            ? `${options.messagePrefix}add year ${[...addedYears]}`
+            : `${options.messagePrefix}update from template`
+        };
   }
 }

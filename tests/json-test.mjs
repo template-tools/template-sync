@@ -37,10 +37,30 @@ test("json empty target", async t => {
       JSON.stringify({
         key: "value"
       })
-    ),
+    )
   );
 
   t.deepEqual(JSON.parse(await commit.entry.getString()), {
     key: "value"
   });
+});
+
+test("json nop", async t => {
+  const commit = await JSONMerger.merge(
+    await createContext(),
+    new StringContentEntry(
+      FILE_NAME,
+      JSON.stringify({
+        key: "value"
+      }, undefined, 2)
+      ),
+    new StringContentEntry(
+      FILE_NAME,
+      JSON.stringify({
+        key: "value"
+      }, undefined, 2)
+    )
+  );
+
+  t.is(commit, undefined);
 });

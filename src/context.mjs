@@ -57,9 +57,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
             jspath(this.properties, expression)
         })
       },
-      files: {
-        value: new Map()
-      },
       targetBranchName: { value: targetBranchName }
     });
 
@@ -88,7 +85,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
       };
     }
 
-    if (targetBranch.repository.owner !== undefined) {
+    if (
+      targetBranch.repository.owner !== undefined &&
+      this.properties.license.owner === undefined
+    ) {
       Object.assign(this.properties.license, {
         owner: targetBranch.owner.name
       });
@@ -136,41 +136,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
     });
   }
 
-  addFile(file) {
-    file.logLevel = this.logLevel;
-    this.files.set(file.name, file);
-  }
-
-  /**
-   * all used dev modules
-   * @return {Set<string>}
-   */
-  async usedDevDependencies() {
-    const usedModuleSets = await Promise.all(
-      Array.from(this.files.values()).map(async file => {
-        if (file.name === "package.json") {
-          return file.constructor.usedDevDependencies(
-            file.targetEntry(this, { ignoreMissing: true })
-          );
-        } else {
-          const m = await file.merge(this);
-          return file.constructor.usedDevDependencies(m.content);
-        }
-      })
-    );
-
-    return usedModuleSets.reduce(
-      (sum, current) => new Set([...sum, ...current]),
-      new Set()
-    );
-  }
-
-  optionalDevDependencies(dependencies) {
-    return Array.from(this.files.values())
-      .map(file => file.constructor.optionalDevDependencies(dependencies, {}))
-      .reduce((sum, current) => new Set([...sum, ...current]), new Set());
-  }
-
   async execute() {
     if (this.properties.usedBy !== undefined) {
       const pullRequests = [];
@@ -210,22 +175,35 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
     const mergers = await template.mergers();
 
-    const commits = (
-      await Promise.all(mergers.map(async ([name,merger,options]) => {
-        let targetEntry = await targetBranch.entry(name);
-        if(targetEntry === undefined) {
-          targetEntry = new EmptyContentEntry(name);
-        }
-
-        return merger.merge(
-          this,
-          targetEntry,
-          await template.entry(name),
-          options
+    /*
+    const targetEntries = new Map();
+    await Promise.all(
+      mergers.map(async ([name]) => {
+        name = this.expand(name);
+        targetEntries.set(
+          name,
+          (await targetBranch.entry(name)) || new EmptyContentEntry(name)
         );
-      }
-      ))
-    ).filter(c => c !== undefined && c.changed);
+      })
+    );*/
+
+    const commits = (
+      await Promise.all(
+        mergers.map(async ([name, merger, options]) => {
+          const targetName = this.expand(name);
+          const targetEntry =
+            (await targetBranch.entry(targetName)) ||
+            new EmptyContentEntry(targetName);
+
+          return merger.merge(
+            this,
+            targetEntry,
+            await template.entry(name),
+            options
+          );
+        })
+      )
+    ).filter(c => c !== undefined);
 
     if (commits.length === 0) {
       this.info("-");

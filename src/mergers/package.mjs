@@ -7,6 +7,13 @@ import {
 } from "hinted-tree-merger";
 import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
+import { Rollup } from "./rollup.mjs";
+
+import {
+  optionalDevDependencies,
+  usedDevDependencies
+} from "../detect-dependencies.mjs";
+
 import {
   actions2messages,
   aggregateActions,
@@ -171,9 +178,8 @@ export class Package extends Merger {
     return new Set(["cracks", "dont-crack"].filter(m => modules.has(m)));
   }
 
-  static async usedDevDependencies(content) {
-    content = await content;
-
+  static async usedDevDependencies(entry) {
+    const content = await entry.getString();
     const pkg = content.length === 0 ? {} : JSON.parse(content);
 
     return moduleNames(pkg.release);
@@ -391,37 +397,41 @@ export class Package extends Merger {
       }
     });
 
-    let newContent = JSON.stringify(target, undefined, 2);
-    const lastChar = newContent[newContent.length - 1];
+    let merged = JSON.stringify(target, undefined, 2);
+    const lastChar = merged[merged.length - 1];
 
     // keep trailing newline
     if (originalLastChar === "\n" && lastChar === "}") {
-      newContent += "\n";
+      merged += "\n";
     }
 
-    return {
-      entry: new StringContentEntry(name, newContent),
-      message: [
-        ...messages,
-        ...actions2messages(actions, options.messagePrefix, name)
-      ].join("\n")
-    };
+    return merged === original
+      ? undefined
+      : {
+          entry: new StringContentEntry(name, merged),
+          message: [
+            ...messages,
+            ...actions2messages(actions, options.messagePrefix, name)
+          ].join("\n")
+        };
   }
 }
 
 export async function deleteUnusedDevDependencies(context, target, template) {
   if (target.devDependencies) {
     try {
-      const usedDevDependencies = await context.usedDevDependencies();
+      const mm = [Package, Rollup].map(m => [m, m.pattern]);
+      const udd = await usedDevDependencies(mm, context.targetBranch);
+
       const allKnown = new Set([
         ...Object.keys(target.devDependencies),
         ...Object.keys(template.devDependencies)
       ]);
 
-      context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
+      context.debug(`used devDependencies: ${[...udd]}`);
 
-      [...context.optionalDevDependencies(allKnown)]
-        .filter(m => !usedDevDependencies.has(m))
+      [...(await optionalDevDependencies(mm, allKnown))]
+        .filter(m => !udd.has(m))
         .forEach(m => {
           if (template.devDependencies === undefined) {
             template.devDependencies = {};

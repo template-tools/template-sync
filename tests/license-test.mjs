@@ -20,18 +20,18 @@ async function lmt(t, license, template, year, expected, message) {
       ? new EmptyContentEntry("license")
       : new StringContentEntry("license", template)
   );
-  t.is(commit.message, message);
-  t.is(await commit.entry.getString(), expected);
+
+  if (commit === undefined) {
+    t.is(message, undefined);
+    t.is(expected, undefined);
+  } else {
+    t.is(commit.message, message, "message");
+    t.is(await commit.entry.getString(), expected, "merged content");
+  }
 }
 
-lmt.title = (
-  providedTitle = "",
-  license,
-  template,
-  year,
-  expected,
-  message
-) => `license ${providedTitle} ${license} ${year} ${expected}`.trim();
+lmt.title = (providedTitle = "", license, template, year, expected, message) =>
+  `license ${providedTitle} ${license} ${year} ${expected}`.trim();
 
 test(
   lmt,
@@ -73,9 +73,7 @@ test(
   lmt,
   "Copyright (c) 2015,2017-2020 by xyz",
   "Copyright (c) {{date.year}} by {{license.owner}}",
-  2020,
-  "Copyright (c) 2015,2017-2020 by xyz",
-  "chore(license): update from template"
+  2020
 );
 
 test(

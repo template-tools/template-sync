@@ -5,7 +5,6 @@ import { Merger } from "../merger.mjs";
 import { actions2message, aggregateActions } from "../util.mjs";
 
 export class INI extends Merger {
-
   static get pattern() {
     return "**/*.ini";
   }
@@ -25,23 +24,22 @@ export class INI extends Merger {
     const template = await sourceEntry.getString();
 
     const actions = {};
-    
-    return {
-      message: actions2message(actions, options.messagePrefix, name),
-      entry: new StringContentEntry(
-        name,
-        encode(
-          merge(
-            decode(original) || {},
-            decode(
-              options.expand ? context.expand(template) : template
-            ),
-            "",
-            (action, hint) => aggregateActions(actions, action, hint),
-            options.mergeHints
-          )
-        )
+
+    const merged = encode(
+      merge(
+        decode(original) || {},
+        decode(options.expand ? context.expand(template) : template),
+        "",
+        (action, hint) => aggregateActions(actions, action, hint),
+        options.mergeHints
       )
-    };
+    );
+
+    return original === merged
+      ? undefined
+      : {
+          entry: new StringContentEntry(name, merged),
+          message: actions2message(actions, options.messagePrefix, name)
+        };
   }
 }

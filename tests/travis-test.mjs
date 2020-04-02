@@ -15,6 +15,7 @@ test(
     - npm install -g codecov
   `,
   undefined,
+  undefined,
   `before_script:
   - npm prune
 `
@@ -41,18 +42,13 @@ ${content
   .join("")}
 `,
     undefined,
+    undefined,
     expected,
     message
   );
 }
 
-travist.title = (
-  providedTitle = "",
-  template,
-  content,
-  expected,
-  message = []
-) =>
+travist.title = (providedTitle = "", template, content, expected, message) =>
   `Travis node versions ${providedTitle} ${JSON.stringify(
     template
   )} ${content} ${expected}`.trim();
@@ -83,6 +79,7 @@ test(
     }
   },
   undefined,
+  undefined,
   `language: node_js
 jobs:
   include:
@@ -110,8 +107,9 @@ before_script:
 `,
   undefined,
   {
-    properties: { node_version: "7.7.2" }
+    node_version: "7.7.2"
   },
+  undefined,
   `node_js: 7.7.2
 before_script:
   - npm prune
@@ -134,7 +132,6 @@ test(
   travist,
   ["7.7.2", "-iojs"],
   ["7.7.1", "iojs"],
-
   `node_js:
   - 7.7.1
   - 7.7.2
