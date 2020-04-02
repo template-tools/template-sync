@@ -45,3 +45,30 @@ MemoryAccounting=true
     }
   });
 });
+
+test("ini merge nop", async t => {
+  const fileName = "a.ini";
+  const commit = await INI.merge(
+    await createContext({ description: "value" }),
+    new StringContentEntry(
+      fileName,
+      `[Unit]
+After=network-online.target
+
+[Service]
+Type=notify
+`
+    ),
+    new StringContentEntry(
+      fileName,
+      `[Unit]
+After=network-online.target
+
+[Service]
+Type=notify
+`
+    )
+  );
+
+  t.is(commit,undefined, "no commit");
+});
