@@ -40,10 +40,10 @@
     "commander": "^5.0.0",
     "content-entry": "^2.3.1",
     "expression-expander": "^7.0.4",
-    "github-repository-provider": "^7.6.7",
+    "github-repository-provider": "^7.7.0",
     "hinted-tree-merger": "^3.12.2",
     "js-yaml": "^3.13.1",
-    "local-repository-provider": "^6.5.11",
+    "local-repository-provider": "^6.5.12",
     "loglevel-mixin": "^5.0.5",
     "markdown": "^0.5.0",
     "micromatch": "^4.0.2",
@@ -58,7 +58,7 @@
     "c8": "^7.1.0",
     "documentation": "^12.2.0",
     "execa": "^4.0.0",
-    "mock-repository-provider": "^5.1.42",
+    "mock-repository-provider": "^5.1.43",
     "semantic-release": "^17.0.4"
   },
   "engines": {

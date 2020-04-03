@@ -64,33 +64,30 @@ merges contents from template repo into destination repo handling some special c
 -   [Context](#context)
     -   [Parameters](#parameters)
     -   [Properties](#properties)
-    -   [usedDevDependencies](#useddevdependencies)
     -   [executeSingleRepo](#executesinglerepo)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-1)
         -   [Parameters](#parameters-1)
 -   [Merger](#merger)
-    -   [Parameters](#parameters-2)
-    -   [Properties](#properties-2)
-    -   [merge](#merge)
-        -   [Parameters](#parameters-3)
-    -   [properties](#properties-3)
-        -   [Parameters](#parameters-4)
+    -   [properties](#properties-2)
+        -   [Parameters](#parameters-2)
+-   [usedDevDependencies](#useddevdependencies)
+    -   [Parameters](#parameters-3)
 -   [Template](#template)
-    -   [Parameters](#parameters-5)
-    -   [Properties](#properties-4)
+    -   [Parameters](#parameters-4)
+    -   [Properties](#properties-3)
     -   [\_templateFrom](#_templatefrom)
-        -   [Parameters](#parameters-6)
+        -   [Parameters](#parameters-5)
     -   [mergers](#mergers)
     -   [templateFor](#templatefor)
-        -   [Parameters](#parameters-7)
+        -   [Parameters](#parameters-6)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-8)
+    -   [Parameters](#parameters-7)
 
 ## Context
 
@@ -108,12 +105,6 @@ context prepared to execute one package
 
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
-
-### usedDevDependencies
-
-all used dev modules
-
-Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 ### executeSingleRepo
 
@@ -141,25 +132,7 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ## Merger
 
-Mergable File
-
-### Parameters
-
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
-
-### Properties
-
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-### merge
-
-#### Parameters
-
--   `context` **PreparedContect** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
+Mergable content
 
 ### properties
 
@@ -170,6 +143,17 @@ Deliver some key properties
 -   `entry` **ContentEntry** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## usedDevDependencies
+
+all used dev modules
+
+### Parameters
+
+-   `mergers`  
+-   `branch`  
+
+Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 ## Template
 
@@ -208,7 +192,7 @@ sources staring wit '-' will be removed
 
 -   `context` **[Context](#context)** 
 -   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
--   `options`  
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ## ReplaceIfEmpty
 
