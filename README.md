@@ -36,7 +36,7 @@ merges contents from template repo into destination repo handling some special c
 -   Licenses - rewriting license years
 -   line set files like .npmignore and .gitignore - by merging both sets together
 -   package.json - merge (.\*)[Dd]ependencies, engines and scripts
--   rollup.conf.js - copy / rewrite
+-   rollup.conf.*js - copy / rewrite + detect dev dependencies
 -   [\*.yaml - merge](doc/yaml)
 -   [.travis.yml - merge with hints](doc/travis)
 -   [\*.toml - merge](doc/toml)
@@ -52,8 +52,8 @@ merges contents from template repo into destination repo handling some special c
 -   [arlac77/template-esm-only](https://github.com/arlac77/template-esm-only) _ava_ _travis_
 -   [arlac77/template-svelte](https://github.com/arlac77/template-svelte) _svelte_ _rollup_ _testcafe_ _travis_
 -   [arlac77/template-svelte-app](https://github.com/arlac77/template-svelte-app) _svelte_ _rollup_ _pkgbuild_ _travis_
--   [Kronos-Tools/npm-package-template](https://github.com/Kronos-Tools/npm-package-template) _mocha_
--   [Kronos-Tools/npm-package-template-minimal](https://github.com/Kronos-Tools/npm-package-template-minimal)
+-   [arlac77/template-kronos-module](https://github.com/arlac77/template-kronos-module) template-esm-only with node 13
+-   [arlac77/template-kronos-app](https://github.com/arlac77/template-kronos-app) node 13 + systemd
 
 # API
 
