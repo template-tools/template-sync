@@ -14,6 +14,8 @@ export class Travis extends YAML {
         "*": { scope: "travis", removeEmpty: true },
         "": {
           orderBy: [
+            "dist",
+            "os",
             "language",
             "addons",
             "python",
