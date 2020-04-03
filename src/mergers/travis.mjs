@@ -26,7 +26,8 @@ export class Travis extends YAML {
             "before_script",
             "after_script",
             "script",
-            "branches"
+            "branches",
+            "notifications"
           ],
         },
         "*node_js": { merge: mergeVersionsPreferNumeric },
