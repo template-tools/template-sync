@@ -1,5 +1,7 @@
 /**
  * all used dev modules
+ * @param mergers
+ * @param {Branch} branch
  * @return {Set<string>}
  */
 export async function usedDevDependencies(mergers, branch) {

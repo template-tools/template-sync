@@ -38,7 +38,7 @@ const provider = new MockProvider({
 
 const context = new Context(provider);
 
-test.skip("template constructor", async t => {
+test("template constructor", async t => {
   const template = new Template(context, ["template"]);
   t.deepEqual(template.sources, ["template"]);
   t.is(`${template}`, "template");
@@ -46,12 +46,12 @@ test.skip("template constructor", async t => {
 });
 
 
-test.skip("template source sort", async t => {
+test("template source sort", async t => {
   const t1 = await Template.templateFor(context, ["t2", "t1"]);
   t.deepEqual(t1.sources, ["t1", "t2"]);
 });
 
-test.skip("template source expression", async t => {
+test("template source expression", async t => {
   const t1t2 = await Template.templateFor(context, ["t1", "t2", "t1", "-t3"]);
   t.deepEqual(t1t2.sources, ["t1", "t2"]);
 
@@ -59,14 +59,14 @@ test.skip("template source expression", async t => {
   t.deepEqual(tx.sources, ["t1"]);
 });
 
-test.skip("template cache", async t => {
+test("template cache", async t => {
   const t1 = await Template.templateFor(context, "template");
   t.deepEqual(t1.sources, ["template"]);
   const t2 = await Template.templateFor(context, "template");
   t.is(t1, t2);
 });
 
-test.skip("template properties", async t => {
+test("template properties", async t => {
   const template = new Template(context, ["template"]);
 
   t.deepEqual(await template.properties(), {
@@ -74,7 +74,7 @@ test.skip("template properties", async t => {
   });
 });
 
-test.skip("template mergers", async t => {
+test("template mergers", async t => {
   const template = new Template(context, ["template"]);
   const mergers = await template.mergers();
 
@@ -93,7 +93,7 @@ test.skip("template mergers", async t => {
   ]);
 });
 
-test.skip("template merge travis", async t => {
+test("template merge travis", async t => {
   const template = new Template(context, ["template"]);
   const t1 = new StringContentEntry(
     ".travis.yml",

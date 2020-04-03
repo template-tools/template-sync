@@ -3,7 +3,7 @@
 [![minified size](https://badgen.net/bundlephobia/min/npm-template-sync)](https://bundlephobia.com/result?p=npm-template-sync)
 [![downloads](http://img.shields.io/npm/dm/npm-template-sync.svg?style=flat-square)](https://npmjs.org/package/npm-template-sync)
 [![GitHub Issues](https://img.shields.io/github/issues/arlac77/npm-template-sync.svg?style=flat-square)](https://github.com/arlac77/npm-template-sync/issues)
-[![Build Status](https://secure.travis-ci.org/arlac77/npm-template-sync.png)](http://travis-ci.org/arlac77/npm-template-sync)
+[![Build Status](https://travis-ci.com/arlac77/npm-template-sync.svg?branch=master)](https://travis-ci.com/arlac77/npm-template-sync)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/arlac77/npm-template-sync)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
@@ -36,7 +36,7 @@ merges contents from template repo into destination repo handling some special c
 -   Licenses - rewriting license years
 -   line set files like .npmignore and .gitignore - by merging both sets together
 -   package.json - merge (.\*)[Dd]ependencies, engines and scripts
--   rollup.conf.js - copy / rewrite
+-   rollup.conf.\*js - copy / rewrite + detect dev dependencies
 -   [\*.yaml - merge](doc/yaml)
 -   [.travis.yml - merge with hints](doc/travis)
 -   [\*.toml - merge](doc/toml)
@@ -52,8 +52,8 @@ merges contents from template repo into destination repo handling some special c
 -   [arlac77/template-esm-only](https://github.com/arlac77/template-esm-only) _ava_ _travis_
 -   [arlac77/template-svelte](https://github.com/arlac77/template-svelte) _svelte_ _rollup_ _testcafe_ _travis_
 -   [arlac77/template-svelte-app](https://github.com/arlac77/template-svelte-app) _svelte_ _rollup_ _pkgbuild_ _travis_
--   [Kronos-Tools/npm-package-template](https://github.com/Kronos-Tools/npm-package-template) _mocha_
--   [Kronos-Tools/npm-package-template-minimal](https://github.com/Kronos-Tools/npm-package-template-minimal)
+-   [arlac77/template-kronos-module](https://github.com/arlac77/template-kronos-module) template-esm-only with node 13
+-   [arlac77/template-kronos-app](https://github.com/arlac77/template-kronos-app) node 13 + systemd
 
 # API
 
@@ -64,33 +64,30 @@ merges contents from template repo into destination repo handling some special c
 -   [Context](#context)
     -   [Parameters](#parameters)
     -   [Properties](#properties)
-    -   [usedDevDependencies](#useddevdependencies)
-    -   [executeSingleRepo](#executesinglerepo)
+    -   [executeBranch](#executebranch)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-1)
         -   [Parameters](#parameters-1)
 -   [Merger](#merger)
-    -   [Parameters](#parameters-2)
-    -   [Properties](#properties-2)
-    -   [merge](#merge)
-        -   [Parameters](#parameters-3)
-    -   [properties](#properties-3)
-        -   [Parameters](#parameters-4)
+    -   [properties](#properties-2)
+        -   [Parameters](#parameters-2)
+-   [usedDevDependencies](#useddevdependencies)
+    -   [Parameters](#parameters-3)
 -   [Template](#template)
-    -   [Parameters](#parameters-5)
-    -   [Properties](#properties-4)
+    -   [Parameters](#parameters-4)
+    -   [Properties](#properties-3)
     -   [\_templateFrom](#_templatefrom)
-        -   [Parameters](#parameters-6)
+        -   [Parameters](#parameters-5)
     -   [mergers](#mergers)
     -   [templateFor](#templatefor)
-        -   [Parameters](#parameters-7)
+        -   [Parameters](#parameters-6)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-8)
+    -   [Parameters](#parameters-7)
 
 ## Context
 
@@ -109,13 +106,7 @@ context prepared to execute one package
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
 
-### usedDevDependencies
-
-all used dev modules
-
-Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
-
-### executeSingleRepo
+### executeBranch
 
 Returns **\[[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>]** 
 
@@ -141,25 +132,7 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ## Merger
 
-Mergable File
-
-### Parameters
-
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** location in the repository
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** mergin options (optional, default `{}`)
-
-### Properties
-
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-### merge
-
-#### Parameters
-
--   `context` **PreparedContect** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** merged content
+Mergable content
 
 ### properties
 
@@ -170,6 +143,17 @@ Deliver some key properties
 -   `entry` **ContentEntry** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## usedDevDependencies
+
+all used dev modules
+
+### Parameters
+
+-   `mergers`  
+-   `branch` **Branch** 
+
+Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 ## Template
 
@@ -208,7 +192,7 @@ sources staring wit '-' will be removed
 
 -   `context` **[Context](#context)** 
 -   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
--   `options`  
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ## ReplaceIfEmpty
 

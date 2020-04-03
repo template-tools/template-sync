@@ -115,7 +115,6 @@ export class Template extends LogLevelMixin(class {}) {
     }
 
     this._duringInitialization = new Promise(async (resolve, reject) => {
-      //console.log("A", this.options.key);
       this.trace(`Initialize template from ${this.sources}`);
 
       const pkg = new StringContentEntry(
@@ -132,7 +131,7 @@ export class Template extends LogLevelMixin(class {}) {
           }
 
           const name = entry.name;
-          this.trace(`template entry ${branch.fullName}/${name}`);
+          this.trace(`template entry ${branch.fullCondensedName}/${name}`);
           if (name === "package.json") {
             continue;
           }
@@ -207,7 +206,6 @@ export class Template extends LogLevelMixin(class {}) {
         try {
           const pkg = JSON.parse(await pc.getString());
 
-          //console.log(branch.fullCondensedName, pkg.template);
           result = mergeTemplate(result, pkg);
 
           const template = pkg.template;
