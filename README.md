@@ -36,7 +36,7 @@ merges contents from template repo into destination repo handling some special c
 -   Licenses - rewriting license years
 -   line set files like .npmignore and .gitignore - by merging both sets together
 -   package.json - merge (.\*)[Dd]ependencies, engines and scripts
--   rollup.conf.*js - copy / rewrite + detect dev dependencies
+-   rollup.conf.\*js - copy / rewrite + detect dev dependencies
 -   [\*.yaml - merge](doc/yaml)
 -   [.travis.yml - merge with hints](doc/travis)
 -   [\*.toml - merge](doc/toml)
@@ -64,7 +64,7 @@ merges contents from template repo into destination repo handling some special c
 -   [Context](#context)
     -   [Parameters](#parameters)
     -   [Properties](#properties)
-    -   [executeSingleRepo](#executesinglerepo)
+    -   [executeBranch](#executebranch)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties-1)
@@ -106,7 +106,7 @@ context prepared to execute one package
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
 
-### executeSingleRepo
+### executeBranch
 
 Returns **\[[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>]** 
 
@@ -151,7 +151,7 @@ all used dev modules
 ### Parameters
 
 -   `mergers`  
--   `branch`  
+-   `branch` **Branch** 
 
 Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
