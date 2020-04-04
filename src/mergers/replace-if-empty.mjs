@@ -13,7 +13,7 @@ export class ReplaceIfEmpty extends Merger {
   ) {
     return (await destinationEntry.isEmpty())
       ? {
-          message: `${options.messagePrefix}add missing {{entry.name}} from template`,
+          message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
           entry: sourceEntry
         }
       : undefined;

@@ -227,7 +227,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
     );
 
     for (const commit of commits) {
-      await prBranch.commit(commit.message, [commit.entry]);
+      //this.properties.entry = commit.entry;
+      await prBranch.commit(this.expand(commit.message), [commit.entry]);
     }
 
     try {
