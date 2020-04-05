@@ -22,9 +22,7 @@ export class Markdown extends Merger {
 
     const actions = {};
 
-    const processor = unified()
-      .use(markdown)
-      .use(stringify);
+    const processor = unified().use(markdown).use(stringify);
 
     let content;
 

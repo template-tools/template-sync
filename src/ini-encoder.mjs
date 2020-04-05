@@ -19,7 +19,7 @@ export function encode(obj, opt) {
 
   for (const [key, val] of Object.entries(obj)) {
     if (val && Array.isArray(val)) {
-      val.forEach(function(item) {
+      val.forEach(function (item) {
         out +=
           safe(opt.inlineArrays ? key : key + "[]") +
           separator +
@@ -37,7 +37,7 @@ export function encode(obj, opt) {
     out = "[" + safe(opt.section) + "]" + EOL + out;
   }
 
-  children.forEach(function(key) {
+  children.forEach(function (key) {
     const parsedSection = dotSplit(key).join("\\.");
     const section = (opt.section ? opt.section + "." : "") + parsedSection;
     const child = encode(obj[key], {
@@ -59,7 +59,7 @@ function dotSplit(str) {
     .replace(/\1/g, "\u0002LITERAL\\1LITERAL\u0002")
     .replace(/\\\./g, "\u0001")
     .split(/\./)
-    .map(function(part) {
+    .map(function (part) {
       return part
         .replace(/\1/g, "\\.")
         .replace(/\2LITERAL\\1LITERAL\2/g, "\u0001");
@@ -74,7 +74,7 @@ export function decode(str, opt = {}) {
   const re = /^\[([^\]]*)\]$|^([^=]+)(?:=(.*))?$/i;
   const lines = str.split(/[\r\n]+/g);
   const commentMatch = /^\s*[;#]/;
-  lines.forEach(function(line) {
+  lines.forEach(function (line) {
     if (!line || line.match(commentMatch)) {
       return;
     }
@@ -124,7 +124,7 @@ export function decode(str, opt = {}) {
   // {a:{y:1},"a.b":{x:2}} --> {a:{y:1,b:{x:2}}}
   // use a filter to return the keys that have to be deleted.
   Object.keys(out)
-    .filter(function(key) {
+    .filter(function (key) {
       if (
         !out[key] ||
         typeof out[key] !== "object" ||
@@ -138,7 +138,7 @@ export function decode(str, opt = {}) {
       let p = out;
       const lastKey = parts.pop();
       const unescapedLastKey = lastKey.replace(/\\\./g, ".");
-      parts.forEach(function(part) {
+      parts.forEach(function (part) {
         if (!p[part] || typeof p[part] !== "object") {
           p[part] = {};
         }
@@ -150,7 +150,7 @@ export function decode(str, opt = {}) {
       p[unescapedLastKey] = out[key];
       return true;
     })
-    .forEach(function(del) {
+    .forEach(function (del) {
       delete out[del];
     });
 

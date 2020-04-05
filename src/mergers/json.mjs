@@ -39,7 +39,7 @@ export class JSONMerger extends Merger {
       options.replacer,
       options.space
     );
-    
+
     return merged === original
       ? undefined
       : {

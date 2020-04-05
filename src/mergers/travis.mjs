@@ -30,17 +30,17 @@ export class Travis extends YAML {
             "script",
             "branches",
             "notifications"
-          ],
+          ]
         },
         "*node_js": { merge: mergeVersionsPreferNumeric },
         "jobs.include": {
           key: "stage",
-          orderBy: ["test", "doc", "release"],
+          orderBy: ["test", "doc", "release"]
         } /*,
         "*stage": {
           orderBy: ["node_js", "script"]
-        }*/,
-      },
+        }*/
+      }
     };
   }
 }

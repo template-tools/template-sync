@@ -25,27 +25,27 @@ export class Context extends LogLevelMixin(class _Context {}) {
     super();
     Object.defineProperties(this, {
       options: {
-        value: options,
+        value: options
       },
       templateSources: {
-        value: asArray(options.template),
+        value: asArray(options.template)
       },
       track: {
-        value: options.track || false,
+        value: options.track || false
       },
       dry: {
-        value: options.dry || false,
+        value: options.dry || false
       },
       provider: {
-        value: provider,
+        value: provider
       },
       properties: {
         value: {
           date: { year: new Date().getFullYear() },
           license: {},
           templateSources: [],
-          ...options.properties,
-        },
+          ...options.properties
+        }
       },
       ctx: {
         value: createContext({
@@ -55,10 +55,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
           rightMarker: "}}",
           markerRegexp: "{{([^}]+)}}",
           evaluate: (expression, context, path) =>
-            jspath(this.properties, expression),
-        }),
+            jspath(this.properties, expression)
+        })
       },
-      targetBranchName: { value: targetBranchName },
+      targetBranchName: { value: targetBranchName }
     });
 
     this.logLevel = options.logLevel;
@@ -82,7 +82,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     if (targetBranch.provider.name === "GithubProvider") {
       this.properties.github = {
         user: targetBranch.owner.name,
-        repo: targetBranch.repository.name,
+        repo: targetBranch.repository.name
       };
     }
 
@@ -91,7 +91,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       this.properties.license.owner === undefined
     ) {
       Object.assign(this.properties.license, {
-        owner: targetBranch.owner.name,
+        owner: targetBranch.owner.name
       });
     }
 
@@ -110,7 +110,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     this.templateSources.push(...this.properties.templateSources);
 
     const template = await Template.templateFor(this, this.templateSources, {
-      logLevel: this.logLevel,
+      logLevel: this.logLevel
     });
 
     if (template === undefined) {
@@ -123,17 +123,17 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
     this.debug({
       message: "detected properties",
-      properties: this.properties,
+      properties: this.properties
     });
 
     Object.defineProperties(this, {
       targetBranch: { value: targetBranch },
-      template: { value: template },
+      template: { value: template }
     });
 
     this.debug({
       message: "initialize",
-      branch: targetBranch.fullCondensedName,
+      branch: targetBranch.fullCondensedName
     });
   }
 
@@ -163,7 +163,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
     this.debug({
       message: "execute",
-      branch: targetBranch.fullCondensedName,
+      branch: targetBranch.fullCondensedName
     });
 
     const pullRequests = [];
@@ -193,7 +193,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
         mergers.map(async ([name, merger, options]) => {
           this.trace({
             message: "merge",
-            name,
+            name
           });
 
           const targetName = this.expand(name);
@@ -209,14 +209,14 @@ export class Context extends LogLevelMixin(class _Context {}) {
           );
         })
       )
-    ).filter((c) => c !== undefined);
+    ).filter(c => c !== undefined);
 
     if (commits.length === 0) {
       this.info("-");
       return pullRequests;
     }
 
-    this.info(commits.map((c) => `${c.message}`).join(","));
+    this.info(commits.map(c => `${c.message}`).join(","));
 
     if (this.dry) {
       return pullRequests;
@@ -236,13 +236,13 @@ export class Context extends LogLevelMixin(class _Context {}) {
         title: `merge from ${template.name}`,
         body: commits
           .map(
-            (c) =>
+            c =>
               `${c.entry.name}
 ---
 - ${c.message}
 `
           )
-          .join("\n"),
+          .join("\n")
       });
       this.info({ message: "PR", pr: pullRequest });
 

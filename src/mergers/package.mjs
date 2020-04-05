@@ -428,9 +428,8 @@ export async function deleteUnusedDevDependencies(context, target, template) {
         ...Object.keys(template.devDependencies)
       ]);
 
-
       const ddd = [];
- 
+
       [...(await optionalDevDependencies(mm, allKnown))]
         .filter(m => !udd.has(m))
         .forEach(m => {
@@ -442,7 +441,7 @@ export async function deleteUnusedDevDependencies(context, target, template) {
         });
 
       context.debug(`used devDependencies: ${[...udd]}`);
-      if(ddd.length) {
+      if (ddd.length) {
         context.debug(`deleted devDependency: ${ddd}`);
       }
     } catch (e) {

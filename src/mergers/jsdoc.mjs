@@ -1,8 +1,10 @@
-import { JSONMerger } from './json.mjs';
+import { JSONMerger } from "./json.mjs";
 
 export class JSDoc extends JSONMerger {
   static optionalDevDependencies(dependencies) {
-    return new Set(Array.from(dependencies).filter(m => m.match(/babel-preset/)));
+    return new Set(
+      Array.from(dependencies).filter(m => m.match(/babel-preset/))
+    );
   }
 
   static async usedDevDependencies(entry) {

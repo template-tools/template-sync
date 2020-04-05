@@ -26,8 +26,7 @@ export async function optionalDevDependencies(mergers, dependencies) {
   return oneSet(all);
 }
 
-function oneSet(all)
-{
+function oneSet(all) {
   const combined = new Set();
   all.forEach(element => element.forEach(e => combined.add(e)));
   return combined;

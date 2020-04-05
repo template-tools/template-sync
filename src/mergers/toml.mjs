@@ -3,10 +3,7 @@ import parse from "@iarna/toml/parse-string.js";
 import { StringContentEntry } from "content-entry";
 import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
-import {
-  actions2message,
-  aggregateActions
-} from "../util.mjs";
+import { actions2message, aggregateActions } from "../util.mjs";
 
 export class TOML extends Merger {
   static get pattern() {
