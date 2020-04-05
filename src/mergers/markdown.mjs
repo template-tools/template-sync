@@ -24,19 +24,19 @@ export class Markdown extends Merger {
 
     const processor = unified().use(markdown).use(stringify);
 
-    let content;
+    let merged;
 
     /*processor.process(original, (err, file) => {
       content = file.contents;
     });*/
 
     processor.process(template, (err, file) => {
-      content = file.contents;
+      merged = file.contents;
     });
 
-    return {
+    return merged === original ? undefined : {
       message: actions2message(actions, options.messagePrefix, name),
-      entry: new StringContentEntry(name, content)
+      entry: new StringContentEntry(name, merged)
     };
   }
 }
