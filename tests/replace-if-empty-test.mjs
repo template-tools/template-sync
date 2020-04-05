@@ -8,10 +8,11 @@ test("replace-if-empty differ", async t => {
   const merged = await ReplaceIfEmpty.merge(
     await createContext(),
     new EmptyContentEntry("aFile"),
-    new StringContentEntry("aFile", "Line 1x")
+    new StringContentEntry("bFile", "Line 1x")
   );
 
   t.is(await merged.entry.getString(), "Line 1x");
+  //t.is(await merged.entry.name, "aFile");
 });
 
 test("replace-if-empty nop", async t => {
