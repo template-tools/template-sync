@@ -22,13 +22,34 @@ put the following merge into your template
 the following hints are used
 
 ```json
-{"*": { "scope": "travis", "removeEmpty": true },
-"*node_js": { "merge": "mergeVersionsPreferNumeric" },
-"jobs.include": {
-    "key": "stage",
-    "orderBy": ["test", "doc", "release"]
-    }
-}
+       {
+        "*": { "scope": "travis", "removeEmpty": true },
+        "": {
+          "orderBy": [
+            "dist",
+            "os",
+            "language",
+            "addons",
+            "python",
+            "php",
+            "rvm",
+            "node_js",
+            "env",
+            "install",
+            "jobs",
+            "before_script",
+            "after_script",
+            "script",
+            "branches",
+            "notifications"
+          ]
+        },
+        "*node_js": { "merge": "mergeVersionsPreferNumeric" },
+        "jobs.include": {
+          "key": "stage",
+          "orderBy": ["test", "doc", "release"]
+        }
+      }
 ```
 
 # example
