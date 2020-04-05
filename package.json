@@ -47,6 +47,7 @@
     "loglevel-mixin": "^5.0.5",
     "markdown": "^0.5.0",
     "micromatch": "^4.0.2",
+    "one-time-execution-method": "^2.0.0",
     "recast": "^0.18.8",
     "remark-parse": "^8.0.0",
     "remark-stringify": "^8.0.0",

@@ -1,3 +1,4 @@
+import { replaceWithOneTimeExecutionMethod } from "one-time-execution-method";
 import micromatch from "micromatch";
 import {
   merge,
@@ -93,10 +94,6 @@ export class Template extends LogLevelMixin(class {}) {
   async entry(name) {
     await this.initialize();
 
-    /*console.log("ENTRY", name, this.entryCache.get(name), [
-      ...this.entryCache.keys()
-    ]);*/
-
     const entry = this.entryCache.get(name);
     if (entry === undefined) {
       throw new Error(`No such entry ${name}`);
@@ -105,56 +102,39 @@ export class Template extends LogLevelMixin(class {}) {
     return entry;
   }
 
-  initialize() {
-    if (this._duringInitialization) {
-      return this._duringInitialization;
-    }
+  async initialize() {
+    this.trace(`Initialize template from ${this.sources}`);
 
-    if (this.entryCache.size > 0) {
-      return;
-    }
+    const pkg = new StringContentEntry(
+      "package.json",
+      JSON.stringify(await this._templateFrom(this.sources, true))
+    );
 
-    this._duringInitialization = new Promise(async (resolve, reject) => {
-      this.trace(`Initialize template from ${this.sources}`);
+    this.entryCache.set(pkg.name, pkg);
 
-      const pkg = new StringContentEntry(
-        "package.json",
-        JSON.stringify(await this._templateFrom(this.sources, true))
-      );
+    for (const branch of this.branches) {
+      for await (const entry of branch.entries()) {
+        if (!entry.isBlob) {
+          continue;
+        }
 
-      this.entryCache.set(pkg.name, pkg);
+        const name = entry.name;
+        this.trace(`template entry ${branch.fullCondensedName}/${name}`);
+        if (name === "package.json") {
+          continue;
+        }
 
-      for (const branch of this.branches) {
-        for await (const entry of branch.entries()) {
-          if (!entry.isBlob) {
-            continue;
-          }
-
-          const name = entry.name;
-          this.trace(`template entry ${branch.fullCondensedName}/${name}`);
-          if (name === "package.json") {
-            continue;
-          }
-
-          const ec = this.entryCache.get(entry.name);
-          if (ec) {
-            this.entryCache.set(
-              name,
-              await this.mergeEntry(this.context, entry, ec)
-            );
-          } else {
-            this.entryCache.set(name, entry);
-          }
+        const ec = this.entryCache.get(entry.name);
+        if (ec) {
+          this.entryCache.set(
+            name,
+            await this.mergeEntry(this.context, entry, ec)
+          );
+        } else {
+          this.entryCache.set(name, entry);
         }
       }
-
-      this._duringInitialization = undefined;
-      //console.log("B", this.options.key, [...this.entryCache.keys()]);
-
-      resolve();
-    });
-
-    return this._duringInitialization;
+    }
   }
 
   async mergeEntry(ctx, a, b) {
@@ -341,6 +321,8 @@ export class Template extends LogLevelMixin(class {}) {
     );
   }
 }
+
+replaceWithOneTimeExecutionMethod(Template.prototype, "initialize");
 
 export function mergeTemplate(a, b) {
   const mvl = { keepHints: true, merge: mergeVersionsLargest };
