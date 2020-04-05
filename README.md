@@ -50,7 +50,7 @@ merges contents from template repo into destination repo handling some special c
 
 -   [arlac77/template-cli-app](https://github.com/arlac77/template-cli-app) _rollup_ _ava_ _travis_
 -   [arlac77/template-esm-only](https://github.com/arlac77/template-esm-only) _ava_ _travis_
--   [arlac77/template-svelte](https://github.com/arlac77/template-svelte) _svelte_ _rollup_ _testcafe_ _travis_
+-   [arlac77/template-svelte-component](https://github.com/arlac77/template-svelte-component) _svelte_ _rollup_ _testcafe_ _travis_
 -   [arlac77/template-svelte-app](https://github.com/arlac77/template-svelte-app) _svelte_ _rollup_ _pkgbuild_ _travis_
 -   [arlac77/template-kronos-module](https://github.com/arlac77/template-kronos-module) template-esm-only with node 13
 -   [arlac77/template-kronos-app](https://github.com/arlac77/template-kronos-app) node 13 + systemd
