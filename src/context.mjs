@@ -49,7 +49,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       },
       ctx: {
         value: createContext({
-          properties: Object.assign({}, this.properties),
+          properties: this.properties,
           keepUndefinedValues: true,
           leftMarker: "{{",
           rightMarker: "}}",
