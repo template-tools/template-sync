@@ -22,21 +22,24 @@ export class Markdown extends Merger {
 
     const actions = {};
 
+    const templateTree = unified().use(markdown).parse(template);
+    const originalTree = unified().use(markdown).parse(original);
+
+    //console.log(JSON.stringify(templateTree, undefined, 2));
+
     const processor = unified().use(markdown).use(stringify);
 
     let merged;
-
-    /*processor.process(original, (err, file) => {
-      content = file.contents;
-    });*/
 
     processor.process(template, (err, file) => {
       merged = file.contents;
     });
 
-    return merged === original ? undefined : {
-      message: actions2message(actions, options.messagePrefix, name),
-      entry: new StringContentEntry(name, merged)
-    };
+    return merged === original
+      ? undefined
+      : {
+          message: actions2message(actions, options.messagePrefix, name),
+          entry: new StringContentEntry(name, merged)
+        };
   }
 }
