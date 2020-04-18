@@ -23,6 +23,7 @@ const templateCache = new Map();
  *
  * @property {Conext} context
  * @property {string[]} sources
+ * @property {Object[]} mergers
  * @property {Set<Branch>} branches all used branches direct and inherited
  * @property {Set<Branch>} initialBranches root branches used to define the template
  */
@@ -70,7 +71,8 @@ export class Template extends LogLevelMixin(class {}) {
       branches: { value: new Set() },
       initialBranches: { value: new Set() },
       entryCache: { value: new Map() },
-      options: { value: options }
+      options: { value: options },
+      mergers: { value: [] }
     });
 
     this.logLevel = options.logLevel;
@@ -105,10 +107,27 @@ export class Template extends LogLevelMixin(class {}) {
   async initialize() {
     this.trace(`Initialize template from ${this.sources}`);
 
-    const pkg = new StringContentEntry(
-      "package.json",
-      JSON.stringify(await this._templateFrom(this.sources, true))
-    );
+    const pj = await this._templateFrom(this.sources, true);
+
+    if (pj.template && pj.template.mergers) {
+      this.mergers.push(
+        ...pj.template.mergers
+          .map(m => {
+            m.factory = mergers.find(f => f.name === m.type) || ReplaceIfEmpty;
+            m.options = { ...m.factory.defaultOptions, ...m.options };
+            return m;
+          })
+          .sort((a, b) => {
+            // order default pattern to the last
+
+            if (a.pattern === "**/*") return 1;
+            if (b.pattern === "**/*") return -1;
+            return 0;
+          })
+      );
+    }
+
+    const pkg = new StringContentEntry("package.json", JSON.stringify(pj));
 
     this.entryCache.set(pkg.name, pkg);
 
@@ -138,13 +157,19 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   async mergeEntry(ctx, a, b) {
-    for (const merger of mergers) {
+    for (const merger of this.mergers) {
       const found = micromatch([a.name], merger.pattern);
+      this.trace(
+        `merge ${merger.type} ${a.name} ${merger.pattern} ${
+          found.length ? "true" : "false"
+        }`
+      );
+
       if (found.length) {
-        const commit = await merger.merge(ctx, a, b, {
-          ...merger.defaultOptions,
+        const commit = await merger.factory.merge(ctx, a, b, {
+          ...merger.options,
           mergeHints: Object.fromEntries(
-            Object.entries(merger.defaultOptions.mergeHints).map(([k, v]) => [
+            Object.entries(merger.options.mergeHints).map(([k, v]) => [
               k,
               { ...v, keepHints: true }
             ])
@@ -226,44 +251,28 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
-   *
+   * @return {Object}
    */
-  async mergers() {
+  async entryMergers() {
     await this.initialize();
-
-    const pkg = await this.package();
-
-    // order default pattern to the last
-    const mappings = pkg.template.mergers.sort((a, b) => {
-      if (a.pattern === "**/*") return 1;
-      if (b.pattern === "**/*") return -1;
-      return 0;
-    });
-
-    const factories = mergers;
 
     let alreadyPresent = new Set();
     const names = [...this.entryCache.values()]
       .filter(entry => entry.isBlob)
       .map(entry => entry.name);
 
-    return mappings
+    return this.mergers
       .map(mapping => {
         const found = micromatch(names, mapping.pattern);
         const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
 
         alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
 
-        return notAlreadyProcessed.map(name => {
-          const factory =
-            factories.find(f => f.name === mapping.type) || ReplaceIfEmpty;
-
-          return [
-            name,
-            factory,
-            { ...factory.defaultOptions, ...mapping.options }
-          ];
-        });
+        return notAlreadyProcessed.map(name => [
+          name,
+          mapping.factory,
+          mapping.options
+        ]);
       })
       .reduce((last, current) => Array.from([...last, ...current]), []);
   }

@@ -174,19 +174,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       pullRequests.push(await template.addUsedPackage(targetBranch));
     }
 
-    const mergers = await template.mergers();
-
-    /*
-    const targetEntries = new Map();
-    await Promise.all(
-      mergers.map(async ([name]) => {
-        name = this.expand(name);
-        targetEntries.set(
-          name,
-          (await targetBranch.entry(name)) || new EmptyContentEntry(name)
-        );
-      })
-    );*/
+    const mergers = await template.entryMergers();
 
     const commits = (
       await Promise.all(

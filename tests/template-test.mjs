@@ -5,6 +5,7 @@ import { StringContentEntry } from "content-entry";
 import { Template } from "../src/template.mjs";
 import { Context } from "../src/context.mjs";
 import { Package } from "../src/mergers/package.mjs";
+import { Travis } from "../src/mergers/travis.mjs";
 
 const provider = new MockProvider({
   template: {
@@ -45,7 +46,6 @@ test("template constructor", async t => {
   t.is(template.name, "template");
 });
 
-
 test("template source sort", async t => {
   const t1 = await Template.templateFor(context, ["t2", "t1"]);
   t.deepEqual(t1.sources, ["t1", "t2"]);
@@ -66,6 +66,27 @@ test("template cache", async t => {
   t.is(t1, t2);
 });
 
+test("template mergers", async t => {
+  const template = new Template(context, ["template"]);
+
+  await template.initialize();
+
+  t.deepEqual(template.mergers, [
+    {
+      type: "Package",
+      factory: Package,
+      pattern: "package.json",
+      options: { ...Package.defaultOptions, o1: 77 }
+    },
+    {
+      type: "Travis",
+      factory: Travis,
+      pattern: ".travis.yml",
+      options: { ...Travis.defaultOptions }
+    }
+  ]);
+});
+
 test("template properties", async t => {
   const template = new Template(context, ["template"]);
 
@@ -74,9 +95,9 @@ test("template properties", async t => {
   });
 });
 
-test("template mergers", async t => {
+test("template entryMergers", async t => {
   const template = new Template(context, ["template"]);
-  const mergers = await template.mergers();
+  const mergers = await template.entryMergers();
 
   t.deepEqual(mergers[0], [
     "package.json",
@@ -95,13 +116,15 @@ test("template mergers", async t => {
 
 test("template merge travis", async t => {
   const template = new Template(context, ["template"]);
+  await template.initialize();
+
   const t1 = new StringContentEntry(
     ".travis.yml",
     `jobs:
   include:
     - stage: test
       node_js:
-        - 13.8.0
+        - 13.13.0
 `
   );
   const t2 = new StringContentEntry(
@@ -124,13 +147,13 @@ test("template merge travis", async t => {
       script:
         - npm run cover
         - npx codecov
-      node_js: 13.8.0
+      node_js: 13.13.0
 `
   );
 });
 
 test("template merged entries", async t => {
-  const template = new Template(context, ["template"],{ key: 'a'});
+  const template = new Template(context, ["template"], { key: "a" });
 
   for (const i of ["a", "b"]) {
     const f = await template.entry(`file_${i}`);
@@ -140,15 +163,26 @@ test("template merged entries", async t => {
 });
 
 test("template package content", async t => {
-  const template = new Template(context, ["template"],{ key: 'b'});
+  const template = new Template(context, ["template"], { key: "b" });
 
   t.deepEqual(await template.package(), {
     devDependencies: { ava: "^2.4.0", rollup: "^1.29.1" },
     template: {
       properties: { a: 1 },
       mergers: [
-        { type: "Package", pattern: "package.json", options: { o1: 77 } },
-        { type: "Travis", pattern: ".travis.yml" }
+        {
+          type: "Package",
+          pattern: "package.json",
+          options: { ...Package.defaultOptions, o1: 77 }
+        },
+        {
+          type: "Travis",
+          pattern: ".travis.yml",
+          options: {
+            ...Travis.defaultOptions,
+            mergeHints: { ...Travis.defaultOptions.mergeHints, "*node_js": {} }
+          }
+        }
       ],
       inheritFrom: ["template_b"]
     }
