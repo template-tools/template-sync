@@ -11,6 +11,7 @@ export class Readme extends Merger {
 
   static get defaultOptions() {
     return {
+      ...super.defaultOptions,
       badges: []
     };
   }
