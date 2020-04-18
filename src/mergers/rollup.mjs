@@ -55,7 +55,7 @@ export class Rollup extends Merger {
   ) {
     const name = destinationEntry.name;
     const templateContent = await sourceEntry.getString();
-    const original = await destinationEntry.getString();
+    const original = (await destinationEntry.isEmpty()) ? templateContent : await destinationEntry.getString();
 
     let messages = [];
 
