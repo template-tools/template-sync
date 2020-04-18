@@ -159,13 +159,9 @@ export class Template extends LogLevelMixin(class {}) {
   async mergeEntry(ctx, a, b) {
     for (const merger of this.mergers) {
       const found = micromatch([a.name], merger.pattern);
-      this.trace(
-        `merge ${merger.type} ${a.name} ${merger.pattern} ${
-          found.length ? "true" : "false"
-        }`
-      );
-
       if (found.length) {
+        this.trace(`merge ${merger.type} ${a.name} ${merger.pattern}`);
+  
         const commit = await merger.factory.merge(ctx, a, b, {
           ...merger.options,
           mergeHints: Object.fromEntries(
