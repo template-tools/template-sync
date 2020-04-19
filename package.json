@@ -35,21 +35,21 @@
   "dependencies": {
     "@babel/core": "^7.9.0",
     "@iarna/toml": "^2.2.3",
-    "aggregation-repository-provider": "^2.6.48",
+    "aggregation-repository-provider": "^2.6.49",
     "babylon": "^6.18.0",
     "commander": "^5.0.0",
     "content-entry": "^2.3.2",
     "expression-expander": "^7.0.4",
-    "github-repository-provider": "^7.8.3",
+    "github-repository-provider": "^7.8.4",
     "hinted-tree-merger": "^3.12.6",
     "js-yaml": "^3.13.1",
-    "local-repository-provider": "^6.5.16",
+    "local-repository-provider": "^6.5.17",
     "loglevel-mixin": "^5.0.6",
     "markdown": "^0.5.0",
     "micromatch": "^4.0.2",
     "one-time-execution-method": "^2.0.1",
     "recast": "^0.19.0",
-    "remark-parse": "^8.0.0",
+    "remark-parse": "^8.0.1",
     "remark-stringify": "^8.0.0",
     "remove-sensible-values": "^1.0.6",
     "unified": "^9.0.0"
@@ -59,11 +59,11 @@
     "c8": "^7.1.0",
     "documentation": "^12.3.0",
     "execa": "^4.0.0",
-    "mock-repository-provider": "^5.1.46",
+    "mock-repository-provider": "^5.1.47",
     "semantic-release": "^17.0.6"
   },
   "engines": {
-    "node": ">=13.12.0"
+    "node": ">=13.13.0"
   },
   "repository": {
     "type": "git",
