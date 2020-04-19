@@ -14,7 +14,23 @@ test("MergeLineSet lines remove", async t => {
   );
 
   t.is(await commit.entry.getString(), ["Line 3", "Line 2"].join("\n"));
- // t.is(commit.message, "chore(something): remove Line 1\nchore(something): add Line 2");
+  // t.is(commit.message, "chore(something): remove Line 1\nchore(something): add Line 2");
+});
+
+test("MergeLineSet keepHints", async t => {
+  const commit = await MergeLineSet.merge(
+    await createContext(),
+    new StringContentEntry("aFile", ["Line 3"].join("\n")),
+    new StringContentEntry("aFile", ["-Line 1", "Line 2"].join("\n")),
+    {
+      mergeHints: { "*": { keepHints: true } }
+    }
+  );
+
+  t.is(
+    await commit.entry.getString(),
+    ["Line 3", "-Line 1", "Line 2"].join("\n")
+  );
 });
 
 test("MergeLineSet nop", async t => {
