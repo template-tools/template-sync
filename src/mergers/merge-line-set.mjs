@@ -7,8 +7,10 @@ function lines2set(content) {
   return new Set(content.split(/\r?\n/));
 }
 
-function set2lines(values) {
-  return Array.from(values).join("\n");
+function set2lines(values, options) {
+  const nl = "\n";
+  const r = Array.from(values).join(nl);
+  return options.trailingNewline ? r + nl : r;
 }
 
 /**
@@ -16,7 +18,7 @@ function set2lines(values) {
  */
 export class MergeLineSet extends Merger {
   static get defaultOptions() {
-    return { ...super.defaultOptions, defaultIgnore: [""] };
+    return { ...super.defaultOptions, trailingNewline: true, defaultIgnore: [""] };
   }
 
   static async merge(
@@ -42,7 +44,8 @@ export class MergeLineSet extends Merger {
         "",
         (action, hint) => aggregateActions(actions, action, hint),
         options.mergeHints
-      )
+      ),
+      options
     );
 
     return merged === original

@@ -33,12 +33,14 @@ test("MergeLineSet keepHints", async t => {
   );
 });
 
+
 test("MergeLineSet nop", async t => {
   const commit = await MergeLineSet.merge(
     await createContext(),
-    new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n")),
+    new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n") + "\n"),
     new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n"))
   );
 
   t.is(commit, undefined);
 });
+
