@@ -191,6 +191,7 @@ export class Package extends Merger {
     sourceEntry,
     options = this.defaultOptions
   ) {
+
     const messages = [];
     const name = destinationEntry.name;
     const templateContent = await sourceEntry.getString();
@@ -260,7 +261,6 @@ export class Package extends Merger {
       (action, hint) => aggregateActions(actions, action, hint),
       {
         "": { orderBy: sortedKeys },
-        "*": { scope: "package", type: "chore" },
         keywords: { removeEmpty: true, compare, type: "docs" },
         repository: { compare },
         files: { compare, scope: "files", removeEmpty: true },
@@ -345,7 +345,8 @@ export class Package extends Merger {
         },
         "template.usedBy": { merge: mergeSkip },
         "template.repository": { remove: true },
-        ...options.mergeHints
+        ...options.mergeHints,
+        "*": { scope: "package", type: "chore" }
       }
     );
 
