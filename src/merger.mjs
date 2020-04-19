@@ -10,7 +10,7 @@ export class Merger {
     return {
       messagePrefix: "",
       expand: true,
-      mergeHints: {}
+      mergeHints: { "*" : {}}
     };
   }
 
