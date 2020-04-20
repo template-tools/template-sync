@@ -11,11 +11,15 @@ export class ReplaceIfEmpty extends Merger {
     sourceEntry,
     options = this.defaultOptions
   ) {
-    return (await destinationEntry.isEmpty())
-      ? {
-          message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
-          entry: new StringContentEntry(destinationEntry.name, await sourceEntry.getString())
-        }
-      : undefined;
+    if(await destinationEntry.isEmpty()) {
+      const source = await sourceEntry.getString();
+
+      return {
+        message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
+        entry: new StringContentEntry(destinationEntry.name,
+           options.expand ? context.expand(source) : source)
+      };
+    }
+    return undefined;
   }
 }

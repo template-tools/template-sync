@@ -11,7 +11,9 @@ export class Replace extends Merger {
     sourceEntry,
     options = this.defaultOptions
   ) {
-    const source = await sourceEntry.getString();
+    let source = await sourceEntry.getString();
+    if(options.expand) { source = context.expand(source); }
+
     return (await destinationEntry.getString()) === source
       ? undefined
       : {
