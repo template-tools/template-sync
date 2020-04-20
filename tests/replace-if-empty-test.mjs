@@ -12,14 +12,14 @@ test("replace-if-empty differ", async t => {
   );
 
   t.is(await merged.entry.getString(), "Line 1x");
-  //t.is(await merged.entry.name, "aFile");
+  t.is(await merged.entry.name, "aFile");
 });
 
 test("replace-if-empty nop", async t => {
   const merged = await ReplaceIfEmpty.merge(
     await createContext(),
     new StringContentEntry("aFile", "Line 1"),
-    new StringContentEntry("aFile", "Line 1")
+    new StringContentEntry("bFile", "Line 1")
   );
 
   t.is(merged, undefined);
