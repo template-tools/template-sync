@@ -1,3 +1,4 @@
+import { StringContentEntry } from "content-entry"; 
 import { Merger } from "../merger.mjs";
 
 /**
@@ -10,12 +11,12 @@ export class Replace extends Merger {
     sourceEntry,
     options = this.defaultOptions
   ) {
-    return (await destinationEntry.getString()) ===
-      (await sourceEntry.getString())
+    const source = await sourceEntry.getString();
+    return (await destinationEntry.getString()) === source
       ? undefined
       : {
           message: `${options.messagePrefix}overwrite {{entry.name}} with template content`,
-          entry: sourceEntry
+          entry: new StringContentEntry(destinationEntry.name, source)
         };
   }
 }
