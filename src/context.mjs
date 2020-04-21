@@ -79,15 +79,24 @@ export class Context extends LogLevelMixin(class _Context {}) {
       throw new Error(`Unable to find branch ${this.targetBranchName}`);
     }
 
+    const repository = targetBranch.repository;
+
+    this.properties.repository = {
+      name: repository.name,
+      url: repository.url,
+      type: repository.type,
+      owner: targetBranch.owner.name
+    };
+
     if (targetBranch.provider.name === "GithubProvider") {
       this.properties.github = {
         user: targetBranch.owner.name,
-        repo: targetBranch.repository.name
+        repo: repository.name
       };
     }
 
     if (
-      targetBranch.repository.owner !== undefined &&
+      repository.owner !== undefined &&
       this.properties.license.owner === undefined
     ) {
       Object.assign(this.properties.license, {
@@ -96,10 +105,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
     }
 
     if (
-      targetBranch.repository.description !== undefined &&
+      repository.description !== undefined &&
       this.properties.description === undefined
     ) {
-      this.properties.description = targetBranch.repository.description;
+      this.properties.description = repository.description;
     }
 
     try {

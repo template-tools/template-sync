@@ -20,6 +20,10 @@ test("context prepare", async t => {
   t.is(context.template.name, TEMPLATE_REPO);
   t.is(context.properties.mySpecialKey, "mySpecialValue");
   t.is(context.properties.name, "sync-test-repository");
+
+  t.is(context.properties.repository.name, "sync-test-repository");
+  t.is(context.properties.repository.owner, "arlac77");
+  t.is(context.properties.repository.type, "git");
 });
 
 test("context execute - PR", async t => {
