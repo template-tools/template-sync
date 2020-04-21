@@ -107,7 +107,7 @@ export class Template extends LogLevelMixin(class {}) {
   async initialize() {
     this.trace(`Initialize template from ${this.sources}`);
 
-    const pj = await this._templateFrom(this.sources, true);
+    const pj = await this._templateFrom(this.sources);
 
     if (pj.template && pj.template.mergers) {
       this.mergers.push(
@@ -161,7 +161,7 @@ export class Template extends LogLevelMixin(class {}) {
       const found = micromatch([a.name], merger.pattern);
       if (found.length) {
         this.trace(`merge ${merger.type} ${a.name} ${merger.pattern}`);
-  
+
         const commit = await merger.factory.merge(ctx, a, b, {
           ...merger.options,
           mergeHints: Object.fromEntries(
@@ -183,21 +183,28 @@ export class Template extends LogLevelMixin(class {}) {
   /**
    * load all templates and collects the files
    * @param {string|Object} sources repo nmae or package content
+   * @param {string[]} inheritencePath who was requesting us
    */
-  async _templateFrom(sources, isInitialSource) {
+  async _templateFrom(sources, inheritencePath = []) {
     let result = {};
 
     for (const source of sources) {
       const branch = await this.provider.branch(source);
 
-      if (branch === undefined || this.branches.has(branch)) {
+      if (branch === undefined) {
+        this.trace(`No such branch ${source}`);
         continue;
       }
 
-      this.debug(`Load ${branch.fullCondensedName}`);
+      if (this.branches.has(branch)) {
+        this.trace(`Already loaded ${branch.fullCondensedName}`);
+        continue;
+      }
+
+      this.debug(`Load ${branch.fullCondensedName} (${inheritencePath.length ? inheritencePath : 'root'})`);
 
       this.branches.add(branch);
-      if (isInitialSource) {
+      if (inheritencePath.length === 0) {
         this.initialBranches.add(branch);
       }
 
@@ -214,11 +221,14 @@ export class Template extends LogLevelMixin(class {}) {
           if (template && template.inheritFrom) {
             result = mergeTemplate(
               result,
-              await this._templateFrom(asArray(template.inheritFrom))
+              await this._templateFrom(asArray(template.inheritFrom), [
+                ...inheritencePath,
+                source
+              ])
             );
           }
         } catch (e) {
-          this.error(branch.fullCondensedName, e);
+          this.error(e);
         }
       } catch (e) {
         continue;
