@@ -3,6 +3,24 @@ import { yamlt } from "./helpers/util.mjs";
 import { Travis } from "../src/mergers/travis.mjs";
 
 test(
+  "expand",
+  yamlt,
+  Travis,
+  `node_js:
+    - {{node_version}}
+    - -13
+  `,
+  `node_js:
+    - 13.12.0
+  `,
+  { node_version: '13.13.0' },
+  undefined,
+  `node_js:
+  - 13.13.0
+`
+);
+
+test(
   "remove before_script",
   yamlt,
   Travis,
