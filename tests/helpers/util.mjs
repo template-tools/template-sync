@@ -96,7 +96,5 @@ yamlt.title = (
   expected,
   message = []
 ) =>
-  `${factory.name} ${providedTitle} ${JSON.stringify(
-    template
-  )} ${content} ${expected}`.trim();
+  `${factory.name} ${providedTitle} ${template && template.trim ? template.trim(): ''} ${content && content.trim ? content.trim(): ''} ${expected}`.trim();
 
