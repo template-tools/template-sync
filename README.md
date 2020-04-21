@@ -13,9 +13,9 @@
 
 ## npm-template-sync
 
-Keep npm package in sync with its template.
+Keep repository in sync with its template.
 
-Generate pull requests to bring a repository back in sync with the template
+Generates pull requests to bring a repository back in sync with the template.
 
 ```shell
 export GH_TOKEN='token providing repositroy write access' # for github repos
@@ -28,10 +28,10 @@ define (initial) properties to be used in the template
 ```shell
 export GH_TOKEN='token providing repositroy write access' # for github repos
 
-npm-template-sync --define "description=a very new fantastic module" -t myUser/myTemplate myUser/newModule
+npm-template-sync --define "description=a very new fantastic module" -t myUser/myTemplate myUser/newModule#aBranch
 ```
 
-merges contents from template repo into destination repo handling some special cases for:
+merges contents from template branch into destination branch handling some special cases for:
 
 -   Licenses - rewriting license years
 -   line set files like .npmignore and .gitignore - by merging both sets together
@@ -79,7 +79,7 @@ merges contents from template repo into destination repo handling some special c
     -   [Properties](#properties-3)
     -   [\_templateFrom](#_templatefrom)
         -   [Parameters](#parameters-5)
-    -   [mergers](#mergers)
+    -   [entryMergers](#entrymergers)
     -   [templateFor](#templatefor)
         -   [Parameters](#parameters-6)
 -   [ReplaceIfEmpty](#replaceifempty)
@@ -169,6 +169,7 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 
 -   `context` **Conext** 
 -   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+-   `mergers` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
 -   `branches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** all used branches direct and inherited
 -   `initialBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** root branches used to define the template
 
@@ -181,7 +182,9 @@ load all templates and collects the files
 -   `sources` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
 -   `isInitialSource`  
 
-### mergers
+### entryMergers
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ### templateFor
 

@@ -32,7 +32,7 @@ const templates = [];
 program
   .usage(description)
   .version(version)
-  .command("[repos...]", "repos to merge")
+  .command("[branches...]", "branches to merge")
   .option("--dry", "do not create branch/pull request")
   .option("--trace", "log level trace")
   .option("--debug", "log level debug")
@@ -46,14 +46,14 @@ program
   .option("--list-providers", "list providers with options and exit")
   .option(
     "--list-properties",
-    "list all properties (if given of the first repo) and exit"
+    "list all properties (if given of the first branch) and exit"
   )
   .option("-t, --template <identifier>", "template repository", value => {
     templates.push(value);
     return templates;
   })
-  .option("-u, --dump-template <directory>", "copy template entries")
-  .action(async (commander, repos) => {
+  .option("-u, --dump-template <directory>", "copy aggregated template entries")
+  .action(async (commander, branches) => {
     const logLevel = program.trace ? "trace" : program.debug ? "debug" : "info";
 
     try {
@@ -87,15 +87,15 @@ program
         return;
       }
 
-      if (repos.length === 0 || repos[0] === ".") {
+      if (branches.length === 0 || branches[0] === ".") {
         const pkg = JSON.parse(
           await fs.promises.readFile("package.json", defaultEncodingOptions)
         );
-        repos.push(pkg.repository.url);
+        branches.push(pkg.repository.url);
       }
 
-      for (const repo of repos) {
-        const context = new Context(provider, repo, {
+      for (const branch of branches) {
+        const context = new Context(provider, branch, {
           template: program.template,
           dry: program.dry,
           track: program.track,
