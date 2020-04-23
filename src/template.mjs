@@ -80,7 +80,7 @@ export class Template extends LogLevelMixin(class {}) {
   get provider() {
     return this.context.provider;
   }
-  
+
   get name() {
     return (this.initialBranches.size > 0
       ? [...this.initialBranches].map(b => b.fullCondensedName)
@@ -297,21 +297,66 @@ export class Template extends LogLevelMixin(class {}) {
   /**
    * Updates usedBy section of the template branch
    * @param {Branch} targetBranch template to be updated
-   * @param {string[]} templateSources original branch identifiers (even with deleteion hints) 
+   * @param {string[]} templateSources original branch identifiers (even with deleteion hints)
    */
   async updateUsedBy(targetBranch, templateSources) {
     await this.initialize();
 
-    const toBeRemoved = templateSources.filter(t=>t.startsWith('-')).map(t=>t.slice(1));
+    const usedByBranchName = "npm-template-sync-used-by";
 
-    this.info(`remove from ${toBeRemoved}`);
+    const toBeRemoved = templateSources
+      .filter(t => t.startsWith("-"))
+      .map(t => t.slice(1));
 
-    return Promise.all(
-      [...this.initialBranches]
-        .map(async sourceBranch => {
+    const removePrs = toBeRemoved
+      .map(async branchName => {
+        let sourceBranch = await this.provider.branch(branchName);
+
+        let prBranch = await sourceBranch.repository.branch(usedByBranchName);
+        if (prBranch) {
+          sourceBranch = prBranch;
+        }
+
+        const entry = await sourceBranch.entry("package.json");
+        const pkg = JSON.parse(await entry.getString());
+
+
+        if (pkg.template !== undefined && pkg.template.usedBy !== undefined) {
           const name = targetBranch.fullCondensedName;
-          const usedByBranchName = "npm-template-sync-used-by";
 
+          //console.log("find", name, "in", pkg.template.usedBy);
+          if (pkg.template.usedBy.find(n => n === name)) {
+            pkg.template.usedBy = pkg.template.usedBy.filter(
+              n => n !== name
+            );
+
+            if (prBranch === undefined) {
+              prBranch = await sourceBranch.createBranch(usedByBranchName);
+            }
+
+            await prBranch.commit(`fix: remove ${name}`, [
+              new StringContentEntry(
+                "package.json",
+                JSON.stringify(pkg, undefined, 2)
+              )
+            ]);
+
+            if (sourceBranch === prBranch) {
+              return undefined;
+            }
+
+            return sourceBranch.createPullRequest(prBranch, {
+              title: `remove ${name}`,
+              body: `remove ${name} from usedBy`
+            });
+          }
+        }
+      });
+
+    return Promise.all([
+      ...removePrs,
+      ...[...this.initialBranches]
+        .map(async sourceBranch => {
           let prBranch = await sourceBranch.repository.branch(usedByBranchName);
           if (prBranch) {
             sourceBranch = prBranch;
@@ -326,6 +371,8 @@ export class Template extends LogLevelMixin(class {}) {
           if (!Array.isArray(pkg.template.usedBy)) {
             pkg.template.usedBy = [];
           }
+
+          const name = targetBranch.fullCondensedName;
 
           if (!pkg.template.usedBy.find(n => n === name)) {
             pkg.template.usedBy.push(name);
@@ -352,8 +399,7 @@ export class Template extends LogLevelMixin(class {}) {
             });
           }
         })
-        .filter(x => x !== undefined)
-    );
+    ].filter(x => x !== undefined));
   }
 }
 
