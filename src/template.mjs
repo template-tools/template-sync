@@ -138,7 +138,7 @@ export class Template extends LogLevelMixin(class {}) {
         }
 
         const name = entry.name;
-        this.trace(`template entry ${branch.fullCondensedName}/${name}`);
+        this.trace(`Load ${branch.fullCondensedName}/${name}`);
         if (name === "package.json") {
           continue;
         }
@@ -147,7 +147,7 @@ export class Template extends LogLevelMixin(class {}) {
         if (ec) {
           this.entryCache.set(
             name,
-            await this.mergeEntry(this.context, entry, ec)
+            await this.mergeEntry(this.context, branch, entry, ec)
           );
         } else {
           this.entryCache.set(name, entry);
@@ -156,11 +156,11 @@ export class Template extends LogLevelMixin(class {}) {
     }
   }
 
-  async mergeEntry(ctx, a, b) {
+  async mergeEntry(ctx, branch, a, b) {
     for (const merger of this.mergers) {
       const found = micromatch([a.name], merger.pattern);
       if (found.length) {
-        this.trace(`merge ${merger.type} ${a.name} ${merger.pattern}`);
+        this.trace(`Merge ${merger.type} ${branch.fullCondensedName}/${a.name} + ${b.name} '${merger.pattern}'`);
 
         const commit = await merger.factory.merge(ctx, a, b, {
           ...merger.options,
