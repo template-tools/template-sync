@@ -180,7 +180,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     const template = this.template;
 
     if (this.track && !this.dry) {
-      pullRequests.push(await template.addUsedPackage(targetBranch));
+      pullRequests.push(await template.updateUsedBy(targetBranch));
     }
 
     const mergers = await template.entryMergers();

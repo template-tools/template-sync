@@ -160,7 +160,11 @@ export class Template extends LogLevelMixin(class {}) {
     for (const merger of this.mergers) {
       const found = micromatch([a.name], merger.pattern);
       if (found.length) {
-        this.trace(`Merge ${merger.type} ${branch.fullCondensedName}/${a.name} + ${b.name} '${merger.pattern}'`);
+        this.trace(
+          `Merge ${merger.type} ${branch.fullCondensedName}/${a.name} + ${
+            b ? b.name : "<missing>"
+          } '${merger.pattern}'`
+        );
 
         const commit = await merger.factory.merge(ctx, a, b, {
           ...merger.options,
@@ -201,7 +205,11 @@ export class Template extends LogLevelMixin(class {}) {
         continue;
       }
 
-      this.debug(`Load ${branch.fullCondensedName} (${inheritencePath.length ? inheritencePath : 'root'})`);
+      this.debug(
+        `Load ${branch.fullCondensedName} (${
+          inheritencePath.length ? inheritencePath : "root"
+        })`
+      );
 
       this.branches.add(branch);
       if (inheritencePath.length === 0) {
@@ -283,7 +291,11 @@ export class Template extends LogLevelMixin(class {}) {
       .reduce((last, current) => Array.from([...last, ...current]), []);
   }
 
-  async addUsedPackage(targetBranch) {
+  /**
+   * Updates usedBy section of the template branch
+   * @param {Branch} targetBranch template to be updated
+   */
+  async updateUsedBy(targetBranch) {
     await this.initialize();
 
     return Promise.all(
