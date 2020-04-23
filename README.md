@@ -31,6 +31,15 @@ export GH_TOKEN='token providing repositroy write access' # for github repos
 npm-template-sync --define "description=a very new fantastic module" -t myUser/myTemplate myUser/newModule#aBranch
 ```
 
+
+switch from arlac77/template-github to arlac77/template-arlac77-github template for arlac77/url-cmd arlac77/uti arlac77/content-entry arlac77/repository-provider
+
+```shell
+export GH_TOKEN='token providing repositroy write access' # for github repos
+
+npm-template-sync --track --template arlac77/template-arlac77-github --template -arlac77/template-github arlac77/url-cmd arlac77/uti arlac77/content-entry arlac77/repository-provider
+```
+
 merges contents from template branch into destination branch handling some special cases for:
 
 -   Licenses - rewriting license years
