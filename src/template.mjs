@@ -66,7 +66,6 @@ export class Template extends LogLevelMixin(class {}) {
     super();
     Object.defineProperties(this, {
       context: { value: context },
-      provider: { value: context.provider },
       sources: { value: sources },
       branches: { value: new Set() },
       initialBranches: { value: new Set() },
@@ -78,6 +77,10 @@ export class Template extends LogLevelMixin(class {}) {
     this.logLevel = options.logLevel;
   }
 
+  get provider() {
+    return this.context.provider;
+  }
+  
   get name() {
     return (this.initialBranches.size > 0
       ? [...this.initialBranches].map(b => b.fullCondensedName)
@@ -294,9 +297,14 @@ export class Template extends LogLevelMixin(class {}) {
   /**
    * Updates usedBy section of the template branch
    * @param {Branch} targetBranch template to be updated
+   * @param {string[]} templateSources original branch identifiers (even with deleteion hints) 
    */
-  async updateUsedBy(targetBranch) {
+  async updateUsedBy(targetBranch, templateSources) {
     await this.initialize();
+
+    const toBeRemoved = templateSources.filter(t=>t.startsWith('-')).map(t=>t.slice(1));
+
+    this.info(`remove from ${toBeRemoved}`);
 
     return Promise.all(
       [...this.initialBranches]
