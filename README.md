@@ -80,14 +80,16 @@ merges contents from template branch into destination branch handling some speci
     -   [\_templateFrom](#_templatefrom)
         -   [Parameters](#parameters-5)
     -   [entryMergers](#entrymergers)
-    -   [templateFor](#templatefor)
+    -   [updateUsedBy](#updateusedby)
         -   [Parameters](#parameters-6)
+    -   [templateFor](#templatefor)
+        -   [Parameters](#parameters-7)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-7)
+    -   [Parameters](#parameters-8)
 
 ## Context
 
@@ -180,11 +182,20 @@ load all templates and collects the files
 #### Parameters
 
 -   `sources` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
--   `isInitialSource`  
+-   `inheritencePath` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** who was requesting us (optional, default `[]`)
 
 ### entryMergers
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### updateUsedBy
+
+Updates usedBy section of the template branch
+
+#### Parameters
+
+-   `targetBranch` **Branch** template to be updated
+-   `templateSources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** original branch identifiers (even with deleteion hints)
 
 ### templateFor
 
