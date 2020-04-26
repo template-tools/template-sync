@@ -5,6 +5,7 @@ build
 *.node
 .DS_Store
 .test
+test-results
 .tmp
 bin
-
+bundle.*
