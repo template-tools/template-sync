@@ -5,6 +5,9 @@ doc
 *.tmp
 .test
 .tmp
+example
 .travis.yml
+rollup.config.*
 .vscode
 .github
+test-results
