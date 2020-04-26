@@ -7,14 +7,16 @@
   "sideEffects": false,
   "type": "module",
   "main": "src/context.mjs",
-  "module": "src/context.mjs",
+  "module": "src/index.mjs",
+  "svelte": "src/index.svelte",
   "description": "Keep npm package in sync with its template",
   "keywords": [
     "npm",
     "template",
     "scaffolding",
     "boilerplate",
-    "git"
+    "git",
+    "svelte"
   ],
   "contributors": [
     {
@@ -27,7 +29,8 @@
     "npm-template-sync": "src/npm-template-sync-cli.mjs"
   },
   "scripts": {
-    "test": "ava --timeout 2m",
+    "start": "rollup -c example/rollup.config.mjs -w",
+    "test": "testcafe $BROWSER:headless tests/*-test.js -s test-results --app-init-delay 500 --app \"rollup -c example/rollup.config.mjs -w\"",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/context.mjs --section=API",
     "lint": "documentation lint src/context.mjs"
@@ -60,7 +63,10 @@
     "documentation": "^12.3.0",
     "execa": "^4.0.0",
     "mock-repository-provider": "^5.1.51",
-    "semantic-release": "^17.0.7"
+    "rollup": "^2.7.2",
+    "semantic-release": "^17.0.7",
+    "svelte": "^3.21.0",
+    "testcafe": "^1.8.4"
   },
   "engines": {
     "node": ">=13.13.0"
@@ -75,8 +81,9 @@
   "homepage": "https://github.com/arlac77/npm-template-sync#readme",
   "template": {
     "inheritFrom": [
+      "arlac77/template-arlac77-github",
       "arlac77/template-esm-only",
-      "arlac77/template-github"
+      "arlac77/template-svelte-component"
     ]
   }
 }
