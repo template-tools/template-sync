@@ -219,11 +219,13 @@ export class Package extends Merger {
       },
       homepage: context.targetBranch.homePageURL,
       template: {
-        inheritFrom: asScalar(
-          [...context.template.initialBranches].map(
+        inheritFrom: asScalar([
+          ...context.templateSources
+            .filter(t => t.startsWith("-")),
+          ...[...context.template.initialBranches].map(
             branch => branch.fullCondensedName
           )
-        )
+        ])
       }
     });
 
