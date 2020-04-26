@@ -24,23 +24,21 @@ import {
 } from "../util.mjs";
 
 function moduleNames(object) {
-  if (object === undefined) return new Set();
-
   const modules = new Set();
 
-  Object.keys(object).forEach(k => {
-    const v = object[k];
-    if (typeof v === "string") {
-      modules.add(v);
-    } else if (Array.isArray(v)) {
-      v.forEach(e => {
-        if (typeof e === "string") {
-          modules.add(e);
-        }
-      });
-    }
-  });
-
+  if (object !== undefined) {
+    Object.entries(object).forEach(([k, v]) => {
+      if (typeof v === "string") {
+        modules.add(v);
+      } else if (Array.isArray(v)) {
+        v.forEach(e => {
+          if (typeof e === "string") {
+            modules.add(e);
+          }
+        });
+      }
+    });
+  }
   return modules;
 }
 
@@ -191,7 +189,6 @@ export class Package extends Merger {
     sourceEntry,
     options = this.defaultOptions
   ) {
-
     const messages = [];
     const name = destinationEntry.name;
     const templateContent = await sourceEntry.getString();
