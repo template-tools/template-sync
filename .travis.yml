@@ -1,10 +1,15 @@
 language: node_js
+addons:
+  chrome: stable
+env:
+  - BROWSER=chrome
 jobs:
   include:
     - stage: test
       node_js:
         - 14.0.0
       script:
+        - npm run test
         - npm run cover
         - npx codecov
         - cat ./build/coverage/lcov.info | npx coveralls
