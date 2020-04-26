@@ -75,8 +75,8 @@
   "homepage": "https://github.com/arlac77/npm-template-sync#readme",
   "template": {
     "inheritFrom": [
-      "arlac77/template-esm-only",
-      "arlac77/template-github"
+      "arlac77/template-arlac77-github",
+      "arlac77/template-esm-only"
     ]
   }
 }
