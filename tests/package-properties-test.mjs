@@ -24,7 +24,7 @@ test("package extract properties not 0.0.0-semantic-release", async t => {
           name: "aName",
           version: "1.2.3",
           description: "a description",
-          module: "a module",
+          main: "index.mjs",
           config: {
             api: "/some/path"
           }
@@ -36,10 +36,10 @@ test("package extract properties not 0.0.0-semantic-release", async t => {
       npm: { name: "aName", fullName: "aName" },
       //license: { owner: 'tragetUser' },
       description: "a description",
-      module: "a module",
+      main: "index.mjs",
       name: "aName",
       version: "1.2.3",
       api: "/some/path"
     });
   });
-    
+

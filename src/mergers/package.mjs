@@ -102,7 +102,6 @@ const propertyKeys = [
   "version",
   "name",
   "main",
-  "module",
   "browser"
 ];
 
@@ -236,8 +235,8 @@ export class Package extends Merger {
       target.name = m ? m[2] : context.targetBranch.repository.name;
     }
 
-    if (target.module !== undefined && !target.module.match(/\{\{module\}\}/)) {
-      properties.module = target.module;
+    if (target.main !== undefined && !target.main.match(/\{\{main\}\}/)) {
+      properties.main = target.main;
     }
 
     await deleteUnusedDevDependencies(context, target, template);
