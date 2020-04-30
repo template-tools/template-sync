@@ -29,7 +29,9 @@
     "test": "ava --timeout 2m",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/context.mjs --section=API",
-    "lint": "documentation lint src/context.mjs"
+    "lint": "documentation lint src/context.mjs",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
@@ -51,7 +53,8 @@
     "remark-parse": "^8.0.2",
     "remark-stringify": "^8.0.0",
     "remove-sensible-values": "^1.0.6",
-    "unified": "^9.0.0"
+    "unified": "^9.0.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "ava": "^3.8.1",
@@ -77,5 +80,6 @@
       "arlac77/template-arlac77-github",
       "arlac77/template-esm-only"
     ]
-  }
+  },
+  "snyk": true
 }
