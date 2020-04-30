@@ -12,8 +12,7 @@ import { AggregationProvider } from "aggregation-repository-provider";
 import { Context } from "./context.mjs";
 import {
   setProperty,
-  defaultEncodingOptions,
-  dumpTemplateEntries
+  defaultEncodingOptions
 } from "./util.mjs";
 
 const { version, description } = JSON.parse(
@@ -106,7 +105,7 @@ program
         await context.initialize();
 
         if (program.dumpTemplate) {
-          await dumpTemplateEntries(context.template, program.dumpTemplate);
+          await context.template.dump(program.dumpTemplate);
           return;
         }
 

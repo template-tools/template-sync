@@ -1,3 +1,5 @@
+import { join, dirname } from "path";
+import fs, { createWriteStream } from "fs";
 import { replaceWithOneTimeExecutionMethod } from "one-time-execution-method";
 import micromatch from "micromatch";
 import {
@@ -257,6 +259,17 @@ export class Template extends LogLevelMixin(class {}) {
     }
   }
 
+  async dump(dest) {
+    for (const entry of this.entryCache.values()) {
+      if (entry.isBlob) {
+        const d = join(dest, entry.name);
+        await fs.promises.mkdir(dirname(d), { recursive: true });
+        const s = await entry.getReadStream();
+        s.pipe(createWriteStream(d));
+      }
+    }
+  }
+
   async package() {
     const entry = await this.entry("package.json");
     return JSON.parse(await entry.getString());
@@ -308,55 +321,51 @@ export class Template extends LogLevelMixin(class {}) {
       .filter(t => t.startsWith("-"))
       .map(t => t.slice(1));
 
-    const removePrs = toBeRemoved
-      .map(async branchName => {
-        let sourceBranch = await this.provider.branch(branchName);
+    const removePrs = toBeRemoved.map(async branchName => {
+      let sourceBranch = await this.provider.branch(branchName);
 
-        let prBranch = await sourceBranch.repository.branch(usedByBranchName);
-        if (prBranch) {
-          sourceBranch = prBranch;
-        }
+      let prBranch = await sourceBranch.repository.branch(usedByBranchName);
+      if (prBranch) {
+        sourceBranch = prBranch;
+      }
 
-        const entry = await sourceBranch.entry("package.json");
-        const pkg = JSON.parse(await entry.getString());
+      const entry = await sourceBranch.entry("package.json");
+      const pkg = JSON.parse(await entry.getString());
 
+      if (pkg.template !== undefined && pkg.template.usedBy !== undefined) {
+        const name = targetBranch.fullCondensedName;
 
-        if (pkg.template !== undefined && pkg.template.usedBy !== undefined) {
-          const name = targetBranch.fullCondensedName;
+        //console.log("find", name, "in", pkg.template.usedBy);
+        if (pkg.template.usedBy.find(n => n === name)) {
+          pkg.template.usedBy = pkg.template.usedBy.filter(n => n !== name);
 
-          //console.log("find", name, "in", pkg.template.usedBy);
-          if (pkg.template.usedBy.find(n => n === name)) {
-            pkg.template.usedBy = pkg.template.usedBy.filter(
-              n => n !== name
-            );
-
-            if (prBranch === undefined) {
-              prBranch = await sourceBranch.createBranch(usedByBranchName);
-            }
-
-            await prBranch.commit(`fix: remove ${name}`, [
-              new StringContentEntry(
-                "package.json",
-                JSON.stringify(pkg, undefined, 2)
-              )
-            ]);
-
-            if (sourceBranch === prBranch) {
-              return undefined;
-            }
-
-            return sourceBranch.createPullRequest(prBranch, {
-              title: `remove ${name}`,
-              body: `remove ${name} from usedBy`
-            });
+          if (prBranch === undefined) {
+            prBranch = await sourceBranch.createBranch(usedByBranchName);
           }
-        }
-      });
 
-    return Promise.all([
-      ...removePrs,
-      ...[...this.initialBranches]
-        .map(async sourceBranch => {
+          await prBranch.commit(`fix: remove ${name}`, [
+            new StringContentEntry(
+              "package.json",
+              JSON.stringify(pkg, undefined, 2)
+            )
+          ]);
+
+          if (sourceBranch === prBranch) {
+            return undefined;
+          }
+
+          return sourceBranch.createPullRequest(prBranch, {
+            title: `remove ${name}`,
+            body: `remove ${name} from usedBy`
+          });
+        }
+      }
+    });
+
+    return Promise.all(
+      [
+        ...removePrs,
+        ...[...this.initialBranches].map(async sourceBranch => {
           let prBranch = await sourceBranch.repository.branch(usedByBranchName);
           if (prBranch) {
             sourceBranch = prBranch;
@@ -399,7 +408,8 @@ export class Template extends LogLevelMixin(class {}) {
             });
           }
         })
-    ].filter(x => x !== undefined));
+      ].filter(x => x !== undefined)
+    );
   }
 }
 
