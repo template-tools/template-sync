@@ -54,6 +54,7 @@ const sortedKeys = [
   "sideEffects",
   "type",
   "main",
+  "exports",
   "umd:main",
   "jsdelivr",
   "unpkg",
@@ -262,6 +263,7 @@ export class Package extends Merger {
         keywords: { removeEmpty: true, compare, type: "docs" },
         repository: { compare },
         files: { compare, scope: "files", removeEmpty: true },
+        export: REMOVE_HINT,
         bin: REMOVE_HINT,
         "bin.*": { removeEmpty: true, scope: "bin" },
         scripts: {
