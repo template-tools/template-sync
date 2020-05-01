@@ -9,7 +9,7 @@ const nts = join(here, "..", "src", "npm-template-sync-cli.mjs");
 test("cli dryrun", async t => {
   const c = await execa(nts, ["--dry", "arlac77/config-expander"]);
 
-  t.truthy(c.stdout.match(/\-/));
+  t.truthy(c.stdout.match(/\-|.+:.+/));
   t.is(c.exitCode, 0);
 });
 
