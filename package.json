@@ -43,7 +43,7 @@
     "commander": "^5.1.0",
     "content-entry": "^2.3.4",
     "expression-expander": "^7.0.5",
-    "github-repository-provider": "^7.9.8",
+    "github-repository-provider": "^7.9.9",
     "hinted-tree-merger": "^3.12.7",
     "js-yaml": "^3.13.1",
     "local-repository-provider": "^6.5.29",
