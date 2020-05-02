@@ -8,7 +8,7 @@
   "type": "module",
   "main": "src/context.mjs",
   "exports": {
-    ".": "./src/context.mjs",
+    ".": "src/context.mjs",
     "./": "./"
   },
   "description": "Keep npm package in sync with its template",
