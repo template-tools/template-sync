@@ -6,9 +6,9 @@
   },
   "sideEffects": false,
   "type": "module",
-  "main": "src/context.mjs",
+  "main": "./src/context.mjs",
   "exports": {
-    ".": "src/context.mjs",
+    ".": "./src/context.mjs",
     "./": "./"
   },
   "description": "Keep npm package in sync with its template",
@@ -32,8 +32,8 @@
   "scripts": {
     "test": "ava --timeout 2m",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
-    "docs": "documentation readme src/context.mjs --section=API",
-    "lint": "documentation lint src/context.mjs"
+    "docs": "documentation readme ./src/context.mjs --section=API",
+    "lint": "documentation lint ./src/context.mjs"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
