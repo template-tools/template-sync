@@ -40,7 +40,9 @@ const provider = new MockProvider({
 const context = new Context(provider);
 
 test("template constructor", async t => {
-  const template = new Template(context, ["template"]);
+  const template = await new Template(context, ["template"]);
+  t.true(template instanceof Template);
+
   t.deepEqual(template.sources, ["template"]);
   t.is(`${template}`, "template");
   t.is(template.name, "template");
@@ -67,9 +69,7 @@ test("template cache", async t => {
 });
 
 test("template mergers", async t => {
-  const template = new Template(context, ["template"]);
-
-  await template.initialize();
+  const template = await new Template(context, ["template"]);
 
   t.deepEqual(template.mergers, [
     {
@@ -88,7 +88,7 @@ test("template mergers", async t => {
 });
 
 test("template properties", async t => {
-  const template = new Template(context, ["template"]);
+  const template = await new Template(context, ["template"]);
 
   t.deepEqual(await template.properties(), {
     a: 1
@@ -96,7 +96,7 @@ test("template properties", async t => {
 });
 
 test("template entryMergers", async t => {
-  const template = new Template(context, ["template"]);
+  const template = await new Template(context, ["template"]);
   const mergers = await template.entryMergers();
 
   t.deepEqual(mergers[0], [
@@ -115,8 +115,7 @@ test("template entryMergers", async t => {
 });
 
 test("template merge travis", async t => {
-  const template = new Template(context, ["template"]);
-  await template.initialize();
+  const template = await new Template(context, ["template"]);
 
   const t1 = new StringContentEntry(
     ".travis.yml",
@@ -153,7 +152,7 @@ test("template merge travis", async t => {
 });
 
 test("template merged entries", async t => {
-  const template = new Template(context, ["template"], { key: "a" });
+  const template = await new Template(context, ["template"], { key: "a" });
 
   for (const i of ["a", "b"]) {
     const f = await template.entry(`file_${i}`);
@@ -163,7 +162,7 @@ test("template merged entries", async t => {
 });
 
 test("template package content", async t => {
-  const template = new Template(context, ["template"], { key: "b" });
+  const template = await new Template(context, ["template"], { key: "b" });
 
   t.deepEqual(await template.package(), {
     devDependencies: { ava: "^2.4.0", rollup: "^1.29.1" },

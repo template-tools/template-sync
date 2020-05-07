@@ -1,6 +1,5 @@
 import { join, dirname } from "path";
 import fs, { createWriteStream } from "fs";
-import { replaceWithOneTimeExecutionMethod } from "one-time-execution-method";
 import micromatch from "micromatch";
 import {
   merge,
@@ -55,11 +54,9 @@ export class Template extends LogLevelMixin(class {}) {
     let template = templateCache.get(key);
 
     if (template === undefined) {
-      template = new Template(context, sources, options);
+      template = await new Template(context, sources, options);
       templateCache.set(key, template);
     }
-
-    await template.initialize();
 
     return template;
   }
@@ -77,6 +74,8 @@ export class Template extends LogLevelMixin(class {}) {
     });
 
     this.logLevel = options.logLevel;
+
+    return this.initialize();
   }
 
   get provider() {
@@ -99,8 +98,6 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   async entry(name) {
-    await this.initialize();
-
     const entry = this.entryCache.get(name);
     if (entry === undefined) {
       throw new Error(`No such entry ${name}`);
@@ -159,6 +156,8 @@ export class Template extends LogLevelMixin(class {}) {
         }
       }
     }
+
+    return this;
   }
 
   async mergeEntry(ctx, branch, a, b) {
@@ -252,8 +251,6 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   async *entries(matchingPatterns) {
-    await this.initialize();
-
     for (const [name, entry] of this.entryCache) {
       yield entry;
     }
@@ -284,8 +281,6 @@ export class Template extends LogLevelMixin(class {}) {
    * @return {Object}
    */
   async entryMergers() {
-    await this.initialize();
-
     let alreadyPresent = new Set();
     const names = [...this.entryCache.values()]
       .filter(entry => entry.isBlob)
@@ -313,8 +308,6 @@ export class Template extends LogLevelMixin(class {}) {
    * @param {string[]} templateSources original branch identifiers (even with deleteion hints)
    */
   async updateUsedBy(targetBranch, templateSources) {
-    await this.initialize();
-
     const usedByBranchName = "npm-template-sync-used-by";
 
     const toBeRemoved = templateSources
@@ -413,7 +406,7 @@ export class Template extends LogLevelMixin(class {}) {
   }
 }
 
-replaceWithOneTimeExecutionMethod(Template.prototype, "initialize");
+//replaceWithOneTimeExecutionMethod(Template.prototype, "initialize");
 
 export function mergeTemplate(a, b) {
   const mvl = { keepHints: true, merge: mergeVersionsLargest };
