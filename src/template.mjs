@@ -97,7 +97,7 @@ export class Template extends LogLevelMixin(class {}) {
     this.context.log(...args);
   }
 
-  async entry(name) {
+  entry(name) {
     const entry = this.entryCache.get(name);
     if (entry === undefined) {
       throw new Error(`No such entry ${name}`);
@@ -250,7 +250,7 @@ export class Template extends LogLevelMixin(class {}) {
     return result;
   }
 
-  async *entries(matchingPatterns) {
+  *entries(matchingPatterns) {
     for (const [name, entry] of this.entryCache) {
       yield entry;
     }
@@ -268,7 +268,7 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   async package() {
-    const entry = await this.entry("package.json");
+    const entry = this.entry("package.json");
     return JSON.parse(await entry.getString());
   }
 
