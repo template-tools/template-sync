@@ -38,15 +38,15 @@
   "dependencies": {
     "@babel/core": "^7.9.6",
     "@iarna/toml": "3.0.0",
-    "aggregation-repository-provider": "^2.6.60",
+    "aggregation-repository-provider": "^2.6.61",
     "babylon": "^6.18.0",
     "commander": "^5.1.0",
     "content-entry": "^2.4.0",
     "expression-expander": "^7.0.5",
-    "github-repository-provider": "^7.9.10",
+    "github-repository-provider": "^7.9.11",
     "hinted-tree-merger": "^3.12.7",
     "js-yaml": "^3.13.1",
-    "local-repository-provider": "^6.5.30",
+    "local-repository-provider": "^6.5.31",
     "loglevel-mixin": "^5.0.6",
     "markdown": "^0.5.0",
     "micromatch": "^4.0.2",
@@ -62,7 +62,7 @@
     "c8": "^7.1.2",
     "documentation": "^12.3.0",
     "execa": "^4.0.0",
-    "mock-repository-provider": "^5.1.58",
+    "mock-repository-provider": "^5.1.59",
     "semantic-release": "^17.0.7"
   },
   "engines": {
