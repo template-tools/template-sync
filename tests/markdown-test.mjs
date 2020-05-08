@@ -1,5 +1,5 @@
 import test from "ava";
-import { StringContentEntry } from "content-entry";
+import { StringContentEntry, EmptyContentEntry } from "content-entry";
 import { Markdown } from "../src/mergers/markdown.mjs";
 
 const FILE_NAME = "a.md";
@@ -34,7 +34,6 @@ test("markdown merge", async t => {
   );
 });
 
-
 test("markdown merge nop", async t => {
   const commit = await Markdown.merge(
     undefined,
@@ -51,4 +50,23 @@ test("markdown merge nop", async t => {
   );
 
   t.is(commit, undefined);
+});
+
+test("markdown merge into empty", async t => {
+  const commit = await Markdown.merge(
+    undefined,
+    new EmptyContentEntry(FILE_NAME),
+    new StringContentEntry(
+      FILE_NAME,
+      `# Hello
+`
+    )
+  );
+
+  t.is(commit.entry.name, FILE_NAME);
+  t.is(
+    await commit.entry.getString(),
+    `# Hello
+`
+  );
 });

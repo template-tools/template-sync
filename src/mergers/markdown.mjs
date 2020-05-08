@@ -18,22 +18,15 @@ export class Markdown extends Merger {
   ) {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();
-    const template = await sourceEntry.getString();
 
     const actions = {};
 
-    const templateTree = unified().use(markdown).parse(template);
+    const templateTree = unified().use(markdown).parse(await sourceEntry.getString());
     const originalTree = unified().use(markdown).parse(original);
 
-    //console.log(JSON.stringify(templateTree, undefined, 2));
+    //console.log(originalTree);
 
-    const processor = unified().use(markdown).use(stringify);
-
-    let merged;
-
-    processor.process(template, (err, file) => {
-      merged = file.contents;
-    });
+    const merged = unified().use(markdown).use(stringify).stringify(templateTree);
 
     return merged === original
       ? undefined
