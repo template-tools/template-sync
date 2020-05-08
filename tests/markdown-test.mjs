@@ -10,16 +10,13 @@ test("markdown merge", async t => {
     new StringContentEntry(
       FILE_NAME,
       `# Hello
-  `
+-  a
+-  b
+`
     ),
     new StringContentEntry(
       FILE_NAME,
-      `# Hello
-  
-- a
-- b
-- c
-`
+      `# Other`
     )
   );
 
@@ -29,7 +26,8 @@ test("markdown merge", async t => {
 
 -   a
 -   b
--   c
+
+# Other
 `
   );
 });
