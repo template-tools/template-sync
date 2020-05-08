@@ -183,7 +183,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       pullRequests.push(await template.updateUsedBy(targetBranch, this.templateSources));
     }
 
-    const mergers = await template.entryMergers();
+    const mergers = template.entryMergers();
 
     const commits = (
       await Promise.all(

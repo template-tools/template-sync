@@ -280,7 +280,7 @@ export class Template extends LogLevelMixin(class {}) {
   /**
    * @return {Object}
    */
-  async entryMergers() {
+  entryMergers() {
     let alreadyPresent = new Set();
     const names = [...this.entryCache.values()]
       .filter(entry => entry.isBlob)

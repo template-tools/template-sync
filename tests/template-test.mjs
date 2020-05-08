@@ -97,7 +97,7 @@ test("template properties", async t => {
 
 test("template entryMergers", async t => {
   const template = await new Template(context, ["template"]);
-  const mergers = await template.entryMergers();
+  const mergers = template.entryMergers();
 
   t.deepEqual(mergers[0], [
     "package.json",
