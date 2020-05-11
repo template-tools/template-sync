@@ -38,12 +38,12 @@
   "dependencies": {
     "@babel/core": "^7.9.6",
     "@iarna/toml": "3.0.0",
-    "aggregation-repository-provider": "^2.6.61",
+    "aggregation-repository-provider": "^2.6.62",
     "babylon": "^6.18.0",
     "commander": "^5.1.0",
     "content-entry": "^2.4.0",
     "expression-expander": "^7.0.5",
-    "github-repository-provider": "^7.9.11",
+    "github-repository-provider": "^7.9.14",
     "hinted-tree-merger": "^3.12.7",
     "js-yaml": "^3.13.1",
     "local-repository-provider": "^6.5.31",
@@ -66,7 +66,7 @@
     "semantic-release": "^17.0.7"
   },
   "engines": {
-    "node": ">=14.1.0"
+    "node": ">=14.2.0"
   },
   "repository": {
     "type": "git",
