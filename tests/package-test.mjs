@@ -394,6 +394,29 @@ test(
 );
 
 test(
+  "package update dependencies => fix",
+  pkgt,
+  {
+    dependencies: {
+      a: "0.25.0"
+    }
+  },
+  {
+    dependencies: {
+      a: "^0.25.1"
+    }
+  },
+  undefined,
+  undefined,
+  (t, merged) => {
+    t.deepEqual(merged.dependencies, {
+      a: "^0.25.1"
+    });
+  },
+  [/fix.*add\s+dependencies/]
+);
+
+test(
   "package dependencies increase beta <> rc",
   pkgt,
   {
