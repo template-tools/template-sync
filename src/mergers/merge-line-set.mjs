@@ -18,7 +18,11 @@ function set2lines(values, options) {
  */
 export class MergeLineSet extends Merger {
   static get defaultOptions() {
-    return { ...super.defaultOptions, trailingNewline: true, defaultIgnore: [""] };
+    return { ...super.defaultOptions, trailingNewline: true, defaultIgnore: [""],
+      mergeHints: {
+         "*": { }
+       }
+     };
   }
 
   static async merge(
