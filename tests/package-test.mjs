@@ -26,8 +26,8 @@ async function pkgt(
   });
 
   // also fill mock repo
-  if(content !== undefined) {
-    const branch = await context.provider.branch('targetUser/targetRepo');
+  if (content !== undefined) {
+    const branch = await context.provider.branch("targetUser/targetRepo");
     branch.files[FILE_NAME] = JSON.stringify(content);
   }
 
@@ -70,9 +70,9 @@ pkgt.title = (
   expected,
   message
 ) =>
-  `package ${providedTitle} ${JSON.stringify(
-    template
-  )} ${content} ${expected}`.trim();
+  `package ${providedTitle} ${JSON.stringify(template)} ${JSON.stringify(
+    content
+  )}`.trim();
 
 test(
   "empty bugs results in no change",
@@ -111,7 +111,6 @@ test(
   },
   undefined,
   undefined,
-
   {
     name: "targetRepo",
     homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
@@ -169,7 +168,7 @@ test(
 );
 
 test(
-  "package skip lower versions engines",
+  "skip lower versions engines",
   pkgt,
   {
     engines: {
@@ -221,7 +220,7 @@ test(
 );
 
 test(
-  "package preserve extra prepare",
+  "preserve extra prepare",
   pkgt,
   {
     scripts: {
@@ -246,7 +245,7 @@ test(
 );
 
 test(
-  "package handle missing scripts in template",
+  "handle missing scripts in template",
   pkgt,
   {
     scripts: {
@@ -264,7 +263,7 @@ test(
 );
 
 test(
-  "package bin with expander",
+  "bin with expander",
   pkgt,
   {
     bin: {
@@ -289,7 +288,7 @@ test(
 );
 
 test(
-  "package devDependencies keep cracks",
+  "devDependencies keep cracks",
   pkgt,
   {
     devDependencies: {}
@@ -313,7 +312,7 @@ test(
 );
 
 test(
-  "package devDependencies remove cracks",
+  "devDependencies remove cracks",
   pkgt,
   {
     devDependencies: {
@@ -334,7 +333,7 @@ test(
 );
 
 test(
-  "package devDependencies",
+  "devDependencies",
   pkgt,
   {
     devDependencies: {
@@ -364,7 +363,7 @@ test(
 );
 
 test(
-  "package dependencies only increase",
+  "dependencies only increase",
   pkgt,
   {
     devDependencies: {
@@ -394,30 +393,42 @@ test(
 );
 
 test(
-  "package update dependencies => fix",
+  "update dependencies => fix",
   pkgt,
   {
     dependencies: {
-      a: "0.25.0"
+      a: "^2.0.0"
     }
   },
   {
     dependencies: {
-      a: "^0.25.1"
+      a: "^1.0.0"
+    },
+    name: "targetRepo",
+    repository: {
+      type: "git",
+      url: "http://mock-provider.com/targetUser/targetRepo"
+    },
+    bugs: {
+      url: "http://mock-provider.com/targetUser/targetRepo/issues"
+    },
+    homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
+    template: {
+      inheritFrom: "templateRepo"
     }
   },
   undefined,
   undefined,
   (t, merged) => {
     t.deepEqual(merged.dependencies, {
-      a: "^0.25.1"
+      a: "^2.0.0"
     });
   },
-  [/fix.*add\s+dependencies/]
+  [/fix\(package\):.*add.*2.0.0.*dependencies\.a/]
 );
 
 test(
-  "package dependencies increase beta <> rc",
+  "dependencies increase beta <> rc",
   pkgt,
   {
     devDependencies: {
@@ -439,7 +450,7 @@ test(
 );
 
 test(
-  "package dependencies git",
+  "dependencies git",
   pkgt,
   {
     devDependencies: {
@@ -461,7 +472,7 @@ test(
 );
 
 test(
-  "package keywords",
+  "keywords",
   pkgt,
   {},
   {
@@ -484,7 +495,7 @@ test(
 );
 
 test(
-  "package keywords empty",
+  "keywords empty",
   pkgt,
   {},
   {
@@ -503,7 +514,7 @@ test(
 );
 
 test(
-  "package remove null keyword",
+  "remove null keyword",
   pkgt,
   {
     template: {}
@@ -521,7 +532,7 @@ test(
 );
 
 test(
-  "package remove unexpanded {{xxx}}",
+  "remove unexpanded {{xxx}}",
   pkgt,
   {
     template: {}
@@ -536,7 +547,7 @@ test(
     t.true(merged.browser === undefined);
     t.true(merged.main === "a value");
   },
-  /chore\(package\): remove unknown value for browser \({{browser}}\)/
+  /chore\(package\): remove {{browser}} \(browser\)/
 );
 
 test(
@@ -584,7 +595,7 @@ test(
   /add .\/build\/coverage.*nyc.report-dir/
 );
 
-test("package start fresh", pkgt, undefined, undefined, undefined, undefined, {
+test("start fresh", pkgt, undefined, undefined, undefined, undefined, {
   name: "targetRepo",
   homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
   bugs: {

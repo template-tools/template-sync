@@ -15,7 +15,7 @@ import {
 } from "../detect-dependencies.mjs";
 
 import {
-  actions2messages,
+  actions2message,
   aggregateActions,
   jspath,
   asScalar,
@@ -98,13 +98,7 @@ const sortedKeys = [
   "template"
 ];
 
-const propertyKeys = [
-  "description",
-  "version",
-  "name",
-  "main",
-  "browser"
-];
+const propertyKeys = ["description", "version", "name", "main", "browser"];
 
 const REMOVE_HINT = { compare, removeEmpty: true };
 const DEPENDENCY_HINT = { merge: mergeVersionsLargest };
@@ -189,7 +183,6 @@ export class Package extends Merger {
     sourceEntry,
     options = this.defaultOptions
   ) {
-    const messages = [];
     const name = destinationEntry.name;
     const templateContent = await sourceEntry.getString();
     const original = await destinationEntry.getString();
@@ -220,8 +213,7 @@ export class Package extends Merger {
       homepage: context.targetBranch.homePageURL,
       template: {
         inheritFrom: asScalar([
-          ...context.templateSources
-            .filter(t => t.startsWith("-")),
+          ...context.templateSources.filter(t => t.startsWith("-")),
           ...[...context.template.initialBranches].map(
             branch => branch.fullCondensedName
           )
@@ -259,8 +251,9 @@ export class Package extends Merger {
       "",
       (action, hint) => aggregateActions(actions, action, hint),
       {
+        "*": { scope: "package", type: "chore" },
         "": { orderBy: sortedKeys },
-        type: { type: 'fix' },
+        type: { type: "fix" },
         keywords: { removeEmpty: true, compare, type: "docs" },
         repository: { compare },
         files: { compare, scope: "files", removeEmpty: true },
@@ -346,8 +339,7 @@ export class Package extends Merger {
         },
         "template.usedBy": { merge: mergeSkip },
         "template.repository": { remove: true },
-        ...options.mergeHints,
-        "*": { scope: "package", type: "chore" }
+        ...options.mergeHints
       }
     );
 
@@ -377,9 +369,12 @@ export class Package extends Merger {
           if (templateValue !== targetValue) {
             setter(templateValue);
 
-            messages.push(
-              `chore(package): set ${action.path}='${templateValue}' as in template`
-            );
+            aggregateActions(actions, {
+              scope: "package",
+              type: "chore",
+              add: templateValue,
+              path: action.path
+            });
           }
         });
       }
@@ -392,9 +387,12 @@ export class Package extends Merger {
         delete target[key];
 
         if (unknownKeys.has(key)) {
-          messages.push(
-            `chore(package): remove unknown value for ${key} ({{${key}}})`
-          );
+          aggregateActions(actions, {
+            scope: "package",
+            type: "chore",
+            remove: "{{" + key + "}}",
+            path: key
+          });
         }
       }
     });
@@ -406,15 +404,12 @@ export class Package extends Merger {
     if (originalLastChar === "\n" && lastChar === "}") {
       merged += "\n";
     }
-    
+
     return merged === original
       ? undefined
       : {
           entry: new StringContentEntry(name, merged),
-          message: [
-            ...messages,
-            ...actions2messages(actions, options.messagePrefix, name)
-          ].join("\n")
+          message: actions2message(actions, options.messagePrefix, name)
         };
   }
 }

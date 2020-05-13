@@ -104,7 +104,7 @@ test("template entryMergers", async t => {
     Package,
     {
       messagePrefix: "",
-      mergeHints: { "*": {} },
+      mergeHints: { },
       expand: true,
       actions: [],
       keywords: [],
