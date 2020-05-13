@@ -260,6 +260,7 @@ export class Package extends Merger {
       (action, hint) => aggregateActions(actions, action, hint),
       {
         "": { orderBy: sortedKeys },
+        type: { type: 'fix' },
         keywords: { removeEmpty: true, compare, type: "docs" },
         repository: { compare },
         files: { compare, scope: "files", removeEmpty: true },
@@ -405,7 +406,7 @@ export class Package extends Merger {
     if (originalLastChar === "\n" && lastChar === "}") {
       merged += "\n";
     }
-
+    
     return merged === original
       ? undefined
       : {
