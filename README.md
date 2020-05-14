@@ -31,7 +31,7 @@ npm-template-sync --define "description=a very new fantastic module" -t myUser/m
 ```
 
 
-switch from arlac77/template-github to arlac77/template-arlac77-github template for arlac77/url-cmd arlac77/uti arlac77/content-entry arlac77/repository-provider
+switch from *arlac77/template-github* to *arlac77/template-arlac77-github* template for *arlac77/url-cmd arlac77/uti*, *arlac77/content-entry* and *arlac77/repository-provider*
 
 ```shell
 export GH_TOKEN='token providing repositroy write access' # for github repos
@@ -60,8 +60,8 @@ merges contents from template branch into destination branch handling some speci
 -   [arlac77/template-esm-only](https://github.com/arlac77/template-esm-only) _ava_ _travis_
 -   [arlac77/template-svelte-component](https://github.com/arlac77/template-svelte-component) _svelte_ _rollup_ _testcafe_ _travis_
 -   [arlac77/template-svelte-app](https://github.com/arlac77/template-svelte-app) _svelte_ _rollup_ _pkgbuild_ _travis_
--   [arlac77/template-kronos-module](https://github.com/arlac77/template-kronos-module) template-esm-only with node 13
--   [arlac77/template-kronos-app](https://github.com/arlac77/template-kronos-app) node 13 + systemd
+-   [arlac77/template-kronos-module](https://github.com/arlac77/template-kronos-module) template-esm-only with node 14
+-   [arlac77/template-kronos-app](https://github.com/arlac77/template-kronos-app) node 14 + systemd
 
 # API
 
