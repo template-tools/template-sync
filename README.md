@@ -31,7 +31,7 @@ npm-template-sync --define "description=a very new fantastic module" -t myUser/m
 ```
 
 
-switch from *arlac77/template-github* to *arlac77/template-arlac77-github* template for *arlac77/url-cmd arlac77/uti*, *arlac77/content-entry* and *arlac77/repository-provider*
+switch from [arlac77/template-github](https://github.com/arlac77/template-github) to [arlac77/template-arlac77-github](https://github.com/arlac77/template-arlac77-github) template for [arlac77/url-cmd](https://github.com/arlac77/url-cmd), [arlac77/uti](https://github.com/arlac77/uti), [arlac77/content-entry](https://github.com/arlac77/content-entry) and [arlac77/repository-provider](https://github.com/arlac77/repository-provider)
 
 ```shell
 export GH_TOKEN='token providing repositroy write access' # for github repos
