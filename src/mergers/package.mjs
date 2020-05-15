@@ -311,7 +311,7 @@ export class Package extends Merger {
         "devDependencies.*": DEPENDENCY_HINT,
         peerDependencies: REMOVE_HINT,
         "peerDependencies.*": DEPENDENCY_HINT,
-        optionalDependencies: REMOVE_HINT,
+        optionalDependencies: { ...DEPENDENCY_HINT, type: "fix" },
         "optionalDependencies.*": DEPENDENCY_HINT,
         bundeledDependencies: REMOVE_HINT,
         "bundeledDependencies.*": DEPENDENCY_HINT,
