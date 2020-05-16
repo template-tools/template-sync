@@ -241,7 +241,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
           )
           .join("\n")
       });
-      this.info({ message: "PR", pr: pullRequest });
+      this.info(`${targetBranch.fullCondensedName}: ${pullRequest.number}`);
 
       pullRequests.push(pullRequest);
     } catch (err) {
