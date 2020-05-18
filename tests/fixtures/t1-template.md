@@ -1,4 +1,3 @@
-
 ## npm-template-sync
 
 Keep repository in sync with its template.

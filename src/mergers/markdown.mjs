@@ -18,16 +18,14 @@ export class Markdown extends Merger {
   ) {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();
-
-    const actions = {};
-
+    const originalTree = unified().use(markdown).parse(original);
     const templateTree = unified()
       .use(markdown)
       .parse(await sourceEntry.getString());
-    const originalTree = unified().use(markdown).parse(original);
 
     //console.log([...childTypes(templateTree, "heading")]);
 
+    const actions = {};
     const headings = {};
 
     for (const h of childTypes(originalTree, "heading")) {
