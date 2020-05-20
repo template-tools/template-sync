@@ -17,7 +17,12 @@ import { asArray } from "./util.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
 
-const mergeFunctions = [mergeVersionsLargest, mergeVersionsPreferNumeric];
+const mergeFunctions = [
+  mergeVersionsLargest,
+  mergeVersionsPreferNumeric,
+  mergeSkip,
+  mergeExpressions
+];
 
 const templateCache = new Map();
 
@@ -240,7 +245,6 @@ export class Template extends LogLevelMixin(class {}) {
                   if (path[path.length - 1] === "merge") {
                     for (const f of mergeFunctions) {
                       if (f.name === value) {
-                        console.log(value, parents);
                         parents[parents.length - 1].merge = f;
                         break;
                       }
