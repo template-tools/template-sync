@@ -189,9 +189,10 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
-   * load all templates and collects the files
+   * Load all templates and collects the files
    * @param {string|Object} sources repo nmae or package content
    * @param {string[]} inheritencePath who was requesting us
+   * @return {Object} package as merged from sources
    */
   async _templateFrom(sources, inheritencePath = []) {
     let result = {};
