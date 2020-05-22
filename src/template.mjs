@@ -3,6 +3,8 @@ import fs, { createWriteStream } from "fs";
 import micromatch from "micromatch";
 import {
   merge,
+  mergeVersions,
+  mergeVersionsSmallest,
   mergeVersionsLargest,
   mergeVersionsPreferNumeric,
   mergeExpressions,
@@ -18,6 +20,8 @@ import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
 
 const mergeFunctions = [
+  mergeVersions,
+  mergeVersionsSmallest,
   mergeVersionsLargest,
   mergeVersionsPreferNumeric,
   mergeSkip,

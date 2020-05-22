@@ -2,8 +2,9 @@ import unified from "unified";
 import markdown from "remark-parse";
 import stringify from "remark-stringify";
 import { StringContentEntry } from "content-entry";
+import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
-import { actions2message } from "../util.mjs";
+import { actions2message, aggregateActions } from "../util.mjs";
 
 export class Markdown extends Merger {
   static get pattern() {
@@ -26,6 +27,8 @@ export class Markdown extends Merger {
     //console.log([...childTypes(templateTree, "heading")]);
 
     const actions = {};
+
+    /*
     const headings = {};
 
     for (const h of childTypes(originalTree, "heading")) {
@@ -39,12 +42,24 @@ export class Markdown extends Merger {
       }
     }
 
-    //  originalTree.children.push(...childTypes(templateTree, "heading"));
-
     const merged = unified()
       .use(markdown)
       .use(stringify)
       .stringify(originalTree);
+*/
+
+    const merged = unified()
+      .use(markdown)
+      .use(stringify)
+      .stringify(
+        merge(
+          originalTree,
+          templateTree,
+          "",
+          (action, hint) => aggregateActions(actions, action, hint),
+          options.mergeHints
+        )
+      );
 
     return merged === original
       ? undefined
