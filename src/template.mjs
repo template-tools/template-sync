@@ -332,7 +332,7 @@ export class Template extends LogLevelMixin(class {}) {
           mapping.options
         ]);
       })
-      .reduce((last, current) => [...last, ...current], []);
+      .reduce((last, current) => last.concat(current), []);
   }
 
   /**
