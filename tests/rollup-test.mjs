@@ -97,10 +97,8 @@ test("rollup empty target", async t => {
     new StringContentEntry( "rollup.config.mjs", "export default {};" )
   );
 
-  t.is( await commit.entry.getString(), `export default {
-,
-
-};`);
+  t.is( await commit.entry.getString(), `export default {};`);
+  t.is( await commit.message, `chore(rollup): add missing rollup.config.mjs from template`);
 });
 
 test("rollup without imports and complex target expression", async t => {

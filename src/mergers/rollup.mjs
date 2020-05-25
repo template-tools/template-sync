@@ -10,6 +10,13 @@ export class Rollup extends Merger {
     return "**/rollup.config.*js";
   }
 
+  static get defaultOptions() {
+    return {
+      ...super.defaultOptions,
+      messagePrefix: "chore(rollup): "
+    };
+  }
+
   static optionalDevDependencies(dependencies) {
     return new Set(
       Array.from(dependencies).filter(
@@ -55,7 +62,18 @@ export class Rollup extends Merger {
   ) {
     const name = destinationEntry.name;
     const templateContent = await sourceEntry.getString();
-    const original = (await destinationEntry.isEmpty()) ? templateContent : await destinationEntry.getString();
+
+    if (await destinationEntry.isEmpty()) {
+      return {
+        message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
+        entry: new StringContentEntry(
+          destinationEntry.name,
+          options.expand ? context.expand(templateContent) : templateContent
+        )
+      };
+    }
+
+    const original = await destinationEntry.getString();
 
     let messages = [];
 
@@ -132,7 +150,8 @@ export class Rollup extends Merger {
             "legacy",
             "namespaceToStringTag"
           ],
-          messages
+          messages,
+          options
         );
 
         if (output !== undefined) {
@@ -166,7 +185,7 @@ export class Rollup extends Merger {
     });
 
     if (addedImports.length > 0) {
-      messages.push(`chore(rollup): import ${addedImports.join(",")}`);
+      messages.push(`${options.messagePrefix}import ${addedImports.join(",")}`);
     }
 
     const addedPlugins = [];
@@ -187,10 +206,11 @@ export class Rollup extends Merger {
       }
     });
     if (addedPlugins.length > 0) {
-      messages.push(`chore(rollup): add ${addedPlugins.join(",")}`);
+      messages.push(`${options.messagePrefix}add ${addedPlugins.join(",")}`);
     }
 
     const merged = recast.print(ast).code;
+
     return original === merged
       ? undefined
       : {
@@ -276,7 +296,7 @@ function removePropertiesKey(properties, name) {
   return undefined;
 }
 
-function mergeKeys(source, dest, knownKeys, messages) {
+function mergeKeys(source, dest, knownKeys, messages, options) {
   const mergedKeys = [];
 
   if (source !== undefined) {
@@ -291,7 +311,9 @@ function mergeKeys(source, dest, knownKeys, messages) {
   }
 
   if (mergedKeys.length > 0) {
-    messages.push(`chore(rollup): add to output ${mergedKeys.join(",")}`);
+    messages.push(
+      `${options.messagePrefix}add to output ${mergedKeys.join(",")}`
+    );
   }
 
   return mergedKeys;
