@@ -30,6 +30,14 @@ const mergeFunctions = [
 
 const templateCache = new Map();
 
+
+/**
+ * @typedef {Object} EntryMerger
+ * @property {string} name
+ * @property {Class} factory
+ * @property {Object} options 
+ */
+
 /**
  * @param {Conext} context
  * @param {string[]} sources
@@ -311,7 +319,8 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
-   * @return {Object}
+   * Mergers for all template entries
+   * @return {EntryMerger[]}
    */
   entryMergers() {
     let alreadyPresent = new Set();
