@@ -324,7 +324,7 @@ export class Template extends LogLevelMixin(class {}) {
         const found = micromatch(names, mapping.pattern);
         const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
 
-        alreadyPresent = new Set([...Array.from(alreadyPresent), ...found]);
+        alreadyPresent = new Set([...alreadyPresent, ...found]);
 
         return notAlreadyProcessed.map(name => [
           name,
@@ -332,7 +332,7 @@ export class Template extends LogLevelMixin(class {}) {
           mapping.options
         ]);
       })
-      .reduce((last, current) => Array.from([...last, ...current]), []);
+      .reduce((last, current) => last.concat(current), []);
   }
 
   /**

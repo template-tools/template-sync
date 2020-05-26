@@ -50,7 +50,7 @@ export class Readme extends Merger {
     } else {
       body = body.filter(l => !l.match(/^\[\!\[.*\)$/));
     }
-    const merged = [...badges, ...body].join("\n");
+    const merged = badges.concat(body).join("\n");
 
     return merged === original
       ? undefined

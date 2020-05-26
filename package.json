@@ -44,7 +44,7 @@
     "content-entry": "^2.4.0",
     "expression-expander": "^7.0.5",
     "github-repository-provider": "^7.9.20",
-    "hinted-tree-merger": "^4.1.0",
+    "hinted-tree-merger": "^4.1.2",
     "js-yaml": "^3.14.0",
     "local-repository-provider": "^6.5.34",
     "loglevel-mixin": "^5.0.6",
@@ -63,7 +63,7 @@
     "documentation": "^13.0.0",
     "execa": "^4.0.2",
     "mock-repository-provider": "^5.1.61",
-    "semantic-release": "^17.0.7"
+    "semantic-release": "^17.0.8"
   },
   "engines": {
     "node": ">=14.2.0"

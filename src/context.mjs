@@ -213,9 +213,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
       return pullRequests;
     }
 
-    this.info(commits.map(c => `${c.message}`).join(","));
-
     if (this.dry) {
+      this.info(commits.map(c => `${c.message}`).join(","));
       return pullRequests;
     }
 
@@ -241,7 +240,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
           )
           .join("\n")
       });
-      this.info(`${targetBranch.fullCondensedName}: ${pullRequest.number}`);
+      this.info(`${targetBranch.fullCondensedName}[${pullRequest.number}]: ${commits.map(c => `${c.message}`).join(",")}`);
 
       pullRequests.push(pullRequest);
     } catch (err) {
