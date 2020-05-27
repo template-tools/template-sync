@@ -2,7 +2,7 @@ import test from "ava";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
-import { FileSystemEntry } from "content-entry";
+import { FileSystemEntry } from "content-entry-filesystem";
 import { Markdown } from "../src/mergers/markdown.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
