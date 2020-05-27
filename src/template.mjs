@@ -448,8 +448,6 @@ export class Template extends LogLevelMixin(class {}) {
   }
 }
 
-//replaceWithOneTimeExecutionMethod(Template.prototype, "initialize");
-
 export function mergeTemplate(a, b) {
   const mvl = { keepHints: true, merge: mergeVersionsLargest };
   return merge(a, b, "", undefined, {
