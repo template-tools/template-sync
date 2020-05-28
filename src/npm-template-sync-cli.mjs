@@ -6,9 +6,9 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import program from "commander";
 import { removeSensibleValues } from "remove-sensible-values";
-import { GithubProvider } from "github-repository-provider";
-import { LocalProvider } from "local-repository-provider";
-import { AggregationProvider } from "aggregation-repository-provider";
+import GithubProvider from "github-repository-provider";
+import LocalProvider from "local-repository-provider";
+import AggregationProvider from "aggregation-repository-provider";
 import { Context } from "./context.mjs";
 import { setProperty, defaultEncodingOptions } from "./util.mjs";
 
