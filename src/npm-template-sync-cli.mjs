@@ -23,7 +23,7 @@ process.on("uncaughtException", e => console.error(e));
 process.on("unhandledRejection", reason => console.error(reason));
 
 const properties = {};
-const templates = [];
+let templates = [];
 
 program
   .usage(description)
@@ -44,10 +44,7 @@ program
     "--list-properties",
     "list all properties (if given of the first branch) and exit"
   )
-  .option("-t, --template <identifier>", "template repository", value => {
-    templates.push(value);
-    return templates;
-  })
+  .option("-t, --template <identifier>", "template repository", value => templates=templates.concat(value))
   .option("-u, --dump-template <directory>", "copy aggregated template entries")
   .action(async (commander, branches) => {
     const logLevel = program.trace ? "trace" : program.debug ? "debug" : "info";
@@ -84,7 +81,7 @@ program
       }
 
       for (const branch of branches) {
-        const context = new Context(provider, branch, {
+        const context = new Context(provider, branch, {          
           template: program.template,
           dry: program.dry,
           track: program.track,
