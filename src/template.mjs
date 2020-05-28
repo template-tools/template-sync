@@ -196,6 +196,11 @@ export class Template extends LogLevelMixin(class {}) {
     return this;
   }
 
+  /**
+   * Find a suitable merger
+   * @param {string} name of the entry
+   * @return {Merger} 
+   */
   mergerFor(name) {
     for (const merger of this.mergers) {
       if ([...match([name], merger.pattern)].length) {
