@@ -8,7 +8,7 @@ import { jspath, asArray, log } from "./util.mjs";
 export { Template };
 
 /**
- * context prepared to execute one package
+ * Context prepared to execute one branch
  * @param {string} targetBranchName
  *
  * @property {Object} ctx
@@ -180,29 +180,27 @@ export class Context extends LogLevelMixin(class _Context {}) {
     const template = this.template;
 
     if (this.track && !this.dry) {
-      pullRequests.push(await template.updateUsedBy(targetBranch, this.templateSources));
+      pullRequests.push(
+        await template.updateUsedBy(targetBranch, this.templateSources)
+      );
     }
-
-    const mergers = template.entryMergers();
 
     const commits = (
       await Promise.all(
-        mergers.map(async ([name, merger, options]) => {
+        [...template.entries()].map(async te => {
+          let name = te.name;
           this.trace({
             message: "merge",
             name
           });
+          name = this.expand(name);
 
-          const targetName = this.expand(name);
-          const targetEntry =
-            (await targetBranch.maybeEntry(targetName)) ||
-            new EmptyContentEntry(targetName);
-
-          return merger.merge(
+          return te.merger.factory.merge(
             this,
-            targetEntry,
-            await template.entry(name),
-            options
+            (await targetBranch.maybeEntry(name)) ||
+              new EmptyContentEntry(name),
+            te,
+            te.merger.options
           );
         })
       )
@@ -214,7 +212,11 @@ export class Context extends LogLevelMixin(class _Context {}) {
     }
 
     if (this.dry) {
-      this.info(commits.map(c => `${c.message}`).join(","));
+      this.info(
+        `${targetBranch.fullCondensedName}[DRY]: ${commits
+          .map(c => `${c.message}`)
+          .join(",")}`
+      );
       return pullRequests;
     }
 
@@ -240,7 +242,11 @@ export class Context extends LogLevelMixin(class _Context {}) {
           )
           .join("\n")
       });
-      this.info(`${targetBranch.fullCondensedName}[${pullRequest.number}]: ${commits.map(c => `${c.message}`).join(",")}`);
+      this.info(
+        `${targetBranch.fullCondensedName}[${
+          pullRequest.number
+        }]: ${commits.map(c => `${c.message}`).join(",")}`
+      );
 
       pullRequests.push(pullRequest);
     } catch (err) {

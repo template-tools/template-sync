@@ -1,6 +1,5 @@
 import { join, dirname } from "path";
 import fs, { createWriteStream } from "fs";
-import micromatch from "micromatch";
 import { match } from "repository-provider";
 
 import {
@@ -39,7 +38,7 @@ const templateCache = new Map();
  * @property {Object} options
  */
 
- /**
+/**
  * @typedef {Object} Merger
  * @property {string} type
  * @property {string} pattern
@@ -161,6 +160,8 @@ export class Template extends LogLevelMixin(class {}) {
 
     const pkg = new StringContentEntry("package.json", JSON.stringify(pj));
 
+    pkg.merger = this.mergerFor(pkg.name);
+
     this.entryCache.set(pkg.name, pkg);
 
     for (const branch of this.branches) {
@@ -182,38 +183,53 @@ export class Template extends LogLevelMixin(class {}) {
             await this.mergeEntry(this.context, branch, entry, ec)
           );
         } else {
+          entry.merger = this.mergerFor(entry.name);
           this.entryCache.set(name, entry);
         }
       }
     }
 
+    /*for (const [name, entry] of this.entryCache) {
+      console.log(name, entry.merger && entry.merger.type);
+    }*/
+
     return this;
   }
 
-  async mergeEntry(ctx, branch, a, b) {
+  mergerFor(name) {
     for (const merger of this.mergers) {
-      if ([...match([a.name], merger.pattern)].length) {
-        this.trace(
-          `Merge ${merger.type} ${branch.fullCondensedName}/${a.name} + ${
-            b ? b.name : "<missing>"
-          } '${merger.pattern}'`
-        );
+      if ([...match([name], merger.pattern)].length) {
+        return merger;
+      }
+    }
+  }
 
-        const commit = await merger.factory.merge(ctx, a, b, {
-          ...merger.options,
-          mergeHints: Object.fromEntries(
-            Object.entries(merger.options.mergeHints).map(([k, v]) => [
-              k,
-              { ...v, keepHints: true }
-            ])
-          )
-        });
-        if (commit !== undefined) {
-          return commit.entry;
-        }
+  async mergeEntry(ctx, branch, a, b) {
+    const merger = this.mergerFor(a.name);
+    if (merger !== undefined) {
+      this.trace(
+        `Merge ${merger.type} ${branch.fullCondensedName}/${a.name} + ${
+          b ? b.name : "<missing>"
+        } '${merger.pattern}'`
+      );
+
+      const commit = await merger.factory.merge(ctx, a, b, {
+        ...merger.options,
+        mergeHints: Object.fromEntries(
+          Object.entries(merger.options.mergeHints).map(([k, v]) => [
+            k,
+            { ...v, keepHints: true }
+          ])
+        )
+      });
+      if (commit !== undefined) {
+        const entry = commit.entry;
+        entry.merger = merger;
+        return entry;
       }
     }
 
+    a.merger = merger;
     return a;
   }
 
@@ -299,10 +315,11 @@ export class Template extends LogLevelMixin(class {}) {
     return result;
   }
 
-  *entries(matchingPatterns) {
-    for (const [name, entry] of this.entryCache) {
-      yield entry;
-    }
+  *entries(patterns) {
+    yield* match(this.entryCache.values(), patterns, {
+      getName: entry => entry.name,
+      caseSensitive: true
+    });
   }
 
   async dump(dest) {
@@ -324,32 +341,6 @@ export class Template extends LogLevelMixin(class {}) {
   async properties() {
     const pkg = await this.package();
     return pkg.template ? pkg.template.properties : undefined;
-  }
-
-  /**
-   * Mergers for all template entries
-   * @return {EntryMerger[]}
-   */
-  entryMergers() {
-    let alreadyPresent = new Set();
-    const names = [...this.entryCache.values()]
-      .filter(entry => entry.isBlob)
-      .map(entry => entry.name);
-
-    return this.mergers
-      .map(mapping => {
-        const found = micromatch(names, mapping.pattern);
-        const notAlreadyProcessed = found.filter(f => !alreadyPresent.has(f));
-
-        alreadyPresent = new Set([...alreadyPresent, ...found]);
-
-        return notAlreadyProcessed.map(name => [
-          name,
-          mapping.factory,
-          mapping.options
-        ]);
-      })
-      .reduce((last, current) => last.concat(current), []);
   }
 
   /**

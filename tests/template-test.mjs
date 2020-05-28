@@ -95,23 +95,24 @@ test("template properties", async t => {
   });
 });
 
-test("template entryMergers", async t => {
+test("template entry merger", async t => {
   const template = await new Template(context, ["template"]);
-  const mergers = template.entryMergers();
+  const pkg = template.entry("package.json");
 
-  t.deepEqual(mergers[0], [
-    "package.json",
-    Package,
-    {
+  t.deepEqual(pkg.merger, {
+    factory: Package,
+    type: "Package",
+    pattern: "package.json",
+    options: {
       messagePrefix: "",
-      mergeHints: { },
+      mergeHints: {},
       expand: true,
       actions: [],
       keywords: [],
       optionalDevDependencies: ["cracks", "dont-crack"],
       o1: 77
     }
-  ]);
+  });
 });
 
 test("template merge travis", async t => {
@@ -137,7 +138,12 @@ test("template merge travis", async t => {
 `
   );
 
-  const tm = await template.mergeEntry({ expand: x => x }, await provider.branch('template'), t2, t1);
+  const tm = await template.mergeEntry(
+    { expand: x => x },
+    await provider.branch("template"),
+    t2,
+    t1
+  );
   t.is(
     await tm.getString(),
     `jobs:

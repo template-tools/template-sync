@@ -48,7 +48,6 @@
     "local-repository-provider": "^6.5.39",
     "loglevel-mixin": "^5.0.6",
     "markdown": "^0.5.0",
-    "micromatch": "^4.0.2",
     "one-time-execution-method": "^2.0.1",
     "recast": "^0.19.1",
     "remark-parse": "^8.0.2",
