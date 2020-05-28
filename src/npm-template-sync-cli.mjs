@@ -10,10 +10,7 @@ import { GithubProvider } from "github-repository-provider";
 import { LocalProvider } from "local-repository-provider";
 import { AggregationProvider } from "aggregation-repository-provider";
 import { Context } from "./context.mjs";
-import {
-  setProperty,
-  defaultEncodingOptions
-} from "./util.mjs";
+import { setProperty, defaultEncodingOptions } from "./util.mjs";
 
 const { version, description } = JSON.parse(
   readFileSync(
@@ -38,7 +35,7 @@ program
   .option("--track", "track packages in templates package.json")
   .option(
     "-d, --define <key=value>",
-    "set provider option",
+    "set option",
     (value, properties) => setProperty(properties, ...value.split(/=/)),
     properties
   )
@@ -61,17 +58,10 @@ program
         logLevel
       };
 
-      const provider = new AggregationProvider(
-        [GithubProvider, LocalProvider].map(provider =>
-          provider.initialize(
-            {
-              ...logOptions,
-              ...properties[provider.name]
-            },
-            process.env
-          )
-        ),
-        logOptions
+      const provider = AggregationProvider.initialize(
+        [GithubProvider, LocalProvider],
+        logOptions,
+        process.env
       );
 
       if (program.listProviders) {
