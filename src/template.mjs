@@ -1,6 +1,8 @@
 import { join, dirname } from "path";
 import fs, { createWriteStream } from "fs";
 import micromatch from "micromatch";
+import { match } from "repository-provider";
+
 import {
   merge,
   mergeVersions,
@@ -30,12 +32,19 @@ const mergeFunctions = [
 
 const templateCache = new Map();
 
-
 /**
  * @typedef {Object} EntryMerger
  * @property {string} name
  * @property {Class} factory
- * @property {Object} options 
+ * @property {Object} options
+ */
+
+ /**
+ * @typedef {Object} Merger
+ * @property {string} type
+ * @property {string} pattern
+ * @property {Class} factory
+ * @property {Object} options
  */
 
 /**
@@ -45,7 +54,7 @@ const templateCache = new Map();
  *
  * @property {Conext} context
  * @property {string[]} sources
- * @property {Object[]} mergers
+ * @property {Merger[]} mergers
  * @property {Set<Branch>} branches all used branches direct and inherited
  * @property {Set<Branch>} initialBranches root branches used to define the template
  */
@@ -183,8 +192,7 @@ export class Template extends LogLevelMixin(class {}) {
 
   async mergeEntry(ctx, branch, a, b) {
     for (const merger of this.mergers) {
-      const found = micromatch([a.name], merger.pattern);
-      if (found.length) {
+      if ([...match([a.name], merger.pattern)].length) {
         this.trace(
           `Merge ${merger.type} ${branch.fullCondensedName}/${a.name} + ${
             b ? b.name : "<missing>"
@@ -210,7 +218,7 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
-   * Load all templates and collects the files
+   * Load all templates and collects the entries
    * @param {string|Object} sources repo nmae or package content
    * @param {string[]} inheritencePath who was requesting us
    * @return {Object} package as merged from sources
