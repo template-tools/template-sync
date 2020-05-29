@@ -147,11 +147,13 @@ export class Package extends Merger {
             break;
 
           case "name":
+            properties.fullName = value;
+
             const m = value.match(/^(\@[^\/]+)\/(.*)/);
             if (m) {
               properties.npm.organization = m[1];
               properties.npm.name = m[2];
-              properties[key] = m[2];
+              properties.name = m[2];
               return;
             }
             break;

@@ -33,7 +33,8 @@ test(
   JSON.stringify({ name: "aName", version: "0.0.0-semantic-release" }),
   {
     npm: { name: "aName", fullName: "aName" },
-    name: "aName"
+    name: "aName",
+    fullName: "aName"
   }
 );
 
@@ -44,6 +45,7 @@ test(
   JSON.stringify({ name: "@org/aName" }),
   {
     npm: { name: "aName", fullName: "@org/aName", organization: "@org" },
+    fullName: "@org/aName",
     name: "aName"
   }
 );
@@ -67,6 +69,7 @@ test(
     description: "a description",
     main: "index.mjs",
     name: "aName",
+    fullName: "aName",
     version: "1.2.3",
     api: "/some/path"
   }
