@@ -30,7 +30,6 @@ export GH_TOKEN='token providing repositroy write access' # for github repos
 npm-template-sync --define "description=a very new fantastic module" -t myUser/myTemplate myUser/newModule#aBranch
 ```
 
-
 switch from [arlac77/template-github](https://github.com/arlac77/template-github) to [arlac77/template-arlac77-github](https://github.com/arlac77/template-arlac77-github) template for [arlac77/url-cmd](https://github.com/arlac77/url-cmd), [arlac77/uti](https://github.com/arlac77/uti), [arlac77/content-entry](https://github.com/arlac77/content-entry) and [arlac77/repository-provider](https://github.com/arlac77/repository-provider)
 
 ```shell
@@ -80,30 +79,39 @@ merges contents from template branch into destination branch handling some speci
 -   [Merger](#merger)
     -   [properties](#properties-2)
         -   [Parameters](#parameters-2)
--   [usedDevDependencies](#useddevdependencies)
-    -   [Parameters](#parameters-3)
--   [Template](#template)
-    -   [Parameters](#parameters-4)
+-   [Merger](#merger-1)
     -   [Properties](#properties-3)
-    -   [\_templateFrom](#_templatefrom)
-        -   [Parameters](#parameters-5)
-    -   [entryMergers](#entrymergers)
-    -   [updateUsedBy](#updateusedby)
+    -   [properties](#properties-4)
+        -   [Parameters](#parameters-3)
+-   [usedDevDependencies](#useddevdependencies)
+    -   [Parameters](#parameters-4)
+-   [EntryMerger](#entrymerger)
+    -   [Properties](#properties-5)
+-   [Template](#template)
+    -   [Parameters](#parameters-5)
+    -   [Properties](#properties-6)
+    -   [entryMerger](#entrymerger-1)
         -   [Parameters](#parameters-6)
-    -   [templateFor](#templatefor)
+    -   [mergerFor](#mergerfor)
         -   [Parameters](#parameters-7)
+    -   [\_templateFrom](#_templatefrom)
+        -   [Parameters](#parameters-8)
+    -   [updateUsedBy](#updateusedby)
+        -   [Parameters](#parameters-9)
+    -   [templateFor](#templatefor)
+        -   [Parameters](#parameters-10)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-8)
+    -   [Parameters](#parameters-11)
 
 ## Context
 
 **Extends LogLevelMixin(class \_Context {})**
 
-context prepared to execute one package
+Context prepared to execute one branch
 
 ### Parameters
 
@@ -154,6 +162,27 @@ Deliver some key properties
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
+## Merger
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `pattern` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `factory` **Class** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+### properties
+
+Deliver some key properties
+
+#### Parameters
+
+-   `entry` **ContentEntry** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
 ## usedDevDependencies
 
 all used dev modules
@@ -164,6 +193,16 @@ all used dev modules
 -   `branch` **Branch** 
 
 Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+
+## EntryMerger
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `factory` **Class** 
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ## Template
 
@@ -179,22 +218,40 @@ Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Glob
 
 -   `context` **Conext** 
 -   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
--   `mergers` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
+-   `mergers` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Merger](#merger)>** 
 -   `branches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** all used branches direct and inherited
 -   `initialBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** root branches used to define the template
 
+### entryMerger
+
+Find a suitable merger for each entry
+
+#### Parameters
+
+-   `entries` **Iterator&lt;ContentEntry>** 
+
+Returns **Iterator&lt;\[ContentEntry, [Merger](#merger)]>** 
+
+### mergerFor
+
+Find a suitable merger
+
+#### Parameters
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** of the entry
+
+Returns **[Merger](#merger)** 
+
 ### \_templateFrom
 
-load all templates and collects the files
+Load all templates and collects the entries
 
 #### Parameters
 
 -   `sources` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
 -   `inheritencePath` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** who was requesting us (optional, default `[]`)
 
-### entryMergers
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** package as merged from sources
 
 ### updateUsedBy
 

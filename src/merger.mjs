@@ -23,21 +23,20 @@ export class Merger {
     return {};
   }
 
-  static optionalDevDependencies(dependencies, options = {}) {
-    return new Set(
-      Array.from(dependencies).filter(dep => {
-        if (options.optionalDevDependencies) {
-          for (const r of options.optionalDevDependencies) {
-            if (dep.match(r)) return true;
-          }
+  static optionalDevDependencies(into, dependencies, options = this.defaultOptions) {
+    if (options.optionalDevDependencies) {
+      Array.from(dependencies).forEach(dep => {
+        for (const r of options.optionalDevDependencies) {
+          if (dep.match(r)) into.add(dep);
         }
-        return false;
-      })
-    );
+      });
+    }
+
+    return into;
   }
 
-  static usedDevDependencies(entry) {
-    return new Set();
+  static usedDevDependencies(into, entry) {
+    return into;
   }
 
   static async merge(context, destinationEntry, sourceEntry, options) {

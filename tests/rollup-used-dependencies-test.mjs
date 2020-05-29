@@ -5,6 +5,7 @@ import { Rollup } from "../src/mergers/rollup.mjs";
 async function rudt(t, content, dependencies) {
   t.deepEqual(
     await Rollup.usedDevDependencies(
+      new Set(),
       new StringContentEntry("rolloup.config.mjs", content)
     ),
     new Set(dependencies)
@@ -112,14 +113,58 @@ test(
 
 test("rollup optional dev modules", t => {
   t.deepEqual(
-    Rollup.optionalDevDependencies(
-      new Set([
-        "a",
-        "rollup-plugin-1",
-        "babel-preset-xyz",
-        "@rollup/plugin-commonjs"
-      ])
-    ),
-    new Set(["rollup-plugin-1", "babel-preset-xyz", "@rollup/plugin-commonjs"])
+    [
+      ...Rollup.optionalDevDependencies(
+        new Set(),
+        new Set([
+          "fs",
+          "npm-pkgbuild",
+          "@semantic-release/exec",
+          "@semantic-release/commit-analyzer",
+          "@semantic-release/release-notes-generator",
+          "semantic-release",
+          "svelte",
+          "postcss-import",
+          "builtin-modules",
+          "rollup",
+          "@rollup/plugin-node-resolve",
+          "@rollup/plugin-json",
+          "@rollup/plugin-commonjs",
+          "@rollup/plugin-typescript",
+          "@rollup/plugin-babel",
+          "@rollup/plugin-virtual",
+          "@rollup/plugin-inject",
+          "rollup-plugin-postcss",
+          "rollup-plugin-executable",
+          "rollup-plugin-native",
+          "rollup-plugin-consts",
+          "rollup-plugin-cleanup",
+          "rollup-plugin-dev",
+          "rollup-plugin-terser",
+          "rollup-plugin-gzip",
+          "rollup-plugin-svelte"
+        ])
+      )
+    ].sort(),
+    [
+      "rollup-plugin-postcss",
+      "postcss-import",
+      "rollup-plugin-svelte",
+      "builtin-modules",
+      "@rollup/plugin-node-resolve",
+      "@rollup/plugin-json",
+      "@rollup/plugin-commonjs",
+      "@rollup/plugin-typescript",
+      "@rollup/plugin-babel",
+      "@rollup/plugin-virtual",
+      "@rollup/plugin-inject",
+      "rollup-plugin-executable",
+      "rollup-plugin-native",
+      "rollup-plugin-consts",
+      "rollup-plugin-cleanup",
+      "rollup-plugin-dev",
+      "rollup-plugin-terser",
+      "rollup-plugin-gzip"
+    ].sort()
   );
 });

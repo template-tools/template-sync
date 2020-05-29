@@ -4,7 +4,10 @@ import { JSDoc } from "../src/mergers/jsdoc.mjs";
 
 test("optional dev modules", t => {
   t.deepEqual(
-    JSDoc.optionalDevDependencies(new Set(["a", "babel-preset-latest"])),
+    JSDoc.optionalDevDependencies(
+      new Set(),
+      new Set(["a", "babel-preset-latest"])
+    ),
     new Set(["babel-preset-latest"])
   );
 });
@@ -12,6 +15,7 @@ test("optional dev modules", t => {
 test("used dev modules", async t => {
   t.deepEqual(
     await JSDoc.usedDevDependencies(
+      new Set(),
       new StringContentEntry(
         "a.json",
         `{

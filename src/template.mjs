@@ -197,9 +197,23 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
+   * Find a suitable merger for each entry
+   * @param {Iterator <ContentEntry>} entries
+   * @return {Iterator <[ContentEntry,Merger]>} 
+   */
+  async *entryMerger(entries) {
+    for await (const entry of entries) {
+      const merger = this.mergerFor(entry.name);
+      if (merger) {
+        yield [entry, merger];
+      }
+    }
+  }
+
+  /**
    * Find a suitable merger
    * @param {string} name of the entry
-   * @return {Merger} 
+   * @return {Merger}
    */
   mergerFor(name) {
     for (const merger of this.mergers) {

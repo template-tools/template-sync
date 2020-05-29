@@ -187,20 +187,20 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
     const commits = (
       await Promise.all(
-        [...template.entries()].map(async te => {
-          let name = te.name;
+        [...template.entries()].map(async templateEntry => {
+          let name = templateEntry.name;
           this.trace({
             message: "merge",
             name
           });
           name = this.expand(name);
 
-          return te.merger.factory.merge(
+          return templateEntry.merger.factory.merge(
             this,
             (await targetBranch.maybeEntry(name)) ||
               new EmptyContentEntry(name),
-            te,
-            te.merger.options
+            templateEntry,
+            templateEntry.merger.options
           );
         })
       )

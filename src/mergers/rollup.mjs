@@ -13,24 +13,18 @@ export class Rollup extends Merger {
   static get defaultOptions() {
     return {
       ...super.defaultOptions,
-      messagePrefix: "chore(rollup): "
+      messagePrefix: "chore(rollup): ",
+      optionalDevDependencies: [
+        /\@rollup\/plugin\-.*/,
+        /rollup\-plugin\-.*/,
+        /babel-preset.*/,
+        "postcss",
+        "builtin-modules"
+      ]
     };
   }
 
-  static optionalDevDependencies(dependencies) {
-    return new Set(
-      Array.from(dependencies).filter(
-        m =>
-          m.match(/@rollup\/plugin/) ||
-          m.match(/rollup-plugin/) ||
-          m.match(/babel-preset/) ||
-          m.match(/postcss/) ||
-          m === "builtin-modules"
-      )
-    );
-  }
-
-  static async usedDevDependencies(entry) {
+  static async usedDevDependencies(into, entry) {
     const content = await entry.getString();
     const ast = recast.parse(content, {
       parser: {
@@ -43,15 +37,13 @@ export class Rollup extends Merger {
       }
     });
 
-    const dependencies = new Set();
-
     for (const decl of ast.program.body) {
       if (decl.type === "ImportDeclaration") {
-        dependencies.add(decl.source.value);
+        into.add(decl.source.value);
       }
     }
 
-    return dependencies;
+    return into;
   }
 
   static async merge(

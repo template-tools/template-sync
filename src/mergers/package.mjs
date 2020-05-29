@@ -7,12 +7,6 @@ import {
 } from "hinted-tree-merger";
 import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
-import { Rollup } from "./rollup.mjs";
-
-import {
-  optionalDevDependencies,
-  usedDevDependencies
-} from "../detect-dependencies.mjs";
 
 import {
   actions2message,
@@ -23,9 +17,7 @@ import {
   defaultEncodingOptions
 } from "../util.mjs";
 
-function moduleNames(object) {
-  const modules = new Set();
-
+function moduleNames(object, modules) {
   if (object !== undefined) {
     Object.entries(object).forEach(([k, v]) => {
       if (typeof v === "string") {
@@ -39,7 +31,6 @@ function moduleNames(object) {
       }
     });
   }
-  return modules;
 }
 
 /**
@@ -166,15 +157,12 @@ export class Package extends Merger {
     return properties;
   }
 
-  static optionalDevDependencies(modules = new Set()) {
-    return new Set(["cracks", "dont-crack"].filter(m => modules.has(m)));
-  }
-
-  static async usedDevDependencies(entry) {
-    const content = await entry.getString();
-    const pkg = content.length === 0 ? {} : JSON.parse(content);
-
-    return moduleNames(pkg.release);
+  static async usedDevDependencies(into, entry) {
+    if (await entry.isEmpty()) {
+      return into;
+    }
+    moduleNames(JSON.parse(await entry.getString()).release, into);
+    return into;
   }
 
   static async merge(
@@ -418,30 +406,60 @@ export class Package extends Merger {
 export async function deleteUnusedDevDependencies(context, target, template) {
   if (target.devDependencies) {
     try {
-      const mm = [Package, Rollup].map(m => [m, m.pattern]);
-      const udd = await usedDevDependencies(mm, context.targetBranch);
-
-      const allKnown = new Set([
-        ...Object.keys(target.devDependencies),
-        ...Object.keys(template.devDependencies)
-      ]);
-
-      const ddd = [];
-
-      [...(await optionalDevDependencies(mm, allKnown))]
-        .filter(m => !udd.has(m))
-        .forEach(m => {
-          if (template.devDependencies === undefined) {
-            template.devDependencies = {};
-          }
-          template.devDependencies[m] = "--delete--";
-          ddd.push(m);
-        });
-
-      context.debug(`used devDependencies: ${[...udd]}`);
-      if (ddd.length) {
-        context.debug(`deleted devDependency: ${ddd}`);
+      const usedDevDependencies = new Set();
+      for await (const [entry, merger] of context.template.entryMerger(
+        context.targetBranch.entries()
+      )) {
+        await merger.factory.usedDevDependencies(
+          usedDevDependencies,
+          entry,
+          merger.options
+        );
       }
+
+      const allKnown = new Set(
+        Object.keys(target.devDependencies).concat(
+          Object.keys(template.devDependencies)
+        )
+      );
+
+      const optionalDevDependencies = new Set();
+      for await (const [entry, merger] of context.template.entryMerger(
+        context.targetBranch.entries()
+      )) {
+        await merger.factory.optionalDevDependencies(
+          optionalDevDependencies,
+          allKnown,
+          merger.options
+        );
+      }
+
+      /*console.log(usedDevDependencies);
+      console.log(allKnown);
+      console.log(optionalDevDependencies);
+      console.log(
+        new Set(
+          [...optionalDevDependencies].filter(d => !usedDevDependencies.has(d))
+        )
+      );
+      console.log(
+        new Set(
+          [...usedDevDependencies].filter(d => !optionalDevDependencies.has(d))
+        )
+      );
+      console.log(new Set(Object.keys(template.devDependencies)));
+*/
+
+      template.devDependencies = {
+        ...template.devDependencies,
+        ...Object.fromEntries(
+          [...optionalDevDependencies]
+            .filter(d => !usedDevDependencies.has(d))
+            .map(d => [d, "--delete--"])
+        )
+      };
+
+      context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
     } catch (e) {
       console.log(e);
     }

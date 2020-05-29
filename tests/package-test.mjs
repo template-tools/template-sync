@@ -25,6 +25,8 @@ async function pkgt(
     ...properties
   });
 
+  context.template.mergers.push({ factory: Package, options: Package.defaultOptions, pattern: Package.pattern });
+
   // also fill mock repo
   if (content !== undefined) {
     const branch = await context.provider.branch("targetUser/targetRepo");

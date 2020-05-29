@@ -3,7 +3,7 @@ import { GithubProvider } from "github-repository-provider";
 import { Context } from "../src/context.mjs";
 
 const REPOSITORY_NAME = "arlac77/sync-test-repository";
-const TEMPLATE_REPO = "arlac77/template-cli-app";
+const TEMPLATE_REPO = "arlac77/template-node-app";
 
 test("context prepare", async t => {
   const provider = new GithubProvider(
@@ -26,15 +26,18 @@ test("context prepare", async t => {
   t.is(context.properties.repository.type, "git");
 });
 
-test("context execute - PR", async t => {
+test.only("context execute - PR", async t => {
   const provider = new GithubProvider(
     GithubProvider.optionsFromEnvironment(process.env)
   );
 
   const context = await Context.from(provider, REPOSITORY_NAME, {
-    console,
+    logger: (...args) => console.log(...args),
+   // logLevel: "trace",
     template: TEMPLATE_REPO
   });
+
+  //console.log(context.template.mergers);
 
   const pullRequests = await context.execute();
   t.truthy(pullRequests.length > 0);
