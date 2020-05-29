@@ -123,14 +123,6 @@ export class Package extends Merger {
       npm: { name: pkg.name, fullName: pkg.name }
     };
 
-    if (pkg.name !== undefined) {
-      const m = pkg.name.match(/^(\@[^\/]+)\/(.*)/);
-      if (m) {
-        properties.npm.organization = m[1];
-        properties.npm.name = m[2];
-      }
-    }
-
     if (pkg.template !== undefined) {
       if (pkg.template.repository !== undefined) {
         properties.templateSources = asArray(pkg.template.repository.url);
@@ -145,10 +137,26 @@ export class Package extends Merger {
     }
 
     propertyKeys.forEach(key => {
-      if (pkg[key] !== undefined && pkg[key] !== `{{${key}}}`) {
-        if (!(key === "version" && pkg[key] === "0.0.0-semantic-release")) {
-          properties[key] = pkg[key];
+      const value = pkg[key];
+      if (value !== undefined && value !== `{{${key}}}`) {
+        switch (key) {
+          case "version":
+            if (value === "0.0.0-semantic-release") {
+              return;
+            }
+            break;
+
+          case "name":
+            const m = value.match(/^(\@[^\/]+)\/(.*)/);
+            if (m) {
+              properties.npm.organization = m[1];
+              properties.npm.name = m[2];
+              properties[key] = m[2];
+              return;
+            }
+            break;
         }
+        properties[key] = value;
       }
     });
 
