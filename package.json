@@ -35,17 +35,17 @@
     "lint": "documentation lint ./src/context.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.10.1",
+    "@babel/core": "^7.10.2",
     "@iarna/toml": "^3.0.0",
-    "aggregation-repository-provider": "^2.7.8",
+    "aggregation-repository-provider": "^2.7.9",
     "babylon": "^6.18.0",
     "commander": "^5.1.0",
     "content-entry": "^2.5.0",
     "expression-expander": "^7.0.5",
-    "github-repository-provider": "^7.9.32",
+    "github-repository-provider": "^7.9.33",
     "hinted-tree-merger": "^4.2.3",
     "js-yaml": "^3.14.0",
-    "local-repository-provider": "^6.5.44",
+    "local-repository-provider": "^6.5.45",
     "loglevel-mixin": "^5.0.6",
     "markdown": "^0.5.0",
     "one-time-execution-method": "^2.0.1",
@@ -61,11 +61,11 @@
     "content-entry-filesystem": "^1.0.0",
     "documentation": "^13.0.0",
     "execa": "^4.0.2",
-    "mock-repository-provider": "^5.1.69",
+    "mock-repository-provider": "^5.1.70",
     "semantic-release": "^17.0.8"
   },
   "engines": {
-    "node": ">=14.2.0"
+    "node": ">=14.3.0"
   },
   "repository": {
     "type": "git",

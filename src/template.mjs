@@ -1,6 +1,6 @@
 import { join, dirname } from "path";
 import fs, { createWriteStream } from "fs";
-import { match } from "repository-provider";
+import { matcher } from "matching-iterator";
 
 import {
   merge,
@@ -217,7 +217,7 @@ export class Template extends LogLevelMixin(class {}) {
    */
   mergerFor(name) {
     for (const merger of this.mergers) {
-      if ([...match([name], merger.pattern)].length) {
+      if ([...matcher([name], merger.pattern)].length) {
         return merger;
       }
     }
