@@ -335,8 +335,8 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   *entries(patterns) {
-    yield* match(this.entryCache.values(), patterns, {
-      getName: entry => entry.name,
+    yield* matcher(this.entryCache.values(), patterns, {
+      name: "name",
       caseSensitive: true
     });
   }
