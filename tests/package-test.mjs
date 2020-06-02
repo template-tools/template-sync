@@ -426,7 +426,7 @@ test(
       a: "^2.0.0"
     });
   },
-  [/fix\(package\):.*add.*2.0.0.*dependencies\.a/]
+  [/fix\(deps\):.*add.*2.0.0.*dependencies\.a/]
 );
 
 test(

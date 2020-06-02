@@ -92,7 +92,7 @@ const sortedKeys = [
 const propertyKeys = ["description", "version", "name", "main", "browser"];
 
 const REMOVE_HINT = { compare, removeEmpty: true };
-const DEPENDENCY_HINT = { merge: mergeVersionsLargest };
+const DEPENDENCY_HINT = { merge: mergeVersionsLargest, scope: 'deps' };
 
 /**
  * Merger for package.json
