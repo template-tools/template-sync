@@ -4,14 +4,11 @@ import { matcher } from "matching-iterator";
 
 import {
   merge,
-  mergeVersions,
-  mergeVersionsSmallest,
   mergeVersionsLargest,
-  mergeVersionsPreferNumeric,
   mergeExpressions,
   mergeSkip,
   compare,
-  walk
+  reanimateHints
 } from "hinted-tree-merger";
 import { StringContentEntry } from "content-entry";
 import { LogLevelMixin } from "loglevel-mixin";
@@ -19,15 +16,6 @@ import { LogLevelMixin } from "loglevel-mixin";
 import { asArray } from "./util.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
-
-const mergeFunctions = [
-  mergeVersions,
-  mergeVersionsSmallest,
-  mergeVersionsLargest,
-  mergeVersionsPreferNumeric,
-  mergeSkip,
-  mergeExpressions
-];
 
 const templateCache = new Map();
 
@@ -145,7 +133,8 @@ export class Template extends LogLevelMixin(class {}) {
         ...pj.template.mergers
           .map(m => {
             m.factory = mergers.find(f => f.name === m.type) || ReplaceIfEmpty;
-            m.options = { ...m.factory.defaultOptions, ...m.options };
+            m.options = reanimateHints({ ...m.factory.defaultOptions, ...m.options });
+            //console.log(m.type,m.pattern,m.options.mergeHints);
             return m;
           })
           .sort((a, b) => {
@@ -189,9 +178,7 @@ export class Template extends LogLevelMixin(class {}) {
       }
     }
 
-    /*for (const [name, entry] of this.entryCache) {
-      console.log(name, entry.merger && entry.merger.type);
-    }*/
+
 
     return this;
   }
@@ -199,7 +186,7 @@ export class Template extends LogLevelMixin(class {}) {
   /**
    * Find a suitable merger for each entry
    * @param {Iterator <ContentEntry>} entries
-   * @return {Iterator <[ContentEntry,Merger]>} 
+   * @return {Iterator <[ContentEntry,Merger]>}
    */
   async *entryMerger(entries) {
     for await (const entry of entries) {
@@ -290,25 +277,6 @@ export class Template extends LogLevelMixin(class {}) {
 
         try {
           const pkg = JSON.parse(await pc.getString());
-
-          if (pkg.template && pkg.template.mergers) {
-            pkg.template.mergers.forEach(m => {
-              if (m.options && m.options.mergeHints) {
-                for (const { value, path, parents } of walk(
-                  m.options.mergeHints
-                )) {
-                  if (path[path.length - 1] === "merge") {
-                    for (const f of mergeFunctions) {
-                      if (f.name === value) {
-                        parents[parents.length - 1].merge = f;
-                        break;
-                      }
-                    }
-                  }
-                }
-              }
-            });
-          }
 
           result = mergeTemplate(result, pkg);
 
