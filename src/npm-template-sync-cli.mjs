@@ -57,7 +57,7 @@ program
 
       const provider = AggregationProvider.initialize(
         [GithubProvider, LocalProvider],
-        logOptions,
+        properties,
         process.env
       );
 
