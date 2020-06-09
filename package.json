@@ -51,7 +51,7 @@
     "one-time-execution-method": "^2.0.1",
     "recast": "^0.19.1",
     "remark-parse": "^8.0.2",
-    "remark-stringify": "^8.0.0",
+    "remark-stringify": "^8.1.0",
     "remove-sensible-values": "^1.0.6",
     "unified": "^9.0.0"
   },
