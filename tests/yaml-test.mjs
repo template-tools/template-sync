@@ -18,6 +18,34 @@ test(
 `
 );
 
+test(
+  yamlt,
+  YAML,
+  undefined,
+  `a:
+   - a name
+  `,
+  {},
+  {},
+  `a:
+  - a name
+`
+);
+
+test(
+  yamlt,
+  YAML,
+  `a:
+   - a name
+  `,
+  undefined,
+  {},
+  {},
+  `a:
+  - a name
+`
+);
+
 test.skip(
   yamlt,
   YAML,

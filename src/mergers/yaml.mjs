@@ -33,7 +33,7 @@ export class YAML extends Merger {
 
     const merged = yaml.safeDump(
       merge(
-        yaml.safeLoad(original, ymlOptions) || {},
+        yaml.safeLoad(original, ymlOptions),
         yaml.safeLoad(
           options.expand ? context.expand(template) : template,
           ymlOptions

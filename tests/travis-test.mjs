@@ -128,7 +128,8 @@ before_script:
     node_version: "7.7.2"
   },
   undefined,
-  `node_js: 7.7.2
+  `node_js:
+  - 7.7.2
 before_script:
   - npm prune
 `
