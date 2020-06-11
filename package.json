@@ -12,11 +12,11 @@
   },
   "description": "Keep npm package in sync with its template",
   "keywords": [
-    "npm",
-    "template",
-    "scaffolding",
     "boilerplate",
-    "git"
+    "git",
+    "npm",
+    "scaffolding",
+    "template"
   ],
   "contributors": [
     {
