@@ -73,10 +73,16 @@ export class Context extends LogLevelMixin(class _Context {}) {
   }
 
   async initialize() {
-    const targetBranch = await this.provider.branch(this.targetBranchName);
+    let targetBranch = await this.provider.branch(this.targetBranchName);
 
     if (targetBranch === undefined) {
-      throw new Error(`Unable to find branch ${this.targetBranchName}`);
+      const targetRepository = await this.provider.repository(this.targetBranchName);
+      if(targetRepository !== undefined) {
+        targetBranch = await targetRepository.createBranch(targetRepository.defaultBranchName);
+      }
+      if(targetBranch === undefined) {
+        throw new Error(`Unable to find branch ${this.targetBranchName}`);
+      }
     }
 
     const repository = targetBranch.repository;
