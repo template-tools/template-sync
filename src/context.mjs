@@ -89,7 +89,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
     this.properties.repository = {
       name: repository.name,
-      url: repository.url,
+      url: repository.cloneURL,
       type: repository.type,
       owner: targetBranch.owner.name
     };
