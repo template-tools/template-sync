@@ -83,29 +83,27 @@ merges contents from template branch into destination branch handling some speci
     -   [Properties](#properties-3)
     -   [properties](#properties-4)
         -   [Parameters](#parameters-3)
--   [usedDevDependencies](#useddevdependencies)
-    -   [Parameters](#parameters-4)
 -   [EntryMerger](#entrymerger)
     -   [Properties](#properties-5)
 -   [Template](#template)
-    -   [Parameters](#parameters-5)
+    -   [Parameters](#parameters-4)
     -   [Properties](#properties-6)
     -   [entryMerger](#entrymerger-1)
-        -   [Parameters](#parameters-6)
+        -   [Parameters](#parameters-5)
     -   [mergerFor](#mergerfor)
-        -   [Parameters](#parameters-7)
+        -   [Parameters](#parameters-6)
     -   [\_templateFrom](#_templatefrom)
-        -   [Parameters](#parameters-8)
+        -   [Parameters](#parameters-7)
     -   [updateUsedBy](#updateusedby)
-        -   [Parameters](#parameters-9)
+        -   [Parameters](#parameters-8)
     -   [templateFor](#templatefor)
-        -   [Parameters](#parameters-10)
+        -   [Parameters](#parameters-9)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-11)
+    -   [Parameters](#parameters-10)
 
 ## Context
 
@@ -182,17 +180,6 @@ Deliver some key properties
 -   `entry` **ContentEntry** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## usedDevDependencies
-
-all used dev modules
-
-### Parameters
-
--   `mergers`  
--   `branch` **Branch** 
-
-Returns **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 
 ## EntryMerger
 
