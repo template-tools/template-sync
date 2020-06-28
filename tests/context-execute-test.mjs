@@ -26,7 +26,7 @@ test("context prepare", async t => {
   t.is(context.properties.repository.type, "git");
 });
 
-test.only("context execute - PR", async t => {
+test("context execute - PR", async t => {
   const provider = new GithubProvider(
     GithubProvider.optionsFromEnvironment(process.env)
   );
@@ -50,7 +50,7 @@ test.only("context execute - PR", async t => {
   console.log("DSTINATION",pullRequest.destination.name);
   */
   for(const pr of pullRequests) {
-    await pr.destination.delete();
+   // await pr.destination.delete();
     await pr.delete();
   }
 });
