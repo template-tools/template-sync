@@ -35,7 +35,7 @@
     "lint": "documentation lint ./src/context.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.10.3",
+    "@babel/core": "^7.10.4",
     "@iarna/toml": "^3.0.0",
     "aggregation-repository-provider": "^2.8.7",
     "babylon": "^6.18.0",
