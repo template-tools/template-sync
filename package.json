@@ -53,7 +53,7 @@
     "remark-parse": "^8.0.3",
     "remark-stringify": "^8.1.1",
     "remove-sensible-values": "^1.0.6",
-    "unified": "^9.0.0"
+    "unified": "^9.1.0"
   },
   "devDependencies": {
     "ava": "^3.10.1",
