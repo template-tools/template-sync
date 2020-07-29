@@ -45,7 +45,7 @@
     "github-repository-provider": "^7.15.5",
     "hinted-tree-merger": "^4.4.0",
     "js-yaml": "^3.14.0",
-    "local-repository-provider": "^6.7.9",
+    "local-repository-provider": "^6.7.10",
     "loglevel-mixin": "^5.0.6",
     "markdown": "^0.5.0",
     "one-time-execution-method": "^2.0.1",
@@ -53,7 +53,7 @@
     "remark-parse": "^8.0.3",
     "remark-stringify": "^8.1.1",
     "remove-sensible-values": "^1.0.6",
-    "unified": "^9.0.0"
+    "unified": "^9.1.0"
   },
   "devDependencies": {
     "ava": "^3.11.0",
