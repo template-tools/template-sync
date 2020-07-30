@@ -87,6 +87,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
     const repository = targetBranch.repository;
 
+    this.properties.fullName = repository.name;
+
     this.properties.repository = {
       name: repository.name,
       url: repository.cloneURL,
