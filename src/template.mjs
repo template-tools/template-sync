@@ -178,8 +178,6 @@ export class Template extends LogLevelMixin(class {}) {
       }
     }
 
-
-
     return this;
   }
 
@@ -356,7 +354,6 @@ export class Template extends LogLevelMixin(class {}) {
       if (pkg.template !== undefined && pkg.template.usedBy !== undefined) {
         const name = targetBranch.fullCondensedName;
 
-        //console.log("find", name, "in", pkg.template.usedBy);
         if (pkg.template.usedBy.find(n => n === name)) {
           pkg.template.usedBy = pkg.template.usedBy.filter(n => n !== name);
 
