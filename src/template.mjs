@@ -132,7 +132,7 @@ export class Template extends LogLevelMixin(class {}) {
       this.mergers.push(
         ...pj.template.mergers
           .map(m => {
-            m.enabled = true;
+            if(m.enabled === undefined) { m.enabled = true; }
             m.factory = mergers.find(f => f.name === m.type) || ReplaceIfEmpty;
             m.options = reanimateHints({ ...m.factory.defaultOptions, ...m.options });
             return m;

@@ -8,6 +8,16 @@ import { Package } from "../src/mergers/package.mjs";
 import { Travis } from "../src/mergers/travis.mjs";
 
 const provider = new MockProvider({
+  template_no_travis: {
+    master: {
+      "package.json": JSON.stringify({
+        template: {
+          mergers: [{ enabled: false, type: "Travis", pattern: ".travis.yml" }],
+          inheritFrom: ["template"]
+        }
+      })
+    }
+  },
   template: {
     master: {
       "package.json": JSON.stringify({
@@ -28,7 +38,7 @@ const provider = new MockProvider({
         devDependencies: { rollup: "^1.29.1" },
         template: {
           properties: { a: 1 },
-          mergers: [{ type: "Travis", pattern: ".travis.yml" }],
+          mergers: [{ enabled: true, type: "Travis", pattern: ".travis.yml" }],
           inheritFrom: ["template_b"]
         }
       }),
@@ -195,6 +205,35 @@ test("template package content", async t => {
         }
       ],
       inheritFrom: ["template_b"]
+    }
+  });
+});
+
+test.skip("template disavle_merger", async t => {
+  const template = await new Template(context, ["template_no_travis"]);
+
+  t.deepEqual(await template.package(), {
+    devDependencies: { ava: "^2.4.0", rollup: "^1.29.1" },
+    template: {
+      properties: { a: 1 },
+      mergers: [
+        {
+          enabled: false,
+          type: "Travis",
+          pattern: ".travis.yml",
+          options: {
+            ...Travis.defaultOptions,
+            mergeHints: { ...Travis.defaultOptions.mergeHints, "*node_js": {} }
+          }
+        },
+        {
+          enabled: true,
+          type: "Package",
+          pattern: "package.json",
+          options: { ...Package.defaultOptions, o1: 77 }
+        }
+      ],
+      inheritFrom: ["template"]
     }
   });
 });
