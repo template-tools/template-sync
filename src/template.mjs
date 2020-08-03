@@ -134,7 +134,6 @@ export class Template extends LogLevelMixin(class {}) {
           .map(m => {
             m.factory = mergers.find(f => f.name === m.type) || ReplaceIfEmpty;
             m.options = reanimateHints({ ...m.factory.defaultOptions, ...m.options });
-            //console.log(m.type,m.pattern,m.options.mergeHints);
             return m;
           })
           .sort((a, b) => {
