@@ -132,9 +132,9 @@ export class Template extends LogLevelMixin(class {}) {
       this.mergers.push(
         ...pj.template.mergers
           .map(m => {
+            if(m.enabled === undefined) { m.enabled = true; }
             m.factory = mergers.find(f => f.name === m.type) || ReplaceIfEmpty;
             m.options = reanimateHints({ ...m.factory.defaultOptions, ...m.options });
-            //console.log(m.type,m.pattern,m.options.mergeHints);
             return m;
           })
           .sort((a, b) => {
@@ -178,8 +178,6 @@ export class Template extends LogLevelMixin(class {}) {
       }
     }
 
-
-
     return this;
   }
 
@@ -212,7 +210,7 @@ export class Template extends LogLevelMixin(class {}) {
 
   async mergeEntry(ctx, branch, a, b) {
     const merger = this.mergerFor(a.name);
-    if (merger !== undefined) {
+    if (merger !== undefined && merger.enabled) {
       this.trace(
         `Merge ${merger.type} ${branch.fullCondensedName}/${a.name} + ${
           b ? b.name : "<missing>"
@@ -356,7 +354,6 @@ export class Template extends LogLevelMixin(class {}) {
       if (pkg.template !== undefined && pkg.template.usedBy !== undefined) {
         const name = targetBranch.fullCondensedName;
 
-        //console.log("find", name, "in", pkg.template.usedBy);
         if (pkg.template.usedBy.find(n => n === name)) {
           pkg.template.usedBy = pkg.template.usedBy.filter(n => n !== name);
 

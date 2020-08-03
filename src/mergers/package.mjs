@@ -187,8 +187,7 @@ export class Package extends Merger {
     const originalLastChar = original[original.length - 1];
     const targetRepository = context.targetBranch.repository;
 
-    let target =
-      original === undefined || original === "" ? {} : JSON.parse(original);
+    let target = original === "" ? {} : JSON.parse(original);
 
     const unknownKeys = new Set();
     propertyKeys.forEach(key => {
