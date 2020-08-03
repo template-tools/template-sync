@@ -132,6 +132,7 @@ export class Template extends LogLevelMixin(class {}) {
       this.mergers.push(
         ...pj.template.mergers
           .map(m => {
+            m.enabled = true;
             m.factory = mergers.find(f => f.name === m.type) || ReplaceIfEmpty;
             m.options = reanimateHints({ ...m.factory.defaultOptions, ...m.options });
             return m;
@@ -209,7 +210,7 @@ export class Template extends LogLevelMixin(class {}) {
 
   async mergeEntry(ctx, branch, a, b) {
     const merger = this.mergerFor(a.name);
-    if (merger !== undefined) {
+    if (merger !== undefined && merger.enabled) {
       this.trace(
         `Merge ${merger.type} ${branch.fullCondensedName}/${a.name} + ${
           b ? b.name : "<missing>"

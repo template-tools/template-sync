@@ -73,12 +73,14 @@ test("template mergers", async t => {
 
   t.deepEqual(template.mergers, [
     {
+      enabled: true,
       type: "Package",
       factory: Package,
       pattern: "package.json",
       options: { ...Package.defaultOptions, o1: 77 }
     },
     {
+      enabled: true,
       type: "Travis",
       factory: Travis,
       pattern: ".travis.yml",
@@ -100,6 +102,7 @@ test("template entry merger", async t => {
   const pkg = template.entry("package.json");
 
   t.deepEqual(pkg.merger, {
+    enabled: true,
     factory: Package,
     type: "Package",
     pattern: "package.json",
@@ -176,11 +179,13 @@ test("template package content", async t => {
       properties: { a: 1 },
       mergers: [
         {
+          enabled: true,
           type: "Package",
           pattern: "package.json",
           options: { ...Package.defaultOptions, o1: 77 }
         },
         {
+          enabled: true,
           type: "Travis",
           pattern: ".travis.yml",
           options: {
