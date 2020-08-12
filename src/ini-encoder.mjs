@@ -170,7 +170,7 @@ function safe(val) {
   // all kinds of values and keys
   if (
     typeof val !== "string" ||
-    val.match(/[=\r\n]/) ||
+    val.match(/[\r\n]/) ||
     val.match(/^\[/) ||
     (val.length > 1 && isQuoted(val)) ||
     val !== val.trim()
