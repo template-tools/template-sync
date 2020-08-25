@@ -132,18 +132,20 @@ export class Template extends LogLevelMixin(class {}) {
       this.mergers.push(
         ...pj.template.mergers
           .map(m => {
-            if(m.enabled === undefined) { m.enabled = true; }
+            if (m.enabled === undefined) {
+              m.enabled = true;
+            }
             m.factory = mergers.find(f => f.name === m.type) || ReplaceIfEmpty;
-            m.options = reanimateHints({ ...m.factory.defaultOptions, ...m.options });
+            m.options = reanimateHints({
+              ...m.factory.defaultOptions,
+              ...m.options
+            });
+            m.priority = m.options.priority
+              ? m.options.priority
+              : m.factory.priority;
             return m;
           })
-          .sort((a, b) => {
-            // order default pattern to the last
-
-            if (a.pattern === "**/*") return 1;
-            if (b.pattern === "**/*") return -1;
-            return 0;
-          })
+          .sort((a, b) => b.priority - a.priority)
       );
     }
 

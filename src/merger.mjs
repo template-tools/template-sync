@@ -6,6 +6,10 @@ export class Merger {
     return "**/*";
   }
 
+  static get priority() {
+    return 1.0;
+  }
+
   static get defaultOptions() {
     return {
       messagePrefix: "",
