@@ -87,14 +87,16 @@ test("template mergers", async t => {
       type: "Package",
       factory: Package,
       pattern: "package.json",
-      options: { ...Package.defaultOptions, o1: 77 }
+      options: { ...Package.defaultOptions, o1: 77 },
+      priority: 1
     },
     {
       enabled: true,
       type: "Travis",
       factory: Travis,
       pattern: ".travis.yml",
-      options: { ...Travis.defaultOptions }
+      options: { ...Travis.defaultOptions },
+      priority: 1
     }
   ]);
 });
@@ -116,6 +118,7 @@ test("template entry merger", async t => {
     factory: Package,
     type: "Package",
     pattern: "package.json",
+    priority: 1,
     options: {
       messagePrefix: "",
       mergeHints: {},
@@ -192,12 +195,14 @@ test("template package content", async t => {
           enabled: true,
           type: "Package",
           pattern: "package.json",
+          priority: 1,
           options: { ...Package.defaultOptions, o1: 77 }
         },
         {
           enabled: true,
           type: "Travis",
           pattern: ".travis.yml",
+          priority: 1,
           options: {
             ...Travis.defaultOptions,
             mergeHints: { ...Travis.defaultOptions.mergeHints, "*node_js": {} }
