@@ -12,6 +12,7 @@ import { INI } from "./mergers/ini.mjs";
 import { YAML } from "./mergers/yaml.mjs";
 import { JSONMerger } from "./mergers/json.mjs";
 import { JSDoc } from "./mergers/jsdoc.mjs";
+import { Skip } from "./mergers/skip.mjs";
 
 export const mergers = [
   Travis,
@@ -27,5 +28,6 @@ export const mergers = [
   MergeLineSet,
   License,
   ReplaceIfEmpty,
-  Replace
+  Replace,
+  Skip
 ];
