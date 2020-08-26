@@ -49,14 +49,14 @@
     "loglevel-mixin": "^5.0.6",
     "markdown": "^0.5.0",
     "one-time-execution-method": "^2.0.1",
-    "recast": "^0.19.1",
+    "recast": "^0.20.1",
     "remark-parse": "^8.0.3",
     "remark-stringify": "^8.1.1",
     "remove-sensible-values": "^1.0.6",
-    "unified": "^9.1.0"
+    "unified": "^9.2.0"
   },
   "devDependencies": {
-    "ava": "^3.11.1",
+    "ava": "^3.12.1",
     "c8": "^7.3.0",
     "content-entry-filesystem": "^1.0.0",
     "documentation": "^13.0.2",
