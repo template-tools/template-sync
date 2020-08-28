@@ -101,6 +101,7 @@ merges contents from template branch into destination branch handling some speci
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
+-   [Skip](#skip)
 -   [jspath](#jspath)
     -   [Parameters](#parameters-10)
 
@@ -280,6 +281,12 @@ injects badges into README.md
 **Extends Merger**
 
 Replace file from template (always)
+
+## Skip
+
+**Extends Merger**
+
+Does not generate destination entry
 
 ## jspath
 
