@@ -214,7 +214,7 @@ test("template package content", async t => {
   });
 });
 
-test.skip("template disavle_merger", async t => {
+test.skip("template disable_merger", async t => {
   const template = await new Template(context, ["template_no_travis"]);
 
   t.deepEqual(await template.package(), {
@@ -224,6 +224,7 @@ test.skip("template disavle_merger", async t => {
       mergers: [
         {
           enabled: false,
+          priority: 1,
           type: "Travis",
           pattern: ".travis.yml",
           options: {
@@ -233,6 +234,7 @@ test.skip("template disavle_merger", async t => {
         },
         {
           enabled: true,
+          priority: 1,
           type: "Package",
           pattern: "package.json",
           options: { ...Package.defaultOptions, o1: 77 }
