@@ -43,7 +43,7 @@
     "content-entry": "^2.5.0",
     "expression-expander": "^7.0.5",
     "github-repository-provider": "^7.15.9",
-    "hinted-tree-merger": "^4.4.1",
+    "hinted-tree-merger": "^4.4.2",
     "js-yaml": "^3.14.0",
     "local-repository-provider": "^6.7.13",
     "loglevel-mixin": "^5.0.6",
@@ -65,7 +65,7 @@
     "semantic-release": "^17.1.1"
   },
   "engines": {
-    "node": ">=14.8.0"
+    "node": ">=14.9.0"
   },
   "repository": {
     "type": "git",
