@@ -52,3 +52,14 @@ test("jspath get", t =>
     ),
     3
   ));
+
+test("jspath get empty", t =>
+  t.is(
+    jspath(
+      {
+        a: { b: "" }
+      },
+      "a.b"
+    ),
+   ""
+  ));
