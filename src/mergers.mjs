@@ -13,12 +13,14 @@ import { YAML } from "./mergers/yaml.mjs";
 import { JSONMerger } from "./mergers/json.mjs";
 import { JSDoc } from "./mergers/jsdoc.mjs";
 import { Skip } from "./mergers/skip.mjs";
+import { YARNLockfile } from "./mergers/yarn-lockfile.mjs";
 
 export const mergers = [
   Travis,
   TOML,
   INI,
   YAML,
+  YARNLockfile,
   Markdown,
   Rollup,
   Readme,

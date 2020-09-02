@@ -37,6 +37,7 @@
   "dependencies": {
     "@babel/core": "^7.11.4",
     "@iarna/toml": "^3.0.0",
+    "@yarnpkg/lockfile": "^1.1.0",
     "aggregation-repository-provider": "^2.8.9",
     "babylon": "^6.18.0",
     "commander": "^6.1.0",
