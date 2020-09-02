@@ -1,4 +1,4 @@
-import * as lockfile from '@yarnpkg/lockfile';
+import lockfile from '@yarnpkg/lockfile';
 import { StringContentEntry } from "content-entry";
 import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
@@ -12,7 +12,6 @@ export class YARNLockfile extends Merger {
   static get defaultOptions() {
     return {
       ...super.defaultOptions,
-      expand: true,
       messagePrefix: "chore: "
     };
   }
@@ -29,10 +28,12 @@ export class YARNLockfile extends Merger {
 
     const actions = {};
 
+    //console.log(lockfile.parse(original).object);
+
     const merged = lockfile.stringify(
       merge(
-        lockfile.parse(original),
-        lockfile.parse(options.expand ? context.expand(template) : template),
+        lockfile.parse(original).object,
+        lockfile.parse(template).object,
         "",
         (action, hint) => aggregateActions(actions, action, hint),
         options.mergeHints
