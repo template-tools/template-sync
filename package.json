@@ -13,11 +13,11 @@
   "description": "Keep npm package in sync with its template",
   "keywords": [
     "boilerplate",
+    "degit",
     "git",
     "npm",
     "scaffolding",
-    "template",
-    "degit"
+    "template"
   ],
   "contributors": [
     {
