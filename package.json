@@ -16,7 +16,8 @@
     "git",
     "npm",
     "scaffolding",
-    "template"
+    "template",
+    "degit"
   ],
   "contributors": [
     {
