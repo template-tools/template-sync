@@ -284,8 +284,10 @@ export class Package extends Merger {
             "poststop",
             "pretest",
             "test",
+            /^test/,
             "posttest",
             "cover",
+            /^cover/,
             "preuninstall",
             "uninstall",
             "postuninstall",
@@ -294,6 +296,7 @@ export class Package extends Merger {
             "postversion",
             "docs",
             "lint",
+            /^lint/,
             "package"
           ]
         },
