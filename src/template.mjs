@@ -35,6 +35,20 @@ const templateCache = new Map();
  */
 
 /**
+ * Remove duplicate sources
+ * sources staring wit '-' will be removed
+ * @param {string[]} sources
+ */
+function normalizeTemplateSources(sources) {
+  sources = [...new Set(asArray(sources))];
+  const remove = sources.filter(s => s[0] === "-").map(s => s.slice(1));
+  return sources
+    .filter(s => remove.indexOf(s) < 0)
+    .filter(s => s[0] !== "-")
+    .sort();
+}
+
+/**
  * @param {Conext} context
  * @param {string[]} sources
  * @param {Object} options
@@ -51,21 +65,13 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
-   * Remove duplicate sources
-   * sources staring wit '-' will be removed
+   * load a template
    * @param {Context} context
    * @param {string[]} sources
    * @param {Object} options
    */
   static async templateFor(context, sources, options) {
-    sources = [...new Set(asArray(sources))];
-
-    const remove = sources.filter(s => s[0] === "-").map(s => s.slice(1));
-    sources = sources
-      .filter(s => remove.indexOf(s) < 0)
-      .filter(s => s[0] !== "-")
-      .sort();
-
+    sources = normalizeTemplateSources(sources);
     const key = sources.join(",");
 
     let template = templateCache.get(key);
@@ -394,52 +400,49 @@ export class Template extends LogLevelMixin(class {}) {
     return Promise.all(
       [
         ...removePrs,
-        ...[...this.initialBranches]
-          .map(async sourceBranch => {
-            let prBranch = await sourceBranch.repository.branch(
-              usedByBranchName
-            );
-            if (prBranch) {
-              sourceBranch = prBranch;
+        ...[...this.initialBranches].map(async sourceBranch => {
+          let prBranch = await sourceBranch.repository.branch(usedByBranchName);
+          if (prBranch) {
+            sourceBranch = prBranch;
+          }
+
+          const entry = await sourceBranch.entry("package.json");
+          const pkg = JSON.parse(await entry.getString());
+
+          if (pkg.template === undefined) {
+            pkg.template = {};
+          }
+          if (!Array.isArray(pkg.template.usedBy)) {
+            pkg.template.usedBy = [];
+          }
+
+          const name = targetBranch.fullCondensedName;
+
+          if (!pkg.template.usedBy.find(n => n === name)) {
+            pkg.template.usedBy.push(name);
+            pkg.template.usedBy = pkg.template.usedBy.sort();
+
+            if (prBranch === undefined) {
+              prBranch = await sourceBranch.createBranch(usedByBranchName);
             }
 
-            const entry = await sourceBranch.entry("package.json");
-            const pkg = JSON.parse(await entry.getString());
+            await prBranch.commit(`fix: add ${name}`, [
+              new StringContentEntry(
+                "package.json",
+                JSON.stringify(pkg, undefined, 2)
+              )
+            ]);
 
-            if (pkg.template === undefined) {
-              pkg.template = {};
+            if (sourceBranch === prBranch) {
+              return undefined;
             }
-            if (!Array.isArray(pkg.template.usedBy)) {
-              pkg.template.usedBy = [];
-            }
 
-            const name = targetBranch.fullCondensedName;
-
-            if (!pkg.template.usedBy.find(n => n === name)) {
-              pkg.template.usedBy.push(name);
-              pkg.template.usedBy = pkg.template.usedBy.sort();
-
-              if (prBranch === undefined) {
-                prBranch = await sourceBranch.createBranch(usedByBranchName);
-              }
-
-              await prBranch.commit(`fix: add ${name}`, [
-                new StringContentEntry(
-                  "package.json",
-                  JSON.stringify(pkg, undefined, 2)
-                )
-              ]);
-
-              if (sourceBranch === prBranch) {
-                return undefined;
-              }
-
-              return sourceBranch.createPullRequest(prBranch, {
-                title: `add ${name}`,
-                body: `add ${name} to usedBy`
-              });
-            }
-          })
+            return sourceBranch.createPullRequest(prBranch, {
+              title: `add ${name}`,
+              body: `add ${name} to usedBy`
+            });
+          }
+        })
       ].filter(x => x !== undefined)
     );
   }
