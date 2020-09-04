@@ -235,7 +235,7 @@ Load all templates and collects the entries
 
 #### Parameters
 
--   `sources` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** repo nmae or package content
+-   `sources` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** branch name
 -   `inheritencePath` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** who was requesting us (optional, default `[]`)
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** package as merged from sources
