@@ -241,7 +241,7 @@ export class Template extends LogLevelMixin(class {}) {
 
   /**
    * Load all templates and collects the entries
-   * @param {string|Object} sources repo nmae or package content
+   * @param {string} sources branch name
    * @param {string[]} inheritencePath who was requesting us
    * @return {Object} package as merged from sources
    */
