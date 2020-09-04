@@ -199,7 +199,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
           let name = templateEntry.name;
           this.trace({
             message: "merge",
-            name
+            name,
+            merger: templateEntry.merger.factory ? templateEntry.merger.factory.name : "undefined"
           });
           name = this.expand(name);
 
