@@ -92,6 +92,96 @@ const propertyKeys = ["description", "version", "name", "main", "browser"];
 
 const REMOVE_HINT = { compare, removeEmpty: true };
 const DEPENDENCY_HINT = { merge: mergeVersionsLargest, scope: "deps" };
+const MERGE_HINTS = {
+  "*": { scope: "package", type: "chore" },
+  "": { orderBy: sortedKeys },
+  type: { type: "fix" },
+  keywords: { removeEmpty: true, compare, type: "docs" },
+  repository: { compare },
+  files: { compare, scope: "files", removeEmpty: true },
+  export: REMOVE_HINT,
+  bin: REMOVE_HINT,
+  "bin.*": { removeEmpty: true, scope: "bin" },
+  scripts: {
+    orderBy: [
+      "preinstall",
+      /^install/,
+      "postinstall",
+      "prepack",
+      /^pack/,
+      "postpack",
+      /^prepare/,
+      "prepublishOnly",
+      "prepublish",
+      /^publish/,
+      "postpublish",
+      "prerestart",
+      /^restart/,
+      "postrestart",
+      "preshrinkwrap",
+      /^shrinkwrap/,
+      "postshrinkwrap",
+      "prestart",
+      /^start/,
+      "poststart",
+      "prestop",
+      /^stop/,
+      "poststop",
+      "pretest",
+      /^test/,
+      "posttest",
+      /^cover/,
+      "preuninstall",
+      /^uninstall/,
+      "postuninstall",
+      "preversion",
+      /^version/,
+      "postversion",
+      /^docs/,
+      /^lint/,
+      /^package/
+    ]
+  },
+  "scripts.*": {
+    merge: mergeExpressions,
+    removeEmpty: true,
+    scope: "scripts"
+  },
+  dependencies: REMOVE_HINT,
+  "dependencies.*": { ...DEPENDENCY_HINT, type: "fix" },
+  devDependencies: REMOVE_HINT,
+  "devDependencies.*": DEPENDENCY_HINT,
+  peerDependencies: REMOVE_HINT,
+  "peerDependencies.*": DEPENDENCY_HINT,
+  optionalDependencies: REMOVE_HINT,
+  "optionalDependencies.*": { ...DEPENDENCY_HINT, type: "fix" },
+  bundeledDependencies: REMOVE_HINT,
+  "bundeledDependencies.*": DEPENDENCY_HINT,
+  "engines.*": {
+    compare,
+    merge: mergeVersionsLargest,
+    removeEmpty: true,
+    type: "fix",
+    scope: "engines"
+  },
+  exports: REMOVE_HINT,
+  release: REMOVE_HINT,
+  config: REMOVE_HINT,
+  "config.*": {
+    compare,
+    overwrite: false
+  },
+  "pacman.*": {
+    overwrite: false
+  },
+  "pacman.depends.*": {
+    merge: mergeVersionsLargest,
+    compare,
+    type: "fix",
+    scope: "pacman"
+  },
+  template: { merge: mergeSkip }
+};
 
 /**
  * Merger for package.json
@@ -199,15 +289,7 @@ export class Package extends Merger {
       bugs: {
         url: context.targetBranch.issuesURL
       },
-      homepage: context.targetBranch.homePageURL,
-      /*
-      template: {
-        inheritFrom: asScalar([
-          ...context.templateSources.filter(t => t.startsWith("-")),
-          ...[...context.template.initialBranches]
-            .map(branch => branch.fullCondensedName)
-        ])
-      }*/
+      homepage: context.targetBranch.homePageURL
     });
 
     const properties = context.properties;
@@ -239,98 +321,7 @@ export class Package extends Merger {
       template,
       "",
       (action, hint) => aggregateActions(actions, action, hint),
-      {
-        "*": { scope: "package", type: "chore" },
-        "": { orderBy: sortedKeys },
-        type: { type: "fix" },
-        keywords: { removeEmpty: true, compare, type: "docs" },
-        repository: { compare },
-        files: { compare, scope: "files", removeEmpty: true },
-        export: REMOVE_HINT,
-        bin: REMOVE_HINT,
-        "bin.*": { removeEmpty: true, scope: "bin" },
-        scripts: {
-          orderBy: [
-            "preinstall",
-            /^install/,
-            "postinstall",
-            "prepack",
-            /^pack/,
-            "postpack",
-            /^prepare/,
-            "prepublishOnly",
-            "prepublish",
-            /^publish/,
-            "postpublish",
-            "prerestart",
-            /^restart/,
-            "postrestart",
-            "preshrinkwrap",
-            /^shrinkwrap/,
-            "postshrinkwrap",
-            "prestart",
-            /^start/,
-            "poststart",
-            "prestop",
-            /^stop/,
-            "poststop",
-            "pretest",
-            /^test/,
-            "posttest",
-            /^cover/,
-            "preuninstall",
-            /^uninstall/,
-            "postuninstall",
-            "preversion",
-            /^version/,
-            "postversion",
-            /^docs/,
-            /^lint/,
-            /^package/
-          ]
-        },
-        "scripts.*": {
-          merge: mergeExpressions,
-          removeEmpty: true,
-          scope: "scripts"
-        },
-        dependencies: REMOVE_HINT,
-        "dependencies.*": { ...DEPENDENCY_HINT, type: "fix" },
-        devDependencies: REMOVE_HINT,
-        "devDependencies.*": DEPENDENCY_HINT,
-        peerDependencies: REMOVE_HINT,
-        "peerDependencies.*": DEPENDENCY_HINT,
-        optionalDependencies: REMOVE_HINT,
-        "optionalDependencies.*": { ...DEPENDENCY_HINT, type: "fix" },
-        bundeledDependencies: REMOVE_HINT,
-        "bundeledDependencies.*": DEPENDENCY_HINT,
-        "engines.*": {
-          compare,
-          merge: mergeVersionsLargest,
-          removeEmpty: true,
-          type: "fix",
-          scope: "engines"
-        },
-        exports: REMOVE_HINT,
-        release: REMOVE_HINT,
-        config: REMOVE_HINT,
-        "config.*": {
-          compare,
-          overwrite: false
-        },
-        "pacman.*": {
-          overwrite: false
-        },
-        "pacman.depends.*": {
-          merge: mergeVersionsLargest,
-          compare,
-          type: "fix",
-          scope: "pacman"
-        },
-        //"template.usedBy": { merge: mergeSkip },
-        "template": { merge: mergeSkip },
-        ...options.mergeHints
-      }
+      { ...MERGE_HINTS, ...options.mergeHints }
     );
 
     if (
@@ -386,6 +377,20 @@ export class Package extends Merger {
         }
       }
     });
+
+    if (context.track) {
+      if (target.template === undefined) {
+        target.template = { inheritFrom: [] };
+      }
+
+      /*
+      target.template.inheritFrom = asScalar([
+        ...context.templateSources.filter(t => t.startsWith("-")),
+        ...[...context.template.initialBranches].map(
+          branch => branch.fullCondensedName
+        )
+      ]);*/
+    }
 
     let merged = JSON.stringify(target, undefined, 2);
     const lastChar = merged[merged.length - 1];
