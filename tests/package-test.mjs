@@ -606,8 +606,9 @@ test("start fresh", pkgt, undefined, undefined, undefined, undefined, {
   repository: {
     type: "git",
     url: "http://mock-provider.com/targetUser/targetRepo"
-  },
+  }
+  /*,
   template: {
     inheritFrom: "templateRepo"
-  }
+  }*/
 });
