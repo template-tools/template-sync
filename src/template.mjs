@@ -13,7 +13,7 @@ import {
 import { StringContentEntry } from "content-entry";
 import { LogLevelMixin } from "loglevel-mixin";
 
-import { asArray } from "./util.mjs";
+import { asArray, normalizeTemplateSources } from "./util.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
 
@@ -33,20 +33,6 @@ const templateCache = new Map();
  * @property {Class} factory
  * @property {Object} options
  */
-
-/**
- * Remove duplicate sources
- * sources staring wit '-' will be removed
- * @param {string[]} sources
- */
-function normalizeTemplateSources(sources) {
-  sources = [...new Set(asArray(sources))];
-  const remove = sources.filter(s => s[0] === "-").map(s => s.slice(1));
-  return sources
-    .filter(s => remove.indexOf(s) < 0)
-    .filter(s => s[0] !== "-")
-    .sort();
-}
 
 /**
  * @param {Conext} context

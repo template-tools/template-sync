@@ -13,7 +13,9 @@ import {
   aggregateActions,
   jspath,
   asScalar,
-  defaultEncodingOptions
+  asArray,
+  defaultEncodingOptions,
+  normalizeTemplateSources
 } from "../util.mjs";
 
 function moduleNames(object, modules) {
@@ -383,13 +385,12 @@ export class Package extends Merger {
         target.template = { inheritFrom: [] };
       }
 
-      /*
-      target.template.inheritFrom = asScalar([
-        ...context.templateSources.filter(t => t.startsWith("-")),
-        ...[...context.template.initialBranches].map(
-          branch => branch.fullCondensedName
+      target.template.inheritFrom = asScalar(
+        normalizeTemplateSources(
+          [...asArray(target.template.inheritFrom), ...context.templateSources],
+          [context.targetBranch.fullCondensedName]
         )
-      ]);*/
+      );
     }
 
     let merged = JSON.stringify(target, undefined, 2);

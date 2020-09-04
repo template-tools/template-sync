@@ -10,6 +10,22 @@ export function asScalar(o) {
   return Array.isArray(o) && o.length === 1 ? o[0] : o;
 }
 
+/**
+ * Remove duplicate sources.
+ * Sources staring with '-' will be removed
+ * @param {string[]} sources
+ * @param {string[]} remove
+ * @return {string[]} normalized sources
+ */
+export function normalizeTemplateSources(sources, remove = []) {
+  sources = [...new Set(asArray(sources))];
+  remove = [...remove, ...sources.filter(s => s[0] === "-").map(s => s.slice(1))];
+  return sources
+    .filter(s => remove.indexOf(s) < 0)
+    .filter(s => s[0] !== "-")
+    .sort();
+}
+
 export function setProperty(properties, attributePath, value) {
   const m = attributePath.match(/^(\w+)\.(.*)/);
 
@@ -157,4 +173,3 @@ export function log(level, ...args) {
   console.log(`${prefix.join(",")}: ${values.join(" ")}`);
   */
 }
-
