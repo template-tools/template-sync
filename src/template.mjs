@@ -70,6 +70,8 @@ export class Template extends LogLevelMixin(class {}) {
 
     let template = templateCache.get(key);
 
+    //console.log("T", key, template ? template.name : "not cached");
+
     if (template === undefined) {
       template = await new Template(context, sources, options);
       templateCache.set(key, template);
@@ -245,7 +247,7 @@ export class Template extends LogLevelMixin(class {}) {
 
   /**
    * Load all templates and collects the entries
-   * @param {string} sources branch name
+   * @param {string} sources branch names
    * @param {string[]} inheritencePath who was requesting us
    * @return {Object} package as merged from sources
    */
@@ -393,7 +395,6 @@ export class Template extends LogLevelMixin(class {}) {
       [
         ...removePrs,
         ...[...this.initialBranches]
-    //      .filter(b => b !== this.context.targetBranch)
           .map(async sourceBranch => {
             let prBranch = await sourceBranch.repository.branch(
               usedByBranchName

@@ -200,14 +200,14 @@ export class Package extends Merger {
         url: context.targetBranch.issuesURL
       },
       homepage: context.targetBranch.homePageURL,
+      /*
       template: {
         inheritFrom: asScalar([
           ...context.templateSources.filter(t => t.startsWith("-")),
           ...[...context.template.initialBranches]
-       //     .filter(b => b !== context.targetBranch)
             .map(branch => branch.fullCondensedName)
         ])
-      }
+      }*/
     });
 
     const properties = context.properties;
@@ -327,8 +327,8 @@ export class Package extends Merger {
           type: "fix",
           scope: "pacman"
         },
-        "template.usedBy": { merge: mergeSkip },
-        "template.repository": { remove: true },
+        //"template.usedBy": { merge: mergeSkip },
+        "template": { merge: mergeSkip },
         ...options.mergeHints
       }
     );
@@ -434,22 +434,6 @@ export async function deleteUnusedDevDependencies(context, target, template) {
           merger.options
         );
       }
-
-      /*console.log(usedDevDependencies);
-      console.log(allKnown);
-      console.log(optionalDevDependencies);
-      console.log(
-        new Set(
-          [...optionalDevDependencies].filter(d => !usedDevDependencies.has(d))
-        )
-      );
-      console.log(
-        new Set(
-          [...usedDevDependencies].filter(d => !optionalDevDependencies.has(d))
-        )
-      );
-      console.log(new Set(Object.keys(template.devDependencies)));
-*/
 
       template.devDependencies = {
         ...template.devDependencies,
