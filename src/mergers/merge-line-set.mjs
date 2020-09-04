@@ -8,8 +8,12 @@ function lines2set(content) {
 }
 
 function set2lines(values, options) {
+  const ignore = new Set(options.ignore);
+
   const nl = "\n";
-  const r = Array.from(values).join(nl);
+  const r = Array.from(values)
+    .filter(line => !ignore.has(line))
+    .join(nl);
   return options.trailingNewline ? r + nl : r;
 }
 
@@ -18,11 +22,14 @@ function set2lines(values, options) {
  */
 export class MergeLineSet extends Merger {
   static get defaultOptions() {
-    return { ...super.defaultOptions, trailingNewline: true, defaultIgnore: [""],
+    return {
+      ...super.defaultOptions,
+      trailingNewline: true,
+      ignore: [""],
       mergeHints: {
-         "*": { }
-       }
-     };
+        "*": {}
+      }
+    };
   }
 
   static async merge(
@@ -34,7 +41,7 @@ export class MergeLineSet extends Merger {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();
     const template = await sourceEntry.getString();
-    const ignore = new Set(options.defaultIgnore);
+    const ignore = new Set(options.ignore);
 
     const actions = {};
 
@@ -43,7 +50,7 @@ export class MergeLineSet extends Merger {
         lines2set(original),
         [
           ...lines2set(options.expand ? context.expand(template) : template),
-          ...[...ignore].map(p => `-${p}`)
+          ...[...ignore].map(p => `--delete-- ${p}`)
         ],
         "",
         (action, hint) => aggregateActions(actions, action, hint),
@@ -51,6 +58,8 @@ export class MergeLineSet extends Merger {
       ),
       options
     );
+
+   // console.log("SIZE", sourceEntry.name, ignore.size,[...ignore].map(i => `"${i}"`),actions2message(actions, options.messagePrefix, name));
 
     return merged === original
       ? undefined

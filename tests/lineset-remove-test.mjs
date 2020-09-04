@@ -44,3 +44,19 @@ test("MergeLineSet nop", async t => {
   t.is(commit, undefined);
 });
 
+test("MergeLineSet ignore option", async t => {
+  const commit = await MergeLineSet.merge(
+    await createContext(),
+    new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n") + "\n"),
+    new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n")),
+    {
+      ignore: ["Line 2"]
+    }
+  );
+
+  t.is(
+    await commit.entry.getString(),
+    "Line 1\n"
+  );
+});
+
