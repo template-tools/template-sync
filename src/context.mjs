@@ -43,7 +43,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
         value: {
           date: { year: new Date().getFullYear() },
           license: {},
-          templateSources: [],
           ...options.properties
         }
       },
@@ -76,14 +75,22 @@ export class Context extends LogLevelMixin(class _Context {}) {
     let targetBranch = await this.provider.branch(this.targetBranchName);
 
     if (targetBranch === undefined) {
-      const targetRepository = await this.provider.repository(this.targetBranchName);
-      if(targetRepository !== undefined) {
-        targetBranch = await targetRepository.createBranch(targetRepository.defaultBranchName);
+      const targetRepository = await this.provider.repository(
+        this.targetBranchName
+      );
+      if (targetRepository !== undefined) {
+        targetBranch = await targetRepository.createBranch(
+          targetRepository.defaultBranchName
+        );
       }
-      if(targetBranch === undefined) {
+      if (targetBranch === undefined) {
         throw new Error(`Unable to find branch ${this.targetBranchName}`);
       }
     }
+
+    Object.defineProperties(this, {
+      targetBranch: { value: targetBranch }
+    });
 
     const repository = targetBranch.repository;
 
@@ -119,12 +126,13 @@ export class Context extends LogLevelMixin(class _Context {}) {
       this.properties.description = repository.description;
     }
 
+
     try {
       const entry = await targetBranch.entry("package.json");
       Object.assign(this.properties, await Package.properties(entry));
     } catch {}
 
-    this.templateSources.push(...this.properties.templateSources);
+    this.templateSources.push(targetBranch.fullCondensedName);
 
     const template = await Template.templateFor(this, this.templateSources, {
       logLevel: this.logLevel
@@ -144,7 +152,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
     });
 
     Object.defineProperties(this, {
-      targetBranch: { value: targetBranch },
       template: { value: template }
     });
 
@@ -200,7 +207,9 @@ export class Context extends LogLevelMixin(class _Context {}) {
           this.trace({
             message: "merge",
             name,
-            merger: templateEntry.merger.factory ? templateEntry.merger.factory.name : "undefined"
+            merger: templateEntry.merger.factory
+              ? templateEntry.merger.factory.name
+              : "undefined"
           });
           name = this.expand(name);
 

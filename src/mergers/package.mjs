@@ -13,7 +13,6 @@ import {
   aggregateActions,
   jspath,
   asScalar,
-  asArray,
   defaultEncodingOptions
 } from "../util.mjs";
 
@@ -92,7 +91,7 @@ const sortedKeys = [
 const propertyKeys = ["description", "version", "name", "main", "browser"];
 
 const REMOVE_HINT = { compare, removeEmpty: true };
-const DEPENDENCY_HINT = { merge: mergeVersionsLargest, scope: 'deps' };
+const DEPENDENCY_HINT = { merge: mergeVersionsLargest, scope: "deps" };
 
 /**
  * Merger for package.json
@@ -124,13 +123,6 @@ export class Package extends Merger {
     };
 
     if (pkg.template !== undefined) {
-      if (pkg.template.repository !== undefined) {
-        properties.templateSources = asArray(pkg.template.repository.url);
-      }
-      if (pkg.template.inheritFrom !== undefined) {
-        properties.templateSources = asArray(pkg.template.inheritFrom);
-      }
-
       if (pkg.template.usedBy !== undefined) {
         properties.usedBy = pkg.template.usedBy;
       }
@@ -211,9 +203,9 @@ export class Package extends Merger {
       template: {
         inheritFrom: asScalar([
           ...context.templateSources.filter(t => t.startsWith("-")),
-          ...[...context.template.initialBranches].map(
-            branch => branch.fullCondensedName
-          )
+          ...[...context.template.initialBranches]
+       //     .filter(b => b !== context.targetBranch)
+            .map(branch => branch.fullCondensedName)
         ])
       }
     });
