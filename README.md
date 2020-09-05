@@ -102,8 +102,10 @@ merges contents from template branch into destination branch handling some speci
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [Skip](#skip)
--   [jspath](#jspath)
+-   [normalizeTemplateSources](#normalizetemplatesources)
     -   [Parameters](#parameters-10)
+-   [jspath](#jspath)
+    -   [Parameters](#parameters-11)
 
 ## Context
 
@@ -207,7 +209,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
 -   `mergers` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Merger](#merger)>** 
 -   `branches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** all used branches direct and inherited
--   `initialBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** root branches used to define the template
+-   `keyBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)&lt;Branch>** branches used to define the template
 
 ### entryMerger
 
@@ -235,7 +237,7 @@ Load all templates and collects the entries
 
 #### Parameters
 
--   `sources` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** branch name
+-   `sources` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** branch names
 -   `inheritencePath` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** who was requesting us (optional, default `[]`)
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** package as merged from sources
@@ -251,8 +253,7 @@ Updates usedBy section of the template branch
 
 ### templateFor
 
-Remove duplicate sources
-sources staring wit '-' will be removed
+load a template
 
 #### Parameters
 
@@ -287,6 +288,18 @@ Replace file from template (always)
 **Extends Merger**
 
 Does not generate destination entry
+
+## normalizeTemplateSources
+
+Remove duplicate sources.
+Sources staring with '-' will be removed
+
+### Parameters
+
+-   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+-   `remove` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** normalized sources
 
 ## jspath
 
