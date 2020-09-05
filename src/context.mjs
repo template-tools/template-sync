@@ -126,7 +126,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
       this.properties.description = repository.description;
     }
 
-
     try {
       const entry = await targetBranch.entry("package.json");
       Object.assign(this.properties, await Package.properties(entry));

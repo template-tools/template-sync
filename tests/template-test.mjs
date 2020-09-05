@@ -56,11 +56,17 @@ test("template constructor", async t => {
   t.deepEqual(template.sources, ["template"]);
   t.is(`${template}`, "template");
   t.is(template.name, "template");
+  t.is(template.key, "template,template_b");
 });
 
 test("template source sort", async t => {
-  const t1 = await Template.templateFor(context, ["t2", "t1"]);
-  t.deepEqual(t1.sources, ["t1", "t2"]);
+  const template = await Template.templateFor(context, [
+    "template_b",
+    "template"
+  ]);
+  t.is(template.name, "template,template_b");
+  t.is(template.key, "template,template_b");
+  t.deepEqual(template.sources, ["template", "template_b"]);
 });
 
 test("template source expression", async t => {

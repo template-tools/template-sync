@@ -43,7 +43,7 @@ const templateCache = new Map();
  * @property {string[]} sources
  * @property {Merger[]} mergers
  * @property {Set<Branch>} branches all used branches direct and inherited
- * @property {Set<Branch>} initialBranches root branches used to define the template
+ * @property {Set<Branch>} keyBranches branches used to define the template
  */
 export class Template extends LogLevelMixin(class {}) {
   static clearCache() {
@@ -66,7 +66,8 @@ export class Template extends LogLevelMixin(class {}) {
 
     if (template === undefined) {
       template = await new Template(context, sources, options);
-      templateCache.set(key, template);
+      templateCache.set(template.name, template);
+      //console.log("C", template.key);
     }
 
     return template;
@@ -78,7 +79,7 @@ export class Template extends LogLevelMixin(class {}) {
       context: { value: context },
       sources: { value: sources },
       branches: { value: new Set() },
-      initialBranches: { value: new Set() },
+      keyBranches: { value: new Set() },
       entryCache: { value: new Map() },
       options: { value: options },
       mergers: { value: [] }
@@ -94,10 +95,14 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   get name() {
-    return (this.initialBranches.size > 0
-      ? [...this.initialBranches].map(b => b.fullCondensedName)
-      : this.sources
-    ).join(",");
+    return this.sources.join(",");
+  }
+
+  get key() {
+    return [...this.keyBranches]
+      .map(b => b.fullCondensedName)
+      .sort()
+      .join(",");
   }
 
   toString() {
@@ -266,18 +271,26 @@ export class Template extends LogLevelMixin(class {}) {
       );
 
       this.branches.add(branch);
-      if (
-        inheritencePath.length === 0 &&
-        branch !== this.context.targetBranch
-      ) {
-        this.initialBranches.add(branch);
-      }
 
       try {
         const pc = await branch.entry("package.json");
 
         try {
           const pkg = JSON.parse(await pc.getString());
+
+          if (inheritencePath.length <= 1) {
+            if (branch === this.context.targetBranch) {
+              if (
+                pkg.template &&
+                Object.keys(pkg.template).filter(k => k !== "inheritFrom")
+                  .length > 0
+              ) {
+                this.keyBranches.add(branch);
+              }
+            } else {
+              this.keyBranches.add(branch);
+            }
+          }
 
           result = mergeTemplate(result, pkg);
 
@@ -386,7 +399,7 @@ export class Template extends LogLevelMixin(class {}) {
     return Promise.all(
       [
         ...removePrs,
-        ...[...this.initialBranches].map(async sourceBranch => {
+        ...[...this.keyBranches].map(async sourceBranch => {
           let prBranch = await sourceBranch.repository.branch(usedByBranchName);
           if (prBranch) {
             sourceBranch = prBranch;
