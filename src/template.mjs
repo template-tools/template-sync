@@ -67,6 +67,7 @@ export class Template extends LogLevelMixin(class {}) {
     if (template === undefined) {
       template = await new Template(context, sources, options);
       templateCache.set(template.name, template);
+      templateCache.set(template.key, template);
       //console.log("C", template.key);
     }
 
@@ -123,9 +124,14 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   async initialize() {
-    this.trace(`Initialize template from ${this.sources}`);
+    this.trace(`Initialize template from ${this.name}`);
 
     const pj = await this._templateFrom(this.sources);
+
+    if(pj instanceof Template) {
+      this.debug(`Deliver from in cache ${this.name} (${this.key})`);
+      return pj;
+    }
 
     if (pj.template && pj.template.mergers) {
       this.mergers.push(
@@ -291,18 +297,27 @@ export class Template extends LogLevelMixin(class {}) {
               this.keyBranches.add(branch);
             }
           }
+          else {
+            const inCache = templateCache.get(this.key);
+            if (inCache) {
+              this.debug(`Found in cache ${this.name} (${this.key})`);
+              //return inCache;
+            }
+          }
 
           result = mergeTemplate(result, pkg);
 
           const template = pkg.template;
 
           if (template && template.inheritFrom) {
+            const inherited = await this._templateFrom(asArray(template.inheritFrom), [
+              ...inheritencePath,
+              source
+            ]);
+
             result = mergeTemplate(
               result,
-              await this._templateFrom(asArray(template.inheritFrom), [
-                ...inheritencePath,
-                source
-              ])
+              inherited instanceof Template ? await inherited.package() : inherited
             );
           }
         } catch (e) {
