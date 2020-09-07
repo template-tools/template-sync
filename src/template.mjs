@@ -1,7 +1,6 @@
 import { join, dirname } from "path";
 import fs, { createWriteStream } from "fs";
 import { matcher } from "matching-iterator";
-
 import {
   merge,
   mergeVersionsLargest,
@@ -129,7 +128,7 @@ export class Template extends LogLevelMixin(class {}) {
     const pj = await this._templateFrom(this.sources);
 
     if(pj instanceof Template) {
-      this.debug(`Deliver from in cache ${this.name} (${this.key})`);
+      this.debug(`Deliver from cache ${this.name} (${this.key})`);
       return pj;
     }
 
@@ -160,10 +159,12 @@ export class Template extends LogLevelMixin(class {}) {
 
     this.entryCache.set(pkg.name, pkg);
 
-    for (const branch of this.branches) {
-      if (branch === this.context.targetBranch) {
+    for (let branch of this.branches) {
+      if (branch.equals(this.context.targetBranch)) {
         continue;
       }
+
+      branch = await branchFromCache(branch);
 
       for await (const entry of branch.entries()) {
         if (!entry.isBlob) {
@@ -488,4 +489,38 @@ export function mergeTemplate(a, b) {
       keepHints: true
     }
   });
+}
+
+
+const branchCache = new Map();
+
+async function branchFromCache(branch)
+{
+  let b = branchCache.get(branch.fullCondensedName);
+  if(b) {
+    //console.log("C for branch",branch.fullCondensedName);
+    return b;
+  }
+
+  const entryCache = new Map();
+
+  for await(const entry of branch.entries()) {
+    entryCache.set(entry.name, entry);
+  }
+
+  b = {
+    name: branch.name,
+    equals(other) { return branch.equals(other); },
+    async * entries() { 
+      for (const entry of entryCache.values()) {
+//        console.log("C",branch.fullCondensedName,entry.name);
+        yield entry;
+      }
+    },
+    async entry(name) { return entryCache.get(name); }
+  };
+
+  branchCache.set(branch.fullCondensedName, b);
+
+  return b;
 }
