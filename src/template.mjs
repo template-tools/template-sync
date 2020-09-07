@@ -67,7 +67,7 @@ export class Template extends LogLevelMixin(class {}) {
       template = await new Template(context, sources, options);
       templateCache.set(template.name, template);
       templateCache.set(template.key, template);
-      //console.log("C", template.key);
+      //console.log("C", key, template.key);
     }
 
     return template;
@@ -287,14 +287,15 @@ export class Template extends LogLevelMixin(class {}) {
 
           if (inheritencePath.length <= 1) {
             if (branch === this.context.targetBranch) {
-              if (
-                pkg.template &&
-                Object.keys(pkg.template).filter(k => k !== "inheritFrom")
-                  .length > 0
-              ) {
-                this.keyBranches.add(branch);
+              if( pkg.template) {
+                if(pkg.template.usedBy) {
+                  this.allKeysCollected = true;
+                }
+                if( Object.keys(pkg.template).filter(k => k !== "inheritFrom") .length > 0) {
+                  this.keyBranches.add(branch);
+                }
               }
-            } else {
+            } else if(!this.allKeysCollected) {
               this.keyBranches.add(branch);
             }
           }
