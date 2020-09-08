@@ -59,7 +59,7 @@ merges contents from template branch into destination branch handling some speci
 -   [arlac77/template-esm-only](https://github.com/arlac77/template-esm-only) _ava_ _travis_
 -   [arlac77/template-svelte-component](https://github.com/arlac77/template-svelte-component) _svelte_ _rollup_ _testcafe_ _travis_
 -   [arlac77/template-svelte-app](https://github.com/arlac77/template-svelte-app) _svelte_ _rollup_ _pkgbuild_ _travis_
--   [arlac77/template-kronos-module](https://github.com/arlac77/template-kronos-module) template-esm-only with node 14
+-   [arlac77/template-kronos-component](https://github.com/arlac77/template-kronos-component) template-esm-only with node 14
 -   [arlac77/template-kronos-app](https://github.com/arlac77/template-kronos-app) node 14 + systemd
 
 # API
