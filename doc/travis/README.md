@@ -5,7 +5,7 @@ a specialized yaml merger
 
 # usage
 
-put the following merge into your template
+Put the following merge into your template
 
 ```json
 {
