@@ -63,7 +63,7 @@
     "content-entry-filesystem": "^1.0.0",
     "documentation": "^13.0.2",
     "execa": "^4.0.3",
-    "mock-repository-provider": "^5.2.7",
+    "mock-repository-provider": "^5.2.8",
     "semantic-release": "^17.1.1"
   },
   "engines": {
