@@ -247,7 +247,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     }
 
     try {
-      const pullRequest = await targetBranch.createPullRequest(prBranch, {
+      const pullRequest = await prBranch.createPullRequest(targetBranch, {
         title: `merge from ${template.key}`,
         body: commits
           .map(

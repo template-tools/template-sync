@@ -405,7 +405,7 @@ export class Template extends LogLevelMixin(class {}) {
             return undefined;
           }
 
-          return sourceBranch.createPullRequest(prBranch, {
+          return prBranch.createPullRequest(sourceBranch, {
             title: `remove ${name}`,
             body: `remove ${name} from usedBy`
           });
@@ -453,7 +453,7 @@ export class Template extends LogLevelMixin(class {}) {
               return undefined;
             }
 
-            return sourceBranch.createPullRequest(prBranch, {
+            return prBranch.createPullRequest(sourceBranch, {
               title: `add ${name}`,
               body: `add ${name} to usedBy`
             });
