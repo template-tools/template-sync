@@ -16,6 +16,8 @@ Keep repository in sync with its template.
 
 Generates pull requests to bring a repository back in sync with the template.
 
+So by making changes to the template and applying npm-template-sync the target project will be updated accoring to the template.
+
 ```shell
 export GH_TOKEN='token providing repositroy write access' # for github repos
 
@@ -38,17 +40,17 @@ export GH_TOKEN='token providing repositroy write access' # for github repos
 npm-template-sync --track --template arlac77/template-arlac77-github --template -arlac77/template-github arlac77/url-cmd arlac77/uti arlac77/content-entry arlac77/repository-provider
 ```
 
-merges contents from template branch into destination branch handling some special cases for:
+Merges contents from template branch into destination branch handling some special cases for:
 
 -   Licenses - rewriting license years
 -   line set files like .npmignore and .gitignore - by merging both sets together
 -   package.json - merge (.\*)[Dd]ependencies, engines and scripts
 -   rollup.conf.\*js - copy / rewrite + detect dev dependencies
--   [\*.yaml - merge](doc/yaml)
--   [.travis.yml - merge with hints](doc/travis)
--   [\*.toml - merge](doc/toml)
--   [\*.ini - merge](doc/ini)
--   [\*.json - merge](doc/json)
+-   [\*.yaml - merge](doc/yaml/README.md)
+-   [.travis.yml - merge with hints](doc/travis/README.md)
+-   [\*.toml - merge](doc/toml/README.md)
+-   [\*.ini - merge](doc/ini/README.md)
+-   [\*.json - merge](doc/json/README.md)
 -   README.md - merge badges
 
 ![generated pull request](doc/pr_sample.png)

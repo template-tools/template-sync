@@ -10,7 +10,7 @@ Put the following merge into your template
 ```json
 {
   "template": {
-    "files": [
+    "mergers": [
       {
         "merger": "Travis",
         "pattern": ".travis.yml"
