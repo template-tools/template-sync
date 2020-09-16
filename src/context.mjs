@@ -229,11 +229,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     }
 
     if (this.dry) {
-      this.info(
-        `${targetBranch.fullCondensedName}[DRY]: ${commits
-          .map(c => `${c.message}`)
-          .join(",")}`
-      );
+      this.info(prInfo(targetBranch, "DRY", commits));
       return pullRequests;
     }
 
@@ -259,11 +255,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
           )
           .join("\n")
       });
-      this.info(
-        `${targetBranch.fullCondensedName}[${
-          pullRequest.number
-        }]: ${commits.map(c => `${c.message}`).join(",")}`
-      );
+      this.info(prInfo(targetBranch, pullRequest.number, commits));
 
       pullRequests.push(pullRequest);
     } catch (err) {
@@ -276,4 +268,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
   log(level, ...args) {
     log(level, ...args);
   }
+}
+
+function prInfo(targetBranch, prName, commits) {
+  return `${targetBranch.provider.name}/${targetBranch.fullCondensedName}[${prName}]: ${commits
+    .map(c => `${c.message}`)
+    .join(",")}`;
 }
