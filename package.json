@@ -44,10 +44,10 @@
     "commander": "^6.1.0",
     "content-entry": "^2.5.0",
     "expression-expander": "^7.0.5",
-    "github-repository-provider": "^7.17.10",
+    "github-repository-provider": "^7.17.11",
     "hinted-tree-merger": "^4.6.1",
     "js-yaml": "^3.14.0",
-    "local-repository-provider": "^6.7.16",
+    "local-repository-provider": "^6.7.17",
     "loglevel-mixin": "^5.0.6",
     "markdown": "^0.5.0",
     "one-time-execution-method": "^2.0.1",
@@ -63,8 +63,8 @@
     "content-entry-filesystem": "^1.0.0",
     "documentation": "^13.0.2",
     "execa": "^4.0.3",
-    "mock-repository-provider": "^5.2.9",
-    "semantic-release": "^17.1.1"
+    "mock-repository-provider": "^5.2.10",
+    "semantic-release": "^17.1.2"
   },
   "engines": {
     "node": ">=14.11.0"
