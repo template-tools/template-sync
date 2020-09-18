@@ -15,6 +15,8 @@ export class Travis extends YAML {
         "": {
           orderBy: [
             "dist",
+            "arch",
+            "group",
             "os",
             "language",
             "addons",
@@ -35,7 +37,7 @@ export class Travis extends YAML {
         "*node_js": { merge: mergeVersionsPreferNumeric },
         "jobs.include": {
           key: "stage",
-          orderBy: ["test", "doc", "release"]
+          orderBy: ["test", "lint", "doc", "release"]
         } /*,
         "*stage": {
           orderBy: ["node_js", "script"]
