@@ -34,7 +34,8 @@
     "test:ava": "ava --timeout 2m tests/*.mjs",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme ./src/context.mjs --section=API",
-    "lint": "documentation lint ./src/context.mjs"
+    "lint": "npm run lint:docs",
+    "lint:docs": "documentation lint ./src/context.mjs"
   },
   "dependencies": {
     "@babel/core": "^7.11.6",
