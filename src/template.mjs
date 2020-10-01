@@ -147,6 +147,10 @@ export class Template extends LogLevelMixin(class {}) {
             m.priority = m.options.priority
               ? m.options.priority
               : m.factory.priority;
+
+            if (m.pattern === undefined) {
+              m.pattern = m.factory.pattern;
+            }
             return m;
           })
           .sort((a, b) => b.priority - a.priority)
@@ -245,7 +249,9 @@ export class Template extends LogLevelMixin(class {}) {
           return entry;
         }
       } catch (e) {
-        this.error(`${this.name} ${branch.fullCondensedName}/${a.name}(${merger.type}): ${e}`);
+        this.error(
+          `${this.name} ${branch.fullCondensedName}/${a.name}(${merger.type}): ${e}`
+        );
         throw e;
       }
     }
