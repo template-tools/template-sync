@@ -14,7 +14,7 @@
 
 Keep repository in sync with its template.
 
-Generates pull requests to bring a repository back in sync with the template.
+Generates pull requests to bring a repository back in sync with its template.
 
 So by making changes to the template and applying npm-template-sync the target project will be updated accoring to the template.
 
