@@ -245,7 +245,7 @@ export class Template extends LogLevelMixin(class {}) {
           return entry;
         }
       } catch (e) {
-        this.error(`${merger.type} ${branch.fullCondensedName}/${a.name}: ${e}`);
+        this.error(`${this.name} ${branch.fullCondensedName}/${a.name}(${merger.type}): ${e}`);
         throw e;
       }
     }
