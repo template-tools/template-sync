@@ -127,7 +127,7 @@ export class Template extends LogLevelMixin(class {}) {
 
     const pj = await this._templateFrom(this.sources);
 
-    if(pj instanceof Template) {
+    if (pj instanceof Template) {
       this.debug(`Deliver from cache ${this.name} (${this.key})`);
       return pj;
     }
@@ -229,19 +229,24 @@ export class Template extends LogLevelMixin(class {}) {
         } '${merger.pattern}'`
       );
 
-      const commit = await merger.factory.merge(ctx, a, b, {
-        ...merger.options,
-        mergeHints: Object.fromEntries(
-          Object.entries(merger.options.mergeHints).map(([k, v]) => [
-            k,
-            { ...v, keepHints: true }
-          ])
-        )
-      });
-      if (commit !== undefined) {
-        const entry = commit.entry;
-        entry.merger = merger;
-        return entry;
+      try {
+        const commit = await merger.factory.merge(ctx, a, b, {
+          ...merger.options,
+          mergeHints: Object.fromEntries(
+            Object.entries(merger.options.mergeHints).map(([k, v]) => [
+              k,
+              { ...v, keepHints: true }
+            ])
+          )
+        });
+        if (commit !== undefined) {
+          const entry = commit.entry;
+          entry.merger = merger;
+          return entry;
+        }
+      } catch (e) {
+        this.error(`${merger.type} ${branch.fullCondensedName}/${a.name}: ${e}`);
+        throw e;
       }
     }
 
@@ -287,19 +292,21 @@ export class Template extends LogLevelMixin(class {}) {
 
           if (inheritencePath.length <= 1) {
             if (branch === this.context.targetBranch) {
-              if( pkg.template) {
-                if(pkg.template.usedBy) {
+              if (pkg.template) {
+                if (pkg.template.usedBy) {
                   this.allKeysCollected = true;
                 }
-                if( Object.keys(pkg.template).filter(k => k !== "inheritFrom") .length > 0) {
+                if (
+                  Object.keys(pkg.template).filter(k => k !== "inheritFrom")
+                    .length > 0
+                ) {
                   this.keyBranches.add(branch);
                 }
               }
-            } else if(!this.allKeysCollected) {
+            } else if (!this.allKeysCollected) {
               this.keyBranches.add(branch);
             }
-          }
-          else {
+          } else {
             const inCache = templateCache.get(this.key);
             if (inCache) {
               this.debug(`Found in cache ${this.name} (${this.key})`);
@@ -312,14 +319,16 @@ export class Template extends LogLevelMixin(class {}) {
           const template = pkg.template;
 
           if (template && template.inheritFrom) {
-            const inherited = await this._templateFrom(asArray(template.inheritFrom), [
-              ...inheritencePath,
-              source
-            ]);
+            const inherited = await this._templateFrom(
+              asArray(template.inheritFrom),
+              [...inheritencePath, source]
+            );
 
             result = mergeTemplate(
               result,
-              inherited instanceof Template ? await inherited.package() : inherited
+              inherited instanceof Template
+                ? await inherited.package()
+                : inherited
             );
           }
         } catch (e) {
@@ -492,33 +501,35 @@ export function mergeTemplate(a, b) {
   });
 }
 
-
 const branchCache = new Map();
 
-async function branchFromCache(branch)
-{
+async function branchFromCache(branch) {
   let b = branchCache.get(branch.fullCondensedName);
-  if(b) {
+  if (b) {
     //console.log("C for branch",branch.fullCondensedName);
     return b;
   }
 
   const entryCache = new Map();
 
-  for await(const entry of branch.entries()) {
+  for await (const entry of branch.entries()) {
     entryCache.set(entry.name, entry);
   }
 
   b = {
     name: branch.name,
-    equals(other) { return branch.equals(other); },
-    async * entries() { 
+    equals(other) {
+      return branch.equals(other);
+    },
+    async *entries() {
       for (const entry of entryCache.values()) {
-//        console.log("C",branch.fullCondensedName,entry.name);
+        //        console.log("C",branch.fullCondensedName,entry.name);
         yield entry;
       }
     },
-    async entry(name) { return entryCache.get(name); }
+    async entry(name) {
+      return entryCache.get(name);
+    }
   };
 
   branchCache.set(branch.fullCondensedName, b);
