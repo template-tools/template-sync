@@ -49,7 +49,7 @@
     "github-repository-provider": "^7.17.17",
     "hinted-tree-merger": "^4.6.1",
     "js-yaml": "^3.14.0",
-    "local-repository-provider": "^6.7.23",
+    "local-repository-provider": "^7.0.0",
     "loglevel-mixin": "^5.0.6",
     "markdown": "^0.5.0",
     "one-time-execution-method": "^2.0.1",
