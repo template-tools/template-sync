@@ -1,9 +1,8 @@
-## INI merger
+# INI merger
 
 a ini file merger
 
-
-# usage
+## usage
 
 Put the following merge into your template
 
@@ -18,7 +17,7 @@ Put the following merge into your template
 }
 ```
 
-# example ordering keys in systemd service files
+## example ordering keys in systemd service files
 
 ```json
 {

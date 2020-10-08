@@ -1,9 +1,8 @@
-## Travis merger
+# Travis merger
 
 a specialized yaml merger
 
-
-# usage
+## usage
 
 Put the following merge into your template
 
@@ -18,7 +17,8 @@ Put the following merge into your template
 }
 ```
 
-# hints
+## hints
+
 the following hints are used
 
 ```json
@@ -52,10 +52,10 @@ the following hints are used
       }
 ```
 
-# example
-
+## example
 
 ## template 1
+
 ```yaml
 jobs:
   include:
@@ -67,6 +67,7 @@ jobs:
 ```
 
 ## template 2
+
 ```yaml
 jobs:
   include:
@@ -76,6 +77,7 @@ jobs:
 ```
 
 ## result
+
 ```yaml
 jobs:
   include:
