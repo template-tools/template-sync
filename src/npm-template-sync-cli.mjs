@@ -10,15 +10,15 @@ import AggregationProvider from "aggregation-repository-provider";
 import { Context } from "./context.mjs";
 import { setProperty, defaultEncodingOptions } from "./util.mjs";
 
+process.on("uncaughtException", e => console.error(e));
+process.on("unhandledRejection", reason => console.error(reason));
+
 const { version, description } = JSON.parse(
   readFileSync(
     new URL("../package.json", import.meta.url).pathname,
     defaultEncodingOptions
   )
 );
-
-process.on("uncaughtException", e => console.error(e));
-process.on("unhandledRejection", reason => console.error(reason));
 
 const properties = {};
 let templates = [];
