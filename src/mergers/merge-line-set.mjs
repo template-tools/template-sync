@@ -59,8 +59,6 @@ export class MergeLineSet extends Merger {
       options
     );
 
-   // console.log("SIZE", sourceEntry.name, ignore.size,[...ignore].map(i => `"${i}"`),actions2message(actions, options.messagePrefix, name));
-
     return merged === original
       ? undefined
       : {

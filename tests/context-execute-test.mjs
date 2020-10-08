@@ -37,18 +37,12 @@ test("context execute - PR", async t => {
     template: TEMPLATE_REPO
   });
 
-  //console.log(context.template.mergers);
-
   const pullRequests = await context.execute();
   t.truthy(pullRequests.length > 0);
 
   const pullRequest = pullRequests[0];
   t.truthy(pullRequest && pullRequest.name);
 
-  /*
-  console.log("SOURCE",pullRequest.source.name);
-  console.log("DSTINATION",pullRequest.destination.name);
-  */
   for(const pr of pullRequests) {
    // await pr.destination.delete();
     await pr.delete();

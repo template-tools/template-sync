@@ -452,7 +452,7 @@ export async function deleteUnusedDevDependencies(context, target, template) {
 
       context.debug(`used devDependencies: ${[...usedDevDependencies]}`);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 }

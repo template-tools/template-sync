@@ -28,8 +28,6 @@ export class YARNLockfile extends Merger {
 
     const actions = {};
 
-    //console.log(lockfile.parse(original).object);
-
     const merged = lockfile.stringify(
       merge(
         lockfile.parse(original).object,
