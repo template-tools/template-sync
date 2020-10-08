@@ -50,14 +50,23 @@ test.skip(
   yamlt,
   YAML,
   `a:
-    - {{name}}
-    `,
+  - {{name}}`,
   `a:
-     - {{name}}
-    `,
+  - {{name}}`,
   { name: "a name" },
   { expand: false },
   `a:
     - a name
   `
+);
+
+test(
+  yamlt,
+  YAML,
+  "boolean: false",
+  "boolean: false",
+  {},
+  {},
+  `boolean: false
+`
 );

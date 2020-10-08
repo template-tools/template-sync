@@ -13,7 +13,7 @@ export class YAML extends Merger {
     return {
       ...super.defaultOptions,
       expand: true,
-      yaml: { lineWith: 128 },
+      yaml: { lineWith: 128, /*schema: yaml.CORE_SCHEMA*/ },
       messagePrefix: "chore: "
     };
   }
@@ -27,16 +27,14 @@ export class YAML extends Merger {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();
     const template = await sourceEntry.getString();
-
-    const ymlOptions = { schema: yaml.FAILSAFE_SCHEMA };
     const actions = {};
 
     const merged = yaml.safeDump(
       merge(
-        yaml.safeLoad(original, ymlOptions),
+        yaml.safeLoad(original, options.yaml),
         yaml.safeLoad(
           options.expand ? context.expand(template) : template,
-          ymlOptions
+          options.yaml
         ),
         "",
         (action, hint) => aggregateActions(actions, action, hint),
