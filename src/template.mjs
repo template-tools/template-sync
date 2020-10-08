@@ -1,5 +1,6 @@
 import { join, dirname } from "path";
-import fs, { createWriteStream } from "fs";
+import { createWriteStream } from "fs";
+import { mkdir } from "fs/promises";
 import { matcher } from "matching-iterator";
 import {
   merge,
@@ -359,7 +360,7 @@ export class Template extends LogLevelMixin(class {}) {
     for (const entry of this.entryCache.values()) {
       if (entry.isBlob) {
         const d = join(dest, entry.name);
-        await fs.promises.mkdir(dirname(d), { recursive: true });
+        await mkdir(dirname(d), { recursive: true });
         const s = await entry.getReadStream();
         s.pipe(createWriteStream(d));
       }

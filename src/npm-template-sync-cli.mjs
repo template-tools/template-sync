@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-import fs, { readFileSync } from "fs";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { readFileSync } from "fs";
+import { readFile } from "fs/promises";
 import program from "commander";
 import { removeSensibleValues } from "remove-sensible-values";
 import GithubProvider from "github-repository-provider";
@@ -13,7 +12,7 @@ import { setProperty, defaultEncodingOptions } from "./util.mjs";
 
 const { version, description } = JSON.parse(
   readFileSync(
-    join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"),
+    new URL("../package.json", import.meta.url).pathname,
     defaultEncodingOptions
   )
 );
@@ -43,7 +42,11 @@ program
     "--list-properties",
     "list all properties (if given of the first branch) and exit"
   )
-  .option("-t, --template <identifier>", "template repository", value => templates=templates.concat(value))
+  .option(
+    "-t, --template <identifier>",
+    "template repository",
+    value => (templates = templates.concat(value))
+  )
   .option("-u, --dump-template <directory>", "copy aggregated template entries")
   .action(async (commander, branches) => {
     const logLevel = program.trace ? "trace" : program.debug ? "debug" : "info";
@@ -74,13 +77,13 @@ program
 
       if (branches.length === 0 || branches[0] === ".") {
         const pkg = JSON.parse(
-          await fs.promises.readFile("package.json", defaultEncodingOptions)
+          await readFile("package.json", defaultEncodingOptions)
         );
         branches.push(pkg.repository.url);
       }
 
       for (const branch of branches) {
-        const context = new Context(provider, branch, {          
+        const context = new Context(provider, branch, {
           template: program.template,
           dry: program.dry,
           track: program.track,
