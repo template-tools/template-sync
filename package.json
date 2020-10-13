@@ -67,7 +67,7 @@
     "documentation": "^13.0.2",
     "execa": "^4.0.3",
     "mock-repository-provider": "^5.2.17",
-    "semantic-release": "^17.1.2"
+    "semantic-release": "^17.2.1"
   },
   "engines": {
     "node": ">=14.13.1"
