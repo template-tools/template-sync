@@ -16,8 +16,6 @@ export async function markdownt(t, factory, name) {
     originalEntry
   );
 
-  //t.is(merged, undefined);
-
   const mergedEntry = new FileSystemEntry(`fixtures/${name}-merged.md`, here);
 
   if ((await mergedEntry.getString()) === (await originalEntry.getString())) {
@@ -31,3 +29,4 @@ markdownt.title = (providedTitle = "", factory, name) =>
   `${factory.name} ${providedTitle} ${name}`.trim();
 
 test(markdownt, Markdown, "t1");
+//test(markdownt, Markdown, "t2");
