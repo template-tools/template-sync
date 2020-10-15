@@ -271,7 +271,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 }
 
 function prInfo(targetBranch, prName, commits) {
-  return `${targetBranch.provider.name}/${targetBranch.fullCondensedName}[${prName}]: ${commits
+  return `${targetBranch.provider.name}:${targetBranch.fullCondensedName}[${prName}]: ${commits
     .map(c => `${c.message}`)
     .join(",")}`;
 }
