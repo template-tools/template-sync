@@ -24,42 +24,28 @@ export class Markdown extends Merger {
       .use(markdown)
       .parse(await sourceEntry.getString());
 
-    //console.log([...childTypes(templateTree, "heading")]);
+    //console.log([...childTypes(originalTree, "heading")]);
 
     const actions = {};
 
-    /*
-    const headings = {};
+    removePosition(originalTree);
+    removePosition(templateTree);
 
-    for (const h of childTypes(originalTree, "heading")) {
-      headings[h.children[0].value] = h;
-    }
-
-    // add headings from template
-    for (const h of childTypes(templateTree, "heading")) {
-      if(headings[h.children[0].value] === undefined) {
-        originalTree.children.push(h);
+    const mergedTree = merge(
+      originalTree,
+      templateTree,
+      "",
+      (action, hint) => aggregateActions(actions, action, hint),
+      {
+        "*.children": { key: "value" }
       }
-    }
+    );
+   // console.log(JSON.stringify(mergedTree, undefined, 2));
 
-    const merged = unified()
-      .use(markdown)
-      .use(stringify)
-      .stringify(originalTree);
-*/
+    const merged = unified().use(markdown).use(stringify).stringify(mergedTree);
 
-    const merged = unified()
-      .use(markdown)
-      .use(stringify)
-      .stringify(
-        merge(
-          originalTree,
-          templateTree,
-          "",
-          (action, hint) => aggregateActions(actions, action, hint),
-          options.mergeHints
-        )
-      );
+
+   // console.log(merged);
 
     return merged === original
       ? undefined
@@ -70,8 +56,21 @@ export class Markdown extends Merger {
   }
 }
 
+function removePosition(tree) {
+  delete tree.position;
+  if (tree.children) {
+    tree.children.forEach(t => removePosition(t));
+  }
+}
+
 function* childTypes(tree, type) {
   for (const c of tree.children.filter(c => c.type === type)) {
     yield c;
   }
+}
+
+function mergeHeadings(a, b) {
+  const children = [...a.children, ...b.children.filter(t => { a.children.find( ) } )];
+
+  return { tpye: a.type, children };
 }
