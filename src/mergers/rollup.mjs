@@ -1,8 +1,7 @@
-import recast from "recast";
+import { parse, print } from "recast";
 import parser from "recast/parsers/babel.js";
 import transform from "@babel/core/lib/transform.js";
 import { StringContentEntry } from "content-entry";
-
 import { Merger } from "../merger.mjs";
 
 export class Rollup extends Merger {
@@ -26,7 +25,7 @@ export class Rollup extends Merger {
 
   static async usedDevDependencies(into, entry) {
     const content = await entry.getString();
-    const ast = recast.parse(content, {
+    const ast = parse(content, {
       parser: {
         parse: source =>
           transform.transform(source, {
@@ -69,8 +68,8 @@ export class Rollup extends Merger {
 
     let messages = [];
 
-    const templateAST = recast.parse(templateContent, parser);
-    const ast = recast.parse(original, parser);
+    const templateAST = parse(templateContent, parser);
+    const ast = parse(original, parser);
 
     removeUseStrict(ast);
 
@@ -201,7 +200,7 @@ export class Rollup extends Merger {
       messages.push(`${options.messagePrefix}add ${addedPlugins.join(",")}`);
     }
 
-    const merged = recast.print(ast).code;
+    const merged = print(ast).code;
 
     return original === merged
       ? undefined
