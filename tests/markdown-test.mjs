@@ -10,8 +10,8 @@ test("markdown merge", async t => {
     new StringContentEntry(
       FILE_NAME,
       `# Hello
--  a
--  b
+* a
+* b
 `
     ),
     new StringContentEntry(
@@ -24,8 +24,8 @@ test("markdown merge", async t => {
     await merged.entry.getString(),
     `# Hello
 
--   a
--   b
+*   a
+*   b
 
 # Other
 `
