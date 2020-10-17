@@ -1,4 +1,4 @@
-import lockfile from '@yarnpkg/lockfile';
+import { stringify, parse } from "@yarnpkg/lockfile";
 import { StringContentEntry } from "content-entry";
 import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
@@ -28,10 +28,10 @@ export class YARNLockfile extends Merger {
 
     const actions = {};
 
-    const merged = lockfile.stringify(
+    const merged = stringify(
       merge(
-        lockfile.parse(original).object,
-        lockfile.parse(template).object,
+        parse(original).object,
+        parse(template).object,
         "",
         (action, hint) => aggregateActions(actions, action, hint),
         options.mergeHints
