@@ -38,7 +38,7 @@
     "lint:docs": "documentation lint ./src/context.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.12.0",
+    "@babel/core": "^7.12.3",
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "aggregation-repository-provider": "^2.8.17",
@@ -46,10 +46,10 @@
     "commander": "^6.1.0",
     "content-entry": "^2.5.1",
     "expression-expander": "^7.0.6",
-    "github-repository-provider": "^7.17.22",
+    "github-repository-provider": "^7.17.23",
     "hinted-tree-merger": "^4.6.4",
     "js-yaml": "^3.14.0",
-    "local-repository-provider": "^7.0.3",
+    "local-repository-provider": "^7.0.4",
     "loglevel-mixin": "^6.0.0",
     "markdown": "^0.5.0",
     "matching-iterator": "^1.1.2",
