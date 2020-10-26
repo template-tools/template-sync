@@ -15,7 +15,7 @@ export class Markdown extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();

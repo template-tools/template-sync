@@ -9,15 +9,15 @@ export class INI extends Merger {
     return "**/*.ini";
   }
 
-  static get defaultOptions() {
-    return { ...super.defaultOptions, expand: false };
+  static get options() {
+    return { ...super.options, expand: false };
   }
 
   static async merge(
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();

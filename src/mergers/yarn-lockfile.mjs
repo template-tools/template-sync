@@ -9,9 +9,9 @@ export class YARNLockfile extends Merger {
     return "yarn.lockfile";
   }
 
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       messagePrefix: "chore: "
     };
   }
@@ -20,7 +20,7 @@ export class YARNLockfile extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();

@@ -9,9 +9,9 @@ export class Readme extends Merger {
     return "**/README.md";
   }
 
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       badges: []
     };
   }
@@ -20,7 +20,7 @@ export class Readme extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     const original = await destinationEntry.getString();
 

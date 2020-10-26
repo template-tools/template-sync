@@ -8,9 +8,9 @@ export class JSONMerger extends Merger {
     return "**/*.json";
   }
 
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       replacer: undefined,
       space: 2
     };
@@ -20,7 +20,7 @@ export class JSONMerger extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();

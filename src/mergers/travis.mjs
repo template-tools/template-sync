@@ -6,9 +6,9 @@ export class Travis extends YAML {
     return ".travis.yml";
   }
 
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       messagePrefix: "chore(travis): ",
       mergeHints: {
         "*": { scope: "travis", removeEmpty: true },

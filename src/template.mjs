@@ -142,7 +142,7 @@ export class Template extends LogLevelMixin(class {}) {
             }
             m.factory = mergers.find(f => f.name === m.type) || ReplaceIfEmpty;
             m.options = reanimateHints({
-              ...m.factory.defaultOptions,
+              ...m.factory.options,
               ...m.options
             });
             m.priority = m.options.priority
@@ -158,7 +158,7 @@ export class Template extends LogLevelMixin(class {}) {
       );
     }
 
-    if (this.mergers.length === 0) {
+    /*if (this.mergers.length === 0) {
       this.mergers.push(
         ...mergers
           .map(m => {
@@ -166,12 +166,12 @@ export class Template extends LogLevelMixin(class {}) {
               factory: m,
               enabled: true,
               priority: m.priority,
-              options: m.defaultOptions
+              options: m.options
             };
           })
           .sort((a, b) => b.priority - a.priority)
       );
-    }
+    }*/
 
     const pkg = new StringContentEntry("package.json", JSON.stringify(pj));
 

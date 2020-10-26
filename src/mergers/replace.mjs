@@ -9,7 +9,7 @@ export class Replace extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     let source = await sourceEntry.getString();
     if(options.expand) { source = context.expand(source); }

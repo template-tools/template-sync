@@ -10,7 +10,7 @@ export class Merger {
     return 1.0;
   }
 
-  static get defaultOptions() {
+  static get options() {
     return {
       messagePrefix: "",
       expand: true,
@@ -27,7 +27,7 @@ export class Merger {
     return {};
   }
 
-  static optionalDevDependencies(into, dependencies, options = this.defaultOptions) {
+  static optionalDevDependencies(into, dependencies, options = this.options) {
     if (options.optionalDevDependencies) {
       Array.from(dependencies).forEach(dep => {
         for (const r of options.optionalDevDependencies) {

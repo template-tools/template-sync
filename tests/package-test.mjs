@@ -25,7 +25,7 @@ async function pkgt(
     ...properties
   });
 
-  context.template.mergers.push({ factory: Package, options: Package.defaultOptions, pattern: Package.pattern });
+  context.template.mergers.push({ factory: Package, options: Package.options, pattern: Package.pattern });
 
   // also fill mock repo
   if (content !== undefined) {
@@ -41,7 +41,7 @@ async function pkgt(
     template === undefined
       ? new EmptyContentEntry(FILE_NAME)
       : new StringContentEntry(FILE_NAME, JSON.stringify(template)),
-    { ...Package.defaultOptions, ...options }
+    { ...Package.options, ...options }
   );
 
   for (const e of asArray(message)) {

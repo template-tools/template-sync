@@ -93,7 +93,7 @@ test("template mergers", async t => {
       type: "Package",
       factory: Package,
       pattern: "package.json",
-      options: { ...Package.defaultOptions, o1: 77 },
+      options: { ...Package.options, o1: 77 },
       priority: 1
     },
     {
@@ -101,7 +101,7 @@ test("template mergers", async t => {
       type: "Travis",
       factory: Travis,
       pattern: ".travis.yml",
-      options: { ...Travis.defaultOptions },
+      options: { ...Travis.options },
       priority: 1
     }
   ]);
@@ -202,7 +202,7 @@ test("template package content", async t => {
           type: "Package",
           pattern: "package.json",
           priority: 1,
-          options: { ...Package.defaultOptions, o1: 77 }
+          options: { ...Package.options, o1: 77 }
         },
         {
           enabled: true,
@@ -210,8 +210,8 @@ test("template package content", async t => {
           pattern: ".travis.yml",
           priority: 1,
           options: {
-            ...Travis.defaultOptions,
-            mergeHints: { ...Travis.defaultOptions.mergeHints, "*node_js": {} }
+            ...Travis.options,
+            mergeHints: { ...Travis.options.mergeHints, "*node_js": {} }
           }
         }
       ],
@@ -234,8 +234,8 @@ test.skip("template disable_merger", async t => {
           type: "Travis",
           pattern: ".travis.yml",
           options: {
-            ...Travis.defaultOptions,
-            mergeHints: { ...Travis.defaultOptions.mergeHints, "*node_js": {} }
+            ...Travis.options,
+            mergeHints: { ...Travis.options.mergeHints, "*node_js": {} }
           }
         },
         {
@@ -243,7 +243,7 @@ test.skip("template disable_merger", async t => {
           priority: 1,
           type: "Package",
           pattern: "package.json",
-          options: { ...Package.defaultOptions, o1: 77 }
+          options: { ...Package.options, o1: 77 }
         }
       ],
       inheritFrom: ["template"]

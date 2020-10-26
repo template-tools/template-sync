@@ -1,9 +1,9 @@
 import { JSONMerger } from "./json.mjs";
 
 export class JSDoc extends JSONMerger {
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       messagePrefix: "chore(jsdoc): ",
     optionalDevDependencies: [/babel\-preset\-.*/]
     };

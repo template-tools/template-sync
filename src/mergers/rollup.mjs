@@ -9,9 +9,9 @@ export class Rollup extends Merger {
     return "**/rollup.config.*js";
   }
 
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       messagePrefix: "chore(rollup): ",
       optionalDevDependencies: [
         /\@rollup\/plugin\-.*/,
@@ -49,7 +49,7 @@ export class Rollup extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     const name = destinationEntry.name;
     const templateContent = await sourceEntry.getString();

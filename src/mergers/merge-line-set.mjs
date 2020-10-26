@@ -21,9 +21,9 @@ function set2lines(values, options) {
  *
  */
 export class MergeLineSet extends Merger {
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       trailingNewline: true,
       ignore: [""],
       mergeHints: {
@@ -36,7 +36,7 @@ export class MergeLineSet extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();

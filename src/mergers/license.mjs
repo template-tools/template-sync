@@ -55,9 +55,9 @@ export class License extends Merger {
     return "**/LICENSE*";
   }
 
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       messagePrefix: "chore(license): "
     };
   }
@@ -66,7 +66,7 @@ export class License extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     let years = new Set();
     const addedYears = new Set();

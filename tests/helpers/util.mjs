@@ -67,7 +67,7 @@ export async function yamlt(
           FILE_NAME,
           typeof template === "string" ? template : yaml.safeDump(template)
         ),
-    { ...factory.defaultOptions, ...options }
+    { ...factory.options, ...options }
   );
 
   if (message !== undefined) {

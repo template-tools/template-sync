@@ -6,7 +6,7 @@ import { StringContentEntry } from "content-entry";
 import { Readme } from "../src/mergers/readme.mjs";
 
 test("readme default options", t => {
-  t.deepEqual(Readme.defaultOptions.badges, []);
+  t.deepEqual(Readme.options.badges, []);
 });
 
 test("readme", async t => {

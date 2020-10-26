@@ -22,7 +22,7 @@ test("toml merge", async t => {
         oldKey: "oldValue"
       })
     ),
-    { ...TOML.defaultOptions, expand: true }
+    { ...TOML.options, expand: true }
   );
 
   t.deepEqual(parse(await commit.entry.getString()), {

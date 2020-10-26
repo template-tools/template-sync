@@ -193,9 +193,9 @@ export class Package extends Merger {
     return "package.json";
   }
 
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       actions: [],
       keywords: [],
       optionalDevDependencies: ["cracks", "dont-crack"]
@@ -263,7 +263,7 @@ export class Package extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     const name = destinationEntry.name;
     const templateContent = await sourceEntry.getString();

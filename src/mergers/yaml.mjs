@@ -9,9 +9,9 @@ export class YAML extends Merger {
     return "**/*.yaml";
   }
 
-  static get defaultOptions() {
+  static get options() {
     return {
-      ...super.defaultOptions,
+      ...super.options,
       expand: true,
       yaml: { lineWith: 128, /*schema: yaml.CORE_SCHEMA*/ },
       messagePrefix: "chore: "
@@ -22,7 +22,7 @@ export class YAML extends Merger {
     context,
     destinationEntry,
     sourceEntry,
-    options = this.defaultOptions
+    options = this.options
   ) {
     const name = destinationEntry.name;
     const original = await destinationEntry.getString();
