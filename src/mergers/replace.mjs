@@ -5,6 +5,11 @@ import { Merger } from "../merger.mjs";
  * Replace file from template (always)
  */
 export class Replace extends Merger {
+
+  static get priority() {
+    return 0.1;
+  }
+
   static async merge(
     context,
     destinationEntry,
