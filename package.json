@@ -43,7 +43,7 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "aggregation-repository-provider": "^2.8.19",
     "babylon": "^6.18.0",
-    "commander": "^6.1.0",
+    "commander": "^6.2.0",
     "content-entry": "^2.5.1",
     "expression-expander": "^7.0.6",
     "github-repository-provider": "^7.17.25",
