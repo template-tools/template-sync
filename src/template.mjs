@@ -158,6 +158,21 @@ export class Template extends LogLevelMixin(class {}) {
       );
     }
 
+    if (this.mergers.length === 0) {
+      this.mergers.push(
+        ...mergers
+          .map(m => {
+            return {
+              factory: m,
+              enabled: true,
+              priority: m.priority,
+              options: m.defaultOptions
+            };
+          })
+          .sort((a, b) => b.priority - a.priority)
+      );
+    }
+
     const pkg = new StringContentEntry("package.json", JSON.stringify(pj));
 
     pkg.merger = this.mergerFor(pkg.name);
@@ -498,7 +513,6 @@ const branchCache = new Map();
 async function branchFromCache(branch) {
   let b = branchCache.get(branch.fullCondensedName);
   if (b) {
-    //console.log("C for branch",branch.fullCondensedName);
     return b;
   }
 
@@ -515,7 +529,6 @@ async function branchFromCache(branch) {
     },
     async *entries() {
       for (const entry of entryCache.values()) {
-        //        console.log("C",branch.fullCondensedName,entry.name);
         yield entry;
       }
     },
