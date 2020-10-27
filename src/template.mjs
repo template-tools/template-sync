@@ -158,7 +158,7 @@ export class Template extends LogLevelMixin(class {}) {
       );
     }
 
-    /*if (this.mergers.length === 0) {
+    if (this.mergers.length === 0) {
       this.mergers.push(
         ...mergers
           .map(m => {
@@ -171,7 +171,7 @@ export class Template extends LogLevelMixin(class {}) {
           })
           .sort((a, b) => b.priority - a.priority)
       );
-    }*/
+    }
 
     const pkg = new StringContentEntry("package.json", JSON.stringify(pj));
 

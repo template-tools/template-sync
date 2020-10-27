@@ -25,7 +25,7 @@ async function pkgt(
     ...properties
   });
 
-  context.template.mergers.push({ factory: Package, options: Package.options, pattern: Package.pattern });
+  context.template.mergers.unshift({ factory: Package, options: Package.options, pattern: Package.pattern });
 
   // also fill mock repo
   if (content !== undefined) {
