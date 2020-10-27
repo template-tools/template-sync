@@ -70,7 +70,7 @@
     "semantic-release": "^17.2.1"
   },
   "engines": {
-    "node": ">=14.14.0"
+    "node": ">=14.15.0"
   },
   "repository": {
     "type": "git",
