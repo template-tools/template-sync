@@ -42,6 +42,7 @@ test("rollup", async t => {
       interop: false
     },
     plugins: [
+      ,
       babel({
         babelrc: false,
         presets: ['stage-3'],

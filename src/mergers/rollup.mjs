@@ -185,7 +185,7 @@ export class Rollup extends Merger {
 
     templatePlugins.forEach(templatePlugin => {
       if (
-        templatePlugin.callee !== undefined &&
+        templatePlugin && templatePlugin.callee !== undefined &&
         originalPlugins.find(
           op =>
             op && op.callee !== undefined &&
