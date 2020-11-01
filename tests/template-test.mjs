@@ -1,5 +1,5 @@
 import test from "ava";
-import { MockProvider } from "mock-repository-provider";
+import MockProvider from "mock-repository-provider";
 import { StringContentEntry } from "content-entry";
 
 import { Template } from "../src/template.mjs";

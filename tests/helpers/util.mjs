@@ -1,5 +1,5 @@
 import { StringContentEntry, EmptyContentEntry } from "content-entry";
-import { MockProvider } from "mock-repository-provider";
+import MockProvider from "mock-repository-provider";
 import { Context } from "../../src/context.mjs";
 import yaml from "js-yaml";
 

@@ -1,5 +1,5 @@
 import test from "ava";
-import { MockProvider } from "mock-repository-provider";
+import MockProvider from "mock-repository-provider";
 import { Context } from "../src/context.mjs";
 
 test("context create", async t => {
