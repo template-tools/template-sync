@@ -63,7 +63,7 @@
   "devDependencies": {
     "ava": "^3.13.0",
     "c8": "^7.3.5",
-    "content-entry-filesystem": "^2.0.0",
+    "content-entry-filesystem": "^2.0.1",
     "documentation": "^13.1.0",
     "execa": "^4.1.0",
     "mock-repository-provider": "^5.5.2",
