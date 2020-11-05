@@ -1,9 +1,13 @@
-import { stringify, parse } from "@yarnpkg/lockfile";
 import { StringContentEntry } from "content-entry";
 import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
 import { actions2message, aggregateActions } from "../util.mjs";
 
+//import { stringify, parse } from "@yarnpkg/lockfile";
+
+import lockfile from "@yarnpkg/lockfile";
+const { stringify, parse } = lockfile;
+ 
 export class YARNLockfile extends Merger {
   static get pattern() {
     return "yarn.lockfile";
