@@ -203,22 +203,24 @@ export class Context extends LogLevelMixin(class _Context {}) {
       await Promise.all(
         [...template.entries()].map(async templateEntry => {
           let name = templateEntry.name;
+          const merger = templateEntry.merger;
           this.trace({
             message: "merge",
             name,
-            merger: templateEntry.merger.factory
-              ? templateEntry.merger.factory.name
-              : "undefined"
+            merger: merger && merger.factory ? merger.factory.name : "undefined"
           });
-          name = this.expand(name);
 
-          return templateEntry.merger.factory.merge(
-            this,
-            (await targetBranch.maybeEntry(name)) ||
-              new EmptyContentEntry(name),
-            templateEntry,
-            templateEntry.merger.options
-          );
+          if (merger) {
+            name = this.expand(name);
+
+            return merger.factory.merge(
+              this,
+              (await targetBranch.maybeEntry(name)) ||
+                new EmptyContentEntry(name),
+              templateEntry,
+              merger.options
+            );
+          }
         })
       )
     ).filter(c => c !== undefined);
@@ -271,7 +273,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 }
 
 function prInfo(targetBranch, prName, commits) {
-  return `${targetBranch.provider.name}:${targetBranch.fullCondensedName}[${prName}]: ${commits
-    .map(c => `${c.message}`)
-    .join(",")}`;
+  return `${targetBranch.provider.name}:${
+    targetBranch.fullCondensedName
+  }[${prName}]: ${commits.map(c => `${c.message}`).join(",")}`;
 }
