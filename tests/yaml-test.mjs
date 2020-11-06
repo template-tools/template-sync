@@ -71,7 +71,6 @@ test(
 `
 );
 
-
 test.skip(
   yamlt,
   YAML,
@@ -85,7 +84,13 @@ test.skip(
   `,
   undefined,
   {},
-  {},
+  {
+    mergeHints: {
+      "*.matrix.node-version": {
+        merge: "mergeVersionsPreferNumeric"
+      }
+    }
+  },
   `jobs:
   test:
     strategy:
