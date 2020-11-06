@@ -70,3 +70,27 @@ test(
   `boolean: false
 `
 );
+
+
+test.skip(
+  yamlt,
+  YAML,
+  `jobs:
+  test:
+    strategy:
+      matrix:
+        node-version:
+          - -15
+          - 15.1.0
+  `,
+  undefined,
+  {},
+  {},
+  `jobs:
+  test:
+    strategy:
+      matrix:
+        node-version:
+          - 15.1.0
+`
+);
