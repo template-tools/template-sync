@@ -18,7 +18,7 @@ test("context prepare from template", async t => {
   // t.is(pc.targetBranch, undefined);
   t.deepEqual(
     [...context.template.branches].map(b => b.fullCondensedName),
-    [TEMPLATE_REPO]
+    [TEMPLATE_REPO, "arlac77/template-npm"]
   );
   //t.is(pc.properties.name, 'sync-test-repository');
   t.is(context.properties.mySpecialKey, "mySpecialValue");
