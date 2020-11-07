@@ -33,18 +33,22 @@ test("context execute - PR", async t => {
 
   const context = await Context.from(provider, REPOSITORY_NAME, {
     logger: (...args) => console.log(...args),
-   // logLevel: "trace",
+    // logLevel: "trace",
     template: TEMPLATE_REPO
   });
 
-  const pullRequests = await context.execute();
+  const pullRequests = [];
+  for await (const pr of context.execute()) {
+    pullRequests.push(pr);
+  }
+
   t.truthy(pullRequests.length > 0);
 
   const pullRequest = pullRequests[0];
   t.truthy(pullRequest && pullRequest.name);
 
-  for(const pr of pullRequests) {
-   // await pr.destination.delete();
+  for (const pr of pullRequests) {
+    // await pr.destination.delete();
     await pr.delete();
   }
 });

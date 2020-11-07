@@ -160,28 +160,27 @@ export class Context extends LogLevelMixin(class _Context {}) {
     });
   }
 
-  async execute() {
+  async * execute() {
     if (this.properties.usedBy !== undefined) {
-      const pullRequests = [];
 
       for (const r of this.properties.usedBy) {
         try {
           const context = await Context.from(this.provider, r, this.options);
-          pullRequests.push(...(await context.execute()));
+          yield *context.execute();
         } catch (e) {
           this.error(e);
         }
       }
-      return pullRequests;
     } else {
-      return this.executeBranch();
+      yield *this.executeBranch();
     }
   }
 
   /**
-   * @return {[Promise<PullRequest>]}
+   * Generate Pull Requests
+   * @return {PullRequest[]}
    */
-  async executeBranch() {
+  async *executeBranch() {
     const targetBranch = this.targetBranch;
 
     this.debug({
@@ -194,9 +193,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     const template = this.template;
 
     if (this.track && !this.dry) {
-      pullRequests.push(
-        await template.updateUsedBy(targetBranch, this.templateSources)
-      );
+      yield await template.updateUsedBy(targetBranch, this.templateSources);
     }
 
     const commits = (
@@ -226,13 +223,13 @@ export class Context extends LogLevelMixin(class _Context {}) {
     ).filter(c => c !== undefined);
 
     if (commits.length === 0) {
-      this.info("-");
-      return pullRequests;
+      yield "-";
+      return;
     }
 
     if (this.dry) {
-      this.info(prInfo(targetBranch, "DRY", commits));
-      return pullRequests;
+      yield prInfo(targetBranch, "DRY", commits);
+      return;
     }
 
     const prBranch = await targetBranch.createBranch(
@@ -259,12 +256,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
       });
       this.info(prInfo(targetBranch, pullRequest.number, commits));
 
-      pullRequests.push(pullRequest);
+      yield pullRequest;
     } catch (err) {
       this.error(err);
     }
-
-    return pullRequests;
   }
 
   log(level, ...args) {

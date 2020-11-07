@@ -109,7 +109,13 @@ program
           return;
         }
 
-        await context.execute();
+        for await (const pr of context.execute()) {
+          if (typeof pr === "string") {
+            console.log(pr);
+          } else {
+            console.log(`${pr.identifier} ${pr.title}`);
+          }
+        }
       }
     } catch (err) {
       console.error(err);
