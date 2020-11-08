@@ -160,6 +160,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
     });
   }
 
+  /**
+   * Generate Pull Requests
+   * @return {AsyncIterator <PullRequest>}
+   */
   async * execute() {
     if (this.properties.usedBy !== undefined) {
 
@@ -178,7 +182,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
   /**
    * Generate Pull Requests
-   * @return {PullRequest[]}
+   * @return {AsyncIterator <PullRequest>}
    */
   async *executeBranch() {
     const targetBranch = this.targetBranch;
@@ -188,13 +192,11 @@ export class Context extends LogLevelMixin(class _Context {}) {
       branch: targetBranch.fullCondensedName
     });
 
-    const pullRequests = [];
-
-    const template = this.template;
-
     if (this.track && !this.dry) {
       yield await template.updateUsedBy(targetBranch, this.templateSources);
     }
+
+    const template = this.template;
 
     const commits = (
       await Promise.all(
