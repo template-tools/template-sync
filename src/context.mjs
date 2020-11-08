@@ -192,11 +192,11 @@ export class Context extends LogLevelMixin(class _Context {}) {
       branch: targetBranch.fullCondensedName
     });
 
-    if (this.track && !this.dry) {
-      yield await template.updateUsedBy(targetBranch, this.templateSources);
-    }
-
     const template = this.template;
+
+    if (this.track && !this.dry) {
+      yield * template.updateUsedBy(targetBranch, this.templateSources);
+    }
 
     const commits = (
       await Promise.all(
