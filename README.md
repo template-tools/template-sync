@@ -69,6 +69,7 @@ Merges contents from template branch into destination branch handling some speci
 -   [Context](#context)
     -   [Parameters](#parameters)
     -   [Properties](#properties)
+    -   [execute](#execute)
     -   [executeBranch](#executebranch)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
@@ -123,9 +124,17 @@ Context prepared to execute one branch
 -   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
 
+### execute
+
+Generate Pull Requests
+
+Returns **AsyncIterator&lt;PullRequest>** 
+
 ### executeBranch
 
-Returns **\[[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;PullRequest>]** 
+Generate Pull Requests
+
+Returns **AsyncIterator&lt;PullRequest>** 
 
 ## sortedKeys
 
