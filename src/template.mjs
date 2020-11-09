@@ -396,9 +396,10 @@ export class Template extends LogLevelMixin(class {}) {
    * Updates usedBy section of the template branch
    * @param {Branch} targetBranch template to be updated
    * @param {string[]} templateSources original branch identifiers (even with deleteion hints)
+   * @param {Object} options as passed to commitIntoPullRequest
    * @return {AsyncIterator <PullRequest>}
    */
-  async *updateUsedBy(targetBranch, templateSources) {
+  async *updateUsedBy(targetBranch, templateSources, options) {
     const toBeRemoved = templateSources
       .filter(t => t.startsWith("-"))
       .map(t => t.slice(1));
@@ -424,7 +425,8 @@ export class Template extends LogLevelMixin(class {}) {
               "npm-template-sync/used-by"
             ),
             title,
-            body
+            body,
+            ...options
           }
         );
       }
