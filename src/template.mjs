@@ -393,86 +393,77 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
-   * Updates usedBy section of the template branch
+   * Updates usedBy section of the template branch.
    * @param {Branch} targetBranch template to be updated
    * @param {string[]} templateSources original branch identifiers (even with deleteion hints)
    * @param {Object} options as passed to commitIntoPullRequest
    * @return {AsyncIterator <PullRequest>}
    */
   async *updateUsedBy(targetBranch, templateSources, options) {
-    const toBeRemoved = templateSources
-      .filter(t => t.startsWith("-"))
-      .map(t => t.slice(1));
-
-    async function* modifyWithPR(
-      sourceBranch,
-      modify,
-      message,
-      title = message,
-      body = message
-    ) {
+    async function* modifyWithPR(sourceBranch, modify, action, itemName) {
       const name = "package.json";
       const entry = await sourceBranch.entry(name);
       const org = await entry.getString();
       const modified = JSON.stringify(modify(JSON.parse(org)), undefined, 2);
 
       if (org !== modified) {
+        const message = `fix: ${action} ${itemName}`;
+
         yield sourceBranch.commitIntoPullRequest(
           { message, entries: [new StringContentEntry(name, modified)] },
           {
-            pullRequestBranch: await sourceBranch.repository.createBranch(
-              "npm-template-sync/used-by"
-            ),
-            title,
-            body,
+            pullRequestBranch: "npm-template-sync/used-by",
+            title: message,
+            body: message,
             ...options
           }
         );
       }
     }
 
-    for (const branchName of toBeRemoved) {
+    for (const branchName of templateSources
+      .filter(t => t.startsWith("-"))
+      .map(t => t.slice(1))) {
       yield* modifyWithPR(
         await this.provider.branch(branchName),
         pkg => {
           if (pkg.template !== undefined && pkg.template.usedBy !== undefined) {
-            const name = targetBranch.fullCondensedName;
-            if (pkg.template.usedBy.find(n => n === name)) {
-              pkg.template.usedBy = pkg.template.usedBy.filter(n => n !== name);
-            }
+            pkg.template.usedBy = pkg.template.usedBy.filter(
+              n => n !== targetBranch.fullCondensedName
+            );
           }
           return pkg;
         },
-        `fix: remove ${name}`,
-        `remove ${name}`,
-        `remove ${name} from usedBy`
+        "remove",
+        targetBranch.fullCondensedName
       );
     }
 
     const name = targetBranch.fullCondensedName;
 
     for (const sourceBranch of this.keyBranches) {
-      yield* modifyWithPR(
-        sourceBranch,
-        pkg => {
-          if (pkg.template === undefined) {
-            pkg.template = {};
-          }
-          if (!Array.isArray(pkg.template.usedBy)) {
-            pkg.template.usedBy = [];
-          }
+      if (targetBranch !== sourceBranch) {
+        yield* modifyWithPR(
+          sourceBranch,
+          pkg => {
+            if (pkg.template === undefined) {
+              pkg.template = {};
+            }
+            if (!Array.isArray(pkg.template.usedBy)) {
+              pkg.template.usedBy = [];
+            }
 
-          if (!pkg.template.usedBy.find(n => n === name)) {
-            pkg.template.usedBy.push(name);
-            pkg.template.usedBy = pkg.template.usedBy.sort();
-          }
+            if (!pkg.template.usedBy.find(n => n === name)) {
+              pkg.template.usedBy.push(name);
+              pkg.template.usedBy = pkg.template.usedBy.sort();
+            }
 
-          return pkg;
-        },
-        `fix: add ${name}`,
-        `add ${name}`,
-        `add ${name} to usedBy`
-      );
+            return pkg;
+          },
+          "add",
+          name
+        );
+      }
     }
   }
 }
