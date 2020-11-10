@@ -252,7 +252,7 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ### updateUsedBy
 
-Updates usedBy section of the template branch
+Updates usedBy section of the template branch.
 
 #### Parameters
 
