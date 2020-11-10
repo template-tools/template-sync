@@ -404,7 +404,7 @@ export class Template extends LogLevelMixin(class {}) {
       .filter(t => t.startsWith("-"))
       .map(t => t.slice(1));
 
-    async function * modifyWithPR(
+    async function* modifyWithPR(
       sourceBranch,
       modify,
       message,
@@ -418,8 +418,7 @@ export class Template extends LogLevelMixin(class {}) {
 
       if (org !== modified) {
         yield sourceBranch.commitIntoPullRequest(
-          message,
-          [new StringContentEntry(name, modified)],
+          { message, entries: [new StringContentEntry(name, modified)] },
           {
             pullRequestBranch: await sourceBranch.repository.createBranch(
               "npm-template-sync/used-by"
@@ -433,7 +432,7 @@ export class Template extends LogLevelMixin(class {}) {
     }
 
     for (const branchName of toBeRemoved) {
-      yield * modifyWithPR(
+      yield* modifyWithPR(
         await this.provider.branch(branchName),
         pkg => {
           if (pkg.template !== undefined && pkg.template.usedBy !== undefined) {
@@ -453,7 +452,7 @@ export class Template extends LogLevelMixin(class {}) {
     const name = targetBranch.fullCondensedName;
 
     for (const sourceBranch of this.keyBranches) {
-      yield * modifyWithPR(
+      yield* modifyWithPR(
         sourceBranch,
         pkg => {
           if (pkg.template === undefined) {
