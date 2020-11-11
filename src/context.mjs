@@ -180,86 +180,59 @@ export class Context extends LogLevelMixin(class _Context {}) {
   }
 
   /**
+   * Generate all commits from the template entry merges.
+   * @return {Commit<AsyncIterator>}
+   */
+  async *commits() {
+    for (const templateEntry of this.template.entries()) {
+      let name = templateEntry.name;
+      const merger = templateEntry.merger;
+      this.trace({
+        message: "merge",
+        name,
+        merger: merger && merger.factory ? merger.factory.name : "undefined"
+      });
+
+      if (merger) {
+        name = this.expand(name);
+
+        yield* merger.factory.commits(
+          this,
+          (await this.targetBranch.maybeEntry(name)) || new EmptyContentEntry(name),
+          templateEntry,
+          merger.options
+        );
+      }
+    }
+  }
+
+  /**
    * Generate Pull Requests
    * @return {AsyncIterator <PullRequest>}
    */
   async *executeBranch() {
-    const targetBranch = this.targetBranch;
+    try {
+      const targetBranch = this.targetBranch;
 
-    this.debug({
-      message: "execute",
-      branch: targetBranch.fullCondensedName
-    });
+      this.debug({
+        message: "execute",
+        branch: targetBranch.fullCondensedName
+      });
 
-    const template = this.template;
+      const template = this.template;
 
-    if (this.track) {
-      yield* template.updateUsedBy(targetBranch, this.templateSources, {
+      if (this.track) {
+        yield* template.updateUsedBy(targetBranch, this.templateSources, {
+          dry: this.dry
+        });
+      }
+
+      yield targetBranch.commitIntoPullRequest(this.commits(), {
+        pullRequestBranch: `npm-template-sync/${template.key}`,
+        title: `merge from ${template.key}`,
+        bodyFromCommitMessages: true,
         dry: this.dry
       });
-    }
-
-    const commits = (
-      await Promise.all(
-        [...template.entries()].map(async templateEntry => {
-          let name = templateEntry.name;
-          const merger = templateEntry.merger;
-          this.trace({
-            message: "merge",
-            name,
-            merger: merger && merger.factory ? merger.factory.name : "undefined"
-          });
-
-          if (merger) {
-            name = this.expand(name);
-
-            return merger.factory.merge(
-              this,
-              (await targetBranch.maybeEntry(name)) ||
-                new EmptyContentEntry(name),
-              templateEntry,
-              merger.options
-            );
-          }
-        })
-      )
-    ).filter(c => c !== undefined);
-
-    if (commits.length === 0) {
-      yield "-";
-      return;
-    }
-
-    if (this.dry) {
-      yield prInfo(targetBranch, "DRY", commits);
-      return;
-    }
-
-    const prBranch = await targetBranch.createBranch(
-      `npm-template-sync/${template.key}`
-    );
-
-    for (const commit of commits) {
-      //this.properties.entry = commit.entry;
-      await prBranch.commit(this.expand(commit.message), [commit.entry]);
-    }
-
-    try {
-      const pullRequest = await prBranch.createPullRequest(targetBranch, {
-        title: `merge from ${template.key}`,
-        body: commits
-          .map(
-            c =>
-              `${c.entry.name}
----
-- ${c.message}
-`
-          )
-          .join("\n")
-      });
-      this.info(prInfo(targetBranch, pullRequest.number, commits));
-
-      yield pullRequest;
     } catch (err) {
       this.error(err);
     }
@@ -268,10 +241,4 @@ export class Context extends LogLevelMixin(class _Context {}) {
   log(level, ...args) {
     log(level, ...args);
   }
-}
-
-function prInfo(targetBranch, prName, commits) {
-  return `${targetBranch.provider.name}:${
-    targetBranch.fullCondensedName
-  }[${prName}]: ${commits.map(c => `${c.message}`).join(",")}`;
 }
