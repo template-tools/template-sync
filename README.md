@@ -70,6 +70,7 @@ Merges contents from template branch into destination branch handling some speci
     -   [Parameters](#parameters)
     -   [Properties](#properties)
     -   [execute](#execute)
+    -   [commits](#commits)
     -   [executeBranch](#executebranch)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
@@ -129,6 +130,12 @@ Context prepared to execute one branch
 Generate Pull Requests
 
 Returns **AsyncIterator&lt;PullRequest>** 
+
+### commits
+
+Generate all commits from the template entry merges.
+
+Returns **Commit&lt;AsyncIterator>** 
 
 ### executeBranch
 
