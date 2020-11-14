@@ -1,30 +1,30 @@
-import { StringContentEntry } from "content-entry"; 
+import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
 
 /**
  * Overwrites none existing entries from template
  */
 export class ReplaceIfEmpty extends Merger {
-
   static get priority() {
     return 0.1;
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
     options = this.options
   ) {
-    if(await destinationEntry.isEmpty()) {
+    if (await destinationEntry.isEmpty()) {
       const source = await sourceEntry.getString();
 
-      return {
+      yield {
         message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
-        entry: new StringContentEntry(destinationEntry.name,
-           options.expand ? context.expand(source) : source)
+        entry: new StringContentEntry(
+          destinationEntry.name,
+          options.expand ? context.expand(source) : source
+        )
       };
     }
-    return undefined;
   }
 }

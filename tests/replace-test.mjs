@@ -1,15 +1,16 @@
 import test from "ava";
-import { createContext } from "./helpers/util.mjs";
+import { createContext, asyncIterator2scalar } from "./helpers/util.mjs";
 import { StringContentEntry } from "content-entry";
-
 import { Replace } from "../src/mergers/replace.mjs";
 
 test("replace differ", async t => {
-  const merged = await Replace.merge(
-    await createContext({ name: 'a name'}),
-    new StringContentEntry("aFile", "Line 1"),
-    new StringContentEntry("bFile", "Line 1x {{name}}"),
-    { expand: false }
+  const merged = await asyncIterator2scalar(
+    Replace.commits(
+      await createContext({ name: "a name" }),
+      new StringContentEntry("aFile", "Line 1"),
+      new StringContentEntry("bFile", "Line 1x {{name}}"),
+      { expand: false }
+    )
   );
 
   t.is(await merged.entry.getString(), "Line 1x {{name}}");
@@ -17,11 +18,13 @@ test("replace differ", async t => {
 });
 
 test("replace differ expand", async t => {
-  const merged = await Replace.merge(
-    await createContext({ name: 'a name'}),
-    new StringContentEntry("aFile", "Line 1"),
-    new StringContentEntry("bFile", "Line 1x {{name}}"),
-    { expand: true }
+  const merged = await asyncIterator2scalar(
+    Replace.commits(
+      await createContext({ name: "a name" }),
+      new StringContentEntry("aFile", "Line 1"),
+      new StringContentEntry("bFile", "Line 1x {{name}}"),
+      { expand: true }
+    )
   );
 
   t.is(await merged.entry.getString(), "Line 1x a name");
@@ -29,10 +32,12 @@ test("replace differ expand", async t => {
 });
 
 test("replace equal", async t => {
-  const merged = await Replace.merge(
-    await createContext(),
-    new StringContentEntry("aFile", "Line 1"),
-    new StringContentEntry("bFile", "Line 1")
+  const merged = await asyncIterator2scalar(
+    Replace.commits(
+      await createContext(),
+      new StringContentEntry("aFile", "Line 1"),
+      new StringContentEntry("bFile", "Line 1")
+    )
   );
 
   t.is(merged, undefined);

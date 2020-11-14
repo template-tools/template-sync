@@ -7,6 +7,14 @@ export function asArray(o) {
   return Array.isArray(o) ? o : o === undefined ? [] : [o];
 }
 
+export async function asyncIterator2scalar(i)
+{
+  for await (const x of i)
+  {
+    return x;
+  }
+}
+
 export const TARGET_REPO = "targetUser/targetRepo";
 export const TEMPLATE_REPO = "templateRepo";
 
