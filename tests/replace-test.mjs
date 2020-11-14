@@ -4,7 +4,7 @@ import { StringContentEntry } from "content-entry";
 import { Replace } from "../src/mergers/replace.mjs";
 
 test("replace differ", async t => {
-  const merged = await asyncIterator2scalar(
+  const commit = await asyncIterator2scalar(
     Replace.commits(
       await createContext({ name: "a name" }),
       new StringContentEntry("aFile", "Line 1"),
@@ -13,12 +13,12 @@ test("replace differ", async t => {
     )
   );
 
-  t.is(await merged.entry.getString(), "Line 1x {{name}}");
-  t.is(merged.entry.name, "aFile");
+  t.is(await commit.entries[0].getString(), "Line 1x {{name}}");
+  t.is(commit.entries[0].name, "aFile");
 });
 
 test("replace differ expand", async t => {
-  const merged = await asyncIterator2scalar(
+  const commit = await asyncIterator2scalar(
     Replace.commits(
       await createContext({ name: "a name" }),
       new StringContentEntry("aFile", "Line 1"),
@@ -27,12 +27,12 @@ test("replace differ expand", async t => {
     )
   );
 
-  t.is(await merged.entry.getString(), "Line 1x a name");
-  t.is(merged.entry.name, "aFile");
+  t.is(await commit.entries[0].getString(), "Line 1x a name");
+  t.is(commit.entries[0].name, "aFile");
 });
 
 test("replace equal", async t => {
-  const merged = await asyncIterator2scalar(
+  const commit = await asyncIterator2scalar(
     Replace.commits(
       await createContext(),
       new StringContentEntry("aFile", "Line 1"),
@@ -40,5 +40,5 @@ test("replace equal", async t => {
     )
   );
 
-  t.is(merged, undefined);
+  t.is(commit, undefined);
 });

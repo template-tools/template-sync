@@ -1,6 +1,6 @@
 import test from "ava";
 
-import { createContext } from "./helpers/util.mjs";
+import { createContext, asyncIterator2scalar } from "./helpers/util.mjs";
 import { StringContentEntry, EmptyContentEntry } from "content-entry";
 
 import { License } from "../src/mergers/license.mjs";
@@ -11,14 +11,16 @@ async function lmt(t, license, template, year, expected, message) {
     license: { owner: "xyz" }
   });
 
-  const commit = await License.merge(
-    context,
-    license === undefined
-      ? new EmptyContentEntry("license")
-      : new StringContentEntry("license", license),
-    template === undefined
-      ? new EmptyContentEntry("license")
-      : new StringContentEntry("license", template)
+  const commit = await asyncIterator2scalar(
+    License.commits(
+      context,
+      license === undefined
+        ? new EmptyContentEntry("license")
+        : new StringContentEntry("license", license),
+      template === undefined
+        ? new EmptyContentEntry("license")
+        : new StringContentEntry("license", template)
+    )
   );
 
   if (commit === undefined) {
@@ -26,7 +28,7 @@ async function lmt(t, license, template, year, expected, message) {
     t.is(expected, undefined);
   } else {
     t.is(commit.message, message, "message");
-    t.is(await commit.entry.getString(), expected, "merged content");
+    t.is(await commit.entries[0].getString(), expected, "merged content");
   }
 }
 

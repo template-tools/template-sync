@@ -7,10 +7,8 @@ export function asArray(o) {
   return Array.isArray(o) ? o : o === undefined ? [] : [o];
 }
 
-export async function asyncIterator2scalar(i)
-{
-  for await (const x of i)
-  {
+export async function asyncIterator2scalar(i) {
+  for await (const x of i) {
     return x;
   }
 }
@@ -18,17 +16,13 @@ export async function asyncIterator2scalar(i)
 export const TARGET_REPO = "targetUser/targetRepo";
 export const TEMPLATE_REPO = "templateRepo";
 
-export async function createContext(
-  properties = {}
-) {
+export async function createContext(properties = {}) {
   const provider = new MockProvider({
     [TEMPLATE_REPO]: {
-      master: {
-      }
+      master: {}
     },
     [TARGET_REPO]: {
-      master: {
-      }
+      master: {}
     }
   });
 
@@ -37,7 +31,6 @@ export async function createContext(
     template: TEMPLATE_REPO
   });
 }
-
 
 const FILE_NAME = ".travis.yml";
 
@@ -61,28 +54,30 @@ export async function yamlt(
     ...properties
   });
 
-  const commit = await factory.merge(
-    context,
-    content === undefined
-      ? new EmptyContentEntry(FILE_NAME)
-      : new StringContentEntry(
-          FILE_NAME,
-          typeof content === "string" ? content : yaml.safeDump(content)
-        ),
-    template === undefined
-      ? new EmptyContentEntry(FILE_NAME)
-      : new StringContentEntry(
-          FILE_NAME,
-          typeof template === "string" ? template : yaml.safeDump(template)
-        ),
-    { ...factory.options, ...options }
+  const commit = await asyncIterator2scalar(
+    factory.commits(
+      context,
+      content === undefined
+        ? new EmptyContentEntry(FILE_NAME)
+        : new StringContentEntry(
+            FILE_NAME,
+            typeof content === "string" ? content : yaml.safeDump(content)
+          ),
+      template === undefined
+        ? new EmptyContentEntry(FILE_NAME)
+        : new StringContentEntry(
+            FILE_NAME,
+            typeof template === "string" ? template : yaml.safeDump(template)
+          ),
+      { ...factory.options, ...options }
+    )
   );
 
   if (message !== undefined) {
     t.is(commit.message, message);
   }
 
-  const result = await commit.entry.getString();
+  const result = await commit.entries[0].getString();
 
   if (typeof expected === "function") {
     expected(t, yaml.safeLoad(result));
@@ -104,5 +99,6 @@ yamlt.title = (
   expected,
   message = []
 ) =>
-  `${factory.name} ${providedTitle} ${template && template.trim ? template.trim(): ''} ${content && content.trim ? content.trim(): ''} ${expected}`.trim();
-
+  `${factory.name} ${providedTitle} ${
+    template && template.trim ? template.trim() : ""
+  } ${content && content.trim ? content.trim() : ""} ${expected}`.trim();

@@ -7,7 +7,7 @@ import { actions2message, aggregateActions } from "../util.mjs";
 
 import lockfile from "@yarnpkg/lockfile";
 const { stringify, parse } = lockfile;
- 
+
 export class YARNLockfile extends Merger {
   static get pattern() {
     return "yarn.lockfile";
@@ -20,7 +20,7 @@ export class YARNLockfile extends Merger {
     };
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -42,11 +42,11 @@ export class YARNLockfile extends Merger {
       )
     );
 
-    return original === merged
-      ? undefined
-      : {
-          entry: new StringContentEntry(name, merged),
-          message: actions2message(actions, options.messagePrefix, name)
-        };
+    if (original !== merged) {
+      yield {
+        entries: [new StringContentEntry(name, merged)],
+        message: actions2message(actions, options.messagePrefix, name)
+      };
+    }
   }
 }

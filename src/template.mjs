@@ -250,7 +250,7 @@ export class Template extends LogLevelMixin(class {}) {
       );
 
       try {
-        const commit = await merger.factory.merge(ctx, a, b, {
+        for await (const commit of await merger.factory.commits(ctx, a, b, {
           ...merger.options,
           mergeHints: Object.fromEntries(
             Object.entries(merger.options.mergeHints).map(([k, v]) => [
@@ -258,9 +258,8 @@ export class Template extends LogLevelMixin(class {}) {
               { ...v, keepHints: true }
             ])
           )
-        });
-        if (commit !== undefined) {
-          const entry = commit.entry;
+        })) {
+          const entry = commit.entries[0];
           entry.merger = merger;
           return entry;
         }

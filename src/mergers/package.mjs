@@ -259,7 +259,7 @@ export class Package extends Merger {
     return into;
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -401,12 +401,12 @@ export class Package extends Merger {
       merged += "\n";
     }
 
-    return merged === original
-      ? undefined
-      : {
-          entry: new StringContentEntry(name, merged),
-          message: actions2message(actions, options.messagePrefix, name)
-        };
+    if (merged !== original) {
+      yield {
+        entries: [new StringContentEntry(name, merged)],
+        message: actions2message(actions, options.messagePrefix, name)
+      };
+    }
   }
 }
 

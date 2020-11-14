@@ -62,7 +62,7 @@ export class License extends Merger {
     };
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -99,13 +99,13 @@ export class License extends Merger {
           )
         : context.expand(source);
 
-    return merged === original
-      ? undefined
-      : {
-          entry: new StringContentEntry(destinationEntry.name, merged),
-          message: addedYears.size
-            ? `${options.messagePrefix}add year ${[...addedYears]}`
-            : `${options.messagePrefix}update from template`
-        };
+    if (merged !== original) {
+      yield {
+        entries: [new StringContentEntry(destinationEntry.name, merged)],
+        message: addedYears.size
+          ? `${options.messagePrefix}add year ${[...addedYears]}`
+          : `${options.messagePrefix}update from template`
+      };
+    }
   }
 }

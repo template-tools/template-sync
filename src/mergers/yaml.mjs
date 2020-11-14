@@ -13,12 +13,12 @@ export class YAML extends Merger {
     return {
       ...super.options,
       expand: true,
-      yaml: { lineWith: 128, /*schema: yaml.CORE_SCHEMA*/ },
+      yaml: { lineWith: 128 /*schema: yaml.CORE_SCHEMA*/ },
       messagePrefix: "chore: "
     };
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -43,11 +43,11 @@ export class YAML extends Merger {
       options.yaml
     );
 
-    return original === merged
-      ? undefined
-      : {
-          entry: new StringContentEntry(name, merged),
-          message: actions2message(actions, options.messagePrefix, name)
-        };
+    if (original !== merged) {
+      yield {
+        entries: [new StringContentEntry(name, merged)],
+        message: actions2message(actions, options.messagePrefix, name)
+      };
+    }
   }
 }

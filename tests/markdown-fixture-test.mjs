@@ -1,4 +1,5 @@
 import test from "ava";
+import { asyncIterator2scalar } from "./helpers/util.mjs";
 import { FileSystemEntry } from "content-entry-filesystem";
 import { Markdown } from "../src/mergers/markdown.mjs";
 
@@ -10,11 +11,11 @@ export async function markdownt(t, factory, name) {
     here
   );
 
-  const merged = await factory.merge(
+  const merged = await asyncIterator2scalar(factory.commits(
     undefined,
     new FileSystemEntry(`fixtures/${name}-template.md`, here),
     originalEntry
-  );
+  ));
 
   const mergedEntry = new FileSystemEntry(`fixtures/${name}-merged.md`, here);
 

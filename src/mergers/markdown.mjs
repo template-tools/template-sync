@@ -11,7 +11,7 @@ export class Markdown extends Merger {
     return "**/*.md";
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -40,19 +40,18 @@ export class Markdown extends Merger {
         "*.children": { key: "value" }
       }
     );
-   // console.log(JSON.stringify(mergedTree, undefined, 2));
+    // console.log(JSON.stringify(mergedTree, undefined, 2));
 
     const merged = unified().use(markdown).use(stringify).stringify(mergedTree);
 
+    // console.log(merged);
 
-   // console.log(merged);
-
-    return merged === original
-      ? undefined
-      : {
-          message: actions2message(actions, options.messagePrefix, name),
-          entry: new StringContentEntry(name, merged)
-        };
+    if (merged !== original) {
+      yield {
+        message: actions2message(actions, options.messagePrefix, name),
+        entries: [new StringContentEntry(name, merged)]
+      };
+    }
   }
 }
 
@@ -70,7 +69,12 @@ function* childTypes(tree, type) {
 }
 
 function mergeHeadings(a, b) {
-  const children = [...a.children, ...b.children.filter(t => { a.children.find( ) } )];
+  const children = [
+    ...a.children,
+    ...b.children.filter(t => {
+      a.children.find();
+    })
+  ];
 
   return { tpye: a.type, children };
 }

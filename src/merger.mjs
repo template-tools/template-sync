@@ -43,19 +43,6 @@ export class Merger {
     return into;
   }
 
-  static async merge(context, destinationEntry, sourceEntry, options) {
-    return undefined;
-  }
-
   static async *commits(context, destinationEntry, sourceEntry, options) {
-    const commit = await this.merge(
-      context,
-      destinationEntry,
-      sourceEntry,
-      options
-    );
-    if (commit) {
-      yield { message: commit.message, entries: [commit.entry] };
-    }
   }
 }

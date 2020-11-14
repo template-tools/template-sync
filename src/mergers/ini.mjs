@@ -13,7 +13,7 @@ export class INI extends Merger {
     return { ...super.options, expand: false };
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -35,11 +35,11 @@ export class INI extends Merger {
       )
     );
 
-    return original === merged
-      ? undefined
-      : {
-          entry: new StringContentEntry(name, merged),
-          message: actions2message(actions, options.messagePrefix, name)
-        };
+    if (original !== merged) {
+      yield {
+        entries: [new StringContentEntry(name, merged)],
+        message: actions2message(actions, options.messagePrefix, name)
+      };
+    }
   }
 }

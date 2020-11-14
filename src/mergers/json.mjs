@@ -16,7 +16,7 @@ export class JSONMerger extends Merger {
     };
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -40,11 +40,11 @@ export class JSONMerger extends Merger {
       options.space
     );
 
-    return merged === original
-      ? undefined
-      : {
-          entry: new StringContentEntry(name, merged),
-          message: actions2message(actions, options.messagePrefix, name)
-        };
+    if (merged !== original) {
+      yield {
+        entries: [new StringContentEntry(name, merged)],
+        message: actions2message(actions, options.messagePrefix, name)
+      };
+    }
   }
 }

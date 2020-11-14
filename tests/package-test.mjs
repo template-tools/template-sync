@@ -1,6 +1,6 @@
 import test from "ava";
 import { StringContentEntry, EmptyContentEntry } from "content-entry";
-import { createContext, asArray } from "./helpers/util.mjs";
+import { createContext, asArray, asyncIterator2scalar } from "./helpers/util.mjs";
 
 import { Package } from "../src/mergers/package.mjs";
 
@@ -33,7 +33,7 @@ async function pkgt(
     branch.files[FILE_NAME] = JSON.stringify(content);
   }
 
-  const commit = await Package.merge(
+  const commit = await asyncIterator2scalar(Package.commits(
     context,
     content === undefined
       ? new EmptyContentEntry(FILE_NAME)
@@ -42,7 +42,7 @@ async function pkgt(
       ? new EmptyContentEntry(FILE_NAME)
       : new StringContentEntry(FILE_NAME, JSON.stringify(template)),
     { ...Package.options, ...options }
-  );
+  ));
 
   for (const e of asArray(message)) {
     if (e instanceof RegExp) {
@@ -53,10 +53,10 @@ async function pkgt(
   }
 
   if (typeof expected === "function") {
-    expected(t, JSON.parse(await commit.entry.getString()));
+    expected(t, JSON.parse(await commit.entries[0].getString()));
   } else {
     t.deepEqual(
-      JSON.parse(await commit.entry.getString()),
+      JSON.parse(await commit.entries[0].getString()),
       expected === undefined ? content : expected,
       "commit content"
     );

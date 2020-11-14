@@ -16,7 +16,7 @@ export class Readme extends Merger {
     };
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -52,11 +52,11 @@ export class Readme extends Merger {
     }
     const merged = badges.concat(body).join("\n");
 
-    return merged === original
-      ? undefined
-      : {
-          entry: new StringContentEntry(destinationEntry.name, merged),
-          message: "docs(README): update from template"
-        };
+    if (merged !== original) {
+      yield {
+        entries: [new StringContentEntry(destinationEntry.name, merged)],
+        message: "docs(README): update from template"
+      };
+    }
   }
 }

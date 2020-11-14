@@ -14,7 +14,7 @@ export class TOML extends Merger {
     return { ...super.options, expand: false };
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -26,9 +26,9 @@ export class TOML extends Merger {
 
     const actions = {};
 
-    return {
+    yield {
       message: actions2message(actions, options.messagePrefix, name),
-      entry: new StringContentEntry(
+      entries: [new StringContentEntry(
         name,
         stringify(
           merge(
@@ -39,7 +39,7 @@ export class TOML extends Merger {
             options.mergeHints
           )
         )
-      )
+      )]
     };
   }
 }

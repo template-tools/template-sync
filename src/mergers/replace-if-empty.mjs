@@ -20,10 +20,12 @@ export class ReplaceIfEmpty extends Merger {
 
       yield {
         message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
-        entry: new StringContentEntry(
-          destinationEntry.name,
-          options.expand ? context.expand(source) : source
-        )
+        entries: [
+          new StringContentEntry(
+            destinationEntry.name,
+            options.expand ? context.expand(source) : source
+          )
+        ]
       };
     }
   }

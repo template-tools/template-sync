@@ -45,7 +45,7 @@ export class Rollup extends Merger {
     return into;
   }
 
-  static async merge(
+  static async *commits(
     context,
     destinationEntry,
     sourceEntry,
@@ -55,13 +55,14 @@ export class Rollup extends Merger {
     const templateContent = await sourceEntry.getString();
 
     if (await destinationEntry.isEmpty()) {
-      return {
+      yield {
         message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
-        entry: new StringContentEntry(
+        entries: [new StringContentEntry(
           destinationEntry.name,
           options.expand ? context.expand(templateContent) : templateContent
-        )
+        )]
       };
+      return;
     }
 
     const original = await destinationEntry.getString();
@@ -185,10 +186,12 @@ export class Rollup extends Merger {
 
     templatePlugins.forEach(templatePlugin => {
       if (
-        templatePlugin && templatePlugin.callee !== undefined &&
+        templatePlugin &&
+        templatePlugin.callee !== undefined &&
         originalPlugins.find(
           op =>
-            op && op.callee !== undefined &&
+            op &&
+            op.callee !== undefined &&
             op.callee.name === templatePlugin.callee.name
         ) === undefined
       ) {
@@ -202,12 +205,12 @@ export class Rollup extends Merger {
 
     const merged = print(ast).code;
 
-    return original === merged
-      ? undefined
-      : {
-          entry: new StringContentEntry(name, merged),
-          message: messages.join("\n")
-        };
+    if (original !== merged) {
+      yield {
+        entries: [new StringContentEntry(name, merged)],
+        message: messages.join("\n")
+      };
+    }
   }
 }
 
