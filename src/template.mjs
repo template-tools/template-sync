@@ -259,9 +259,12 @@ export class Template extends LogLevelMixin(class {}) {
             ])
           )
         })) {
-          const entry = commit.entries[0];
-          entry.merger = merger;
-          return entry;
+          for(const entry of commit.entries) {
+            if(entry.name === a.name) {
+              entry.merger = merger;
+              return entry;    
+            }
+          }
         }
       } catch (e) {
         this.error(
