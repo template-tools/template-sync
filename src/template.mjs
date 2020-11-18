@@ -397,7 +397,7 @@ export class Template extends LogLevelMixin(class {}) {
   /**
    * Updates usedBy section of the template branch.
    * @param {Branch} targetBranch template to be updated
-   * @param {string[]} templateSources original branch identifiers (even with deleteion hints)
+   * @param {string[]} templateSources original branch identifiers (even with deletion hints)
    * @param {Object} options as passed to commitIntoPullRequest
    * @return {AsyncIterator <PullRequest>}
    */
