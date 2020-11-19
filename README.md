@@ -264,7 +264,7 @@ Updates usedBy section of the template branch.
 #### Parameters
 
 -   `targetBranch` **Branch** template to be updated
--   `templateSources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** original branch identifiers (even with deleteion hints)
+-   `templateSources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** original branch identifiers (even with deletion hints)
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** as passed to commitIntoPullRequest
 
 Returns **AsyncIterator&lt;PullRequest>** 
