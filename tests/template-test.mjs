@@ -49,25 +49,22 @@ const provider = new MockProvider({
 
 const context = new Context(provider);
 
-test("template constructor", async t => {
-  const template = await new Template(context, ["template"]);
+async function tt(t, sources, key) {
+  const template = await new Template(context, sources);
   t.true(template instanceof Template);
 
-  t.deepEqual(template.sources, ["template"]);
-  t.is(`${template}`, "template");
-  t.is(template.name, "template");
-  t.is(template.key, "template,template_b");
-});
+  t.deepEqual(template.sources, sources);
+  t.is(`${template}`, sources.join(','));
+  t.is(template.name, sources.join(','));
+  t.is(template.key, key);
+}
 
-test("template source sort", async t => {
-  const template = await Template.templateFor(context, [
-    "template_b",
-    "template"
-  ]);
-  t.is(template.name, "template,template_b");
-  t.is(template.key, "template,template_b");
-  t.deepEqual(template.sources, ["template", "template_b"]);
-});
+tt.title = (providedTitle = "", sources, key) =>
+  `Template ${providedTitle}${sources} '${key}'`.trim();
+
+test(tt, ["template"], "template,template_b");
+test(tt, ["template_b", "template"], "template,template_b");
+test(tt, ["template", "template_b"], "template,template_b");
 
 test("template source expression", async t => {
   const t1t2 = await Template.templateFor(context, ["t1", "t2", "t1", "-t3"]);
