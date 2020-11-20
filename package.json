@@ -84,8 +84,7 @@
     "inheritFrom": [
       "arlac77/template-arlac77-github",
       "arlac77/template-esm-only",
-      "arlac77/template-node-app",
-      "arlac77/template-vscode"
+      "arlac77/template-node-app"
     ]
   }
 }
