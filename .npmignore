@@ -5,6 +5,5 @@ doc
 *.tmp
 .test
 .tmp
-.travis.yml
 .vscode
 .github
