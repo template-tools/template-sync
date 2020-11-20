@@ -259,10 +259,10 @@ export class Template extends LogLevelMixin(class {}) {
             ])
           )
         })) {
-          for(const entry of commit.entries) {
-            if(entry.name === a.name) {
+          for (const entry of commit.entries) {
+            if (entry.name === a.name) {
               entry.merger = merger;
-              return entry;    
+              return entry;
             }
           }
         }
@@ -279,9 +279,9 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
-   * Load all templates and collects the entries
+   * Load all templates and collects the entries.
    * @param {string} sources branch names
-   * @param {string[]} inheritencePath who was requesting us
+   * @param {Branch[]} inheritencePath who was requesting us
    * @return {Object} package as merged from sources
    */
   async _templateFrom(sources, inheritencePath = []) {
@@ -345,7 +345,7 @@ export class Template extends LogLevelMixin(class {}) {
           if (template && template.inheritFrom) {
             const inherited = await this._templateFrom(
               asArray(template.inheritFrom),
-              [...inheritencePath, source]
+              [...inheritencePath, branch]
             );
 
             result = mergeTemplate(
