@@ -7,44 +7,45 @@ import { Context } from "../src/context.mjs";
 import { Package } from "../src/mergers/package.mjs";
 import { Travis } from "../src/mergers/travis.mjs";
 
+const pkg = (j, other) => {
+  return {
+    master: {
+      "package.json": JSON.stringify(j),
+      ...other
+    }
+  };
+};
+
 const provider = new MockProvider({
-  template_no_travis: {
-    master: {
-      "package.json": JSON.stringify({
-        template: {
-          mergers: [{ enabled: false, type: "Travis", pattern: ".travis.yml" }],
-          inheritFrom: ["template"]
-        }
-      })
+  template: pkg(
+    {
+      devDependencies: { ava: "^2.4.0" },
+      template: {
+        mergers: [
+          { type: "Package", pattern: "package.json", options: { o1: 77 } }
+        ],
+        inheritFrom: ["template_b"]
+      }
+    },
+    { file_a: "content a" }
+  ),
+  template_b: pkg(
+    {
+      devDependencies: { rollup: "^1.29.1" },
+      template: {
+        properties: { a: 1 },
+        mergers: [{ enabled: true, type: "Travis", pattern: ".travis.yml" }],
+        inheritFrom: ["template"]
+      }
+    },
+    { file_b: "content b" }
+  ),
+  template_no_travis: pkg({
+    template: {
+      mergers: [{ enabled: false, type: "Travis", pattern: ".travis.yml" }],
+      inheritFrom: ["template"]
     }
-  },
-  template: {
-    master: {
-      "package.json": JSON.stringify({
-        devDependencies: { ava: "^2.4.0" },
-        template: {
-          mergers: [
-            { type: "Package", pattern: "package.json", options: { o1: 77 } }
-          ],
-          inheritFrom: ["template_b"]
-        }
-      }),
-      file_a: "content a"
-    }
-  },
-  template_b: {
-    master: {
-      "package.json": JSON.stringify({
-        devDependencies: { rollup: "^1.29.1" },
-        template: {
-          properties: { a: 1 },
-          mergers: [{ enabled: true, type: "Travis", pattern: ".travis.yml" }],
-          inheritFrom: ["template_b"]
-        }
-      }),
-      file_b: "content b"
-    }
-  }
+  })
 });
 
 const context = new Context(provider);
@@ -54,8 +55,8 @@ async function tt(t, sources, key) {
   t.true(template instanceof Template);
 
   t.deepEqual(template.sources, sources, "sources");
-  t.is(`${template}`, sources.join(','), "toString");
-  t.is(template.name, sources.join(','), "name");
+  t.is(`${template}`, sources.join(","), "toString");
+  t.is(template.name, sources.join(","), "name");
   t.is(template.key, key, "key");
 }
 
