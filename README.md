@@ -248,12 +248,12 @@ Returns **[Merger](#merger)**
 
 ### \_templateFrom
 
-Load all templates and collects the entries
+Load all templates and collects the entries.
 
 #### Parameters
 
 -   `sources` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** branch names
--   `inheritencePath` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** who was requesting us (optional, default `[]`)
+-   `inheritencePath` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;Branch>** who was requesting us (optional, default `[]`)
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** package as merged from sources
 
