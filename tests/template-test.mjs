@@ -109,7 +109,11 @@ test("template properties", async t => {
   const template = await new Template(context, ["template"]);
 
   t.deepEqual(await template.properties(), {
-    a: 1
+    a: 1,
+    template: {
+      key: "template,template_b",
+      name: "template"
+    }
   });
 });
 

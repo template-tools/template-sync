@@ -391,7 +391,16 @@ export class Template extends LogLevelMixin(class {}) {
 
   async properties() {
     const pkg = await this.package();
-    return pkg.template ? pkg.template.properties : undefined;
+
+    return Object.assign(
+      {
+        template: {
+          key: this.key,
+          name: this.name
+        }
+      },
+      pkg.template && pkg.template.properties
+    );
   }
 
   /**
