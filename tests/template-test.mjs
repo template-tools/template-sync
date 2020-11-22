@@ -60,13 +60,6 @@ async function tt(t, sources, key) {
   t.is(template.key, key, "key");
 }
 
-tt.title = (providedTitle = "", sources, key) =>
-  `Template key ${providedTitle}[${sources}] '${key}'`.trim();
-
-test(tt, ["template"], "template,template_b");
-test(tt, ["template_b", "template"], "template,template_b");
-test(tt, ["template", "template_b"], "template,template_b");
-
 test("template source expression", async t => {
   const t1t2 = await Template.templateFor(context, ["t1", "t2", "t1", "-t3"]);
   t.deepEqual(t1t2.sources, ["t1", "t2"]);
