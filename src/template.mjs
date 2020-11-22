@@ -41,6 +41,7 @@ const templateCache = new Map();
  *
  * @property {Conext} context
  * @property {string[]} sources
+ * @param {Set<string>} toBeRemovedSources
  * @property {Merger[]} mergers
  * @property {Set<Branch>} branches all used branches direct and inherited
  * @property {Set<Branch>} keyBranches branches used to define the template
@@ -51,7 +52,7 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
-   * load a template
+   * Load a template
    * @param {Context} context
    * @param {string[]} sources
    * @param {Object} options
@@ -78,7 +79,12 @@ export class Template extends LogLevelMixin(class {}) {
     super();
     Object.defineProperties(this, {
       context: { value: context },
-      sources: { value: sources },
+      toBeRemovedSources: {
+        value: new Set(
+          sources.filter(n => n.startsWith("-")).map(n => n.substring(1))
+        )
+      },
+      sources: { value: sources.filter(t => !t.startsWith("-")) },
       branches: { value: new Set() },
       keyBranches: { value: new Set() },
       entryCache: { value: new Map() },
@@ -96,7 +102,7 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   get name() {
-    return this.sources.join(",");
+    return this.sources.sort().join(",");
   }
 
   get key() {
@@ -288,6 +294,10 @@ export class Template extends LogLevelMixin(class {}) {
     let result = {};
 
     for (const source of sources) {
+      if (this.toBeRemovedSources.has(source)) {
+        continue;
+      }
+
       const branch = await this.provider.branch(source);
 
       if (branch === undefined) {
@@ -328,6 +338,7 @@ export class Template extends LogLevelMixin(class {}) {
                 }
               }
             } else if (!this.allKeysCollected) {
+              //console.log("B", this.sources, sources, branch.identifier);
               this.keyBranches.add(branch);
             }
           } else {
