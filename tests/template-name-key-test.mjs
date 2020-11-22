@@ -3,23 +3,25 @@ import MockProvider from "mock-repository-provider";
 import { Template } from "../src/template.mjs";
 import { Context } from "../src/context.mjs";
 
-const pkg = inheritFrom => {
+const pkg = (inheritFrom, other) => {
   return {
     master: {
       "package.json": JSON.stringify({
         template: {
-          inheritFrom
+          inheritFrom,
+          ...other
         }
       })
     }
   };
 };
 
+const otherTemplateAttributes = { usedBy: [] };
 const provider = new MockProvider({
-  other: pkg([]),
-  github: pkg([]),
   uti: pkg(["github"]),
-  "arlac77-github": pkg(["github"])
+  other: pkg([], otherTemplateAttributes),
+  github: pkg([], otherTemplateAttributes),
+  "arlac77-github": pkg(["github"], otherTemplateAttributes)
 });
 
 const context = new Context(provider);
@@ -30,7 +32,7 @@ async function tt(t, sources, name, key = name) {
 
   t.deepEqual(
     template.sources,
-    sources.filter(n => !n.startsWith("-")).sort(),
+    new Set(sources.filter(n => !n.startsWith("-"))),
     "sources"
   );
   t.is(`${template}`, name, "toString");
@@ -43,17 +45,17 @@ tt.title = (providedTitle = "", sources, name, key = name) =>
 
 test(tt, ["github"], "github");
 test(tt, ["github", "-other"], "github");
-test(tt, ["uti"], "uti", "github,uti");
+test(tt, ["uti"], "uti", "github");
 test(
   tt,
   ["uti", "arlac77-github"],
   "arlac77-github,uti",
-  "arlac77-github,github,uti"
+  "arlac77-github,github"
 );
 test(
   tt,
   ["arlac77-github", "uti"],
   "arlac77-github,uti",
-  "arlac77-github,github,uti"
+  "arlac77-github,github"
 );
-test(tt, ["uti", "arlac77-github", "-github"], "arlac77-github,uti");
+test(tt, ["uti", "arlac77-github", "-github"], "arlac77-github,uti","arlac77-github");

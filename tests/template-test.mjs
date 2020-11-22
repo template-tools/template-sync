@@ -54,7 +54,6 @@ async function tt(t, sources, key) {
   const template = await new Template(context, sources);
   t.true(template instanceof Template);
 
-  t.deepEqual(template.sources, sources, "sources");
   t.is(`${template}`, sources.join(","), "toString");
   t.is(template.name, sources.join(","), "name");
   t.is(template.key, key, "key");
@@ -62,15 +61,15 @@ async function tt(t, sources, key) {
 
 test("template source expression", async t => {
   const t1t2 = await Template.templateFor(context, ["t1", "t2", "t1", "-t3"]);
-  t.deepEqual(t1t2.sources, ["t1", "t2"]);
+  t.deepEqual(t1t2.sources, new Set(["t1", "t2"]));
 
   const tx = await Template.templateFor(context, ["t1", "t2", "-t2"]);
-  t.deepEqual(tx.sources, ["t1"]);
+  t.deepEqual(tx.sources, new Set(["t1"]));
 });
 
 test("template cache", async t => {
   const t1 = await Template.templateFor(context, "template");
-  t.deepEqual(t1.sources, ["template"]);
+  t.deepEqual(t1.sources, new Set(["template"]));
   const t2 = await Template.templateFor(context, "template");
   t.is(t1, t2);
 });
