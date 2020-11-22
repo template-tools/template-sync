@@ -40,8 +40,8 @@ const templateCache = new Map();
  * @param {Object} options
  *
  * @property {Conext} context
- * @property {string[]} sources
- * @param {Set<string>} toBeRemovedSources
+ * @property {Set<string>} sources
+ * @property {Set<string>} toBeRemovedSources
  * @property {Merger[]} mergers
  * @property {Set<Branch>} branches all used branches direct and inherited
  * @property {Set<Branch>} keyBranches branches used to define the template
@@ -84,7 +84,7 @@ export class Template extends LogLevelMixin(class {}) {
           sources.filter(n => n.startsWith("-")).map(n => n.substring(1))
         )
       },
-      sources: { value: sources.filter(t => !t.startsWith("-")) },
+      sources: { value: new Set(sources.filter(t => !t.startsWith("-"))) },
       branches: { value: new Set() },
       keyBranches: { value: new Set() },
       entryCache: { value: new Map() },
@@ -102,7 +102,7 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   get name() {
-    return this.sources.sort().join(",");
+    return [...this.sources].sort().join(",");
   }
 
   get key() {
@@ -324,34 +324,44 @@ export class Template extends LogLevelMixin(class {}) {
         try {
           const pkg = JSON.parse(await pc.getString());
 
-          if (inheritencePath.length <= 1) {
-            if (branch === this.context.targetBranch) {
-              if (pkg.template) {
-                if (pkg.template.usedBy) {
-                  this.allKeysCollected = true;
-                }
+          /*console.log(
+            "X",
+            branch.identifier,
+            inheritencePath.map(b => b.identifier),
+            [...this.keyBranches].map(b => b.identifier),
+            inheritencePath.find(b => branch) ? "ALREADY PRESENT" : ""
+          );*/
+
+          const template = pkg.template;
+
+          switch (inheritencePath.length) {
+            case 0:
+              if (template) {
                 if (
-                  Object.keys(pkg.template).filter(k => k !== "inheritFrom")
-                    .length > 0
+                  template.usedBy ||
+                  Object.keys(template).filter(
+                    k => k !== "inheritFrom" && k !== "usedBy"
+                  ).length > 0
                 ) {
+               //   console.log("A ADD", branch.identifier);
                   this.keyBranches.add(branch);
                 }
               }
-            } else if (!this.allKeysCollected) {
-              //console.log("B", this.sources, sources, branch.identifier);
-              this.keyBranches.add(branch);
-            }
-          } else {
-            const inCache = templateCache.get(this.key);
-            if (inCache) {
-              this.debug(`Found in cache ${this.name} (${this.key})`);
-              //return inCache;
-            }
+              break;
+
+            case 1:
+             // if (!this.keyBranches.has(inheritencePath[0])) {
+                this.keyBranches.add(branch);
+             // }
+          }
+
+          const inCache = templateCache.get(this.key);
+          if (inCache) {
+            this.debug(`Found in cache ${this.name} (${this.key})`);
+            //return inCache;
           }
 
           result = mergeTemplate(result, pkg);
-
-          const template = pkg.template;
 
           if (template && template.inheritFrom) {
             const inherited = await this._templateFrom(
