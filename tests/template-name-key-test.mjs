@@ -52,10 +52,10 @@ test(
   "arlac77-github,uti",
   "arlac77-github,github"
 );
+test(tt, ["arlac77-github", "uti"], "arlac77-github,uti", "arlac77-github");
 test(
   tt,
-  ["arlac77-github", "uti"],
+  ["uti", "arlac77-github", "-github"],
   "arlac77-github,uti",
-  "arlac77-github,github"
+  "arlac77-github"
 );
-test(tt, ["uti", "arlac77-github", "-github"], "arlac77-github,uti","arlac77-github");

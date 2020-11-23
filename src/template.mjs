@@ -343,16 +343,19 @@ export class Template extends LogLevelMixin(class {}) {
                     k => k !== "inheritFrom" && k !== "usedBy"
                   ).length > 0
                 ) {
-               //   console.log("A ADD", branch.identifier);
+                  //   console.log("A ADD", branch.identifier);
                   this.keyBranches.add(branch);
                 }
               }
               break;
 
             case 1:
-             // if (!this.keyBranches.has(inheritencePath[0])) {
+              if (
+                inheritencePath[0] === this.targetBranch ||
+                this.keyBranches.size === 0
+              ) {
                 this.keyBranches.add(branch);
-             // }
+              }
           }
 
           const inCache = templateCache.get(this.key);
