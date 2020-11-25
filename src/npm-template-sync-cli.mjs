@@ -30,7 +30,8 @@ program
   .option("--dry", "do not create branch/pull request")
   .option("--trace", "log level trace")
   .option("--debug", "log level debug")
-  .option("--track", "track packages in templates package.json")
+  .option("--create", "create repository if not present in provider")
+  .option("--track", "track templates in package.json")
   .option(
     "-d, --define <key=value>",
     "set option",
@@ -93,6 +94,7 @@ program
           template: program.template,
           dry: program.dry,
           track: program.track,
+          create: program.create,
           properties,
           ...logOptions
         });

@@ -36,6 +36,9 @@ export class Context extends LogLevelMixin(class _Context {}) {
       dry: {
         value: options.dry || false
       },
+      create: {
+        value: options.create || false
+      },
       provider: {
         value: provider
       },
@@ -84,7 +87,15 @@ export class Context extends LogLevelMixin(class _Context {}) {
         );
       }
       if (targetBranch === undefined) {
-        throw new Error(`Unable to find branch ${this.targetBranchName}`);
+        if(this.create) {
+          this.info(`create new repo: ${this.targetBranchName}`);
+
+          await this.provider.createRepository(this.targetBranchName);
+          targetBranch = await this.provider.branch(this.targetBranchName);
+        }
+        if(targetBranch === undefined) {
+          throw new Error(`Unable to find branch ${this.targetBranchName}`);
+        }
       }
     }
 
