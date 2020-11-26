@@ -59,15 +59,21 @@ program
       };
 
       const provider = AggregationProvider.initialize(
-        [GithubProvider /*, LocalProvider*/],
+        [GithubProvider, LocalProvider],
         properties,
         process.env
       );
 
       provider.messageDestination = {
-        info(...args) { console.log(...args); },
-        warn(...args) { console.warn(...args); },
-        error(...args) { console.error(...args); }
+        info(...args) {
+          console.log(...args);
+        },
+        warn(...args) {
+          console.warn(...args);
+        },
+        error(...args) {
+          console.error(...args);
+        }
       };
 
       if (program.listProviders) {
