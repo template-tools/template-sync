@@ -88,11 +88,20 @@ export class Context extends LogLevelMixin(class _Context {}) {
       }
       if (targetBranch === undefined) {
         if (this.create) {
-          this.info(`Create new repo: ${this.targetBranchName} ${JSON.stringify(this.properties)}`);
+          const properties = Object.assign(
+            {},
+            this.properties,
+            this.properties.repository
+          );
+          this.info(
+            `Create new repo: ${this.targetBranchName} ${JSON.stringify(
+              properties
+            )}`
+          );
 
           await this.provider.createRepository(
             this.targetBranchName,
-            this.properties
+            properties
           );
           targetBranch = await this.provider.branch(this.targetBranchName);
         }
