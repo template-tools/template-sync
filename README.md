@@ -14,7 +14,6 @@ Generates pull requests to bring a repository back in sync with its template.
 
 So by making changes to the template and applying npm-template-sync the target project will be updated accoring to the template.
 
-
 ```shell
 export GITHUB_TOKEN='token providing repositroy write access' # for github repos
 
@@ -30,6 +29,7 @@ npm-template-sync --define "description=a very new fantastic module" -t myUser/m
 ```
 
 create new repository and bind it to aTemplateGithubUser/aRepo
+
 ```shell
 export GITHUB_TOKEN='token providing repositroy write access' # for github repos
 
