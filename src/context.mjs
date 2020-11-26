@@ -87,13 +87,16 @@ export class Context extends LogLevelMixin(class _Context {}) {
         );
       }
       if (targetBranch === undefined) {
-        if(this.create) {
+        if (this.create) {
           this.info(`create new repo: ${this.targetBranchName}`);
 
-          await this.provider.createRepository(this.targetBranchName);
+          await this.provider.createRepository(
+            this.targetBranchName,
+            this.options
+          );
           targetBranch = await this.provider.branch(this.targetBranchName);
         }
-        if(targetBranch === undefined) {
+        if (targetBranch === undefined) {
           throw new Error(`Unable to find branch ${this.targetBranchName}`);
         }
       }
@@ -209,7 +212,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
         yield* merger.factory.commits(
           this,
-          (await this.targetBranch.maybeEntry(name)) || new EmptyContentEntry(name),
+          (await this.targetBranch.maybeEntry(name)) ||
+            new EmptyContentEntry(name),
           templateEntry,
           merger.options
         );
