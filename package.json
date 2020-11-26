@@ -46,7 +46,7 @@
     "commander": "^6.2.0",
     "content-entry": "^2.5.1",
     "expression-expander": "^7.0.6",
-    "github-repository-provider": "^7.20.8",
+    "github-repository-provider": "^7.20.9",
     "hinted-tree-merger": "^4.6.4",
     "js-yaml": "^3.14.0",
     "local-repository-provider": "^7.0.45",

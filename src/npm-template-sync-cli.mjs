@@ -59,7 +59,7 @@ program
       };
 
       const provider = AggregationProvider.initialize(
-        [GithubProvider, LocalProvider],
+        [GithubProvider /*, LocalProvider*/],
         properties,
         process.env
       );
