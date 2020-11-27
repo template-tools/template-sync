@@ -86,34 +86,39 @@ Merges contents from template branch into destination branch handling some speci
 -   [Merger](#merger)
     -   [properties](#properties-2)
         -   [Parameters](#parameters-2)
+    -   [commits](#commits-1)
+        -   [Parameters](#parameters-3)
 -   [Merger](#merger-1)
     -   [Properties](#properties-3)
     -   [properties](#properties-4)
-        -   [Parameters](#parameters-3)
+        -   [Parameters](#parameters-4)
+    -   [commits](#commits-2)
+        -   [Parameters](#parameters-5)
 -   [EntryMerger](#entrymerger)
     -   [Properties](#properties-5)
 -   [Template](#template)
-    -   [Parameters](#parameters-4)
+    -   [Parameters](#parameters-6)
     -   [Properties](#properties-6)
     -   [entryMerger](#entrymerger-1)
-        -   [Parameters](#parameters-5)
-    -   [mergerFor](#mergerfor)
-        -   [Parameters](#parameters-6)
-    -   [\_templateFrom](#_templatefrom)
         -   [Parameters](#parameters-7)
-    -   [updateUsedBy](#updateusedby)
+    -   [mergerFor](#mergerfor)
         -   [Parameters](#parameters-8)
-    -   [templateFor](#templatefor)
+    -   [\_templateFrom](#_templatefrom)
         -   [Parameters](#parameters-9)
+    -   [updateUsedBy](#updateusedby)
+        -   [Parameters](#parameters-10)
+    -   [templateFor](#templatefor)
+        -   [Parameters](#parameters-11)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Readme](#readme)
 -   [MergeLineSet](#mergelineset)
 -   [Replace](#replace)
 -   [Skip](#skip)
+-   [Delete](#delete)
 -   [normalizeTemplateSources](#normalizetemplatesources)
-    -   [Parameters](#parameters-10)
+    -   [Parameters](#parameters-12)
 -   [jspath](#jspath)
-    -   [Parameters](#parameters-11)
+    -   [Parameters](#parameters-13)
 
 ## Context
 
@@ -176,13 +181,24 @@ Mergable content
 
 ### properties
 
-Deliver some key properties
+Deliver some key properties.
 
 #### Parameters
 
 -   `entry` **ContentEntry** 
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
+
+### commits
+
+Generate commits as result of merging two entries.
+
+#### Parameters
+
+-   `context`  
+-   `destinationEntry`  
+-   `sourceEntry`  
+-   `options`  
 
 ## Merger
 
@@ -197,13 +213,24 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### properties
 
-Deliver some key properties
+Deliver some key properties.
 
 #### Parameters
 
 -   `entry` **ContentEntry** 
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
+
+### commits
+
+Generate commits as result of merging two entries.
+
+#### Parameters
+
+-   `context`  
+-   `destinationEntry`  
+-   `sourceEntry`  
+-   `options`  
 
 ## EntryMerger
 
@@ -314,6 +341,12 @@ Replace file from template (always)
 **Extends Merger**
 
 Does not generate destination entry
+
+## Delete
+
+**Extends Merger**
+
+Delete entry.
 
 ## normalizeTemplateSources
 
