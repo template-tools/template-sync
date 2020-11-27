@@ -5,6 +5,7 @@ import { readFile } from "fs/promises";
 import program from "commander";
 import { removeSensibleValues } from "remove-sensible-values";
 import GithubProvider from "github-repository-provider";
+import BitbucketProvider from "bitbucket-repository-provider";
 import LocalProvider from "local-repository-provider";
 import AggregationProvider from "aggregation-repository-provider";
 import { Context } from "./context.mjs";
@@ -59,7 +60,7 @@ program
       };
 
       const provider = AggregationProvider.initialize(
-        [GithubProvider, LocalProvider],
+        [GithubProvider, BitbucketProvider, LocalProvider],
         properties,
         process.env
       );
