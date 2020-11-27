@@ -46,10 +46,10 @@
     "commander": "^6.2.0",
     "content-entry": "^2.6.0",
     "expression-expander": "^7.0.6",
-    "github-repository-provider": "^7.20.12",
+    "github-repository-provider": "^7.20.13",
     "hinted-tree-merger": "^4.6.4",
     "js-yaml": "^3.14.0",
-    "local-repository-provider": "^7.0.48",
+    "local-repository-provider": "^7.0.50",
     "loglevel-mixin": "^6.0.0",
     "markdown": "^0.5.0",
     "matching-iterator": "^1.1.2",
@@ -66,7 +66,7 @@
     "content-entry-filesystem": "^2.0.2",
     "documentation": "github:arlac77/documentation",
     "execa": "^4.1.0",
-    "mock-repository-provider": "^5.5.34",
+    "mock-repository-provider": "^5.5.36",
     "semantic-release": "^17.3.0"
   },
   "engines": {
