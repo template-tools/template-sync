@@ -13,6 +13,7 @@ import { YAML } from "./mergers/yaml.mjs";
 import { JSONMerger } from "./mergers/json.mjs";
 import { JSDoc } from "./mergers/jsdoc.mjs";
 import { Skip } from "./mergers/skip.mjs";
+import { Delete } from "./mergers/delete.mjs";
 import { YARNLockfile } from "./mergers/yarn-lockfile.mjs";
 
 export const mergers = [
@@ -31,5 +32,6 @@ export const mergers = [
   License,
   ReplaceIfEmpty,
   Replace,
-  Skip
+  Skip,
+  Delete
 ];
