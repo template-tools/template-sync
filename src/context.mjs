@@ -8,7 +8,7 @@ import { jspath, asArray, log } from "./util.mjs";
 export { Template };
 
 /**
- * Context prepared to execute one branch
+ * Context prepared to execute one branch.
  * @param {string} targetBranchName
  *
  * @property {Object} ctx
@@ -186,7 +186,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
   }
 
   /**
-   * Generate Pull Requests
+   * Generate Pull Requests.
    * @return {AsyncIterator <PullRequest>}
    */
   async *execute() {
@@ -233,7 +233,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
   }
 
   /**
-   * Generate Pull Requests
+   * Generate Pull Requests.
    * @return {AsyncIterator <PullRequest>}
    */
   async *executeBranch() {
