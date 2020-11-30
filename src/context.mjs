@@ -193,7 +193,14 @@ export class Context extends LogLevelMixin(class _Context {}) {
     if (this.properties.usedBy !== undefined) {
       for (const r of this.properties.usedBy) {
         try {
-          const context = await Context.from(this.provider, r, this.options);
+
+          // PASS parent template (only one!)
+          const options = { ...this.options };
+          if (this.templateSources && options.template === undefined) {
+            options.template = [this.templateSources[0]];
+          }
+          //console.log(this.options, options);
+          const context = await Context.from(this.provider, r, options);
           yield* context.execute();
         } catch (e) {
           this.error(e);
