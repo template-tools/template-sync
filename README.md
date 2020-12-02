@@ -124,7 +124,7 @@ Merges contents from template branch into destination branch handling some speci
 
 **Extends LogLevelMixin(class \_Context {})**
 
-Context prepared to execute one branch
+Context prepared to execute one branch.
 
 ### Parameters
 
@@ -139,7 +139,7 @@ Context prepared to execute one branch
 
 ### execute
 
-Generate Pull Requests
+Generate Pull Requests.
 
 Returns **AsyncIterator&lt;PullRequest>** 
 
@@ -151,7 +151,7 @@ Returns **Commit&lt;AsyncIterator>**
 
 ### executeBranch
 
-Generate Pull Requests
+Generate Pull Requests.
 
 Returns **AsyncIterator&lt;PullRequest>** 
 
