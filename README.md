@@ -13,13 +13,15 @@ Generates pull requests to bring a repository back in sync with its template.
 
 So by making changes to the template and applying npm-template-sync the target project will be updated accoring to the template.
 
+Works with github and bitbucket.
+
 ```shell
 export GITHUB_TOKEN='token providing repositroy write access' # for github repos
 
 npm-template-sync --template aTemplateGithubUser/aRepo myGithubUser/myRepo
 ```
 
-define (initial) properties to be used in the template
+Define (initial) properties to be used in the template
 
 ```shell
 export GITHUB_TOKEN='token providing repositroy write access' # for github repos
@@ -27,7 +29,7 @@ export GITHUB_TOKEN='token providing repositroy write access' # for github repos
 npm-template-sync --define "description=a very new fantastic module" -t myUser/myTemplate myUser/newModule#aBranch
 ```
 
-create new repository and bind it to aTemplateGithubUser/aRepo
+Create new repository and bind it to aTemplateGithubUser/aRepo
 
 ```shell
 export GITHUB_TOKEN='token providing repositroy write access' # for github repos
@@ -35,7 +37,7 @@ export GITHUB_TOKEN='token providing repositroy write access' # for github repos
 npm-template-sync --track --create --template aTemplateGithubUser/aRepo myGithubUser/myRepo
 ```
 
-switch from [arlac77/template-github](https://github.com/arlac77/template-github) to [arlac77/template-arlac77-github](https://github.com/arlac77/template-arlac77-github) template for [arlac77/url-cmd](https://github.com/arlac77/url-cmd), [arlac77/uti](https://github.com/arlac77/uti), [arlac77/content-entry](https://github.com/arlac77/content-entry) and [arlac77/repository-provider](https://github.com/arlac77/repository-provider)
+Switch from [arlac77/template-github](https://github.com/arlac77/template-github) to [arlac77/template-arlac77-github](https://github.com/arlac77/template-arlac77-github) template for [arlac77/url-cmd](https://github.com/arlac77/url-cmd), [arlac77/uti](https://github.com/arlac77/uti), [arlac77/content-entry](https://github.com/arlac77/content-entry) and [arlac77/repository-provider](https://github.com/arlac77/repository-provider)
 
 ```shell
 export GITHUB_TOKEN='token providing repositroy write access' # for github repos

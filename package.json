@@ -10,14 +10,16 @@
   "exports": {
     ".": "./src/context.mjs"
   },
-  "description": "Keep npm package in sync with its template",
+  "description": "Keep repository in sync with its template",
   "keywords": [
     "boilerplate",
     "degit",
     "git",
     "npm",
     "scaffolding",
-    "template"
+    "template",
+    "github",
+    "bitbucket"
   ],
   "contributors": [
     {
