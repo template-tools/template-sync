@@ -241,7 +241,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
   /**
    * Generate Pull Requests.
-   * @return {AsyncIterator <PullRequest>}
+   * @return {AsyncIterator <PullRequest>} the actual PRs
    */
   async *executeBranch() {
     try {
