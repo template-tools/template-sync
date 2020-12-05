@@ -9,12 +9,13 @@ test("replace differ", async t => {
       await createContext({ name: "a name" }),
       new StringContentEntry("aFile", "Line 1"),
       new StringContentEntry("bFile", "Line 1x {{name}}"),
-      { expand: false }
+      { expand: false, messagePrefix: "prefix: " }
     )
   );
 
   t.is(await commit.entries[0].getString(), "Line 1x {{name}}");
   t.is(commit.entries[0].name, "aFile");
+  t.is(commit.message, "prefix: overwrite aFile with template content");
 });
 
 test("replace differ expand", async t => {
