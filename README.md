@@ -155,7 +155,7 @@ Returns **Commit&lt;AsyncIterator>**
 
 Generate Pull Requests.
 
-Returns **AsyncIterator&lt;PullRequest>** 
+Returns **AsyncIterator&lt;PullRequest>** the actual PRs
 
 ## sortedKeys
 
