@@ -12,14 +12,14 @@
   },
   "description": "Keep repository in sync with its template",
   "keywords": [
+    "bitbucket",
     "boilerplate",
     "degit",
     "git",
+    "github",
     "npm",
     "scaffolding",
-    "template",
-    "github",
-    "bitbucket"
+    "template"
   ],
   "contributors": [
     {
