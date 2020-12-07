@@ -64,7 +64,7 @@
     "unified": "^9.2.0"
   },
   "devDependencies": {
-    "ava": "^3.13.0",
+    "ava": "^3.14.0",
     "c8": "^7.3.5",
     "content-entry-filesystem": "^2.0.2",
     "documentation": "github:arlac77/documentation",
