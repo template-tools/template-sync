@@ -43,7 +43,7 @@
     "@babel/core": "^7.12.7",
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
-    "aggregation-repository-provider": "^2.9.19",
+    "aggregation-repository-provider": "^2.9.20",
     "babylon": "^6.18.0",
     "bitbucket-repository-provider": "^3.7.75",
     "commander": "^6.2.0",
