@@ -128,12 +128,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
       owner: targetBranch.owner.name
     };
 
-    if (targetBranch.provider.name === "GithubProvider") {
-      this.properties.github = {
-        user: targetBranch.owner.name,
-        repo: repository.name
-      };
-    }
+    this.properties[targetBranch.provider.name] = {
+      user: targetBranch.owner.name,
+      repo: repository.name
+    };
 
     if (
       repository.owner !== undefined &&
@@ -193,7 +191,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
     if (this.properties.usedBy !== undefined) {
       for (const r of this.properties.usedBy) {
         try {
-
           // PASS parent template (only one!)
           const options = { ...this.options };
           if (this.templateSources && options.template === undefined) {
