@@ -174,7 +174,12 @@ Merger for package.json
 
 ### properties
 
-Deliver some key properties
+Deliver some key properties.
+
+-   name
+-   version
+-   description
+-   main
 
 #### Parameters
 
