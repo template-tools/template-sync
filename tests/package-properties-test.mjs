@@ -74,3 +74,17 @@ test(
     api: "/some/path"
   }
 );
+
+test(
+  propertiest,
+  Package,
+  "package.json",
+  JSON.stringify({
+    exports: {
+      "./": "index.mjs"
+    }
+  }),
+  {
+    main: "index.mjs"
+  }
+);
