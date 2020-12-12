@@ -81,7 +81,7 @@ test(
   "package.json",
   JSON.stringify({
     exports: {
-      "./": "index.mjs"
+      ".": "index.mjs"
     }
   }),
   {

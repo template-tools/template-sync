@@ -259,9 +259,9 @@ export class Package extends Merger {
     if (
       properties.main === undefined &&
       pkg.exports &&
-      pkg.exports["./"]
+      pkg.exports["."]
     ) {
-      properties.main = pkg.exports["./"];
+      properties.main = pkg.exports["."];
     }
 
     Object.assign(properties, pkg.config);
