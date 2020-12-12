@@ -92,16 +92,18 @@ const sortedKeys = [
 
 const propertyKeys = ["description", "version", "name", "main", "browser"];
 
+const MODULE_HINT = { type: "fix", scope: "module" };
 const REMOVE_HINT = { compare, removeEmpty: true };
 const DEPENDENCY_HINT = { merge: mergeVersionsLargest, scope: "deps" };
 const MERGE_HINTS = {
   "*": { scope: "package", type: "chore" },
   "": { orderBy: sortedKeys },
-  type: { type: "fix" },
+  type: MODULE_HINT,
   keywords: { removeEmpty: true, compare, type: "docs" },
   repository: { compare },
   files: { compare, scope: "files", removeEmpty: true },
-  export: REMOVE_HINT,
+  exports: { ...REMOVE_HINT, ...MODULE_HINT },
+  imports: { ...REMOVE_HINT, ...MODULE_HINT },
   bin: REMOVE_HINT,
   "bin.*": { removeEmpty: true, scope: "bin" },
   scripts: {
