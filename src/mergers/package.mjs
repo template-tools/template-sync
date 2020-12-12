@@ -205,16 +205,24 @@ export class Package extends Merger {
   }
 
   /**
-   * Deliver some key properties
+   * Deliver some key properties.
+   * - name
+   * - version
+   * - description
+   * - main
    * @param {ContentEntry} entry
    * @return {Object}
    */
   static async properties(entry) {
     const pkg = JSON.parse(await entry.getString(defaultEncodingOptions));
 
-    const properties = {
-      npm: { name: pkg.name, fullName: pkg.name }
-    };
+    const properties = {};
+
+    if (pkg.name) {
+      Object.assign(properties, {
+        npm: { name: pkg.name, fullName: pkg.name }
+      });
+    }
 
     if (pkg.template !== undefined) {
       if (pkg.template.usedBy !== undefined) {
@@ -247,6 +255,14 @@ export class Package extends Merger {
         properties[key] = value;
       }
     });
+
+    if (
+      properties.main === undefined &&
+      pkg.exports &&
+      pkg.exports["./"]
+    ) {
+      properties.main = pkg.exports["./"];
+    }
 
     Object.assign(properties, pkg.config);
 
