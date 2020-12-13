@@ -168,7 +168,6 @@ const MERGE_HINTS = {
     type: "fix",
     scope: "engines"
   },
-  exports: REMOVE_HINT,
   release: REMOVE_HINT,
   config: REMOVE_HINT,
   "config.*": {
