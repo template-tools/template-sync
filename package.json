@@ -50,7 +50,7 @@
     "github-repository-provider": "^7.21.7",
     "hinted-tree-merger": "^4.6.4",
     "js-yaml": "^3.14.1",
-    "local-repository-provider": "^7.0.66",
+    "local-repository-provider": "^7.0.70",
     "loglevel-mixin": "^6.0.1",
     "markdown": "^0.5.0",
     "matching-iterator": "^1.1.3",
