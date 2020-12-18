@@ -67,7 +67,7 @@
     "content-entry-filesystem": "^2.0.3",
     "documentation": "github:arlac77/documentation",
     "execa": "^5.0.0",
-    "mock-repository-provider": "5.5.52",
+    "mock-repository-provider": "5.5.54",
     "semantic-release": "^17.3.0"
   },
   "engines": {
