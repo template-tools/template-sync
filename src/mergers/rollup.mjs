@@ -17,7 +17,6 @@ export class Rollup extends Merger {
         /\@rollup\/plugin\-.*/,
         /rollup\-plugin\-.*/,
         /babel-preset.*/,
-        "postcss",
         "builtin-modules"
       ]
     };
