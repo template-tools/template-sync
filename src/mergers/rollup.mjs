@@ -233,7 +233,9 @@ function importDeclarationsByLocalName(ast) {
 
   for (const decl of ast.program.body) {
     if (decl.type === "ImportDeclaration") {
-      declarations.set(decl.specifiers[0].local.name, decl);
+      for(const spec of decl.specifiers) {
+        declarations.set(spec.local.name, decl);
+      }
     }
   }
 
