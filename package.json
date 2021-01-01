@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "ava": "^3.14.0",
-    "c8": "^7.3.5",
+    "c8": "^7.4.0",
     "content-entry-filesystem": "^2.0.3",
     "documentation": "github:arlac77/documentation",
     "execa": "^5.0.0",
