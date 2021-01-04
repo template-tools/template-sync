@@ -70,8 +70,10 @@ export class License extends Merger {
   ) {
     let years = new Set();
     const addedYears = new Set();
-    const original = await destinationEntry.getString();
-    const source = await sourceEntry.getString();
+    const [original, template] = await Promise.all([
+      destinationEntry.getString(),
+      sourceEntry.getString()
+    ]);
 
     const m = original.match(
       /opyright\s*\(c\)\s*((\d+)([,\-\d]+)*)(\s*(,|by)\s*(.*))?/
@@ -97,7 +99,7 @@ export class License extends Merger {
             /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
             `opyright (c) ${yearsToString(years)}`
           )
-        : context.expand(source);
+        : context.expand(template);
 
     if (merged !== original) {
       yield {

@@ -20,11 +20,14 @@ export class TOML extends Merger {
     sourceEntry,
     options = this.options
   ) {
-    const name = destinationEntry.name;
-    const original = await destinationEntry.getString();
-    const template = await sourceEntry.getString();
+    const [original, template] = await Promise.all([
+      destinationEntry.getString(),
+      sourceEntry.getString()
+    ]);
 
     const actions = {};
+
+    const name = destinationEntry.name;
 
     yield {
       message: actions2message(actions, options.messagePrefix, name),

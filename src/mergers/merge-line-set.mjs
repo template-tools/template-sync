@@ -38,9 +38,10 @@ export class MergeLineSet extends Merger {
     sourceEntry,
     options = this.options
   ) {
-    const name = destinationEntry.name;
-    const original = await destinationEntry.getString();
-    const template = await sourceEntry.getString();
+    const [original, template] = await Promise.all([
+      destinationEntry.getString(),
+      sourceEntry.getString()
+    ]);
     const ignore = new Set(options.ignore);
 
     const actions = {};
@@ -60,6 +61,7 @@ export class MergeLineSet extends Merger {
     );
 
     if (merged !== original) {
+      const name = destinationEntry.name;
       yield {
         entries: [new StringContentEntry(name, merged)],
         message: actions2message(actions, options.messagePrefix, name)

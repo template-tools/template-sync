@@ -283,8 +283,11 @@ export class Package extends Merger {
     options = this.options
   ) {
     const name = destinationEntry.name;
-    const templateContent = await sourceEntry.getString();
-    const original = await destinationEntry.getString();
+    const [original, templateContent] = await Promise.all([
+      destinationEntry.getString(),
+      sourceEntry.getString()
+    ]);
+
     const originalLastChar = original[original.length - 1];
     const targetRepository = context.targetBranch.repository;
 

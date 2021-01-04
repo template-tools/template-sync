@@ -24,9 +24,10 @@ export class YAML extends Merger {
     sourceEntry,
     options = this.options
   ) {
-    const name = destinationEntry.name;
-    const original = await destinationEntry.getString();
-    const template = await sourceEntry.getString();
+    const [original, template] = await Promise.all([
+      destinationEntry.getString(),
+      sourceEntry.getString()
+    ]);
     const actions = {};
 
     const merged = dump(
@@ -44,6 +45,8 @@ export class YAML extends Merger {
     );
 
     if (original !== merged) {
+      const name = destinationEntry.name;
+
       yield {
         entries: [new StringContentEntry(name, merged)],
         message: actions2message(actions, options.messagePrefix, name)
