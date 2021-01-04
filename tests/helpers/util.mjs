@@ -1,7 +1,7 @@
 import { StringContentEntry, EmptyContentEntry } from "content-entry";
 import MockProvider from "mock-repository-provider";
 import { Context } from "../../src/context.mjs";
-import yaml from "js-yaml";
+import { load, dump } from "js-yaml";
 
 export function asArray(o) {
   return Array.isArray(o) ? o : o === undefined ? [] : [o];
@@ -61,13 +61,13 @@ export async function yamlt(
         ? new EmptyContentEntry(FILE_NAME)
         : new StringContentEntry(
             FILE_NAME,
-            typeof content === "string" ? content : yaml.safeDump(content)
+            typeof content === "string" ? content : dump(content)
           ),
       template === undefined
         ? new EmptyContentEntry(FILE_NAME)
         : new StringContentEntry(
             FILE_NAME,
-            typeof template === "string" ? template : yaml.safeDump(template)
+            typeof template === "string" ? template : dump(template)
           ),
       { ...factory.options, ...options }
     )
@@ -80,10 +80,10 @@ export async function yamlt(
   const result = await commit.entries[0].getString();
 
   if (typeof expected === "function") {
-    expected(t, yaml.safeLoad(result));
+    expected(t, load(result));
   } else {
     t.deepEqual(
-      typeof expected === "string" ? result : yaml.safeLoad(result),
+      typeof expected === "string" ? result : load(result),
       expected === undefined ? content : expected
     );
   }

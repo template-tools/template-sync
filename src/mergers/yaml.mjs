@@ -1,4 +1,4 @@
-import yaml from "js-yaml";
+import { load, dump } from "js-yaml";
 import { StringContentEntry } from "content-entry";
 import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
@@ -29,10 +29,10 @@ export class YAML extends Merger {
     const template = await sourceEntry.getString();
     const actions = {};
 
-    const merged = yaml.safeDump(
+    const merged = dump(
       merge(
-        yaml.safeLoad(original, options.yaml),
-        yaml.safeLoad(
+        load(original, options.yaml),
+        load(
           options.expand ? context.expand(template) : template,
           options.yaml
         ),
