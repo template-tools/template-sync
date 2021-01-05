@@ -40,7 +40,6 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "aggregation-repository-provider": "^2.9.28",
     "babylon": "^6.18.0",
-    "commander": "^6.2.1",
     "content-entry": "^2.6.1",
     "expression-expander": "^7.0.7",
     "hinted-tree-merger": "^4.6.5",
