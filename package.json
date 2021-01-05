@@ -1,5 +1,5 @@
 {
-  "name": "npm-template-sync",
+  "name": "@template-tools/template-sync",
   "version": "0.0.0-semantic-release",
   "publishConfig": {
     "access": "public"
@@ -26,9 +26,6 @@
     }
   ],
   "license": "BSD-2-Clause",
-  "bin": {
-    "npm-template-sync": "src/npm-template-sync-cli.mjs"
-  },
   "scripts": {
     "test": "npm run test:ava",
     "test:ava": "ava --timeout 2m tests/*.mjs",
@@ -43,14 +40,11 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "aggregation-repository-provider": "^2.9.28",
     "babylon": "^6.18.0",
-    "bitbucket-repository-provider": "^3.7.85",
     "commander": "^6.2.1",
     "content-entry": "^2.6.1",
     "expression-expander": "^7.0.7",
-    "github-repository-provider": "^7.21.11",
     "hinted-tree-merger": "^4.6.5",
     "js-yaml": "^4.0.0",
-    "local-repository-provider": "^7.0.72",
     "loglevel-mixin": "^6.0.1",
     "markdown": "^0.5.0",
     "matching-iterator": "^1.1.3",
@@ -67,6 +61,7 @@
     "content-entry-filesystem": "^2.0.3",
     "documentation": "github:arlac77/documentation",
     "execa": "^5.0.0",
+    "github-repository-provider": "^7.21.11",
     "mock-repository-provider": "5.5.55",
     "semantic-release": "^17.3.1"
   },
@@ -84,8 +79,7 @@
   "template": {
     "inheritFrom": [
       "arlac77/template-arlac77-github",
-      "arlac77/template-esm-only",
-      "arlac77/template-node-app"
+      "arlac77/template-esm-only"
     ]
   }
 }
