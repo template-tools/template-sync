@@ -1,13 +1,13 @@
-[![npm](https://img.shields.io/npm/v/npm-template-sync.svg)](https://www.npmjs.com/package/npm-template-sync)
+[![npm](https://img.shields.io/npm/v/@template-tools/template-sync.svg)](https://www.npmjs.com/package/@template-tools/template-sync)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![minified size](https://badgen.net/bundlephobia/min/npm-template-sync)](https://bundlephobia.com/result?p=npm-template-sync)
-[![downloads](http://img.shields.io/npm/dm/npm-template-sync.svg?style=flat-square)](https://npmjs.org/package/npm-template-sync)
-[![GitHub Issues](https://img.shields.io/github/issues/arlac77/npm-template-sync.svg?style=flat-square)](https://github.com/arlac77/npm-template-sync/issues)
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Farlac77%2Fnpm-template-sync%2Fbadge&style=flat)](https://actions-badge.atrox.dev/arlac77/npm-template-sync/goto)
+[![minified size](https://badgen.net/bundlephobia/min/@template-tools/template-sync)](https://bundlephobia.com/result?p=@template-tools/template-sync)
+[![downloads](http://img.shields.io/npm/dm/@template-tools/template-sync.svg?style=flat-square)](https://npmjs.org/package/@template-tools/template-sync)
+[![GitHub Issues](https://img.shields.io/github/issues/template-tools/template-sync.svg?style=flat-square)](https://github.com/template-tools/template-sync/issues)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Ftemplate-tools%2Ftemplate-sync%2Fbadge&style=flat)](https://actions-badge.atrox.dev/template-tools/template-sync/goto)
 [![Styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-[![Known Vulnerabilities](https://snyk.io/test/github/arlac77/npm-template-sync/badge.svg)](https://snyk.io/test/github/arlac77/npm-template-sync)
-[![Coverage Status](https://coveralls.io/repos/arlac77/npm-template-sync/badge.svg)](https://coveralls.io/github/arlac77/npm-template-sync)
+[![Known Vulnerabilities](https://snyk.io/test/github/template-tools/template-sync/badge.svg)](https://snyk.io/test/github/template-tools/template-sync)
+[![Coverage Status](https://coveralls.io/repos/template-tools/template-sync/badge.svg)](https://coveralls.io/github/template-tools/template-sync)
 
 ## npm-template-sync
 

@@ -68,12 +68,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/arlac77/npm-template-sync.git"
+    "url": "https://github.com/template-tools/template-sync.git"
   },
   "bugs": {
-    "url": "https://github.com/arlac77/npm-template-sync/issues"
+    "url": "https://github.com/template-tools/template-sync/issues"
   },
-  "homepage": "https://github.com/arlac77/npm-template-sync#readme",
+  "homepage": "https://github.com/template-tools/template-sync#readme",
   "template": {
     "inheritFrom": [
       "arlac77/template-arlac77-github",
