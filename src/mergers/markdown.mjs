@@ -17,12 +17,12 @@ export class Markdown extends Merger {
     sourceEntry,
     options = this.options
   ) {
-    const name = destinationEntry.name;
-    const original = await destinationEntry.getString();
+    const [original, template] = await Promise.all([
+      destinationEntry.getString(),
+      sourceEntry.getString()
+    ]);
     const originalTree = unified().use(markdown).parse(original);
-    const templateTree = unified()
-      .use(markdown)
-      .parse(await sourceEntry.getString());
+    const templateTree = unified().use(markdown).parse(template);
 
     //console.log([...childTypes(originalTree, "heading")]);
 
@@ -47,6 +47,8 @@ export class Markdown extends Merger {
     // console.log(merged);
 
     if (merged !== original) {
+      const name = destinationEntry.name;
+
       yield {
         message: actions2message(actions, options.messagePrefix, name),
         entries: [new StringContentEntry(name, merged)]
