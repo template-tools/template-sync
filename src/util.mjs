@@ -26,20 +26,6 @@ export function normalizeTemplateSources(sources, remove = []) {
     .sort();
 }
 
-export function setProperty(properties, attributePath, value) {
-  const m = attributePath.match(/^(\w+)\.(.*)/);
-
-  if (m) {
-    const key = m[1];
-    if (properties[key] === undefined) {
-      properties[key] = {};
-    }
-    setProperty(properties[key], m[2], value);
-  } else {
-    properties[attributePath] = value;
-  }
-}
-
 /**
  *
  */
@@ -124,52 +110,4 @@ export function aggregateActions(actions, action, hint) {
     actions[action.path].push(action);
   }
   delete action.path;
-}
-
-export function log(level, ...args) {
-  switch (level) {
-    case "warn":
-      console.warn(...args);
-      break;
-    default:
-      console.log(...args);
-      break;
-  }
-  /*
-  const prefixKeys = {
-    branch: 1,
-    severity: "info"
-  };
-  const valueKeys = {
-    message: "v",
-    timestamp: "d"
-  };
-
-  const prefix = Object.keys(prefixKeys).reduce((a, c) => {
-    if (arg[c]) {
-      if (prefixKeys[c] !== arg[c]) {
-        a.push(arg[c]);
-      }
-      delete arg[c];
-    }
-    return a;
-  }, []);
-
-  const values = Object.keys(arg).reduce((a, c) => {
-    if (arg[c] !== undefined) {
-      switch (valueKeys[c]) {
-        case "v":
-          a.push(arg[c]);
-          break;
-        case "d":
-          break;
-        default:
-          a.push(`${c}=${JSON.stringify(arg[c])}`);
-      }
-    }
-    return a;
-  }, []);
-
-  console.log(`${prefix.join(",")}: ${values.join(" ")}`);
-  */
 }

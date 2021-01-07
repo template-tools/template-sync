@@ -3,7 +3,7 @@ import { LogLevelMixin } from "loglevel-mixin";
 import { EmptyContentEntry } from "content-entry";
 import { Package } from "./mergers/package.mjs";
 import { Template } from "./template.mjs";
-import { jspath, asArray, log } from "./util.mjs";
+import { jspath, asArray } from "./util.mjs";
 
 export { Template };
 
@@ -269,6 +269,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
   }
 
   log(level, ...args) {
-    log(level, ...args);
+    console.log(...args);
   }
 }
