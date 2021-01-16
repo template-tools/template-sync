@@ -60,7 +60,7 @@
     "documentation": "github:arlac77/documentation",
     "execa": "^5.0.0",
     "github-repository-provider": "^7.21.11",
-    "mock-repository-provider": "5.5.55",
+    "mock-repository-provider": "5.5.56",
     "semantic-release": "^17.3.2"
   },
   "engines": {
