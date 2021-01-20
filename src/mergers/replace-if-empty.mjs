@@ -2,7 +2,7 @@ import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
 
 /**
- * Overwrites none existing entries from template
+ * Overwrites none existing entries from template.
  */
 export class ReplaceIfEmpty extends Merger {
   static get priority() {
@@ -18,15 +18,17 @@ export class ReplaceIfEmpty extends Merger {
     if (await destinationEntry.isEmpty()) {
       const source = await sourceEntry.getString();
 
-      yield {
-        message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
-        entries: [
-          new StringContentEntry(
-            destinationEntry.name,
-            options.expand ? context.expand(source) : source
-          )
-        ]
-      };
+      if(source.length() > 0) { 
+        yield {
+          message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
+          entries: [
+            new StringContentEntry(
+              destinationEntry.name,
+              options.expand ? context.expand(source) : source
+            )
+          ]
+        };
+      }
     }
   }
 }
