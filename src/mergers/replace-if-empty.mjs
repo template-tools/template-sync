@@ -18,7 +18,7 @@ export class ReplaceIfEmpty extends Merger {
     if (await destinationEntry.isEmpty()) {
       const source = await sourceEntry.getString();
 
-      if(source.length() > 0) { 
+      if(source.length > 0) { 
         yield {
           message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
           entries: [
