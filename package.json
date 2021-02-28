@@ -35,7 +35,7 @@
     "lint:docs": "documentation lint ./src/**/*.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.12.17",
+    "@babel/core": "^7.13.8",
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "babylon": "^6.18.0",
@@ -51,7 +51,7 @@
     "remark-parse": "^9.0.0",
     "remark-stringify": "^9.0.1",
     "remove-sensible-values": "^1.0.9",
-    "unified": "^9.2.0"
+    "unified": "^9.2.1"
   },
   "devDependencies": {
     "ava": "^3.15.0",
