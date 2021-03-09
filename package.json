@@ -35,7 +35,7 @@
     "lint:docs": "documentation lint ./src/**/*.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.13.8",
+    "@babel/core": "^7.13.10",
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "babylon": "^6.18.0",
@@ -59,8 +59,8 @@
     "content-entry-filesystem": "^2.0.4",
     "documentation": "github:arlac77/documentation",
     "execa": "^5.0.0",
-    "github-repository-provider": "^7.21.16",
-    "mock-repository-provider": "5.5.62",
+    "github-repository-provider": "^7.22.0",
+    "mock-repository-provider": "5.5.63",
     "semantic-release": "^17.4.1"
   },
   "engines": {
