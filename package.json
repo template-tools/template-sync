@@ -57,7 +57,7 @@
     "ava": "^3.15.0",
     "c8": "^7.7.0",
     "content-entry-filesystem": "^2.0.4",
-    "documentation": "^13.2.0",
+    "documentation": "^13.2.1",
     "execa": "^5.0.0",
     "github-repository-provider": "^7.22.3",
     "mock-repository-provider": "^5.5.65",
