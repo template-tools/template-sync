@@ -80,50 +80,30 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 -   [Delete](#delete)
--   [normalizeTemplateSources](#normalizetemplatesources)
-    -   [Parameters](#parameters)
--   [jspath](#jspath)
-    -   [Parameters](#parameters-1)
 -   [MergeLineSet](#mergelineset)
 -   [sortedKeys](#sortedkeys)
 -   [Package](#package)
     -   [properties](#properties)
-        -   [Parameters](#parameters-2)
+        -   [Parameters](#parameters)
 -   [Readme](#readme)
 -   [ReplaceIfEmpty](#replaceifempty)
 -   [Replace](#replace)
+-   [Skip](#skip)
 -   [Merger](#merger)
     -   [properties](#properties-1)
-        -   [Parameters](#parameters-3)
+        -   [Parameters](#parameters-1)
     -   [commits](#commits)
-        -   [Parameters](#parameters-4)
--   [Skip](#skip)
+        -   [Parameters](#parameters-2)
+-   [normalizeTemplateSources](#normalizetemplatesources)
+    -   [Parameters](#parameters-3)
+-   [jspath](#jspath)
+    -   [Parameters](#parameters-4)
 
 ## Delete
 
 **Extends Merger**
 
 Delete entry.
-
-## normalizeTemplateSources
-
-Remove duplicate sources.
-Sources staring with '-' will be removed
-
-### Parameters
-
--   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
--   `remove` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** normalized sources
-
-## jspath
-
-### Parameters
-
--   `object`  
--   `path`  
--   `cb`  
 
 ## MergeLineSet
 
@@ -172,6 +152,12 @@ Overwrites none existing entries from template.
 
 Replace file from template (always)
 
+## Skip
+
+**Extends Merger**
+
+Does not generate destination entry
+
 ## Merger
 
 Mergable content
@@ -197,11 +183,25 @@ Generate commits as result of merging two entries.
 -   `sourceEntry`  
 -   `options`  
 
-## Skip
+## normalizeTemplateSources
 
-**Extends Merger**
+Remove duplicate sources.
+Sources staring with '-' will be removed
 
-Does not generate destination entry
+### Parameters
+
+-   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+-   `remove` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** normalized sources
+
+## jspath
+
+### Parameters
+
+-   `object`  
+-   `path`  
+-   `cb`  
 
 # install
 
