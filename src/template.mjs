@@ -52,7 +52,7 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   /**
-   * Load a template
+   * Load a template.
    * @param {Context} context
    * @param {string[]} sources
    * @param {Object} options
@@ -380,7 +380,7 @@ export class Template extends LogLevelMixin(class {}) {
             );
           }
         } catch (e) {
-          this.error(e);
+          this.error(`${this.name} ${branch.fullCondensedName}: ${e}`);
         }
       } catch (e) {
         continue;
