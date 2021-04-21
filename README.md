@@ -3,7 +3,7 @@
 [![minified size](https://badgen.net/bundlephobia/min/@template-tools/template-sync)](https://bundlephobia.com/result?p=@template-tools/template-sync)
 [![downloads](http://img.shields.io/npm/dm/@template-tools/template-sync.svg?style=flat-square)](https://npmjs.org/package/@template-tools/template-sync)
 [![GitHub Issues](https://img.shields.io/github/issues/template-tools/template-sync.svg?style=flat-square)](https://github.com/template-tools/template-sync/issues)
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Ftemplate-tools%2Ftemplate-sync%2Fbadge&style=flat)](https://actions-badge.atrox.dev/template-tools/template-sync/goto)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Ftemplate-tools%2Ftemplate-sync%2Fbadge\&style=flat)](https://actions-badge.atrox.dev/template-tools/template-sync/goto)
 [![Styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![Known Vulnerabilities](https://snyk.io/test/github/template-tools/template-sync/badge.svg)](https://snyk.io/test/github/template-tools/template-sync)
@@ -51,27 +51,27 @@ npm-template-sync --track --template arlac77/template-arlac77-github --template 
 
 Merges contents from template branch into destination branch handling some special cases for:
 
--   Licenses - rewriting license years
--   line set files like .npmignore and .gitignore - by merging both sets together
--   package.json - merge (.\*)[Dd]ependencies, engines and scripts
--   rollup.conf.\*js - copy / rewrite + detect dev dependencies
--   [\*.yaml - merge](doc/yaml/README.md)
--   [.travis.yml - merge with hints](doc/travis/README.md)
--   [\*.toml - merge](doc/toml/README.md)
--   [\*.ini - merge](doc/ini/README.md)
--   [\*.json - merge](doc/json/README.md)
--   README.md - merge badges
+*   Licenses - rewriting license years
+*   line set files like .npmignore and .gitignore - by merging both sets together
+*   package.json - merge (.\*)\[Dd]ependencies, engines and scripts
+*   rollup.conf.\*js - copy / rewrite + detect dev dependencies
+*   [\*.yaml - merge](doc/yaml/README.md)
+*   [.travis.yml - merge with hints](doc/travis/README.md)
+*   [\*.toml - merge](doc/toml/README.md)
+*   [\*.ini - merge](doc/ini/README.md)
+*   [\*.json - merge](doc/json/README.md)
+*   README.md - merge badges
 
 ![generated pull request](doc/pr_sample.png)
 
 ## Some templates
 
--   [arlac77/template-cli-app](https://github.com/arlac77/template-cli-app) _rollup_ _ava_ _travis_
--   [arlac77/template-esm-only](https://github.com/arlac77/template-esm-only) _ava_ _travis_
--   [arlac77/template-svelte-component](https://github.com/arlac77/template-svelte-component) _svelte_ _rollup_ _testcafe_ _travis_
--   [arlac77/template-svelte-app](https://github.com/arlac77/template-svelte-app) _svelte_ _rollup_ _pkgbuild_ _travis_
--   [arlac77/template-kronos-component](https://github.com/arlac77/template-kronos-component) template-esm-only with node 14
--   [arlac77/template-kronos-app](https://github.com/arlac77/template-kronos-app) node 14 + systemd
+*   [arlac77/template-cli-app](https://github.com/arlac77/template-cli-app) *rollup* *ava* *travis*
+*   [arlac77/template-esm-only](https://github.com/arlac77/template-esm-only) *ava* *travis*
+*   [arlac77/template-svelte-component](https://github.com/arlac77/template-svelte-component) *svelte* *rollup* *testcafe* *travis*
+*   [arlac77/template-svelte-app](https://github.com/arlac77/template-svelte-app) *svelte* *rollup* *pkgbuild* *travis*
+*   [arlac77/template-kronos-component](https://github.com/arlac77/template-kronos-component) template-esm-only with node 14
+*   [arlac77/template-kronos-app](https://github.com/arlac77/template-kronos-app) node 14 + systemd
 
 # API
 
@@ -79,25 +79,25 @@ Merges contents from template branch into destination branch handling some speci
 
 ### Table of Contents
 
--   [Delete](#delete)
--   [MergeLineSet](#mergelineset)
--   [sortedKeys](#sortedkeys)
--   [Package](#package)
-    -   [properties](#properties)
-        -   [Parameters](#parameters)
--   [Readme](#readme)
--   [ReplaceIfEmpty](#replaceifempty)
--   [Replace](#replace)
--   [Skip](#skip)
--   [Merger](#merger)
-    -   [properties](#properties-1)
-        -   [Parameters](#parameters-1)
-    -   [commits](#commits)
-        -   [Parameters](#parameters-2)
--   [normalizeTemplateSources](#normalizetemplatesources)
-    -   [Parameters](#parameters-3)
--   [jspath](#jspath)
-    -   [Parameters](#parameters-4)
+*   [Delete](#delete)
+*   [MergeLineSet](#mergelineset)
+*   [sortedKeys](#sortedkeys)
+*   [Package](#package)
+    *   [properties](#properties)
+        *   [Parameters](#parameters)
+*   [Readme](#readme)
+*   [ReplaceIfEmpty](#replaceifempty)
+*   [Replace](#replace)
+*   [Skip](#skip)
+*   [Merger](#merger)
+    *   [properties](#properties-1)
+        *   [Parameters](#parameters-1)
+    *   [commits](#commits)
+        *   [Parameters](#parameters-2)
+*   [normalizeTemplateSources](#normalizetemplatesources)
+    *   [Parameters](#parameters-3)
+*   [jspath](#jspath)
+    *   [Parameters](#parameters-4)
 
 ## Delete
 
@@ -123,14 +123,14 @@ Merger for package.json
 
 Deliver some key properties.
 
--   name
--   version
--   description
--   main
+*   name
+*   version
+*   description
+*   main
 
 #### Parameters
 
--   `entry` **ContentEntry** 
+*   `entry` **ContentEntry** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
@@ -168,7 +168,7 @@ Deliver some key properties.
 
 #### Parameters
 
--   `entry` **ContentEntry** 
+*   `entry` **ContentEntry** 
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
 
@@ -178,10 +178,10 @@ Generate commits as result of merging two entries.
 
 #### Parameters
 
--   `context`  
--   `destinationEntry`  
--   `sourceEntry`  
--   `options`  
+*   `context`  
+*   `destinationEntry`  
+*   `sourceEntry`  
+*   `options`  
 
 ## normalizeTemplateSources
 
@@ -190,18 +190,18 @@ Sources staring with '-' will be removed
 
 ### Parameters
 
--   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
--   `remove` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
+*   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+*   `remove` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
 
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** normalized sources
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** normalized sources
 
 ## jspath
 
 ### Parameters
 
--   `object`  
--   `path`  
--   `cb`  
+*   `object`  
+*   `path`  
+*   `cb`  
 
 # install
 
