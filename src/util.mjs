@@ -19,7 +19,10 @@ export function asScalar(o) {
  */
 export function normalizeTemplateSources(sources, remove = []) {
   sources = [...new Set(asArray(sources))];
-  remove = [...remove, ...sources.filter(s => s[0] === "-").map(s => s.slice(1))];
+  remove = [
+    ...remove,
+    ...sources.filter(s => s[0] === "-").map(s => s.slice(1))
+  ];
   return sources
     .filter(s => remove.indexOf(s) < 0)
     .filter(s => s[0] !== "-")
@@ -60,10 +63,33 @@ export function jspath(object, path, cb) {
   return object[last];
 }
 
-export function actions2message(actions, prefix, name) {
-  return actions2messages(actions, prefix, name).join("\n");
+const scopeOrder = ["feat","fix", "chore", "docs"];
+
+function scope(str) {
+  const m = str.match(/^(\w+)/);
+  return m ? m[1] : undefined;
 }
 
+/**
+ * 
+ * @param actions 
+ * @param prefix 
+ * @param name 
+ * @returns actions as one string lines ordered by scope
+ */
+export function actions2message(actions, prefix, name) {
+  return actions2messages(actions, prefix, name)
+    .sort((a, b) => scopeOrder.indexOf(scope(a)) - scopeOrder.indexOf(scope(b)))
+    .join("\n");
+}
+
+/**
+ *
+ * @param actions
+ * @param prefix
+ * @param name
+ * @returns
+ */
 export function actions2messages(actions, prefix, name) {
   const messages = Object.entries(actions).map(([slot, action]) => {
     const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
