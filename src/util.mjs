@@ -63,7 +63,7 @@ export function jspath(object, path, cb) {
   return object[last];
 }
 
-const scopeOrder = ["feat","fix", "chore", "docs"];
+const scopeOrder = ["feat", "fix", "refactor", "chore", "docs", "style"];
 
 function scope(str) {
   const m = str.match(/^(\w+)/);
