@@ -107,7 +107,7 @@ export class Template extends LogLevelMixin(class {}) {
 
   get key() {
     return [...this.keyBranches]
-      .map(b => b.fullCondensedName)
+      .map(b => b.condensedName)
       .sort()
       .join(",");
   }
