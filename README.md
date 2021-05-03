@@ -3,7 +3,7 @@
 [![minified size](https://badgen.net/bundlephobia/min/@template-tools/template-sync)](https://bundlephobia.com/result?p=@template-tools/template-sync)
 [![downloads](http://img.shields.io/npm/dm/@template-tools/template-sync.svg?style=flat-square)](https://npmjs.org/package/@template-tools/template-sync)
 [![GitHub Issues](https://img.shields.io/github/issues/template-tools/template-sync.svg?style=flat-square)](https://github.com/template-tools/template-sync/issues)
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Ftemplate-tools%2Ftemplate-sync%2Fbadge&style=flat)](https://actions-badge.atrox.dev/template-tools/template-sync/goto)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Ftemplate-tools%2Ftemplate-sync%2Fbadge\&style=flat)](https://actions-badge.atrox.dev/template-tools/template-sync/goto)
 [![Styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![Known Vulnerabilities](https://snyk.io/test/github/template-tools/template-sync/badge.svg)](https://snyk.io/test/github/template-tools/template-sync)
@@ -98,6 +98,10 @@ Merges contents from template branch into destination branch handling some speci
     *   [Parameters](#parameters-3)
 *   [jspath](#jspath)
     *   [Parameters](#parameters-4)
+*   [actions2message](#actions2message)
+    *   [Parameters](#parameters-5)
+*   [actions2messages](#actions2messages)
+    *   [Parameters](#parameters-6)
 
 ## Delete
 
@@ -202,6 +206,24 @@ Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Gl
 *   `object`  
 *   `path`  
 *   `cb`  
+
+## actions2message
+
+### Parameters
+
+*   `actions`  
+*   `prefix`  
+*   `name`  
+
+Returns **any** actions as one string lines ordered by scope
+
+## actions2messages
+
+### Parameters
+
+*   `actions`  
+*   `prefix`  
+*   `name`  
 
 # install
 
