@@ -112,6 +112,17 @@ export class Template extends LogLevelMixin(class {}) {
       .join(",");
   }
 
+  /**
+   * Used to identify generated branch.
+   * @return {string} short template key
+   */
+  get shorKey() {
+    return [...this.keyBranches]
+      .map(b => b.repository.name)
+      .sort()
+      .join(",");
+  }
+
   toString() {
     return this.name;
   }

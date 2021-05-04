@@ -258,8 +258,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
       }
 
       yield targetBranch.commitIntoPullRequest(this.commits(), {
-        pullRequestBranch: `template-sync/${template.key}`,
-        title: `merge from ${template.key}`,
+        pullRequestBranch: `template-sync/${template.shorKey}`,
+        title: `merge from ${template.shorKey}`,
         bodyFromCommitMessages: true,
         dry: this.dry
       });
