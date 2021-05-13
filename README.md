@@ -80,87 +80,34 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 *   [Delete](#delete)
+*   [Merger](#merger)
+    *   [properties](#properties)
+        *   [Parameters](#parameters)
+    *   [commits](#commits)
+        *   [Parameters](#parameters-1)
+*   [normalizeTemplateSources](#normalizetemplatesources)
+    *   [Parameters](#parameters-2)
+*   [jspath](#jspath)
+    *   [Parameters](#parameters-3)
+*   [actions2message](#actions2message)
+    *   [Parameters](#parameters-4)
+*   [actions2messages](#actions2messages)
+    *   [Parameters](#parameters-5)
 *   [MergeLineSet](#mergelineset)
 *   [sortedKeys](#sortedkeys)
 *   [Package](#package)
-    *   [properties](#properties)
-        *   [Parameters](#parameters)
+    *   [properties](#properties-1)
+        *   [Parameters](#parameters-6)
 *   [Readme](#readme)
 *   [ReplaceIfEmpty](#replaceifempty)
 *   [Replace](#replace)
 *   [Skip](#skip)
-*   [Merger](#merger)
-    *   [properties](#properties-1)
-        *   [Parameters](#parameters-1)
-    *   [commits](#commits)
-        *   [Parameters](#parameters-2)
-*   [normalizeTemplateSources](#normalizetemplatesources)
-    *   [Parameters](#parameters-3)
-*   [jspath](#jspath)
-    *   [Parameters](#parameters-4)
-*   [actions2message](#actions2message)
-    *   [Parameters](#parameters-5)
-*   [actions2messages](#actions2messages)
-    *   [Parameters](#parameters-6)
 
 ## Delete
 
 **Extends Merger**
 
 Delete entry.
-
-## MergeLineSet
-
-**Extends Merger**
-
-## sortedKeys
-
-order in which json keys are written
-
-## Package
-
-**Extends Merger**
-
-Merger for package.json
-
-### properties
-
-Deliver some key properties.
-
-*   name
-*   version
-*   description
-*   main
-
-#### Parameters
-
-*   `entry` **ContentEntry** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## Readme
-
-**Extends Merger**
-
-injects badges into README.md
-
-## ReplaceIfEmpty
-
-**Extends Merger**
-
-Overwrites none existing entries from template.
-
-## Replace
-
-**Extends Merger**
-
-Replace file from template (always)
-
-## Skip
-
-**Extends Merger**
-
-Does not generate destination entry
 
 ## Merger
 
@@ -224,6 +171,59 @@ Returns **any** actions as one string lines ordered by scope
 *   `actions`  
 *   `prefix`  
 *   `name`  
+
+## MergeLineSet
+
+**Extends Merger**
+
+## sortedKeys
+
+order in which json keys are written
+
+## Package
+
+**Extends Merger**
+
+Merger for package.json
+
+### properties
+
+Deliver some key properties.
+
+*   name
+*   version
+*   description
+*   main
+
+#### Parameters
+
+*   `entry` **ContentEntry** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+## Readme
+
+**Extends Merger**
+
+injects badges into README.md
+
+## ReplaceIfEmpty
+
+**Extends Merger**
+
+Overwrites none existing entries from template.
+
+## Replace
+
+**Extends Merger**
+
+Replace file from template (always)
+
+## Skip
+
+**Extends Merger**
+
+Does not generate destination entry
 
 # install
 
