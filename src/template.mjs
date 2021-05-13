@@ -391,7 +391,7 @@ export class Template extends LogLevelMixin(class {}) {
             );
           }
         } catch (e) {
-          this.error(`${this.name} ${branch.fullCondensedName}: ${e}`);
+          this.error(`${this.name} ${branch.fullCondensedName}/${pc.name}: ${e}`);
         }
       } catch (e) {
         continue;
