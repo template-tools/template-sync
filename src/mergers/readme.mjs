@@ -39,7 +39,7 @@ export class Readme extends Merger {
         if (r.match(/\{\{/)) {
           return "";
         }
-        return r;
+        return r.replace(/&/,"\\&");
       })
       .filter(b => b.length > 0);
 
