@@ -118,7 +118,7 @@ export class Template extends LogLevelMixin(class {}) {
    */
   get shortKey() {
     return [...this.keyBranches]
-      .map(b => b.repository.name)
+      .map(b => b.repository.displayName)
       .sort()
       .join(",");
   }
