@@ -29,7 +29,7 @@ body`
           {
             name: "Badge 1",
             icon: "http://domain.net/somewhere1.svg",
-            url: "http://domain.net/somewhere1?a=1&b=2",
+            url: "http://domain.net/somewhere1?a=1&b=2&c=3",
             order: 0.1
           }
         ]
@@ -39,7 +39,7 @@ body`
 
   t.is(
     await commit.entries[0].getString(),
-    `[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1?a=1\\&b=2)
+    `[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1?a=1\\&b=2\\&c=3)
 
 
 body
