@@ -80,34 +80,72 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 *   [Delete](#delete)
+*   [normalizeTemplateSources](#normalizetemplatesources)
+    *   [Parameters](#parameters)
+*   [jspath](#jspath)
+    *   [Parameters](#parameters-1)
+*   [actions2message](#actions2message)
+    *   [Parameters](#parameters-2)
+*   [actions2messages](#actions2messages)
+    *   [Parameters](#parameters-3)
 *   [MergeLineSet](#mergelineset)
 *   [sortedKeys](#sortedkeys)
 *   [Package](#package)
     *   [properties](#properties)
-        *   [Parameters](#parameters)
+        *   [Parameters](#parameters-4)
 *   [Readme](#readme)
 *   [ReplaceIfEmpty](#replaceifempty)
 *   [Replace](#replace)
 *   [Skip](#skip)
 *   [Merger](#merger)
     *   [properties](#properties-1)
-        *   [Parameters](#parameters-1)
+        *   [Parameters](#parameters-5)
     *   [commits](#commits)
-        *   [Parameters](#parameters-2)
-*   [normalizeTemplateSources](#normalizetemplatesources)
-    *   [Parameters](#parameters-3)
-*   [jspath](#jspath)
-    *   [Parameters](#parameters-4)
-*   [actions2message](#actions2message)
-    *   [Parameters](#parameters-5)
-*   [actions2messages](#actions2messages)
-    *   [Parameters](#parameters-6)
+        *   [Parameters](#parameters-6)
 
 ## Delete
 
 **Extends Merger**
 
 Delete entry.
+
+## normalizeTemplateSources
+
+Remove duplicate sources.
+Sources staring with '-' will be removed
+
+### Parameters
+
+*   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+*   `remove` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** normalized sources
+
+## jspath
+
+### Parameters
+
+*   `object`  
+*   `path`  
+*   `cb`  
+
+## actions2message
+
+### Parameters
+
+*   `actions`  
+*   `prefix`  
+*   `name`  
+
+Returns **any** actions as one string lines ordered by scope
+
+## actions2messages
+
+### Parameters
+
+*   `actions`  
+*   `prefix`  
+*   `name`  
 
 ## MergeLineSet
 
@@ -186,44 +224,6 @@ Generate commits as result of merging two entries.
 *   `destinationEntry`  
 *   `sourceEntry`  
 *   `options`  
-
-## normalizeTemplateSources
-
-Remove duplicate sources.
-Sources staring with '-' will be removed
-
-### Parameters
-
-*   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
-*   `remove` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** normalized sources
-
-## jspath
-
-### Parameters
-
-*   `object`  
-*   `path`  
-*   `cb`  
-
-## actions2message
-
-### Parameters
-
-*   `actions`  
-*   `prefix`  
-*   `name`  
-
-Returns **any** actions as one string lines ordered by scope
-
-## actions2messages
-
-### Parameters
-
-*   `actions`  
-*   `prefix`  
-*   `name`  
 
 # install
 
