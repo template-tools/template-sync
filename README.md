@@ -80,34 +80,59 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 *   [Delete](#delete)
+*   [Merger](#merger)
+    *   [properties](#properties)
+        *   [Parameters](#parameters)
+    *   [commits](#commits)
+        *   [Parameters](#parameters-1)
 *   [normalizeTemplateSources](#normalizetemplatesources)
-    *   [Parameters](#parameters)
-*   [jspath](#jspath)
-    *   [Parameters](#parameters-1)
-*   [actions2message](#actions2message)
     *   [Parameters](#parameters-2)
-*   [actions2messages](#actions2messages)
+*   [jspath](#jspath)
     *   [Parameters](#parameters-3)
+*   [actions2message](#actions2message)
+    *   [Parameters](#parameters-4)
+*   [actions2messages](#actions2messages)
+    *   [Parameters](#parameters-5)
 *   [MergeLineSet](#mergelineset)
 *   [sortedKeys](#sortedkeys)
 *   [Package](#package)
-    *   [properties](#properties)
-        *   [Parameters](#parameters-4)
+    *   [properties](#properties-1)
+        *   [Parameters](#parameters-6)
 *   [Readme](#readme)
 *   [ReplaceIfEmpty](#replaceifempty)
 *   [Replace](#replace)
 *   [Skip](#skip)
-*   [Merger](#merger)
-    *   [properties](#properties-1)
-        *   [Parameters](#parameters-5)
-    *   [commits](#commits)
-        *   [Parameters](#parameters-6)
 
 ## Delete
 
 **Extends Merger**
 
 Delete entry.
+
+## Merger
+
+Mergable content
+
+### properties
+
+Deliver some key properties.
+
+#### Parameters
+
+*   `entry` **ContentEntry** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
+
+### commits
+
+Generate commits as result of merging two entries.
+
+#### Parameters
+
+*   `context`  
+*   `destinationEntry`  
+*   `sourceEntry`  
+*   `options`  
 
 ## normalizeTemplateSources
 
@@ -199,31 +224,6 @@ Replace file from template (always)
 **Extends Merger**
 
 Does not generate destination entry
-
-## Merger
-
-Mergable content
-
-### properties
-
-Deliver some key properties.
-
-#### Parameters
-
-*   `entry` **ContentEntry** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
-
-### commits
-
-Generate commits as result of merging two entries.
-
-#### Parameters
-
-*   `context`  
-*   `destinationEntry`  
-*   `sourceEntry`  
-*   `options`  
 
 # install
 
