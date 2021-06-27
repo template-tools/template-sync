@@ -88,19 +88,19 @@ Merges contents from template branch into destination branch handling some speci
     *   [Parameters](#parameters-2)
 *   [actions2messages](#actions2messages)
     *   [Parameters](#parameters-3)
+*   [Merger](#merger)
+    *   [properties](#properties)
+        *   [Parameters](#parameters-4)
+    *   [commits](#commits)
+        *   [Parameters](#parameters-5)
 *   [MergeLineSet](#mergelineset)
 *   [sortedKeys](#sortedkeys)
 *   [Package](#package)
-    *   [properties](#properties)
-        *   [Parameters](#parameters-4)
+    *   [properties](#properties-1)
+        *   [Parameters](#parameters-6)
 *   [Readme](#readme)
 *   [ReplaceIfEmpty](#replaceifempty)
 *   [Replace](#replace)
-*   [Merger](#merger)
-    *   [properties](#properties-1)
-        *   [Parameters](#parameters-5)
-    *   [commits](#commits)
-        *   [Parameters](#parameters-6)
 *   [Skip](#skip)
 
 ## Delete
@@ -146,6 +146,31 @@ Returns **any** actions as one string lines ordered by scope
 *   `actions`  
 *   `prefix`  
 *   `name`  
+
+## Merger
+
+Mergable content
+
+### properties
+
+Deliver some key properties.
+
+#### Parameters
+
+*   `entry` **ContentEntry** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
+
+### commits
+
+Generate commits as result of merging two entries.
+
+#### Parameters
+
+*   `context`  
+*   `destinationEntry`  
+*   `sourceEntry`  
+*   `options`  
 
 ## MergeLineSet
 
@@ -193,31 +218,6 @@ Overwrites none existing entries from template.
 **Extends Merger**
 
 Replace file from template (always)
-
-## Merger
-
-Mergable content
-
-### properties
-
-Deliver some key properties.
-
-#### Parameters
-
-*   `entry` **ContentEntry** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
-
-### commits
-
-Generate commits as result of merging two entries.
-
-#### Parameters
-
-*   `context`  
-*   `destinationEntry`  
-*   `sourceEntry`  
-*   `options`  
 
 ## Skip
 
