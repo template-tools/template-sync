@@ -46,18 +46,18 @@ test(
 `
 );
 
-test.skip(
+test(
   yamlt,
   YAML,
   `a:
-  - {{name}}`,
+- {{name}}`,
   `a:
-  - {{name}}`,
+- {{name}}`,
   { name: "a name" },
-  { expand: false },
+  { expand: true },
   `a:
-    - a name
-  `
+  - a name
+`
 );
 
 test(

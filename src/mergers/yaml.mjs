@@ -32,7 +32,7 @@ export class YAML extends Merger {
 
     const merged = dump(
       merge(
-        load(original, options.yaml),
+        load(options.expand ? context.expand(original) : original, options.yaml),
         load(
           options.expand ? context.expand(template) : template,
           options.yaml
