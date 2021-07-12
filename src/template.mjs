@@ -558,6 +558,7 @@ async function branchFromCache(branch) {
 
   b = {
     name: branch.name,
+    fullCondensedName: branch.fullCondensedName,
     equals(other) {
       return branch.equals(other);
     },
