@@ -1,4 +1,4 @@
-import unified from "unified";
+import { unified } from "unified";
 import markdown from "remark-parse";
 import stringify from "remark-stringify";
 import { StringContentEntry } from "content-entry";
