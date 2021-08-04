@@ -49,7 +49,7 @@
     "one-time-execution-method": "^2.0.9",
     "recast": "^0.20.4",
     "remark-parse": "^9.0.0",
-    "remark-stringify": "^9.0.1",
+    "remark-stringify": "^10.0.0",
     "unified": "^10.0.1"
   },
   "devDependencies": {
