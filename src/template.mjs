@@ -413,7 +413,7 @@ export class Template extends LogLevelMixin(class {}) {
       if (entry.isBlob) {
         const d = join(dest, entry.name);
         await mkdir(dirname(d), { recursive: true });
-        const s = await entry.getReadStream();
+        const s = await entry.readStream;
         s.pipe(createWriteStream(d));
       }
     }
