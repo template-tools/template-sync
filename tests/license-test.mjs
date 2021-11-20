@@ -28,7 +28,7 @@ async function lmt(t, license, template, year, expected, message) {
     t.is(expected, undefined);
   } else {
     t.is(commit.message, message, "message");
-    t.is(await commit.entries[0].getString(), expected, "merged content");
+    t.is(await commit.entries[0].string, expected, "merged content");
   }
 }
 

@@ -27,5 +27,5 @@ test("yarn lockfile merge", async t => {
   );
 
   t.is(commit, undefined);
-  //t.is(await commit.entries[0].getString(), content);
+  //t.is(await commit.entries[0].string, content);
 });

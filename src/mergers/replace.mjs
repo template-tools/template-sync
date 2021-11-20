@@ -15,12 +15,12 @@ export class Replace extends Merger {
     sourceEntry,
     options = this.options
   ) {
-    let source = await sourceEntry.getString();
+    let source = await sourceEntry.string;
     if (options.expand) {
       source = context.expand(source);
     }
 
-    if ((await destinationEntry.getString()) !== source) {
+    if ((await destinationEntry.string) !== source) {
       yield {
         message: `${options.messagePrefix}overwrite ${destinationEntry.name} with template content`,
         entries: [new StringContentEntry(destinationEntry.name, source)]

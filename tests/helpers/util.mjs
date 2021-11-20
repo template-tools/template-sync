@@ -77,7 +77,7 @@ export async function yamlt(
     t.is(commit.message, message);
   }
 
-  const result = await commit.entries[0].getString();
+  const result = await commit.entries[0].string;
 
   if (typeof expected === "function") {
     expected(t, load(result));

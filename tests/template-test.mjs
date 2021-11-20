@@ -161,7 +161,7 @@ test("template merge travis", async t => {
     t1
   );
   t.is(
-    await tm.getString(),
+    await tm.string,
     `jobs:
   include:
     - stage: test
@@ -179,7 +179,7 @@ test("template merged entries", async t => {
   for (const i of ["a", "b"]) {
     const f = await template.entry(`file_${i}`);
     t.is(f.name, `file_${i}`);
-    t.is(await f.getString(), `content ${i}`);
+    t.is(await f.string, `content ${i}`);
   }
 });
 

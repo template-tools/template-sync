@@ -18,8 +18,8 @@ export class Markdown extends Merger {
     options = this.options
   ) {
     const [original, template] = await Promise.all([
-      destinationEntry.getString(),
-      sourceEntry.getString()
+      destinationEntry.string,
+      sourceEntry.string
     ]);
     const originalTree = unified().use(markdown).parse(original);
     const templateTree = unified().use(markdown).parse(template);

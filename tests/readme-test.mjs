@@ -38,7 +38,7 @@ body`
   );
 
   t.is(
-    await commit.entries[0].getString(),
+    await commit.entries[0].string,
     `[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1?a=1\\&b=2\\&c=3)
 
 

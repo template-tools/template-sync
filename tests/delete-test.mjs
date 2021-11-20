@@ -13,7 +13,7 @@ test("replace differ", async t => {
     )
   );
 
-  t.is(await commit.entries[0].getString(), "");
+  t.is(await commit.entries[0].string, "");
   t.is( commit.entries[0].isDeleted, true);
   t.is(commit.entries[0].name, "aFile");
 });

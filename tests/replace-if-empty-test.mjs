@@ -11,7 +11,7 @@ test("replace-if-empty differ", async t => {
     { expand: false }
   ));
 
-  t.is(await commit.entries[0].getString(), "Line 1x {{name}}");
+  t.is(await commit.entries[0].string, "Line 1x {{name}}");
   t.is(await commit.entries[0].name, "aFile");
 });
 
@@ -23,7 +23,7 @@ test("replace-if-empty differ with expand", async t => {
     { expand: true }
   ));
 
-  t.is(await commit.entries[0].getString(), "Line 1x a name");
+  t.is(await commit.entries[0].string, "Line 1x a name");
   t.is(await commit.entries[0].name, "aFile");
 });
 

@@ -53,10 +53,10 @@ async function pkgt(
   }
 
   if (typeof expected === "function") {
-    expected(t, JSON.parse(await commit.entries[0].getString()));
+    expected(t, JSON.parse(await commit.entries[0].string));
   } else {
     t.deepEqual(
-      JSON.parse(await commit.entries[0].getString()),
+      JSON.parse(await commit.entries[0].string),
       expected === undefined ? content : expected,
       "commit content"
     );

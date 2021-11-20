@@ -15,7 +15,7 @@ test("MergeLineSet lines remove", async t => {
     )
   );
 
-  t.is(await commit.entries[0].getString(), ["Line 3", "Line 2"].join("\n"));
+  t.is(await commit.entries[0].string, ["Line 3", "Line 2"].join("\n"));
   // t.is(commit.message, "chore(something): remove Line 1\nchore(something): add Line 2");
 });
 
@@ -32,7 +32,7 @@ test("MergeLineSet keepHints", async t => {
   );
 
   t.is(
-    await commit.entries[0].getString(),
+    await commit.entries[0].string,
     ["Line 3", "-Line 1", "Line 2"].join("\n")
   );
 });
@@ -61,5 +61,5 @@ test("MergeLineSet ignore option", async t => {
     )
   );
 
-  t.is(await commit.entries[0].getString(), "Line 1\n");
+  t.is(await commit.entries[0].string, "Line 1\n");
 });

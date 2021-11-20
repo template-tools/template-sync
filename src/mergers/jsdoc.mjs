@@ -10,7 +10,7 @@ export class JSDoc extends JSONMerger {
   }
 
   static async usedDevDependencies(into, entry) {
-    const content = await entry.getString();
+    const content = await entry.string;
 
     const json = JSON.parse(content);
 

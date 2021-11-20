@@ -56,7 +56,7 @@ test("rollup", async t => {
   );
 
   t.is(
-    await commit.entries[0].getString(),
+    await commit.entries[0].string,
     `'use strict';;
 import pkg from './package.json';
 
@@ -104,7 +104,7 @@ test("rollup empty target", async t => {
     )
   );
 
-  t.is(await commit.entries[0].getString(), `export default {};`);
+  t.is(await commit.entries[0].string, `export default {};`);
   t.is(
     await commit.message,
     `chore(rollup): add missing rollup.config.mjs from template`

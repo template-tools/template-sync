@@ -333,7 +333,7 @@ export class Template extends LogLevelMixin(class {}) {
         const pc = await branch.entry("package.json");
 
         try {
-          const pkg = JSON.parse(await pc.getString());
+          const pkg = JSON.parse(await pc.string);
 
           /*console.log(
             "X",
@@ -421,7 +421,7 @@ export class Template extends LogLevelMixin(class {}) {
 
   async package() {
     const entry = this.entry("package.json");
-    return JSON.parse(await entry.getString());
+    return JSON.parse(await entry.string);
   }
 
   async properties() {
@@ -449,7 +449,7 @@ export class Template extends LogLevelMixin(class {}) {
     async function* modifyWithPR(sourceBranch, modify, action, itemName) {
       const name = "package.json";
       const entry = await sourceBranch.entry(name);
-      const org = await entry.getString();
+      const org = await entry.string;
       const modified = JSON.stringify(modify(JSON.parse(org)), undefined, 2);
 
       if (org !== modified) {

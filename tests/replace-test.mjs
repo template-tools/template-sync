@@ -13,7 +13,7 @@ test("replace differ", async t => {
     )
   );
 
-  t.is(await commit.entries[0].getString(), "Line 1x {{name}}");
+  t.is(await commit.entries[0].string, "Line 1x {{name}}");
   t.is(commit.entries[0].name, "aFile");
   t.is(commit.message, "prefix: overwrite aFile with template content");
 });
@@ -28,7 +28,7 @@ test("replace differ expand", async t => {
     )
   );
 
-  t.is(await commit.entries[0].getString(), "Line 1x a name");
+  t.is(await commit.entries[0].string, "Line 1x a name");
   t.is(commit.entries[0].name, "aFile");
 });
 

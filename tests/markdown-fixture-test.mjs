@@ -19,10 +19,10 @@ export async function markdownt(t, factory, name) {
 
   const mergedEntry = new FileSystemEntry(`fixtures/${name}-merged.md`, here);
 
-  if ((await mergedEntry.getString()) === (await originalEntry.getString())) {
+  if ((await mergedEntry.string) === (await originalEntry.string)) {
     t.true(true);
   } else {
-    t.is(await merged.entry.getString(), await mergedEntry.getString());
+    t.is(await merged.entry.string, await mergedEntry.string);
   }
 }
 

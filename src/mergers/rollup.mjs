@@ -24,7 +24,7 @@ export class Rollup extends Merger {
   }
 
   static async usedDevDependencies(into, entry) {
-    const content = await entry.getString();
+    const content = await entry.string;
     const ast = recast.parse(content, {
       parser: {
         parse: source =>
@@ -52,7 +52,7 @@ export class Rollup extends Merger {
     options = this.options
   ) {
     const name = destinationEntry.name;
-    const templateContent = await sourceEntry.getString();
+    const templateContent = await sourceEntry.string;
 
     if (await destinationEntry.isEmpty()) {
       yield {
@@ -65,7 +65,7 @@ export class Rollup extends Merger {
       return;
     }
 
-    const original = await destinationEntry.getString();
+    const original = await destinationEntry.string;
 
     let messages = [];
 

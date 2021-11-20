@@ -21,7 +21,7 @@ test("markdown merge", async t => {
   );
 
   t.is(
-    await commit.entries[0].getString(),
+    await commit.entries[0].string,
     `# Hello
 
 *   a
@@ -67,7 +67,7 @@ test("markdown merge into empty", async t => {
 
   t.is(commit.entries[0].name, FILE_NAME);
   t.is(
-    await commit.entries[0].getString(),
+    await commit.entries[0].string,
     `# Hello
 `
   );

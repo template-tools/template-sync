@@ -24,7 +24,7 @@ test("json merge", async t => {
     )
   );
 
-  t.deepEqual(JSON.parse(await commit.entries[0].getString()), {
+  t.deepEqual(JSON.parse(await commit.entries[0].string), {
     key: "value",
     oldKey: "oldValue"
   });
@@ -44,7 +44,7 @@ test("json empty target", async t => {
     )
   );
 
-  t.deepEqual(JSON.parse(await commit.entries[0].getString()), {
+  t.deepEqual(JSON.parse(await commit.entries[0].string), {
     key: "value"
   });
 });

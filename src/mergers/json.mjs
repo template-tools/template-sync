@@ -23,8 +23,8 @@ export class JSONMerger extends Merger {
     options = this.options
   ) {
     const [original, template] = await Promise.all([
-      destinationEntry.getString(),
-      sourceEntry.getString()
+      destinationEntry.string,
+      sourceEntry.string
     ]);
     const actions = {};
 

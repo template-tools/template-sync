@@ -35,7 +35,7 @@ MemoryAccounting=true
     )
   );
 
-  t.deepEqual(decode(await commit.entries[0].getString()), {
+  t.deepEqual(decode(await commit.entries[0].string), {
     Unit: {
       Description: "{{description}}",
       After: "network-online.target",
@@ -95,7 +95,7 @@ Type=notify
     )
   );
 
-  t.deepEqual(decode(await commit.entries[0].getString()), {
+  t.deepEqual(decode(await commit.entries[0].string), {
     Unit: {
       After: "network-online.target"
     },

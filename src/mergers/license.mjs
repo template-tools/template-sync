@@ -71,8 +71,8 @@ export class License extends Merger {
     let years = new Set();
     const addedYears = new Set();
     const [original, template] = await Promise.all([
-      destinationEntry.getString(),
-      sourceEntry.getString()
+      destinationEntry.string,
+      sourceEntry.string
     ]);
 
     const m = original.match(

@@ -27,7 +27,7 @@ test("toml merge", async t => {
     )
   );
 
-  t.deepEqual(parse(await commit.entries[0].getString()), {
+  t.deepEqual(parse(await commit.entries[0].string), {
     key: "the description",
     oldKey: "oldValue"
   });

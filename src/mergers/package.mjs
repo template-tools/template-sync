@@ -272,7 +272,7 @@ export class Package extends Merger {
     if (await entry.isEmpty()) {
       return into;
     }
-    moduleNames(JSON.parse(await entry.getString()).release, into);
+    moduleNames(JSON.parse(await entry.string).release, into);
     return into;
   }
 
@@ -284,8 +284,8 @@ export class Package extends Merger {
   ) {
     const name = destinationEntry.name;
     const [original, templateContent] = await Promise.all([
-      destinationEntry.getString(),
-      sourceEntry.getString()
+      destinationEntry.string,
+      sourceEntry.string
     ]);
 
     const originalLastChar = original[original.length - 1];

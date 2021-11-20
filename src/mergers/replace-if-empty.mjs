@@ -16,7 +16,7 @@ export class ReplaceIfEmpty extends Merger {
     options = this.options
   ) {
     if (await destinationEntry.isEmpty()) {
-      const source = await sourceEntry.getString();
+      const source = await sourceEntry.string;
 
       if(source.length > 0) { 
         yield {

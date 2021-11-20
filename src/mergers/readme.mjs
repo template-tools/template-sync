@@ -22,7 +22,7 @@ export class Readme extends Merger {
     sourceEntry,
     options = this.options
   ) {
-    const original = await destinationEntry.getString();
+    const original = await destinationEntry.string;
 
     const badges = options.badges
       .sort((a, b) => (a.order > b.order ? 1 : a.order < b.order ? -1 : 0))
