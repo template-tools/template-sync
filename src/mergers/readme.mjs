@@ -2,7 +2,7 @@ import { Merger } from "../merger.mjs";
 import { StringContentEntry } from "content-entry";
 
 /**
- * injects badges into README.md
+ * Injects badges into README.md.
  */
 export class Readme extends Merger {
   static get pattern() {
@@ -39,18 +39,18 @@ export class Readme extends Merger {
         if (r.match(/\{\{/)) {
           return "";
         }
-        return r.replace(/&/g,"\\&");
+        return r.replace(/&/g, "\\&");
       })
       .filter(b => b.length > 0);
 
-    let body = original.split(/\n/);
-
-    if (body.length === 0) {
-      body = context.expand(template).split(/\n/);
-    } else {
-      body = body.filter(l => !l.match(/^\[\!\[.*\)$/));
-    }
-    const merged = badges.concat(body).join("\n");
+    const body = original.split(/\n/);
+    const merged = badges
+      .concat(
+        body.length === 0
+          ? context.expand(template).split(/\n/)
+          : body.filter(l => !l.match(/^\[\!\[.*\)$/))
+      )
+      .join("\n");
 
     if (merged !== original) {
       yield {
