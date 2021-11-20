@@ -177,7 +177,7 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 **Extends Merger**
 
-injects badges into README.md
+Injects badges into README.md.
 
 ## ReplaceIfEmpty
 
