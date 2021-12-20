@@ -54,7 +54,7 @@ export class Rollup extends Merger {
     const name = destinationEntry.name;
     const templateContent = await sourceEntry.string;
 
-    if (await destinationEntry.isEmpty()) {
+    if (await destinationEntry.isEmpty) {
       yield {
         message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
         entries: [new StringContentEntry(

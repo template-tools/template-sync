@@ -269,7 +269,8 @@ export class Package extends Merger {
   }
 
   static async usedDevDependencies(into, entry) {
-    if (await entry.isEmpty()) {
+    console.log("usedDevDependencies", entry.name, await entry.isEmpty);
+    if (await entry.isEmpty) {
       return into;
     }
     moduleNames(JSON.parse(await entry.string).release, into);
