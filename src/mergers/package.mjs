@@ -213,7 +213,7 @@ export class Package extends Merger {
    * @return {Object}
    */
   static async properties(entry) {
-    const pkg = JSON.parse(await entry.getString(defaultEncodingOptions));
+    const pkg = JSON.parse(await entry.string);
 
     const properties = {};
 
