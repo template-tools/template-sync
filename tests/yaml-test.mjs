@@ -33,6 +33,7 @@ test(
 );
 
 test(
+  "yaml referse",
   yamlt,
   YAML,
   `a:
