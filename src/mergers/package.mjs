@@ -82,6 +82,7 @@ const sortedKeys = [
   "config",
   "systemd",
   "pacman",
+  "pkg",
   "release",
   "ava",
   "nyc",
