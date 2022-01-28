@@ -184,6 +184,15 @@ const MERGE_HINTS = {
     type: "fix",
     scope: "pacman"
   },
+  "pkg.*": {
+    overwrite: false
+  },
+  "pkg.depends.*": {
+    merge: mergeVersionsLargest,
+    compare,
+    type: "fix",
+    scope: "pkg"
+  },
   template: { merge: mergeSkip }
 };
 
