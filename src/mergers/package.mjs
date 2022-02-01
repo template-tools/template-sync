@@ -184,6 +184,15 @@ const MERGE_HINTS = {
     type: "fix",
     scope: "pacman"
   },
+  pkg: {
+    orderBy: [
+      "content",
+      "output",
+      "hooks",
+      "backup",
+      "groups"
+    ]
+  },
   "pkg.*": {
     overwrite: false
   },
