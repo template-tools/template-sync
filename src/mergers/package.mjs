@@ -14,7 +14,6 @@ import {
   jspath,
   asScalar,
   asArray,
-  defaultEncodingOptions,
   normalizeTemplateSources
 } from "../util.mjs";
 
@@ -185,13 +184,7 @@ const MERGE_HINTS = {
     scope: "pacman"
   },
   pkg: {
-    orderBy: [
-      "content",
-      "output",
-      "hooks",
-      "backup",
-      "groups"
-    ]
+    orderBy: ["content", "output", "hooks", "backup", "groups"]
   },
   "pkg.*": {
     overwrite: false
@@ -274,11 +267,7 @@ export class Package extends Merger {
       }
     });
 
-    if (
-      properties.main === undefined &&
-      pkg.exports &&
-      pkg.exports["."]
-    ) {
+    if (properties.main === undefined && pkg.exports && pkg.exports["."]) {
       properties.main = pkg.exports["."];
     }
 
