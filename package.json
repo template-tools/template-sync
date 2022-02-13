@@ -57,7 +57,7 @@
     "c8": "^7.11.0",
     "content-entry-filesystem": "^4.0.6",
     "documentation": "^13.2.5",
-    "execa": "^6.0.0",
+    "execa": "^6.1.0",
     "github-repository-provider": "^7.25.37",
     "mock-repository-provider": "^6.0.0",
     "semantic-release": "^19.0.2"
