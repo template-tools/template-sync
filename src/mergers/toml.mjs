@@ -35,8 +35,8 @@ export class TOML extends Merger {
         name,
         stringify(
           merge(
-            parse(options.expand ? context.expand(original) : original) || {},
-            parse(options.expand ? context.expand(template) : template),
+            parse(context.expand(original, options.expand)) || {},
+            parse(context.expand(template, options.expand)),
             "",
             (action, hint) => aggregateActions(actions, action, hint),
             options.mergeHints

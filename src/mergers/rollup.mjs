@@ -57,10 +57,12 @@ export class Rollup extends Merger {
     if (await destinationEntry.isEmpty) {
       yield {
         message: `${options.messagePrefix}add missing ${destinationEntry.name} from template`,
-        entries: [new StringContentEntry(
-          destinationEntry.name,
-          options.expand ? context.expand(templateContent) : templateContent
-        )]
+        entries: [
+          new StringContentEntry(
+            destinationEntry.name,
+            context.expand(templateContent, options.expand)
+          )
+        ]
       };
       return;
     }
@@ -233,7 +235,7 @@ function importDeclarationsByLocalName(ast) {
 
   for (const decl of ast.program.body) {
     if (decl.type === "ImportDeclaration") {
-      for(const spec of decl.specifiers) {
+      for (const spec of decl.specifiers) {
         declarations.set(spec.local.name, decl);
       }
     }

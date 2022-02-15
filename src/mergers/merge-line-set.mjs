@@ -50,7 +50,7 @@ export class MergeLineSet extends Merger {
       merge(
         lines2set(original),
         [
-          ...lines2set(options.expand ? context.expand(template) : template),
+          ...lines2set(context.expand(template, options.expand)),
           ...[...ignore].map(p => `--delete-- ${p}`)
         ],
         "",

@@ -29,7 +29,7 @@ export class INI extends Merger {
     const merged = encode(
       merge(
         decode(original),
-        decode(options.expand ? context.expand(template) : template),
+        decode(context.expand(template, options.expand)),
         "",
         (action, hint) => aggregateActions(actions, action, hint),
         options.mergeHints

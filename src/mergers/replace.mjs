@@ -15,7 +15,10 @@ export class Replace extends Merger {
     sourceEntry,
     options = this.options
   ) {
-    const source = context.optionallyExpand(await sourceEntry.string);
+    const source = context.expand(
+      await sourceEntry.string,
+      options.expand
+    );
 
     if ((await destinationEntry.string) !== source) {
       yield {

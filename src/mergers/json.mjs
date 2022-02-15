@@ -31,7 +31,7 @@ export class JSONMerger extends Merger {
     const merged = JSON.stringify(
       merge(
         original.length === 0 ? {} : JSON.parse(original),
-        JSON.parse(options.expand ? context.expand(template) : template),
+        JSON.parse(context.expand(template, options.expand)),
         "",
         (action, hint) => aggregateActions(actions, action, hint),
         options.mergeHints
