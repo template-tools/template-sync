@@ -33,7 +33,6 @@ test("context execute - PR", async t => {
 
   const context = await Context.from(provider, REPOSITORY_NAME, {
     logger: (...args) => console.log(...args),
-    // logLevel: "trace",
     template: TEMPLATE_REPO
   });
 
