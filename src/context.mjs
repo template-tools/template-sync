@@ -66,6 +66,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
     this.logLevel = options.logLevel;
   }
 
+  optionallyExpand(arg) {
+    return this.options.expand ? this.ctx.expand(arg) : arg;
+  }
+
   expand(...args) {
     return this.ctx.expand(...args);
   }
