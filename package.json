@@ -46,7 +46,7 @@
     "loglevel-mixin": "^6.0.7",
     "markdown": "^0.5.0",
     "matching-iterator": "^2.0.3",
-    "one-time-execution-method": "^2.0.11",
+    "one-time-execution-method": "^2.0.12",
     "recast": "^0.20.5",
     "remark-parse": "^10.0.0",
     "remark-stringify": "^10.0.0",
@@ -58,8 +58,8 @@
     "content-entry-filesystem": "^4.0.6",
     "documentation": "^13.2.5",
     "execa": "^6.1.0",
-    "github-repository-provider": "^7.25.43",
-    "mock-repository-provider": "^6.0.6",
+    "github-repository-provider": "^7.25.45",
+    "mock-repository-provider": "^6.0.8",
     "semantic-release": "^19.0.2"
   },
   "engines": {
