@@ -35,11 +35,11 @@
     "lint:docs": "documentation lint ./src/**/*.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.17.5",
+    "@babel/core": "^7.17.8",
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "babylon": "^6.18.0",
-    "content-entry": "^4.1.7",
+    "content-entry": "^4.1.8",
     "expression-expander": "^7.0.15",
     "hinted-tree-merger": "^5.0.0",
     "js-yaml": "^4.1.0",
@@ -58,7 +58,7 @@
     "content-entry-filesystem": "^4.0.6",
     "documentation": "^13.2.5",
     "execa": "^6.1.0",
-    "github-repository-provider": "^7.25.47",
+    "github-repository-provider": "^7.25.50",
     "mock-repository-provider": "^6.0.8",
     "semantic-release": "^19.0.2"
   },
