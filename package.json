@@ -46,7 +46,7 @@
     "loglevel-mixin": "^6.0.7",
     "markdown": "^0.5.0",
     "matching-iterator": "^2.0.3",
-    "one-time-execution-method": "^2.0.12",
+    "one-time-execution-method": "^2.0.13",
     "recast": "^0.20.5",
     "remark-parse": "^10.0.0",
     "remark-stringify": "^10.0.0",
