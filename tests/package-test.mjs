@@ -1,6 +1,10 @@
 import test from "ava";
 import { StringContentEntry, EmptyContentEntry } from "content-entry";
-import { createContext, asArray, asyncIterator2scalar } from "./helpers/util.mjs";
+import {
+  createContext,
+  asArray,
+  asyncIterator2scalar
+} from "./helpers/util.mjs";
 
 import { Package } from "../src/mergers/package.mjs";
 
@@ -25,7 +29,11 @@ async function pkgt(
     ...properties
   });
 
-  context.template.mergers.unshift({ factory: Package, options: Package.options, pattern: Package.pattern });
+  context.template.mergers.unshift({
+    factory: Package,
+    options: Package.options,
+    pattern: Package.pattern
+  });
 
   // also fill mock repo
   if (content !== undefined) {
@@ -33,16 +41,18 @@ async function pkgt(
     branch.files[FILE_NAME] = JSON.stringify(content);
   }
 
-  const commit = await asyncIterator2scalar(Package.commits(
-    context,
-    content === undefined
-      ? new EmptyContentEntry(FILE_NAME)
-      : new StringContentEntry(FILE_NAME, JSON.stringify(content)),
-    template === undefined
-      ? new EmptyContentEntry(FILE_NAME)
-      : new StringContentEntry(FILE_NAME, JSON.stringify(template)),
-    { ...Package.options, ...options }
-  ));
+  const commit = await asyncIterator2scalar(
+    Package.commits(
+      context,
+      content === undefined
+        ? new EmptyContentEntry(FILE_NAME)
+        : new StringContentEntry(FILE_NAME, JSON.stringify(content)),
+      template === undefined
+        ? new EmptyContentEntry(FILE_NAME)
+        : new StringContentEntry(FILE_NAME, JSON.stringify(template)),
+      { ...Package.options, ...options }
+    )
+  );
 
   for (const e of asArray(message)) {
     if (e instanceof RegExp) {
@@ -190,6 +200,30 @@ test(
       node: ">=10"
     });
   }
+);
+
+test(
+  "breaking engines",
+  pkgt,
+  {
+    engines: {
+      node: ">=12"
+    }
+  },
+  {
+    engines: {
+      node: ">=10"
+    }
+  },
+  undefined,
+  undefined,
+
+  (t, merged) => {
+    t.deepEqual(merged.engines, {
+      node: ">=12"
+    });
+  },
+  /BREAKING CHANGE:/
 );
 
 test(

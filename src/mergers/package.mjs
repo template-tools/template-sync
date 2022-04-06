@@ -165,7 +165,7 @@ const MERGE_HINTS = {
     compare,
     merge: mergeVersionsLargest,
     removeEmpty: true,
-    type: "fix",
+    type: "fix:breaking",
     scope: "engines"
   },
   release: REMOVE_HINT,

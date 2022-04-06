@@ -1,3 +1,4 @@
+import { buildExternalHelpers } from "@babel/core";
 import { isScalar } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
@@ -71,10 +72,10 @@ function scope(str) {
 }
 
 /**
- * 
- * @param actions 
- * @param prefix 
- * @param name 
+ *
+ * @param actions
+ * @param prefix
+ * @param name
  * @returns actions as one string lines ordered by scope
  */
 export function actions2message(actions, prefix, name) {
@@ -91,30 +92,44 @@ export function actions2message(actions, prefix, name) {
  * @returns
  */
 export function actions2messages(actions, prefix, name) {
-  const messages = Object.entries(actions).map(([slot, action]) => {
-    const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
-    const verbs = ["add", "remove", "update"]
-      .map(verb => [
-        verb,
-        action.map(x => toValue(x[verb])).filter(x => x !== undefined)
-      ])
-      .filter(([name, value]) => value.length > 0)
-      .map(([name, value]) => `${name} ${value}`);
+  const messages = Object.entries(actions).reduce(
+    (messages, [slot, action]) => {
+      const extra = [];
+      const toValue = s => (s !== undefined && isScalar(s) ? s : undefined);
+      const verbs = ["add", "remove", "update"]
+        .map(verb => [
+          verb,
+          action.map(x => toValue(x[verb])).filter(x => x !== undefined)
+        ])
+        .filter(([name, value]) => value.length > 0)
+        .map(([name, value]) => `${name} ${value}`);
 
-    verbs.push(`(${slot.replace(/\[\d*\]/, "")})`);
+      verbs.push(`(${slot.replace(/\[\d*\]/, "")})`);
 
-    const a = action.reduce((a, c) => Object.assign(a, c), { type: "chore" });
+      const a = action.reduce((a, c) => Object.assign(a, c), { type: "chore" });
 
-    if (a.type) {
-      prefix = a.type;
-      if (a.scope) {
-        prefix += `(${a.scope})`;
+      if (a.type) {
+        const [type, modifier] = a.type.split(/:/);
+
+        if (modifier === "breaking") {
+          extra.push("");
+          extra.push("BREAKING CHANGE: " + verbs.join(" "));
+        }
+
+        prefix = type;
+
+        if (a.scope) {
+          prefix += `(${a.scope})`;
+        }
+        prefix += ": ";
       }
-      prefix += ": ";
-    }
 
-    return prefix + verbs.join(" ");
-  });
+      messages.push(prefix + verbs.join(" "), ...extra);
+
+      return messages;
+    },
+    []
+  );
 
   return messages.length === 0
     ? [`${prefix}merge from template ${name}`]
