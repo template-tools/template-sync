@@ -174,15 +174,6 @@ const MERGE_HINTS = {
     compare,
     overwrite: false
   },
-  "pacman.*": {
-    overwrite: false
-  },
-  "pacman.depends.*": {
-    merge: mergeVersionsLargest,
-    compare,
-    type: "fix",
-    scope: "pacman"
-  },
   pkg: {
     orderBy: ["content", "output", "hooks", "backup", "groups"]
   },
