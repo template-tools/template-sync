@@ -43,7 +43,7 @@
     "expression-expander": "^7.0.16",
     "hinted-tree-merger": "^5.0.1",
     "js-yaml": "^4.1.0",
-    "loglevel-mixin": "^6.0.7",
+    "loglevel-mixin": "^6.1.1",
     "markdown": "^0.5.0",
     "matching-iterator": "^2.0.4",
     "one-time-execution-method": "^2.0.13",
@@ -58,8 +58,8 @@
     "content-entry-filesystem": "^4.0.8",
     "documentation": "^13.2.5",
     "execa": "^6.1.0",
-    "github-repository-provider": "^7.25.63",
-    "mock-repository-provider": "^6.0.10",
+    "github-repository-provider": "^7.26.0",
+    "mock-repository-provider": "^6.0.14",
     "semantic-release": "^19.0.2"
   },
   "engines": {
