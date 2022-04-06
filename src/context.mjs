@@ -244,25 +244,32 @@ export class Context extends LogLevelMixin(class _Context {}) {
     try {
       const targetBranch = this.targetBranch;
 
-      this.debug({
-        message: "execute",
-        branch: targetBranch.fullCondensedName
-      });
+      if (targetBranch.isWritable) {
+        this.debug({
+          message: "execute",
+          branch: targetBranch.fullCondensedName
+        });
 
-      const template = this.template;
+        const template = this.template;
 
-      if (this.track) {
-        yield* template.updateUsedBy(targetBranch, this.templateSources, {
+        if (this.track) {
+          yield* template.updateUsedBy(targetBranch, this.templateSources, {
+            dry: this.dry
+          });
+        }
+
+        yield targetBranch.commitIntoPullRequest(this.commits(), {
+          pullRequestBranch: `template-sync/${template.shortKey}`,
+          title: `merge from ${template.shortKey}`,
+          bodyFromCommitMessages: true,
           dry: this.dry
         });
+      } else {
+        this.info({
+          message: "is not writable skipping",
+          branch: targetBranch.fullCondensedName
+        });
       }
-
-      yield targetBranch.commitIntoPullRequest(this.commits(), {
-        pullRequestBranch: `template-sync/${template.shortKey}`,
-        title: `merge from ${template.shortKey}`,
-        bodyFromCommitMessages: true,
-        dry: this.dry
-      });
     } catch (err) {
       this.error(err);
     }
