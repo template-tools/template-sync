@@ -77,27 +77,27 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 *   [Delete](#delete)
+*   [normalizeTemplateSources](#normalizetemplatesources)
+    *   [Parameters](#parameters)
+*   [jspath](#jspath)
+    *   [Parameters](#parameters-1)
+*   [actions2message](#actions2message)
+    *   [Parameters](#parameters-2)
+*   [actions2messages](#actions2messages)
+    *   [Parameters](#parameters-3)
 *   [MergeLineSet](#mergelineset)
 *   [sortedKeys](#sortedkeys)
 *   [Package](#package)
     *   [properties](#properties)
-        *   [Parameters](#parameters)
-*   [Merger](#merger)
-    *   [properties](#properties-1)
-        *   [Parameters](#parameters-1)
-    *   [commits](#commits)
-        *   [Parameters](#parameters-2)
-*   [normalizeTemplateSources](#normalizetemplatesources)
-    *   [Parameters](#parameters-3)
-*   [jspath](#jspath)
-    *   [Parameters](#parameters-4)
-*   [actions2message](#actions2message)
-    *   [Parameters](#parameters-5)
-*   [actions2messages](#actions2messages)
-    *   [Parameters](#parameters-6)
+        *   [Parameters](#parameters-4)
 *   [Readme](#readme)
 *   [ReplaceIfEmpty](#replaceifempty)
 *   [Replace](#replace)
+*   [Merger](#merger)
+    *   [properties](#properties-1)
+        *   [Parameters](#parameters-5)
+    *   [commits](#commits)
+        *   [Parameters](#parameters-6)
 *   [Skip](#skip)
 
 ## Delete
@@ -105,60 +105,6 @@ Merges contents from template branch into destination branch handling some speci
 **Extends Merger**
 
 Delete entry.
-
-## MergeLineSet
-
-**Extends Merger**
-
-## sortedKeys
-
-order in which json keys are written
-
-## Package
-
-**Extends Merger**
-
-Merger for package.json
-
-### properties
-
-Deliver some key properties.
-
-*   name
-*   version
-*   description
-*   main
-
-#### Parameters
-
-*   `entry` **ContentEntry** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-
-## Merger
-
-Mergable content
-
-### properties
-
-Deliver some key properties.
-
-#### Parameters
-
-*   `entry` **ContentEntry** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
-
-### commits
-
-Generate commits as result of merging two entries.
-
-#### Parameters
-
-*   `context`  
-*   `destinationEntry`  
-*   `sourceEntry`  
-*   `options`  
 
 ## normalizeTemplateSources
 
@@ -198,6 +144,35 @@ Returns **any** actions as one string lines ordered by scope
 *   `prefix`  
 *   `name`  
 
+## MergeLineSet
+
+**Extends Merger**
+
+## sortedKeys
+
+order in which json keys are written
+
+## Package
+
+**Extends Merger**
+
+Merger for package.json
+
+### properties
+
+Deliver some key properties.
+
+*   name
+*   version
+*   description
+*   main
+
+#### Parameters
+
+*   `entry` **ContentEntry** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
 ## Readme
 
 **Extends Merger**
@@ -215,6 +190,31 @@ Overwrites none existing entries from template.
 **Extends Merger**
 
 Replace file from template (always)
+
+## Merger
+
+Mergable content
+
+### properties
+
+Deliver some key properties.
+
+#### Parameters
+
+*   `entry` **ContentEntry** 
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
+
+### commits
+
+Generate commits as result of merging two entries.
+
+#### Parameters
+
+*   `context`  
+*   `destinationEntry`  
+*   `sourceEntry`  
+*   `options`  
 
 ## Skip
 
