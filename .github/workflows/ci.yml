@@ -12,6 +12,7 @@ jobs:
           - windows-latest
         node-version:
           - 16.14.2
+          - 18.0.0
           - 19.9.0
     steps:
       - uses: actions/checkout@v3
