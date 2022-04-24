@@ -230,9 +230,9 @@ Does not generate destination entry
 With [npm](http://npmjs.org) do:
 
 ```shell
-npm install -g npm-template-sync
+npm install -g @template-tools/sync-cli
 
-# npm-template-sync --help
+# template-sync --help
 ```
 
 # license
