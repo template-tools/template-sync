@@ -81,7 +81,7 @@ const sortedKeys = [
   "config",
   "systemd",
   "pacman",
-  "pkg",
+  "pkgbuild",
   "release",
   "ava",
   "nyc",
@@ -174,13 +174,13 @@ const MERGE_HINTS = {
     compare,
     overwrite: false
   },
-  pkg: {
+  pkgbuild: {
     orderBy: ["content", "output", "hooks", "backup", "groups"]
   },
-  "pkg.*": {
+  "pkgbuild.*": {
     overwrite: false
   },
-  "pkg.depends.*": {
+  "pkgbuild.depends.*": {
     merge: mergeVersionsLargest,
     compare,
     type: "fix",
