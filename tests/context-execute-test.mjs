@@ -36,6 +36,8 @@ test("context execute - PR", async t => {
     template: TEMPLATE_REPO
   });
 
+  //context.logLevel = 'trace';
+
   const pullRequests = [];
   for await (const pr of context.execute()) {
     pullRequests.push(pr);
