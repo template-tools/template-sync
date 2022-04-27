@@ -63,6 +63,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       targetBranchName: { value: targetBranchName }
     });
 
+    provider.messageDestination = this;
     this.logLevel = options.logLevel;
   }
 
