@@ -130,7 +130,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     };
 
     this.properties[targetBranch.provider.name] = {
-      user: targetBranch.owner.name,
+      user: targetBranch.repository.owner.name,
       repo: repository.name
     };
 
