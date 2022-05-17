@@ -63,7 +63,7 @@
     "semantic-release": "^19.0.2"
   },
   "engines": {
-    "node": ">=15.15.0"
+    "node": ">=16.15.0"
   },
   "repository": {
     "type": "git",
