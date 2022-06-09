@@ -55,11 +55,11 @@
   "devDependencies": {
     "ava": "^4.3.0",
     "c8": "^7.11.3",
-    "content-entry-filesystem": "^5.0.4",
+    "content-entry-filesystem": "^5.0.5",
     "documentation": "^13.2.5",
     "execa": "^6.1.0",
-    "github-repository-provider": "^7.30.7",
-    "mock-repository-provider": "^6.0.54",
+    "github-repository-provider": "^7.30.8",
+    "mock-repository-provider": "^6.0.55",
     "semantic-release": "^19.0.3"
   },
   "engines": {
