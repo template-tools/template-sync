@@ -11,7 +11,7 @@ jobs:
           - macos-latest
           - windows-latest
         node-version:
-          - 16.15.1
+          - 16.16.0
           - 18.4.0
     steps:
       - uses: actions/checkout@v3
