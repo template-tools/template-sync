@@ -4,6 +4,9 @@ import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
 import { actions2message, aggregateActions } from "../util.mjs";
 
+/**
+ * Merge ini entries
+ */
 export class INI extends Merger {
   static get pattern() {
     return "**/*.ini";
