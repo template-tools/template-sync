@@ -2,7 +2,7 @@ import { StringContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
 
 /**
- * Replace file from template (always)
+ * Always overwrite entry from template
  */
 export class Replace extends Merger {
   static get priority() {
