@@ -64,18 +64,18 @@ export function jspath(object, path, cb) {
   return object[last];
 }
 
-const scopeOrder = ["feat", "fix", "refactor", "chore", "docs", "style"];
+const scopeOrder = ["feat", "fix", "refactor", "chore", "perf", "docs", "style"];
 
 function scope(str) {
   const m = str.match(/^(\w+)/);
-  return m ? m[1] : undefined;
+  return m && m[1];
 }
 
 /**
  *
  * @param actions
- * @param prefix
- * @param name
+ * @param {string} prefix
+ * @param {string} name
  * @returns actions as one string lines ordered by scope
  */
 export function actions2message(actions, prefix, name) {
@@ -87,8 +87,8 @@ export function actions2message(actions, prefix, name) {
 /**
  *
  * @param actions
- * @param prefix
- * @param name
+ * @param {string} prefix
+ * @param {string} name
  * @returns
  */
 export function actions2messages(actions, prefix, name) {
