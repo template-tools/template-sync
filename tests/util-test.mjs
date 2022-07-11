@@ -11,6 +11,7 @@ ntst.title = (providedTitle = "", sources, remove, expected) =>
   }`.trim();
 
 test(ntst, ["b", "a"], undefined, ["a", "b"]);
+test(ntst, ["b", "a", "a"], undefined, ["a", "b"]);
 test(ntst, ["b", "a"], ["a"], ["b"]);
 test(ntst, ["b", "-a"], undefined, ["b"]);
 test(ntst, ["b", "a", "-a"], undefined, ["b"]);
