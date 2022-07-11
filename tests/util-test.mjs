@@ -6,7 +6,7 @@ function ntst(t, source, remove, expected) {
 }
 
 ntst.title = (providedTitle = "", sources, remove, expected) =>
-  `normalize template sources ${providedTitle} ${sources} ${
+  `normalizeTemplateSources ${providedTitle} ${sources} ${
     remove === undefined ? "" : remove
   }`.trim();
 
