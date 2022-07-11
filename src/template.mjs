@@ -75,6 +75,8 @@ export class Template extends LogLevelMixin(class {}) {
     return template;
   }
 
+  #entryCache = new Map();
+
   constructor(context, sources, options = {}) {
     super();
     Object.defineProperties(this, {
@@ -87,7 +89,6 @@ export class Template extends LogLevelMixin(class {}) {
       sources: { value: new Set(sources.filter(t => !t.startsWith("-"))) },
       branches: { value: new Set() },
       keyBranches: { value: new Set() },
-      entryCache: { value: new Map() },
       options: { value: options },
       mergers: { value: [] }
     });
@@ -132,7 +133,7 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   entry(name) {
-    const entry = this.entryCache.get(name);
+    const entry = this.#entryCache.get(name);
     if (entry === undefined) {
       throw new Error(`No such entry ${name}`);
     }
@@ -194,7 +195,7 @@ export class Template extends LogLevelMixin(class {}) {
 
     pkg.merger = this.mergerFor(pkg.name);
 
-    this.entryCache.set(pkg.name, pkg);
+    this.#entryCache.set(pkg.name, pkg);
 
     for (let branch of this.branches) {
       if (branch.equals(this.context.targetBranch)) {
@@ -214,15 +215,15 @@ export class Template extends LogLevelMixin(class {}) {
           continue;
         }
 
-        const ec = this.entryCache.get(entry.name);
+        const ec = this.#entryCache.get(entry.name);
         if (ec) {
-          this.entryCache.set(
+          this.#entryCache.set(
             name,
             await this.mergeEntry(this.context, branch, entry, ec)
           );
         } else {
           entry.merger = this.mergerFor(entry.name);
-          this.entryCache.set(name, entry);
+          this.#entryCache.set(name, entry);
         }
       }
     }
@@ -402,14 +403,14 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   *entries(patterns) {
-    yield* matcher(this.entryCache.values(), patterns, {
+    yield* matcher(this.#entryCache.values(), patterns, {
       name: "name",
       caseSensitive: true
     });
   }
 
   async dump(dest) {
-    for (const entry of this.entryCache.values()) {
+    for (const entry of this.#entryCache.values()) {
       if (entry.isBlob) {
         const d = join(dest, entry.name);
         await mkdir(dirname(d), { recursive: true });
