@@ -80,6 +80,7 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 *   [Delete](#delete)
+*   [INI](#ini)
 *   [normalizeTemplateSources](#normalizetemplatesources)
     *   [Parameters](#parameters)
 *   [jspath](#jspath)
@@ -109,6 +110,12 @@ Merges contents from template branch into destination branch handling some speci
 
 Delete entry.
 
+## INI
+
+**Extends Merger**
+
+Merge ini entries
+
 ## normalizeTemplateSources
 
 Remove duplicate sources.
@@ -134,8 +141,8 @@ Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Gl
 ### Parameters
 
 *   `actions`  
-*   `prefix`  
-*   `name`  
+*   `prefix` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 Returns **any** actions as one string lines ordered by scope
 
@@ -144,8 +151,8 @@ Returns **any** actions as one string lines ordered by scope
 ### Parameters
 
 *   `actions`  
-*   `prefix`  
-*   `name`  
+*   `prefix` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## MergeLineSet
 
@@ -192,7 +199,7 @@ Overwrites none existing entries from template.
 
 **Extends Merger**
 
-Replace file from template (always)
+Always overwrite entry from template
 
 ## Merger
 
