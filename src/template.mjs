@@ -76,7 +76,10 @@ export class Template extends LogLevelMixin(class {}) {
   }
 
   #entryCache = new Map();
-
+  branches = new Set();
+  keyBranches = new Set();
+  mergers = [];
+  
   constructor(context, sources, options = {}) {
     super();
     Object.defineProperties(this, {
@@ -87,10 +90,7 @@ export class Template extends LogLevelMixin(class {}) {
         )
       },
       sources: { value: new Set(sources.filter(t => !t.startsWith("-"))) },
-      branches: { value: new Set() },
-      keyBranches: { value: new Set() },
       options: { value: options },
-      mergers: { value: [] }
     });
 
     this.logLevel = options.logLevel;
@@ -474,7 +474,7 @@ export class Template extends LogLevelMixin(class {}) {
       yield* modifyWithPR(
         await this.provider.branch(branchName),
         pkg => {
-          if (pkg.template !== undefined && pkg.template.usedBy !== undefined) {
+          if (pkg.template?.usedBy !== undefined) {
             pkg.template.usedBy = pkg.template.usedBy.filter(
               n => n !== targetBranch.fullCondensedName
             );
