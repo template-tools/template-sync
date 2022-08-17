@@ -226,10 +226,8 @@ export class Package extends Merger {
       });
     }
 
-    if (pkg.template !== undefined) {
-      if (pkg.template.usedBy !== undefined) {
-        properties.usedBy = pkg.template.usedBy;
-      }
+    if (pkg.template?.usedBy !== undefined) {
+      properties.usedBy = pkg.template.usedBy;
     }
 
     propertyKeys.forEach(key => {
