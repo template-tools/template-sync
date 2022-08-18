@@ -41,7 +41,7 @@
     "babylon": "^6.18.0",
     "content-entry": "^5.2.3",
     "expression-expander": "^7.0.19",
-    "hinted-tree-merger": "^5.0.3",
+    "hinted-tree-merger": "^5.0.4",
     "js-yaml": "^4.1.0",
     "loglevel-mixin": "^6.1.4",
     "markdown": "^0.5.0",
