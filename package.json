@@ -39,7 +39,7 @@
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "babylon": "^6.18.0",
-    "content-entry": "^5.2.3",
+    "content-entry": "^5.2.4",
     "expression-expander": "^7.0.19",
     "hinted-tree-merger": "^5.0.4",
     "js-yaml": "^4.1.0",
@@ -58,8 +58,8 @@
     "content-entry-filesystem": "^5.2.5",
     "documentation": "^13.2.5",
     "execa": "^6.1.0",
-    "github-repository-provider": "^7.31.12",
-    "mock-repository-provider": "^6.0.75",
+    "github-repository-provider": "^7.32.0",
+    "mock-repository-provider": "^6.1.0",
     "semantic-release": "^19.0.3"
   },
   "engines": {
