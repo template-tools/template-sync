@@ -80,28 +80,28 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 *   [Delete](#delete)
+*   [Merger](#merger)
+    *   [properties](#properties)
+        *   [Parameters](#parameters)
+    *   [commits](#commits)
+        *   [Parameters](#parameters-1)
 *   [INI](#ini)
 *   [normalizeTemplateSources](#normalizetemplatesources)
-    *   [Parameters](#parameters)
-*   [jspath](#jspath)
-    *   [Parameters](#parameters-1)
-*   [actions2message](#actions2message)
     *   [Parameters](#parameters-2)
-*   [actions2messages](#actions2messages)
+*   [jspath](#jspath)
     *   [Parameters](#parameters-3)
+*   [actions2message](#actions2message)
+    *   [Parameters](#parameters-4)
+*   [actions2messages](#actions2messages)
+    *   [Parameters](#parameters-5)
 *   [MergeLineSet](#mergelineset)
 *   [sortedKeys](#sortedkeys)
 *   [Package](#package)
-    *   [properties](#properties)
-        *   [Parameters](#parameters-4)
+    *   [properties](#properties-1)
+        *   [Parameters](#parameters-6)
 *   [Readme](#readme)
 *   [ReplaceIfEmpty](#replaceifempty)
 *   [Replace](#replace)
-*   [Merger](#merger)
-    *   [properties](#properties-1)
-        *   [Parameters](#parameters-5)
-    *   [commits](#commits)
-        *   [Parameters](#parameters-6)
 *   [Skip](#skip)
 
 ## Delete
@@ -109,6 +109,31 @@ Merges contents from template branch into destination branch handling some speci
 **Extends Merger**
 
 Delete entry.
+
+## Merger
+
+Mergable content
+
+### properties
+
+Deliver some key properties.
+
+#### Parameters
+
+*   `entry` **ContentEntry**&#x20;
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
+
+### commits
+
+Generate commits as result of merging two entries.
+
+#### Parameters
+
+*   `context` &#x20;
+*   `destinationEntry` &#x20;
+*   `sourceEntry` &#x20;
+*   `options` &#x20;
 
 ## INI
 
@@ -123,7 +148,7 @@ Sources staring with '-' will be removed
 
 ### Parameters
 
-*   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** 
+*   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**&#x20;
 *   `remove` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**  (optional, default `[]`)
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** normalized sources
@@ -132,17 +157,17 @@ Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Gl
 
 ### Parameters
 
-*   `object`  
-*   `path`  
-*   `cb`  
+*   `object` &#x20;
+*   `path` &#x20;
+*   `cb` &#x20;
 
 ## actions2message
 
 ### Parameters
 
-*   `actions`  
-*   `prefix` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `actions` &#x20;
+*   `prefix` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
+*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
 
 Returns **any** actions as one string lines ordered by scope
 
@@ -150,9 +175,9 @@ Returns **any** actions as one string lines ordered by scope
 
 ### Parameters
 
-*   `actions`  
-*   `prefix` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+*   `actions` &#x20;
+*   `prefix` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
+*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
 
 ## MergeLineSet
 
@@ -179,9 +204,9 @@ Deliver some key properties.
 
 #### Parameters
 
-*   `entry` **ContentEntry** 
+*   `entry` **ContentEntry**&#x20;
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
 
 ## Readme
 
@@ -200,31 +225,6 @@ Overwrites none existing entries from template.
 **Extends Merger**
 
 Always overwrite entry from template
-
-## Merger
-
-Mergable content
-
-### properties
-
-Deliver some key properties.
-
-#### Parameters
-
-*   `entry` **ContentEntry** 
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
-
-### commits
-
-Generate commits as result of merging two entries.
-
-#### Parameters
-
-*   `context`  
-*   `destinationEntry`  
-*   `sourceEntry`  
-*   `options`  
 
 ## Skip
 
