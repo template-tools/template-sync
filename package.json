@@ -40,7 +40,7 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "babylon": "^6.18.0",
     "content-entry": "^5.2.7",
-    "expression-expander": "^7.0.20",
+    "expression-expander": "^7.1.0",
     "hinted-tree-merger": "^5.0.4",
     "js-yaml": "^4.1.0",
     "loglevel-mixin": "^6.1.4",
@@ -59,7 +59,7 @@
     "documentation": "^14.0.0",
     "execa": "^6.1.0",
     "github-repository-provider": "^7.33.0",
-    "mock-repository-provider": "^6.2.1",
+    "mock-repository-provider": "^6.2.3",
     "semantic-release": "^19.0.5"
   },
   "engines": {
