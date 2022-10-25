@@ -1,7 +1,7 @@
 name: CI
 'on': push
 jobs:
-  test:
+  test-node:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
@@ -15,7 +15,7 @@ jobs:
           - 18.11.0
     steps:
       - uses: actions/checkout@v3
-      - name: Build / Test Node ${{ matrix.node-version }}
+      - name: Test Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3.5.1
         with:
           node-version: ${{ matrix.node-version }}
@@ -34,7 +34,7 @@ jobs:
         continue-on-error: true
   release:
     needs:
-      - test
+      - test-node
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -50,7 +50,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PKGBUILD_PUBLISH: ${{ secrets.PKGBUILD_PUBLISH }}
   finish:
-    needs: test
+    needs: test-node
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
