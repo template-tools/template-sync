@@ -12,7 +12,7 @@ jobs:
           - windows-latest
         node-version:
           - 16.18.0
-          - 18.11.0
+          - 18.12.0
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.5.1
@@ -49,7 +49,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PKGBUILD_PUBLISH: ${{ secrets.PKGBUILD_PUBLISH }}
   finish:
-    needs: test-node
+    needs:
+      - test-node
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
