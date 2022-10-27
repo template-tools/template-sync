@@ -80,12 +80,12 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 *   [Delete](#delete)
+*   [INI](#ini)
 *   [Merger](#merger)
     *   [properties](#properties)
         *   [Parameters](#parameters)
     *   [commits](#commits)
         *   [Parameters](#parameters-1)
-*   [INI](#ini)
 *   [normalizeTemplateSources](#normalizetemplatesources)
     *   [Parameters](#parameters-2)
 *   [jspath](#jspath)
@@ -109,6 +109,12 @@ Merges contents from template branch into destination branch handling some speci
 **Extends Merger**
 
 Delete entry.
+
+## INI
+
+**Extends Merger**
+
+Merge ini entries
 
 ## Merger
 
@@ -134,12 +140,6 @@ Generate commits as result of merging two entries.
 *   `destinationEntry` &#x20;
 *   `sourceEntry` &#x20;
 *   `options` &#x20;
-
-## INI
-
-**Extends Merger**
-
-Merge ini entries
 
 ## normalizeTemplateSources
 
