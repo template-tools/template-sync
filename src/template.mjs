@@ -79,7 +79,7 @@ export class Template extends LogLevelMixin(class {}) {
   branches = new Set();
   keyBranches = new Set();
   mergers = [];
-  
+
   constructor(context, sources, options = {}) {
     super();
     Object.defineProperties(this, {
@@ -90,7 +90,7 @@ export class Template extends LogLevelMixin(class {}) {
         )
       },
       sources: { value: new Set(sources.filter(t => !t.startsWith("-"))) },
-      options: { value: options },
+      options: { value: options }
     });
 
     this.logLevel = options.logLevel;
@@ -151,7 +151,7 @@ export class Template extends LogLevelMixin(class {}) {
       return pj;
     }
 
-    if (pj.template && pj.template.mergers) {
+    if (pj.template?.mergers) {
       this.mergers.push(
         ...pj.template.mergers
           .map(m => {
@@ -260,7 +260,7 @@ export class Template extends LogLevelMixin(class {}) {
 
   async mergeEntry(ctx, branch, a, b) {
     const merger = this.mergerFor(a.name);
-    if (merger !== undefined && merger.enabled) {
+    if (merger?.enabled) {
       this.trace(
         `Merge ${merger.type} ${branch.fullCondensedName}/${a.name} + ${
           b ? b.name : "<missing>"
@@ -378,7 +378,7 @@ export class Template extends LogLevelMixin(class {}) {
 
           result = mergeTemplate(result, pkg);
 
-          if (template && template.inheritFrom) {
+          if (template?.inheritFrom) {
             const inherited = await this._templateFrom(
               asArray(template.inheritFrom),
               [...inheritencePath, branch]
@@ -392,7 +392,9 @@ export class Template extends LogLevelMixin(class {}) {
             );
           }
         } catch (e) {
-          this.error(`${this.name} ${branch.fullCondensedName}/${pc.name}: ${e}`);
+          this.error(
+            `${this.name} ${branch.fullCondensedName}/${pc.name}: ${e}`
+          );
         }
       } catch (e) {
         continue;
