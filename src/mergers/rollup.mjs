@@ -79,11 +79,7 @@ export class Rollup extends Merger {
     const exp = exportDefaultDeclaration(ast);
     const templateExp = exportDefaultDeclaration(templateAST);
 
-    if (
-      exp !== undefined &&
-      exp.properties !== undefined &&
-      templateExp !== undefined
-    ) {
+    if (exp?.properties !== undefined && templateExp !== undefined) {
       let output, dest;
 
       const banner = removePropertiesKey(exp.properties, "banner");
@@ -191,10 +187,7 @@ export class Rollup extends Merger {
         templatePlugin &&
         templatePlugin.callee !== undefined &&
         originalPlugins.find(
-          op =>
-            op &&
-            op.callee !== undefined &&
-            op.callee.name === templatePlugin.callee.name
+          op => op?.callee?.name === templatePlugin.callee.name
         ) === undefined
       ) {
         originalPlugins.push(templatePlugin);
@@ -255,14 +248,10 @@ function exportDefaultDeclaration(ast) {
 }
 
 function pluginsFromExpression(exp) {
-  if (exp !== undefined && exp.properties !== undefined) {
-    const plugins = exp.properties.find(
-      p => p !== undefined && p.key.name === "plugins"
-    );
+  const plugins = exp?.properties?.find(p => p?.key.name === "plugins");
 
-    if (plugins !== undefined) {
-      return plugins.value.elements;
-    }
+  if (plugins !== undefined) {
+    return plugins.value.elements;
   }
 
   return [];
@@ -270,9 +259,7 @@ function pluginsFromExpression(exp) {
 
 function findProperty(properties, name) {
   if (properties !== undefined) {
-    const prop = properties.find(
-      prop => prop !== undefined && prop.key.name === name
-    );
+    const prop = properties.find(prop => prop?.key.name === name);
 
     return prop;
   }
