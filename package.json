@@ -45,7 +45,7 @@
     "js-yaml": "^4.1.0",
     "loglevel-mixin": "^6.1.4",
     "markdown": "^0.5.0",
-    "matching-iterator": "^2.0.9",
+    "matching-iterator": "^2.0.10",
     "one-time-execution-method": "^3.0.5",
     "recast": "^0.21.1",
     "remark-parse": "^10.0.0",
