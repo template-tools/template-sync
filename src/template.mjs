@@ -311,9 +311,7 @@ export class Template extends LogLevelMixin(class {}) {
       const branch = await this.provider.branch(source);
 
       if (branch === undefined) {
-        const message = `No such branch ${source} (${inheritencePath.map(p=>p.name)})`;
-    //    this.error(message);
-        throw new Error(message);
+        throw new Error( `No such branch ${source} (${inheritencePath.map(p=>p.name)})`);
       }
 
       if (this.branches.has(branch)) {
@@ -335,14 +333,6 @@ export class Template extends LogLevelMixin(class {}) {
         try {
           const pkg = JSON.parse(await pc.string);
 
-          /*console.log(
-            "X",
-            branch.identifier,
-            inheritencePath.map(b => b.identifier),
-            [...this.keyBranches].map(b => b.identifier),
-            inheritencePath.find(b => branch) ? "ALREADY PRESENT" : ""
-          );*/
-
           const template = pkg.template;
 
           switch (inheritencePath.length) {
@@ -354,7 +344,6 @@ export class Template extends LogLevelMixin(class {}) {
                     k => k !== "inheritFrom" && k !== "usedBy"
                   ).length > 0
                 ) {
-                  //   console.log("A ADD", branch.identifier);
                   this.keyBranches.add(branch);
                 }
               }
