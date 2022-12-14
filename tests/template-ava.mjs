@@ -17,6 +17,10 @@ const pkg = (j, other) => {
 };
 
 const provider = new MockProvider({
+  t1: pkg(),
+  t2: pkg(),
+  t3: pkg(),
+
   template: pkg(
     {
       devDependencies: { ava: "^2.4.0" },
