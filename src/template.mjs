@@ -163,9 +163,7 @@ export class Template extends LogLevelMixin(class {}) {
               ...m.factory.options,
               ...m.options
             });
-            m.priority = m.options.priority
-              ? m.options.priority
-              : m.factory.priority;
+            m.priority = m.options.priority || m.factory.priority;
 
             if (m.pattern === undefined) {
               m.pattern = m.factory.pattern;
@@ -313,8 +311,9 @@ export class Template extends LogLevelMixin(class {}) {
       const branch = await this.provider.branch(source);
 
       if (branch === undefined) {
-        this.trace(`No such branch ${source}`);
-        continue;
+        const message = `No such branch ${source} (${inheritencePath.map(p=>p.name)})`;
+    //    this.error(message);
+        throw new Error(message);
       }
 
       if (this.branches.has(branch)) {
