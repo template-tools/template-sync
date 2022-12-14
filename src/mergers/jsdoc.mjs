@@ -14,7 +14,7 @@ export class JSDoc extends JSONMerger {
 
     const json = JSON.parse(content);
 
-    if (json.babel !== undefined && json.babel.presets !== undefined) {
+    if (json.babel?.presets !== undefined) {
       json.babel.presets.forEach(m => into.add(`babel-preset-${m}`));
     }
 
