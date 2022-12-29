@@ -65,6 +65,11 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
     provider.messageDestination = this;
     this.logLevel = options.logLevel;
+    this.log =
+      options.log ||
+      ((level, ...args) => {
+        console.log(...args);
+      });
   }
 
   expand(arg, flag = true) {
@@ -274,9 +279,5 @@ export class Context extends LogLevelMixin(class _Context {}) {
     } catch (err) {
       this.error(err);
     }
-  }
-
-  log(level, ...args) {
-    console.log(...args);
   }
 }
