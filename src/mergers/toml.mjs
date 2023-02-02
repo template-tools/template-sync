@@ -27,22 +27,23 @@ export class TOML extends Merger {
 
     const actions = {};
 
-    const name = destinationEntry.name;
+    const merged = stringify(
+      merge(
+        parse(context.expand(original, options.expand)) || {},
+        parse(context.expand(template, options.expand)),
+        "",
+        (action, hint) => aggregateActions(actions, action, hint),
+        options.mergeHints
+      )
+    );
 
-    yield {
-      message: actions2message(actions, options.messagePrefix, name),
-      entries: [new StringContentEntry(
-        name,
-        stringify(
-          merge(
-            parse(context.expand(original, options.expand)) || {},
-            parse(context.expand(template, options.expand)),
-            "",
-            (action, hint) => aggregateActions(actions, action, hint),
-            options.mergeHints
-          )
-        )
-      )]
-    };
+    if (merged !== original) {
+      const name = destinationEntry.name;
+
+      yield {
+        message: actions2message(actions, options.messagePrefix, name),
+        entries: [new StringContentEntry(name,merged)]
+      };
+    }
   }
 }

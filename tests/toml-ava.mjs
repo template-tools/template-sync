@@ -32,3 +32,26 @@ test("toml merge", async t => {
     oldKey: "oldValue"
   });
 });
+
+test("toml nop", async t => {
+  const commit = await asyncIterator2scalar(
+    TOML.commits(
+      await createContext({}),
+      new StringContentEntry(
+        "a.toml",
+        stringify({
+          key: "value"
+        })
+      ),
+      new StringContentEntry(
+        "a.toml",
+        stringify({
+          key: "value"
+        })
+      ),
+      { ...TOML.options, expand: true }
+    )
+  );
+
+  t.is(commit, undefined);
+});
