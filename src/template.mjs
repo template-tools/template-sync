@@ -425,7 +425,7 @@ export class Template extends LogLevelMixin(class {}) {
           name: this.name
         }
       },
-      pkg.template && pkg.template.properties
+      pkg.template?.properties
     );
   }
 
