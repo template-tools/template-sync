@@ -34,7 +34,7 @@
     "lint:docs": "documentation lint ./src/**/*.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.19.1",
+    "@babel/core": "^7.21.3",
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "babylon": "^6.18.0",
@@ -58,7 +58,7 @@
     "documentation": "^14.0.1",
     "execa": "^7.1.1",
     "github-repository-provider": "^8.0.7",
-    "mock-repository-provider": "^6.2.37",
+    "mock-repository-provider": "^6.2.38",
     "semantic-release": "^20.1.1"
   },
   "engines": {
