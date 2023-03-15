@@ -255,7 +255,7 @@ export class Package extends Merger {
       }
     });
 
-    if (properties.main === undefined && pkg.exports && pkg.exports["."]) {
+    if (properties.main === undefined && pkg.exports?.["."]) {
       properties.main = pkg.exports["."];
     }
 
@@ -344,8 +344,7 @@ export class Package extends Merger {
 
     if (
       target.contributors !== undefined &&
-      target.author !== undefined &&
-      target.author.name !== undefined
+      target.author?.name !== undefined
     ) {
       const m = target.author.name.match(/(^[^<]+)<([^>]+)>/);
       if (m !== undefined) {
