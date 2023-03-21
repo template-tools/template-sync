@@ -57,7 +57,7 @@
     "content-entry-filesystem": "^5.2.13",
     "documentation": "^14.0.1",
     "execa": "^7.1.1",
-    "github-repository-provider": "^8.0.7",
+    "github-repository-provider": "^8.0.8",
     "mock-repository-provider": "^6.2.39",
     "semantic-release": "^20.1.3"
   },
