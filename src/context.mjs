@@ -225,7 +225,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       this.trace({
         message: "merge",
         name,
-        merger: merger && merger.factory ? merger.factory.name : "undefined"
+        merger: merger?.factory?.name : "undefined"
       });
 
       if (merger) {
