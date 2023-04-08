@@ -1,4 +1,3 @@
-import { buildExternalHelpers } from "@babel/core";
 import { isScalar } from "hinted-tree-merger";
 
 export const defaultEncodingOptions = { encoding: "utf8" };
