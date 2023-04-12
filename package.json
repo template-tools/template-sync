@@ -58,7 +58,7 @@
     "documentation": "^14.0.1",
     "execa": "^7.1.1",
     "github-repository-provider": "^8.0.11",
-    "mock-repository-provider": "^6.2.42",
+    "mock-repository-provider": "^6.2.43",
     "semantic-release": "^21.0.1"
   },
   "engines": {
