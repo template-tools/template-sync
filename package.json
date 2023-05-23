@@ -47,8 +47,8 @@
     "matching-iterator": "^2.0.12",
     "one-time-execution-method": "^3.0.6",
     "recast": "^0.23.2",
-    "remark-parse": "^10.0.0",
-    "remark-stringify": "^10.0.0",
+    "remark-parse": "^10.0.2",
+    "remark-stringify": "^10.0.3",
     "unified": "^10.1.0"
   },
   "devDependencies": {
