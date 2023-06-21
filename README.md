@@ -80,20 +80,20 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 *   [Delete](#delete)
-*   [Merger](#merger)
-    *   [properties](#properties)
-        *   [Parameters](#parameters)
-    *   [commits](#commits)
-        *   [Parameters](#parameters-1)
 *   [INI](#ini)
 *   [normalizeTemplateSources](#normalizetemplatesources)
-    *   [Parameters](#parameters-2)
+    *   [Parameters](#parameters)
 *   [jspath](#jspath)
-    *   [Parameters](#parameters-3)
+    *   [Parameters](#parameters-1)
 *   [actions2message](#actions2message)
-    *   [Parameters](#parameters-4)
+    *   [Parameters](#parameters-2)
 *   [actions2messages](#actions2messages)
-    *   [Parameters](#parameters-5)
+    *   [Parameters](#parameters-3)
+*   [Merger](#merger)
+    *   [properties](#properties)
+        *   [Parameters](#parameters-4)
+    *   [commits](#commits)
+        *   [Parameters](#parameters-5)
 *   [MergeLineSet](#mergelineset)
 *   [sortedKeys](#sortedkeys)
 *   [Package](#package)
@@ -109,31 +109,6 @@ Merges contents from template branch into destination branch handling some speci
 **Extends Merger**
 
 Delete entry.
-
-## Merger
-
-Mergable content
-
-### properties
-
-Deliver some key properties.
-
-#### Parameters
-
-*   `entry` **ContentEntry**&#x20;
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
-
-### commits
-
-Generate commits as result of merging two entries.
-
-#### Parameters
-
-*   `context` &#x20;
-*   `destinationEntry` &#x20;
-*   `sourceEntry` &#x20;
-*   `options` &#x20;
 
 ## INI
 
@@ -178,6 +153,31 @@ Returns **any** actions as one string lines ordered by scope
 *   `actions` &#x20;
 *   `prefix` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
 *   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
+
+## Merger
+
+Mergable content
+
+### properties
+
+Deliver some key properties.
+
+#### Parameters
+
+*   `entry` **ContentEntry**&#x20;
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
+
+### commits
+
+Generate commits as result of merging two entries.
+
+#### Parameters
+
+*   `context` &#x20;
+*   `destinationEntry` &#x20;
+*   `sourceEntry` &#x20;
+*   `options` &#x20;
 
 ## MergeLineSet
 
