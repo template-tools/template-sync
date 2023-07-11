@@ -169,6 +169,8 @@ const MERGE_HINTS = {
     type: "fix:breaking",
     scope: "engines"
   },
+  postcss: REMOVE_HINT,
+  browserslist: REMOVE_HINT,
   release: REMOVE_HINT,
   config: REMOVE_HINT,
   "config.*": {
