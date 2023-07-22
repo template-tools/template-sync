@@ -34,7 +34,7 @@
     "lint:docs": "documentation lint ./src/**/*.mjs"
   },
   "dependencies": {
-    "@babel/core": "^7.21.8",
+    "@babel/core": "^7.22.9",
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "babylon": "^6.18.0",
@@ -46,7 +46,7 @@
     "markdown": "^0.5.0",
     "matching-iterator": "^2.0.12",
     "one-time-execution-method": "^3.0.6",
-    "recast": "^0.23.2",
+    "recast": "^0.23.3",
     "remark-parse": "^10.0.2",
     "remark-stringify": "^10.0.3",
     "unified": "^10.1.0"
@@ -62,7 +62,7 @@
     "semantic-release": "^21.0.7"
   },
   "engines": {
-    "node": ">=16.19.0"
+    "node": ">=18.17.0"
   },
   "repository": {
     "type": "git",
