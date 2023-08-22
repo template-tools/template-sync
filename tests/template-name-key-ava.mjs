@@ -24,9 +24,8 @@ const provider = new MockProvider({
   "arlac77-github": pkg(["github"], otherTemplateAttributes)
 });
 
-const context = new Context(provider);
-
 async function tt(t, sources, name, key = name) {
+  const context = new Context(provider);
   const template = await new Template(context, sources);
   t.true(template instanceof Template);
 
