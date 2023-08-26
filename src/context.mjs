@@ -23,48 +23,31 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
   constructor(provider, targetBranchName, options = {}) {
     super();
-    Object.defineProperties(this, {
-      options: {
-        value: options
-      },
-      templateSources: {
-        value: asArray(options.template)
-      },
-      track: {
-        value: options.track || false
-      },
-      dry: {
-        value: options.dry || false
-      },
-      create: {
-        value: options.create || false
-      },
-      provider: {
-        value: provider
-      },
-      properties: {
-        value: {
-          date: { year: new Date().getFullYear() },
-          license: {},
-          ...options.properties
-        }
-      },
-      ctx: {
-        value: createContext({
-          properties: this.properties,
-          keepUndefinedValues: true,
-          leftMarker: "{{",
-          rightMarker: "}}",
-          markerRegexp: "{{([^}]+)}}",
-          evaluate: (expression, context, path) =>
-            jspath(this.properties, expression)
-        })
-      },
-      targetBranchName: { value: targetBranchName }
-    });
 
     provider.messageDestination = this;
+    this.options = options;
     this.logLevel = options.logLevel;
+    this.provider = provider;
+    this.templateSources = asArray(options.template);
+    this.targetBranchName = targetBranchName;
+    this.track = options.track || false;
+    this.dry = options.dry || false;
+    this.create = options.create || false;
+    this.properties = {
+      date: { year: new Date().getFullYear() },
+      license: {},
+      ...options.properties
+    };
+    this.ctx = createContext({
+      properties: this.properties,
+      keepUndefinedValues: true,
+      leftMarker: "{{",
+      rightMarker: "}}",
+      markerRegexp: "{{([^}]+)}}",
+      evaluate: (expression, context, path) =>
+        jspath(this.properties, expression)
+    });
+
     this.log = options.log || ((level, ...args) => console.log(...args));
   }
 
@@ -113,9 +96,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       }
     }
 
-    Object.defineProperties(this, {
-      targetBranch: { value: targetBranch }
-    });
+    this.targetBranch = targetBranch;
 
     const repository = targetBranch.repository;
 
@@ -175,9 +156,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       properties: this.properties
     });
 
-    Object.defineProperties(this, {
-      template: { value: template }
-    });
+    this.template = template;
 
     this.debug({
       message: "initialize",
