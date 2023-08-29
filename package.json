@@ -54,7 +54,7 @@
   "devDependencies": {
     "ava": "^5.3.1",
     "c8": "^8.0.1",
-    "content-entry-filesystem": "^5.2.13",
+    "content-entry-filesystem": "^6.0.0",
     "documentation": "^14.0.2",
     "execa": "^8.0.1",
     "github-repository-provider": "^8.0.22",
