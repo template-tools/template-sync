@@ -416,15 +416,13 @@ export class Template extends LogLevelMixin(class {}) {
   async properties() {
     const pkg = await this.package();
 
-    return Object.assign(
-      {
+    return {
         template: {
           key: this.key,
           name: this.name
-        }
-      },
-      pkg.template?.properties
-    );
+        },
+        ...pkg.template?.properties
+      };
   }
 
   /**
