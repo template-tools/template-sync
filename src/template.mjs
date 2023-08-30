@@ -82,17 +82,13 @@ export class Template extends LogLevelMixin(class {}) {
 
   constructor(context, sources, options = {}) {
     super();
-    Object.defineProperties(this, {
-      context: { value: context },
-      toBeRemovedSources: {
-        value: new Set(
-          sources.filter(n => n.startsWith("-")).map(n => n.substring(1))
-        )
-      },
-      sources: { value: new Set(sources.filter(t => !t.startsWith("-"))) },
-      options: { value: options }
-    });
 
+    this.context = context;
+    this.sources = new Set(sources.filter(t => !t.startsWith("-")));
+    this.toBeRemovedSources = new Set(
+      sources.filter(n => n.startsWith("-")).map(n => n.substring(1))
+    );
+    this.options = options;
     this.logLevel = options.logLevel;
 
     return this.initialize();
@@ -311,7 +307,9 @@ export class Template extends LogLevelMixin(class {}) {
       const branch = await this.provider.branch(source);
 
       if (branch === undefined) {
-        throw new Error( `No such branch ${source} (${inheritencePath.map(p=>p.name)})`);
+        throw new Error(
+          `No such branch ${source} (${inheritencePath.map(p => p.name)})`
+        );
       }
 
       if (this.branches.has(branch)) {
