@@ -24,8 +24,8 @@ test("markdown merge", async t => {
     await commit.entries[0].string,
     `# Hello
 
-*   a
-*   b
+* a
+* b
 
 # Other
 `
