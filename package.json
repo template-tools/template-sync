@@ -59,7 +59,7 @@
     "execa": "^8.0.1",
     "github-repository-provider": "^8.0.28",
     "mock-repository-provider": "^8.0.0",
-    "semantic-release": "^22.0.6"
+    "semantic-release": "^22.0.7"
   },
   "engines": {
     "node": ">=18.18.2"
