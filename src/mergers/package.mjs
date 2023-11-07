@@ -44,6 +44,7 @@ const sortedKeys = [
   "files",
   "sideEffects",
   "type",
+  "packageManager",
   "main",
   "exports",
   "imports",
