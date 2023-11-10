@@ -70,6 +70,7 @@ const sortedKeys = [
   "peerDependencies",
   "optionalDependencies",
   "bundledDependencies",
+  "overrides",
   "engines",
   "os",
   "cpu",
@@ -161,8 +162,8 @@ const MERGE_HINTS = {
   "optionalDependencies.*": { ...DEPENDENCY_HINT, type: "fix" },
   bundeledDependencies: REMOVE_HINT,
   "bundeledDependencies.*": DEPENDENCY_HINT,
-  overwrites: REMOVE_HINT,
-  "overwrites.*": DEPENDENCY_HINT,
+  overrides: REMOVE_HINT,
+  "overrides.*": DEPENDENCY_HINT,
   "engines.*": {
     compare,
     merge: mergeVersionsLargest,
