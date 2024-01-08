@@ -21,15 +21,15 @@ export class Markdown extends Merger {
       destinationEntry.string,
       sourceEntry.string
     ]);
-    const originalTree = unified().use(markdown).parse(original);
-    const templateTree = unified().use(markdown).parse(template);
+    const parser = unified().use(markdown);
+    const originalTree = parser.parse(original);
+    const templateTree = parser.parse(template);
 
     //console.log([...childTypes(originalTree, "heading")]);
-
-    const actions = {};
-
     removePosition(originalTree);
     removePosition(templateTree);
+
+    const actions = {};
 
     const mergedTree = merge(
       originalTree,
@@ -42,9 +42,7 @@ export class Markdown extends Merger {
     );
     // console.log(JSON.stringify(mergedTree, undefined, 2));
 
-    const merged = unified().use(markdown).use(stringify).stringify(mergedTree);
-
-    // console.log(merged);
+    const merged = unified().use(stringify).stringify(mergedTree);
 
     if (merged !== original) {
       const name = destinationEntry.name;
