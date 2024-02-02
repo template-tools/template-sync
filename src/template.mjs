@@ -89,7 +89,6 @@ export class Template extends LogLevelMixin(class {}) {
       sources.filter(n => n.startsWith("-")).map(n => n.substring(1))
     );
     this.options = options;
-    this.logLevel = options.logLevel;
 
     return this.initialize();
   }
@@ -122,6 +121,11 @@ export class Template extends LogLevelMixin(class {}) {
 
   toString() {
     return this.name;
+  }
+
+  get logLevel()
+  {
+    return this.options.logLevel;
   }
 
   log(...args) {
