@@ -67,7 +67,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/template-tools/template-sync"
+    "url": "git+https://github.com/template-tools/template-sync.git"
   },
   "bugs": {
     "url": "https://github.com/template-tools/template-sync/issues"
