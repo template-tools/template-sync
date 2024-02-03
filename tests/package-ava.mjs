@@ -94,7 +94,7 @@ test(
     name: "targetRepo",
     repository: {
       type: "git",
-      url: "http://mock-provider.com/targetUser/targetRepo"
+      url: "git+http://mock-provider.com/targetUser/targetRepo.git"
     },
     bugs: { url: "http://mock-provider.com/targetUser/targetRepo/issues" },
     homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
@@ -131,7 +131,7 @@ test(
     },
     repository: {
       type: "git",
-      url: "http://mock-provider.com/targetUser/targetRepo"
+      url: "git+http://mock-provider.com/targetUser/targetRepo.git"
     },
     template: {
       inheritFrom: "templateRepo"
@@ -147,7 +147,7 @@ test(
     dependencies: {},
     repository: {
       type: "git",
-      url: "http://mock-provider.com/targetUser/targetRepo"
+      url: "git+http://mock-provider.com/targetUser/targetRepo.git"
     }
   },
   {
@@ -170,7 +170,7 @@ test(
     },
     repository: {
       type: "git",
-      url: "http://mock-provider.com/targetUser/targetRepo"
+      url: "git+http://mock-provider.com/targetUser/targetRepo.git"
     },
     template: {
       inheritFrom: "templateRepo"
@@ -443,7 +443,7 @@ test(
     name: "targetRepo",
     repository: {
       type: "git",
-      url: "http://mock-provider.com/targetUser/targetRepo"
+      url: "git+http://mock-provider.com/targetUser/targetRepo.git"
     },
     bugs: {
       url: "http://mock-provider.com/targetUser/targetRepo/issues"
@@ -639,7 +639,7 @@ test("start fresh", pkgt, undefined, undefined, undefined, undefined, {
   },
   repository: {
     type: "git",
-    url: "http://mock-provider.com/targetUser/targetRepo"
+    url: "git+http://mock-provider.com/targetUser/targetRepo.git"
   }
   /*,
   template: {

@@ -309,7 +309,7 @@ export class Package extends Merger {
       ...(templateContent.length ? JSON.parse(templateContent) : {}),
       repository: {
         type: targetRepository.type,
-        url: targetRepository.url
+        url: targetRepository.cloneURL
       },
       bugs: {
         url: context.targetBranch.issuesURL
