@@ -17,8 +17,7 @@ export { Template };
 export class Context extends LogLevelMixin(class _Context {}) {
   static async from(provider, targetBranchName, options) {
     const pc = new Context(provider, targetBranchName, options);
-    await pc.initialize();
-    return pc;
+    return pc.initialize();
   }
 
   constructor(provider, targetBranchName, options = {}) {
@@ -100,6 +99,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
       }
     }
 
+    if(!targetBranch.isWritable) {
+      return undefined;
+    }
+
     this.targetBranch = targetBranch;
 
     const repository = targetBranch.repository;
@@ -166,6 +169,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
       message: "initialize",
       branch: targetBranch.fullCondensedName
     });
+
+    return this;
   }
 
   /**
@@ -183,7 +188,9 @@ export class Context extends LogLevelMixin(class _Context {}) {
           }
           //console.log(this.options, options);
           const context = await Context.from(this.provider, r, options);
-          yield* context.execute();
+          if(context?.isWritable) {
+            yield* context.execute();
+          }
         } catch (e) {
           this.error(e);
         }
@@ -219,6 +226,11 @@ export class Context extends LogLevelMixin(class _Context {}) {
         );
       }
     }
+  }
+
+  get isWritable()
+  {
+    return this.targetBranch.isWritable;
   }
 
   /**
