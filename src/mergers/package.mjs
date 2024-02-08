@@ -46,6 +46,7 @@ const sortedKeys = [
   "type",
   "packageManager",
   "main",
+  "types",
   "exports",
   "imports",
   "umd:main",
