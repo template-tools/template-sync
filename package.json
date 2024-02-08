@@ -45,7 +45,7 @@
     "js-yaml": "^4.1.0",
     "loglevel-mixin": "^7.1.0",
     "markdown": "^0.5.0",
-    "matching-iterator": "^2.1.0",
+    "matching-iterator": "^2.1.2",
     "one-time-execution-method": "^3.0.6",
     "recast": "^0.23.4",
     "remark-parse": "^11.0.0",
@@ -58,7 +58,7 @@
     "content-entry-filesystem": "^6.0.0",
     "documentation": "^14.0.3",
     "execa": "^8.0.1",
-    "github-repository-provider": "^8.0.35",
+    "github-repository-provider": "^8.0.36",
     "mock-repository-provider": "^8.0.9",
     "semantic-release": "^23.0.2"
   },
