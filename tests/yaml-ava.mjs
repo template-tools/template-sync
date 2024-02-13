@@ -72,7 +72,7 @@ test(
 `
 );
 
-test.skip(
+test(
   yamlt,
   YAML,
   `jobs:
@@ -80,7 +80,7 @@ test.skip(
     strategy:
       matrix:
         node-version:
-          - -15
+          - --delete-- 15
           - 15.1.0
   `,
   undefined,
