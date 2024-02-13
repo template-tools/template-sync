@@ -263,8 +263,13 @@ export class Package extends Merger {
       }
     });
 
-    if (properties.main === undefined && pkg.exports?.["."]) {
-      properties.main = pkg.exports["."];
+    if (properties.main === undefined && pkg.exports !== undefined) {
+      for (const slot of [".", "default"]) {
+        if (pkg.exports[slot]) {
+          properties.main = pkg.exports[slot];
+          break;
+        }
+      }
     }
 
     Object.assign(properties, pkg.config);

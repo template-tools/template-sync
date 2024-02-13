@@ -88,3 +88,18 @@ test(
     main: "index.mjs"
   }
 );
+
+test(
+  propertiest,
+  Package,
+  "package.json",
+  JSON.stringify({
+    exports: {
+      other: "xyz",
+      default: "index.mjs"
+    }
+  }),
+  {
+    main: "index.mjs"
+  }
+);
