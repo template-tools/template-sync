@@ -21,6 +21,7 @@ test("context create", async t => {
   t.is(context.provider, provider);
   t.is(context.dry, false);
   t.is(context.track, false);
+  t.is(context.isWritable, true);
   t.deepEqual(context.templateSources, ["templateRepo", "owner/targetRepo"]);
   t.deepEqual(context.properties.date, { year: new Date().getFullYear() });
   t.is(context.properties.fullName, "targetRepo");
