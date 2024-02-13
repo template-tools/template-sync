@@ -106,6 +106,7 @@ const MERGE_HINTS = {
   repository: { compare },
   files: { compare, scope: "files", removeEmpty: true },
   exports: { ...REMOVE_HINT, ...MODULE_HINT },
+  "exports.*" : { ...REMOVE_HINT, ...MODULE_HINT },
   imports: { ...REMOVE_HINT, ...MODULE_HINT },
   bin: REMOVE_HINT,
   "bin.*": { removeEmpty: true, scope: "bin" },
