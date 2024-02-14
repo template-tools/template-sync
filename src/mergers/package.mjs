@@ -102,6 +102,7 @@ const MERGE_HINTS = {
   "*": { scope: "package", type: "chore" },
   "": { orderBy: sortedKeys },
   type: MODULE_HINT,
+  types: MODULE_HINT,
   keywords: { removeEmpty: true, compare, type: "docs" },
   repository: { compare },
   files: { compare, scope: "files", removeEmpty: true },
