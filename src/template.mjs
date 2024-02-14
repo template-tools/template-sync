@@ -1,6 +1,6 @@
-import { join, dirname } from "path";
-import { createWriteStream } from "fs";
-import { mkdir } from "fs/promises";
+import { join, dirname } from "node:path";
+import { createWriteStream } from "node:fs";
+import { mkdir } from "node:fs/promises";
 import { matcher } from "matching-iterator";
 import {
   merge,
@@ -12,7 +12,6 @@ import {
 } from "hinted-tree-merger";
 import { StringContentEntry } from "content-entry";
 import { LogLevelMixin } from "loglevel-mixin";
-
 import { asArray, normalizeTemplateSources } from "./util.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
 import { mergers } from "./mergers.mjs";
