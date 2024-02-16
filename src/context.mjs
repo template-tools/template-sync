@@ -1,6 +1,7 @@
 import { createContext } from "expression-expander";
 import { LogLevelMixin } from "loglevel-mixin";
 import { EmptyContentEntry } from "content-entry";
+import { PullRequest, Commit } from "repository-provider";
 import { Package } from "./mergers/package.mjs";
 import { Template } from "./template.mjs";
 import { jspath, asArray } from "./util.mjs";
@@ -152,7 +153,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
     if (template === undefined) {
       throw new Error(
-        `Unable to extract template repo url from ${targetBranch.name} ${pkg.name}`
+        `Unable to extract template repo url from ${targetBranch.name}`
       );
     }
 
@@ -202,7 +203,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
   /**
    * Generate all commits from the template entry merges.
-   * @return {Commit<AsyncIterator>}
+   * @return {AsyncIterator<Commit>}
    */
   async *commits() {
     for (const templateEntry of this.template.entries()) {
@@ -235,7 +236,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
   /**
    * Generate Pull Requests.
-   * @return {AsyncIterator <PullRequest>} the actual PRs
+   * @return {AsyncIterator<PullRequest>} the actual PRs
    */
   async *executeBranch() {
     try {

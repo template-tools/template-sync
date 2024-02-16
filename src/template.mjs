@@ -11,6 +11,7 @@ import {
   reanimateHints
 } from "hinted-tree-merger";
 import { StringContentEntry } from "content-entry";
+import { PullRequest, Branch } from "repository-provider";
 import { LogLevelMixin } from "loglevel-mixin";
 import { asArray, normalizeTemplateSources } from "./util.mjs";
 import { ReplaceIfEmpty } from "./mergers/replace-if-empty.mjs";
@@ -405,8 +406,8 @@ export class Template extends LogLevelMixin(class {}) {
       if (entry.isBlob) {
         const d = join(dest, entry.name);
         await mkdir(dirname(d), { recursive: true });
-        const s = await entry.readStream;
-        s.pipe(createWriteStream(d));
+        const readStream = await entry.readStream;
+        readStream.pipeTo(createWriteStream(d));
       }
     }
   }
@@ -508,6 +509,7 @@ export function mergeTemplate(a, b) {
   const mvl = { keepHints: true, merge: mergeVersionsLargest };
   return merge(a, b, "", undefined, {
     "engines.*": mvl,
+    "exports.*": mvl,
     "scripts.*": { keepHints: true, merge: mergeExpressions },
     "dependencies.*": mvl,
     "devDependencies.*": mvl,
