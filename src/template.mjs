@@ -1,5 +1,6 @@
 import { join, dirname } from "node:path";
 import { createWriteStream } from "node:fs";
+import { Writable } from 'node:stream';
 import { mkdir } from "node:fs/promises";
 import { matcher } from "matching-iterator";
 import {
@@ -407,7 +408,9 @@ export class Template extends LogLevelMixin(class {}) {
         const d = join(dest, entry.name);
         await mkdir(dirname(d), { recursive: true });
         const readStream = await entry.readStream;
-        readStream.pipeTo(createWriteStream(d));
+        console.log(readStream)
+      //  readStream.pipe(Writable.toWeb(createWriteStream(d)));
+        readStream.pipe(createWriteStream(d));
       }
     }
   }
