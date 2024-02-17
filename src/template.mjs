@@ -1,6 +1,6 @@
 import { join, dirname } from "node:path";
 import { createWriteStream } from "node:fs";
-import { Writable } from 'node:stream';
+import { Writable } from "node:stream";
 import { mkdir } from "node:fs/promises";
 import { matcher } from "matching-iterator";
 import {
@@ -124,8 +124,7 @@ export class Template extends LogLevelMixin(class {}) {
     return this.name;
   }
 
-  get logLevel()
-  {
+  get logLevel() {
     return this.options.logLevel;
   }
 
@@ -408,8 +407,8 @@ export class Template extends LogLevelMixin(class {}) {
         const d = join(dest, entry.name);
         await mkdir(dirname(d), { recursive: true });
         const readStream = await entry.readStream;
-        console.log(readStream)
-      //  readStream.pipe(Writable.toWeb(createWriteStream(d)));
+        console.log(readStream);
+        //  readStream.pipe(Writable.toWeb(createWriteStream(d)));
         readStream.pipe(createWriteStream(d));
       }
     }
@@ -424,12 +423,12 @@ export class Template extends LogLevelMixin(class {}) {
     const pkg = await this.package();
 
     return {
-        template: {
-          key: this.key,
-          name: this.name
-        },
-        ...pkg.template?.properties
-      };
+      template: {
+        key: this.key,
+        name: this.name
+      },
+      ...pkg.template?.properties
+    };
   }
 
   /**
@@ -512,7 +511,6 @@ export function mergeTemplate(a, b) {
   const mvl = { keepHints: true, merge: mergeVersionsLargest };
   return merge(a, b, "", undefined, {
     "engines.*": mvl,
-    "exports.*": mvl,
     "scripts.*": { keepHints: true, merge: mergeExpressions },
     "dependencies.*": mvl,
     "devDependencies.*": mvl,
