@@ -1,4 +1,4 @@
-import { load, dump } from "js-yaml";
+import { parse, stringify } from "yaml";
 import { StringContentEntry } from "content-entry";
 import { merge } from "hinted-tree-merger";
 import { Merger } from "../merger.mjs";
@@ -13,7 +13,6 @@ export class YAML extends Merger {
     return {
       ...super.options,
       expand: true,
-      yaml: { lineWith: 128 /*schema: yaml.CORE_SCHEMA*/ },
       messagePrefix: "chore: "
     };
   }
@@ -30,15 +29,14 @@ export class YAML extends Merger {
     ]);
     const actions = {};
 
-    const merged = dump(
+    const merged = stringify(
       merge(
-        load(context.expand(original, options.expand), options.yaml),
-        load(context.expand(template, options.expand), options.yaml),
+        parse(context.expand(original, options.expand)),
+        parse(context.expand(template, options.expand)),
         "",
         (action, hint) => aggregateActions(actions, action, hint),
         options.mergeHints
-      ),
-      options.yaml
+      )
     );
 
     if (original !== merged) {
