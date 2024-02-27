@@ -1,5 +1,5 @@
 name: CI
-'on':
+on:
   push:
     branches:
       - master
@@ -17,8 +17,6 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
-        node-version:
-          - 20.11.1
     steps:
       - uses: actions/checkout@v4.1.1
       - uses: actions/setup-node@v4.0.2
@@ -52,7 +50,7 @@ jobs:
       - run: npm ci
       - run: npx semantic-release
         env:
-          CI: 'true'
+          CI: "true"
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
