@@ -107,7 +107,7 @@ const MERGE_HINTS = {
   repository: { compare },
   files: { compare, scope: "files", removeEmpty: true },
   exports: { ...REMOVE_HINT, ...MODULE_HINT },
-  "exports.*" : { ...REMOVE_HINT, ...MODULE_HINT },
+  "exports.*": { ...REMOVE_HINT, ...MODULE_HINT },
   imports: { ...REMOVE_HINT, ...MODULE_HINT },
   bin: REMOVE_HINT,
   "bin.*": { removeEmpty: true, scope: "bin" },
@@ -199,6 +199,12 @@ const MERGE_HINTS = {
 };
 
 /**
+ * Order in which exports are searched
+ * @see {https://nodejs.org/dist/latest/docs/api/packages.html#exports}
+ */
+const exportsConditionOrder = ["browser", "module", "import", ".", "default"];
+
+/**
  * Merger for package.json
  */
 export class Package extends Merger {
@@ -265,12 +271,21 @@ export class Package extends Merger {
       }
     });
 
-    if (properties.main === undefined && pkg.exports !== undefined) {
-      for (const slot of [".", "default"]) {
-        if (pkg.exports[slot]) {
-          properties.main = pkg.exports[slot];
-          break;
+    function findMainExport(object) {
+      for (const slot of exportsConditionOrder) {
+        switch (typeof object?.[slot]) {
+          case "string":
+            return object[slot];
+          case "object":
+            return findMainExport(object[slot]);
         }
+      }
+    }
+
+    if (properties.main === undefined) {
+      const main = findMainExport(pkg.exports);
+      if (main !== undefined) {
+        properties.main = main;
       }
     }
 

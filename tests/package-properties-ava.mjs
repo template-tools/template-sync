@@ -2,7 +2,7 @@ import test from "ava";
 import { StringContentEntry } from "content-entry";
 import { Package } from "../src/mergers/package.mjs";
 
-async function propertiest(
+async function propertyt(
   t,
   factory = Package,
   name = "package.json",
@@ -18,7 +18,7 @@ async function propertiest(
   t.deepEqual(properties, expected, "properties");
 }
 
-propertiest.title = (
+propertyt.title = (
   providedTitle = "",
   factory = Package,
   name = "package.json",
@@ -27,7 +27,7 @@ propertiest.title = (
 ) => `properties ${factory.name} ${providedTitle} ${content}`.trim();
 
 test(
-  propertiest,
+  propertyt,
   Package,
   "package.json",
   JSON.stringify({ name: "aName", version: "0.0.0-semantic-release" }),
@@ -39,7 +39,7 @@ test(
 );
 
 test(
-  propertiest,
+  propertyt,
   Package,
   "package.json",
   JSON.stringify({ name: "@org/aName" }),
@@ -51,7 +51,7 @@ test(
 );
 
 test(
-  propertiest,
+  propertyt,
   Package,
   "package.json",
   JSON.stringify({
@@ -76,7 +76,7 @@ test(
 );
 
 test(
-  propertiest,
+  propertyt,
   Package,
   "package.json",
   JSON.stringify({
@@ -90,7 +90,7 @@ test(
 );
 
 test(
-  propertiest,
+  propertyt,
   Package,
   "package.json",
   JSON.stringify({
@@ -101,5 +101,22 @@ test(
   }),
   {
     main: "index.mjs"
+  }
+);
+
+test(
+  propertyt,
+  Package,
+  "package.json",
+  JSON.stringify({
+    exports: {
+      ".": {
+        default: "./index.mjs",
+        types: "./types/index.d.mts"
+      }
+    }
+  }),
+  {
+    main: "./index.mjs"
   }
 );
