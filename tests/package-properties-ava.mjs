@@ -120,3 +120,22 @@ test(
     main: "./index.mjs"
   }
 );
+
+test(
+  propertyt,
+  Package,
+  "package.json",
+  JSON.stringify({
+    exports: {
+      ".": {
+        default: "./src/module.mjs",
+        svelte: "./src/index.svelte",
+        types: "./types/module.d.mjs"
+      },
+      "./css": "./src/common.css"
+    }
+  }),
+  {
+    main: "./src/module.mjs"
+  }
+);
