@@ -52,12 +52,12 @@ Merges contents from template branch into destination branch handling some speci
 ### Table of Contents
 
 *   [Delete](#delete)
-*   [INI](#ini)
 *   [Merger](#merger)
     *   [properties](#properties)
         *   [Parameters](#parameters)
     *   [commits](#commits)
         *   [Parameters](#parameters-1)
+*   [INI](#ini)
 *   [normalizeTemplateSources](#normalizetemplatesources)
     *   [Parameters](#parameters-2)
 *   [jspath](#jspath)
@@ -68,6 +68,7 @@ Merges contents from template branch into destination branch handling some speci
     *   [Parameters](#parameters-5)
 *   [MergeLineSet](#mergelineset)
 *   [sortedKeys](#sortedkeys)
+*   [exportsConditionOrder](#exportsconditionorder)
 *   [Package](#package)
     *   [properties](#properties-1)
         *   [Parameters](#parameters-6)
@@ -81,12 +82,6 @@ Merges contents from template branch into destination branch handling some speci
 **Extends Merger**
 
 Delete entry.
-
-## INI
-
-**Extends Merger**
-
-Merge ini entries
 
 ## Merger
 
@@ -112,6 +107,12 @@ Generate commits as result of merging two entries.
 *   `destinationEntry` &#x20;
 *   `sourceEntry` &#x20;
 *   `options` &#x20;
+
+## INI
+
+**Extends Merger**
+
+Merge ini entries
 
 ## normalizeTemplateSources
 
@@ -158,6 +159,12 @@ Returns **any** actions as one string lines ordered by scope
 ## sortedKeys
 
 order in which json keys are written
+
+## exportsConditionOrder
+
+*   **See**: {<https://nodejs.org/dist/latest/docs/api/packages.html#exports}>
+
+Order in which exports are searched
 
 ## Package
 
