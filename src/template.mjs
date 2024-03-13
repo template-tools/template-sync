@@ -518,7 +518,7 @@ export function mergeTemplate(a, b) {
     "optionalDependencies.*": mvl,
     "config.*": { keepHints: true, overwrite: false },
     "pkgbuild.*": { keepHints: true, overwrite: false },
-    "pkgbuild.depends.*": mvl,
+    "pkgbuild.dependencies.*": mvl,
     "template.mergers": { key: ["type", "pattern"] },
     "template.inheritFrom": { merge: mergeSkip },
     "template.usedBy": { merge: mergeSkip },

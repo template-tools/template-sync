@@ -5,7 +5,7 @@ import {
   mergeSkip,
   compare
 } from "hinted-tree-merger";
-import { StringContentEntry } from "content-entry";
+import { StringContentEntry, ContentEntry } from "content-entry";
 import { Merger } from "../merger.mjs";
 
 import {
@@ -189,7 +189,7 @@ const MERGE_HINTS = {
   "pkgbuild.*": {
     overwrite: false
   },
-  "pkgbuild.depends.*": {
+  "pkgbuild.dependencies.*": {
     merge: mergeVersionsLargest,
     compare,
     type: "fix",
