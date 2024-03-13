@@ -2,7 +2,7 @@ import test from "ava";
 import { createContext, asyncIterator2scalar } from "./helpers/util.mjs";
 import { decode } from "../src/ini-encoder.mjs";
 import { INI } from "../src/mergers/ini.mjs";
-import { EmptyContentEntry, StringContentEntry } from "content-entry";
+import { ContentEntry, StringContentEntry } from "content-entry";
 
 test("ini merge", async t => {
   const fileName = "a.ini";
@@ -82,7 +82,7 @@ test("ini merge empty dest", async t => {
   const commit = await asyncIterator2scalar(
     INI.commits(
       await createContext({ description: "value" }),
-      new EmptyContentEntry(fileName),
+      new ContentEntry(fileName),
       new StringContentEntry(
         fileName,
         `[Unit]

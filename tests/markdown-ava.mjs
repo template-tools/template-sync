@@ -1,6 +1,6 @@
 import test from "ava";
 import { asyncIterator2scalar } from "./helpers/util.mjs";
-import { StringContentEntry, EmptyContentEntry } from "content-entry";
+import { StringContentEntry, ContentEntry } from "content-entry";
 import { Markdown } from "../src/mergers/markdown.mjs";
 
 const FILE_NAME = "a.md";
@@ -56,7 +56,7 @@ test("markdown merge into empty", async t => {
   const commit = await asyncIterator2scalar(
     Markdown.commits(
       undefined,
-      new EmptyContentEntry(FILE_NAME),
+      new ContentEntry(FILE_NAME),
       new StringContentEntry(
         FILE_NAME,
         `# Hello

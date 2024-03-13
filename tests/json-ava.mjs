@@ -1,6 +1,6 @@
 import test from "ava";
 import { createContext, asyncIterator2scalar } from "./helpers/util.mjs";
-import { StringContentEntry, EmptyContentEntry } from "content-entry";
+import { StringContentEntry, ContentEntry } from "content-entry";
 import { JSONMerger } from "../src/mergers/json.mjs";
 
 const FILE_NAME = "a.json";
@@ -34,7 +34,7 @@ test("json empty target", async t => {
   const commit = await asyncIterator2scalar(
     JSONMerger.commits(
       await createContext(),
-      new EmptyContentEntry(FILE_NAME),
+      new ContentEntry(FILE_NAME),
       new StringContentEntry(
         FILE_NAME,
         JSON.stringify({

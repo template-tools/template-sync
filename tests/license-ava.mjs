@@ -1,7 +1,7 @@
 import test from "ava";
 
 import { createContext, asyncIterator2scalar } from "./helpers/util.mjs";
-import { StringContentEntry, EmptyContentEntry } from "content-entry";
+import { StringContentEntry, ContentEntry } from "content-entry";
 
 import { License } from "../src/mergers/license.mjs";
 
@@ -15,10 +15,10 @@ async function lmt(t, license, template, year, expected, message) {
     License.commits(
       context,
       license === undefined
-        ? new EmptyContentEntry("license")
+        ? new ContentEntry("license")
         : new StringContentEntry("license", license),
       template === undefined
-        ? new EmptyContentEntry("license")
+        ? new ContentEntry("license")
         : new StringContentEntry("license", template)
     )
   );

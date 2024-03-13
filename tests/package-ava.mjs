@@ -1,5 +1,5 @@
 import test from "ava";
-import { StringContentEntry, EmptyContentEntry } from "content-entry";
+import { StringContentEntry, ContentEntry } from "content-entry";
 import {
   createContext,
   asArray,
@@ -45,10 +45,10 @@ async function pkgt(
     Package.commits(
       context,
       content === undefined
-        ? new EmptyContentEntry(FILE_NAME)
+        ? new ContentEntry(FILE_NAME)
         : new StringContentEntry(FILE_NAME, JSON.stringify(content)),
       template === undefined
-        ? new EmptyContentEntry(FILE_NAME)
+        ? new ContentEntry(FILE_NAME)
         : new StringContentEntry(FILE_NAME, JSON.stringify(template)),
       { ...Package.options, ...options }
     )

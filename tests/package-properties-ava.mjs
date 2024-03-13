@@ -1,5 +1,5 @@
 import test from "ava";
-import { StringContentEntry } from "content-entry";
+import { StringContentEntry, ContentEntry } from "content-entry";
 import { Package } from "../src/mergers/package.mjs";
 
 async function propertyt(
@@ -11,7 +11,7 @@ async function propertyt(
 ) {
   const properties = await factory.properties(
     content === undefined
-      ? new EmptyContentEntry(name)
+      ? new ContentEntry(name)
       : new StringContentEntry(name, content)
   );
 

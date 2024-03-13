@@ -1,6 +1,6 @@
 import { createContext } from "expression-expander";
 import { LogLevelMixin } from "loglevel-mixin";
-import { EmptyContentEntry } from "content-entry";
+import { ContentEntry } from "content-entry";
 import { PullRequest, Commit } from "repository-provider";
 import { Package } from "./mergers/package.mjs";
 import { Template } from "./template.mjs";
@@ -221,7 +221,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
         yield* merger.factory.commits(
           this,
           (await this.targetBranch.maybeEntry(name)) ||
-            new EmptyContentEntry(name),
+            new ContentEntry(name),
           templateEntry,
           merger.options
         );

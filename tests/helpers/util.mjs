@@ -1,4 +1,4 @@
-import { StringContentEntry, EmptyContentEntry } from "content-entry";
+import { StringContentEntry, ContentEntry } from "content-entry";
 import MockProvider from "mock-repository-provider";
 import { Context } from "../../src/context.mjs";
 import { load, dump } from "js-yaml";
@@ -58,13 +58,13 @@ export async function yamlt(
     factory.commits(
       context,
       content === undefined
-        ? new EmptyContentEntry(FILE_NAME)
+        ? new ContentEntry(FILE_NAME)
         : new StringContentEntry(
             FILE_NAME,
             typeof content === "string" ? content : dump(content)
           ),
       template === undefined
-        ? new EmptyContentEntry(FILE_NAME)
+        ? new ContentEntry(FILE_NAME)
         : new StringContentEntry(
             FILE_NAME,
             typeof template === "string" ? template : dump(template)

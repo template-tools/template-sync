@@ -1,12 +1,12 @@
 import test from "ava";
 import { createContext, asyncIterator2scalar } from "./helpers/util.mjs";
-import { StringContentEntry, EmptyContentEntry } from "content-entry";
+import { StringContentEntry, ContentEntry } from "content-entry";
 import { ReplaceIfEmpty } from "../src/mergers/replace-if-empty.mjs";
 
 test("replace-if-empty differ", async t => {
   const commit = await asyncIterator2scalar(ReplaceIfEmpty.commits(
     await createContext({ name: 'a name' }),
-    new EmptyContentEntry("aFile"),
+    new ContentEntry("aFile"),
     new StringContentEntry("bFile", "Line 1x {{name}}"),
     { expand: false }
   ));
@@ -18,7 +18,7 @@ test("replace-if-empty differ", async t => {
 test("replace-if-empty differ with expand", async t => {
   const commit = await asyncIterator2scalar(ReplaceIfEmpty.commits(
     await createContext({ name: 'a name' }),
-    new EmptyContentEntry("aFile"),
+    new ContentEntry("aFile"),
     new StringContentEntry("bFile", "Line 1x {{name}}"),
     { expand: true }
   ));

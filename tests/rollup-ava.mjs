@@ -1,5 +1,5 @@
 import test from "ava";
-import { StringContentEntry, EmptyContentEntry } from "content-entry";
+import { StringContentEntry, ContentEntry } from "content-entry";
 import { createContext, asyncIterator2scalar } from "./helpers/util.mjs";
 import { Rollup } from "../src/mergers/rollup.mjs";
 
@@ -88,7 +88,7 @@ test("rollup empty template", async t => {
     Rollup.commits(
       await createContext(),
       new StringContentEntry("rollup.config.mjs", "export default {};"),
-      new EmptyContentEntry("rollup.config.mjs")
+      new ContentEntry("rollup.config.mjs")
     )
   );
 
@@ -99,7 +99,7 @@ test("rollup empty target", async t => {
   const commit = await asyncIterator2scalar(
     Rollup.commits(
       await createContext(),
-      new EmptyContentEntry("rollup.config.mjs"),
+      new ContentEntry("rollup.config.mjs"),
       new StringContentEntry("rollup.config.mjs", "export default {};")
     )
   );
