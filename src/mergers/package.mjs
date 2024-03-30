@@ -202,7 +202,7 @@ const MERGE_HINTS = {
  * Order in which exports are searched
  * @see {https://nodejs.org/dist/latest/docs/api/packages.html#exports}
  */
-const exportsConditionOrder = [/*"browser", "module", "import", ".",*/ "default"];
+const exportsConditionOrder = [/*"browser", "module", "import", ".",*/ "default", "."];
 
 /**
  * Merger for package.json
