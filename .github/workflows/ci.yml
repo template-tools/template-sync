@@ -21,7 +21,6 @@ jobs:
           - windows-latest
         node-version:
           - 20.12.2
-          - 22.0.0
           - 22.1.0
     steps:
       - uses: actions/checkout@v4.1.4
