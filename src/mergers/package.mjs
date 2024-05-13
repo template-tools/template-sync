@@ -98,6 +98,7 @@ const propertyKeys = ["description", "version", "name", "main", "browser"];
 const MODULE_HINT = { type: "fix", scope: "module" };
 const REMOVE_HINT = { compare, removeEmpty: true };
 const DEPENDENCY_HINT = { merge: mergeVersionsLargest, scope: "deps" };
+const DEPENDENCY_HINT_FIX = { merge: mergeVersionsLargest, scope: "fix" };
 const MERGE_HINTS = {
   "*": { scope: "package", type: "chore" },
   "": { orderBy: sortedKeys },
@@ -157,13 +158,13 @@ const MERGE_HINTS = {
     scope: "scripts"
   },
   dependencies: REMOVE_HINT,
-  "dependencies.*": { ...DEPENDENCY_HINT, type: "fix" },
+  "dependencies.*": DEPENDENCY_HINT_FIX,
   devDependencies: REMOVE_HINT,
   "devDependencies.*": DEPENDENCY_HINT,
   peerDependencies: REMOVE_HINT,
-  "peerDependencies.*": DEPENDENCY_HINT,
+  "peerDependencies.*": DEPENDENCY_HINT_FIX,
   optionalDependencies: REMOVE_HINT,
-  "optionalDependencies.*": { ...DEPENDENCY_HINT, type: "fix" },
+  "optionalDependencies.*": DEPENDENCY_HINT_FIX,
   bundeledDependencies: REMOVE_HINT,
   "bundeledDependencies.*": DEPENDENCY_HINT,
   overrides: REMOVE_HINT,
