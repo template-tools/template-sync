@@ -98,7 +98,7 @@ const propertyKeys = ["description", "version", "name", "main", "browser"];
 const MODULE_HINT = { type: "fix", scope: "module" };
 const REMOVE_HINT = { compare, removeEmpty: true };
 const DEPENDENCY_HINT = { merge: mergeVersionsLargest, scope: "deps" };
-const DEPENDENCY_HINT_FIX = { merge: mergeVersionsLargest, scope: "fix" };
+const DEPENDENCY_HINT_FIX = { type: "fix", ...DEPENDENCY_HINT };
 const MERGE_HINTS = {
   "*": { scope: "package", type: "chore" },
   "": { orderBy: sortedKeys },
