@@ -1,7 +1,7 @@
 import { createContext } from "expression-expander";
 import { LogLevelMixin } from "loglevel-mixin";
 import { ContentEntry } from "content-entry";
-import { PullRequest, Commit } from "repository-provider";
+import { Branch, PullRequest, Commit } from "repository-provider";
 import { Package } from "./mergers/package.mjs";
 import { Template } from "./template.mjs";
 import { jspath, asArray } from "./util.mjs";
@@ -10,25 +10,32 @@ export { Template };
 
 /**
  * Context prepared to execute one branch.
- * @param {string} targetBranchName
  *
  * @property {Object} ctx
  * @property {Map<string,Object>} files
  */
 export class Context extends LogLevelMixin(class _Context {}) {
-  static async from(provider, targetBranchName, options) {
-    const pc = new Context(provider, targetBranchName, options);
+  static async from(provider, targetBranch, options) {
+    const pc = new Context(provider, targetBranch, options);
     return pc.initialize();
   }
 
-  constructor(provider, targetBranchName, options = {}) {
+  /** @type {Branch} */ targetBranch;
+
+  /**
+   * Context prepared to execute one branch.
+   * @param {Object} provider
+   * @param {Branch|string} targetBranch
+   * @param {Object} options
+   */
+  constructor(provider, targetBranch, options = {}) {
     super();
 
     provider.messageDestination = this;
     this.options = options;
     this.provider = provider;
     this.templateSources = asArray(options.template);
-    this.targetBranchName = targetBranchName;
+    this.targetBranch = targetBranch;
     this.track = options.track || false;
     this.dry = options.dry || false;
     this.create = options.create || false;
@@ -50,8 +57,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     this.log = options.log || ((level, ...args) => console.log(...args));
   }
 
-  get logLevel()
-  {
+  get logLevel() {
     return this.options.logLevel;
   }
 
@@ -64,47 +70,51 @@ export class Context extends LogLevelMixin(class _Context {}) {
   }
 
   async initialize() {
-    let targetBranch = await this.provider.branch(this.targetBranchName);
+    let targetBranch = this.targetBranch;
 
-    if (targetBranch === undefined) {
-      const targetRepository = await this.provider.repository(
-        this.targetBranchName
-      );
-      if (targetRepository !== undefined) {
-        targetBranch = await targetRepository.createBranch(
-          targetRepository.defaultBranchName
-        );
-      }
+    if (typeof this.targetBranch === "string") {
+      targetBranch = await this.provider.branch(this.targetBranch);
+
       if (targetBranch === undefined) {
-        if (this.create) {
-          const properties = Object.assign(
-            {},
-            this.properties,
-            this.properties.repository
+        const targetRepository = await this.provider.repository(
+          this.targetBranch
+        );
+        if (targetRepository !== undefined) {
+          targetBranch = await targetRepository.createBranch(
+            targetRepository.defaultBranchName
           );
-          this.info(
-            `Create new repo: ${this.targetBranchName} ${JSON.stringify(
-              properties
-            )}`
-          );
-
-          await this.provider.createRepository(
-            this.targetBranchName,
-            properties
-          );
-          targetBranch = await this.provider.branch(this.targetBranchName);
         }
         if (targetBranch === undefined) {
-          throw new Error(`Unable to find branch ${this.targetBranchName}`);
+          if (this.create) {
+            const properties = Object.assign(
+              {},
+              this.properties,
+              this.properties.repository
+            );
+            this.info(
+              `Create new repo: ${this.targetBranch} ${JSON.stringify(
+                properties
+              )}`
+            );
+
+            await this.provider.createRepository(
+              this.targetBranch,
+              properties
+            );
+            targetBranch = await this.provider.branch(this.targetBranch);
+          }
+          if (targetBranch === undefined) {
+            throw new Error(`Unable to find branch ${this.targetBranch}`);
+          }
         }
       }
-    }
 
-    if(!targetBranch.isWritable) {
-      return undefined;
-    }
+      if (!targetBranch.isWritable) {
+        return undefined;
+      }
 
-    this.targetBranch = targetBranch;
+      this.targetBranch = targetBranch;
+    }
 
     const repository = targetBranch.repository;
 
@@ -189,7 +199,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
           }
           //console.log(this.options, options);
           const context = await Context.from(this.provider, r, options);
-          if(context?.isWritable) {
+          if (context?.isWritable) {
             yield* context.execute();
           }
         } catch (e) {
@@ -220,8 +230,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
         yield* merger.factory.commits(
           this,
-          (await this.targetBranch.maybeEntry(name)) ||
-            new ContentEntry(name),
+          (await this.targetBranch.maybeEntry(name)) || new ContentEntry(name),
           templateEntry,
           merger.options
         );
@@ -229,8 +238,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     }
   }
 
-  get isWritable()
-  {
+  get isWritable() {
     return this.targetBranch.isWritable;
   }
 
