@@ -97,10 +97,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
               )}`
             );
 
-            await this.provider.createRepository(
-              this.targetBranch,
-              properties
-            );
+            await this.provider.createRepository(this.targetBranch, properties);
             targetBranch = await this.provider.branch(this.targetBranch);
           }
           if (targetBranch === undefined) {
@@ -155,6 +152,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
       Object.assign(this.properties, await Package.properties(entry));
     } catch {}
 
+    if(!this.isTemplate && !this.targetBranch.isWritable) {
+      return undefined;
+    }
+
     this.templateSources.push(targetBranch.fullCondensedName);
 
     const template = await Template.templateFor(this, this.templateSources, {
@@ -184,12 +185,16 @@ export class Context extends LogLevelMixin(class _Context {}) {
     return this;
   }
 
+  get isTemplate() {
+    return this.properties.usedBy !== undefined;
+  }
+
   /**
    * Generate Pull Requests.
    * @return {AsyncIterator <PullRequest>}
    */
   async *execute() {
-    if (this.properties.usedBy !== undefined) {
+    if (this.isTemplate) {
       for (const r of this.properties.usedBy) {
         try {
           // PASS parent template (only one!)
