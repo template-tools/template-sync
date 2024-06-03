@@ -69,6 +69,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
     return jspath(this.properties, expression);
   }
 
+  /**
+   * 
+   * @returns {Promise<Context|undefined>}
+   */
   async initialize() {
     let targetBranch = this.targetBranch;
 
@@ -191,7 +195,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
   /**
    * Generate Pull Requests.
-   * @return {AsyncIterator <PullRequest>}
+   * @return {AsyncIterable<PullRequest>}
    */
   async *execute() {
     if (this.isTemplate) {
@@ -218,7 +222,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
   /**
    * Generate all commits from the template entry merges.
-   * @return {AsyncIterator<Commit>}
+   * @return {AsyncIterable<Commit>}
    */
   async *commits() {
     for (const templateEntry of this.template.entries()) {
@@ -249,7 +253,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
 
   /**
    * Generate Pull Requests.
-   * @return {AsyncIterator<PullRequest>} the actual PRs
+   * @return {AsyncIterable<PullRequest>} the actual PRs
    */
   async *executeBranch() {
     try {
