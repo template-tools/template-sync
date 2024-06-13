@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "ava": "^6.1.3",
-    "c8": "^10.1.1",
+    "c8": "^10.1.2",
     "content-entry-filesystem": "^7.1.1",
     "documentation": "^14.0.3",
     "execa": "^9.2.0",
