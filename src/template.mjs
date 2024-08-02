@@ -334,7 +334,6 @@ export class Template extends LogLevelMixin(class {}) {
 
         try {
           const pkg = JSON.parse(await pc.string);
-
           const template = pkg.template;
 
           switch (inheritencePath.length) {
