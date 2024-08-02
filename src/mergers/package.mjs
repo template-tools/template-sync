@@ -185,10 +185,11 @@ const MERGE_HINTS = {
     overwrite: false
   },
   pkgbuild: {
-    orderBy: ["content", "output", "hooks", "backup", "groups"]
+    orderBy: ["content", "output", "hooks", "backup", "groups"],
+    merge: mergeSkip
   },
   "pkgbuild.*": {
-    overwrite: false
+    merge: mergeSkip
   },
   "pkgbuild.dependencies.*": {
     merge: mergeVersionsLargest,
