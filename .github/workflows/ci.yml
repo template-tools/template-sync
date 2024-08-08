@@ -41,6 +41,8 @@ jobs:
           path-to-lcov: build/coverage/lcov.info
           parallel: true
         continue-on-error: true
+      - name: null
+        run: npm ci
   release:
     needs:
       - test-node
