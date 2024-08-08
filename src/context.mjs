@@ -36,6 +36,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
     this.provider = provider;
     this.templateSources = asArray(options.template);
     this.targetBranch = targetBranch;
+    this.#pullRequestBranch = options.pullRequestBranch;
     this.track = options.track || false;
     this.dry = options.dry || false;
     this.create = options.create || false;
@@ -193,6 +194,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
     return this.properties.usedBy !== undefined;
   }
 
+  get pullRequestBranch() {
+    return this.#pullRequestBranch || `template-sync/${template.shortKey}`;
+  }
+  
   /**
    * Generate Pull Requests.
    * @return {AsyncIterable<PullRequest>}
@@ -274,8 +279,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
         }
 
         yield targetBranch.commitIntoPullRequest(this.commits(), {
-          pullRequestBranch: `template-sync/${template.shortKey}`,
-          title: `merge from ${template.shortKey}`,
+          pullRequestBranch: this.pullRequestBranch,
+          title: `merge from ${this.pullRequestBranch}`,
           bodyFromCommitMessages: true,
           dry: this.dry
         });
