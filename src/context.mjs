@@ -72,7 +72,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
   }
 
   /**
-   * 
+   *
    * @returns {Promise<Context|undefined>}
    */
   async initialize() {
@@ -158,7 +158,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       Object.assign(this.properties, await Package.properties(entry));
     } catch {}
 
-    if(!this.isTemplate && !this.targetBranch.isWritable) {
+    if (!this.isTemplate && !this.targetBranch.isWritable) {
       return undefined;
     }
 
@@ -195,10 +195,10 @@ export class Context extends LogLevelMixin(class _Context {}) {
     return this.properties.usedBy !== undefined;
   }
 
-  get pullRequestBranch() {
+  pullRequestBranch(template) {
     return this.#pullRequestBranch || `template-sync/${template.shortKey}`;
   }
-  
+
   /**
    * Generate Pull Requests.
    * @return {AsyncIterable<PullRequest>}
@@ -279,9 +279,11 @@ export class Context extends LogLevelMixin(class _Context {}) {
           });
         }
 
+        const pullRequestBranch = this.pullRequestBranch(template);
+
         yield targetBranch.commitIntoPullRequest(this.commits(), {
-          pullRequestBranch: this.pullRequestBranch,
-          title: `merge from ${this.pullRequestBranch}`,
+          pullRequestBranch,
+          title: `merge from ${pullRequestBranch}`,
           bodyFromCommitMessages: true,
           dry: this.dry
         });
