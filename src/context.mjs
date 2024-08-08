@@ -20,7 +20,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
     return pc.initialize();
   }
 
-  /** @type {Branch} */ targetBranch;
+  /** @type {Branch|String} */ targetBranch;
+  /** @type {String} */ #pullRequestBranch;
 
   /**
    * Context prepared to execute one branch.
