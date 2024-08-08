@@ -28,7 +28,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: package-lock.json
-      - run: npm ci
+      - name: checkout
+        run: npm ci
       - run: npm run cover --if-present
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -58,7 +59,6 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: checkout
         run: npm ci
-      - run: npm ci
       - run: npx semantic-release
         env:
           CI: "true"
