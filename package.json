@@ -63,7 +63,7 @@
     "semantic-release": "^24.1.2"
   },
   "engines": {
-    "node": ">=22.7.0"
+    "node": ">=22.9.0"
   },
   "repository": {
     "type": "git",
