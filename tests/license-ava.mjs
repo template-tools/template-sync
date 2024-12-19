@@ -35,7 +35,7 @@ async function lmt(t, license, template, year, expected, message) {
 }
 
 lmt.title = (providedTitle = "", license, template, year, expected, message) =>
-  `license ${providedTitle} ${license} ${year} ${expected}`.trim();
+  `license ${providedTitle} ${license} ${year} ${expected||""}`.trim();
 
 test(
   lmt,
@@ -80,11 +80,18 @@ test(
   2020
 );
 
-test.only(
+test(
   lmt,
   undefined,
   "Copyright (c) {{license.years}} by {{license.owner}}",
   2097,
   "Copyright (c) 2097 by default_owner",
   "chore(license): update from template"
+);
+
+test(
+  lmt,
+  "Copyright (C) 2015-2024 by xyz",
+  "Copyright (C) {{license.years}} by {{license.owner}}",
+  2024
 );
