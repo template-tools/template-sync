@@ -83,7 +83,7 @@ export class License extends Merger {
       originalYears = stringToIntegers(m[1]);
       mergedYears = originalYears.union(mergedYears);
 
-      if (m[5] !== undefined) {
+      if (m[6] !== undefined) {
         context.properties.license.owner = m[6];
       }
     }
