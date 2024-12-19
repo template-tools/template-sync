@@ -26,7 +26,7 @@ async function lmt(t, license, template, year, expected, message) {
     t.is(message, undefined);
     t.is(expected, undefined);
   } else {
-    if(message) {
+    if (message) {
       t.is(commit.message, message, "message");
     }
     t.is(await commit.entries[0].string, expected, "merged content");
@@ -34,15 +34,24 @@ async function lmt(t, license, template, year, expected, message) {
 }
 
 lmt.title = (providedTitle = "", license, template, year, expected, message) =>
-  `license ${providedTitle} ${license} ${year} ${expected||""}`.trim();
+  `license ${providedTitle} ${license} ${year} ${expected || ""}`.trim();
+
+test(
+  lmt,
+  "Copyright (c) 1999 by {{license.owner}}",
+  "Copyright (C) {{license.years}} by {{license.owner}}",
+  2018,
+  "Copyright (C) 1999,2018 by default_owner",
+  "chore(license): add year 2018"
+);
 
 test(
   lmt,
   "Copyright (c) 1999 by xyz",
   "Copyright (C) {{license.years}} by {{license.owner}}",
-  2099,
-  "Copyright (C) 1999,2099 by xyz",
-  "chore(license): add year 2099"
+  2019,
+  "Copyright (C) 1999,2019 by xyz",
+  "chore(license): add year 2019"
 );
 
 test(

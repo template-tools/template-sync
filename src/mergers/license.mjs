@@ -83,7 +83,7 @@ export class License extends Merger {
       originalYears = stringToIntegers(m[1]);
       mergedYears = originalYears.union(mergedYears);
 
-      if (m[6] !== undefined) {
+      if (m[6] !== undefined && m[6] !== '{{license.owner}}') {
         context.properties.license.owner = m[6];
       }
     }
@@ -93,9 +93,10 @@ export class License extends Merger {
 
     if (merged !== original) {
       const addedYears = mergedYears.difference(originalYears);
+
       yield {
         entries: [new StringContentEntry(destinationEntry.name, merged)],
-        message: originalYears.size !== 0
+        message: addedYears.size !== 0 && original.length !== 0
           ? `${options.messagePrefix}add year ${[...addedYears]}`
           : `${options.messagePrefix}update from template`
       };
