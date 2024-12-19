@@ -68,43 +68,34 @@ export class License extends Merger {
     sourceEntry,
     options = this.options
   ) {
-    let years = new Set();
-    const addedYears = new Set();
+    let mergedYears = new Set([context.evaluate("date.year")]);
+    let originalYears = new Set();
     const [original, template] = await Promise.all([
       destinationEntry.string,
       sourceEntry.string
     ]);
 
     const m = original.match(
-      /opyright\s*\(c\)\s*((\d+)([,\-\d]+)*)(\s*(,|by)\s*(.*))?/
+      /opyright\s*\(c\)\s*((\d+)([,\-\d]+)*)(\s*(,|by)\s*(.*))?/i
     );
 
     if (m) {
-      const year = context.evaluate("date.year");
-      years = stringToIntegers(m[1]);
+      originalYears = stringToIntegers(m[1]);
+      mergedYears = originalYears.union(mergedYears);
 
       if (m[5] !== undefined) {
         context.properties.license.owner = m[6];
       }
-
-      if (!years.has(year)) {
-        years.add(year);
-        addedYears.add(year);
-      }
     }
 
-    const merged =
-      original.length > 0
-        ? original.replace(
-            /opyright\s*\(c\)\s*(\d+)([,\-\d])*/,
-            `opyright (c) ${yearsToString(years)}`
-          )
-        : context.expand(template);
+    context.properties.license.years = yearsToString(mergedYears);
+    const merged = context.expand(template);
 
     if (merged !== original) {
+      const addedYears = mergedYears.difference(originalYears);
       yield {
         entries: [new StringContentEntry(destinationEntry.name, merged)],
-        message: addedYears.size
+        message: originalYears.size !== 0
           ? `${options.messagePrefix}add year ${[...addedYears]}`
           : `${options.messagePrefix}update from template`
       };
