@@ -142,7 +142,7 @@ export class Context extends LogLevelMixin(class _Context {}) {
       this.properties.license.owner === undefined
     ) {
       Object.assign(this.properties.license, {
-        owner: targetBranch.owner.name
+        owner: targetBranch.repository.owner.name
       });
     }
 
