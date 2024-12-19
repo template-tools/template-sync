@@ -2,7 +2,6 @@ import test from "ava";
 
 import { createContext, asyncIterator2scalar } from "./helpers/util.mjs";
 import { StringContentEntry, ContentEntry } from "content-entry";
-
 import { License } from "../src/mergers/license.mjs";
 
 async function lmt(t, license, template, year, expected, message) {
@@ -91,7 +90,7 @@ test(
 
 test(
   lmt,
-  "Copyright (C) 2015-2024 by xyz",
+  "Copyright (C) 2015-2024 by a & b",
   "Copyright (C) {{license.years}} by {{license.owner}}",
   2024
 );
