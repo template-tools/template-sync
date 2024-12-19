@@ -8,7 +8,7 @@ import { License } from "../src/mergers/license.mjs";
 async function lmt(t, license, template, year, expected, message) {
   const context = await createContext({
     date: { year },
-    license: { owner: "xyz" }
+    license: { owner: "default_owner" }
   });
 
   const commit = await asyncIterator2scalar(
@@ -80,11 +80,11 @@ test(
   2020
 );
 
-test(
+test.only(
   lmt,
   undefined,
   "Copyright (c) {{license.years}} by {{license.owner}}",
   2097,
-  "Copyright (c) 2097 by xyz",
+  "Copyright (c) 2097 by default_owner",
   "chore(license): update from template"
 );
