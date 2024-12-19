@@ -38,6 +38,15 @@ lmt.title = (providedTitle = "", license, template, year, expected, message) =>
 
 test(
   lmt,
+  "Copyright (c) 1999 xyz",
+  "Copyright (C) {{license.years}} by {{license.owner}}",
+  2017,
+  "Copyright (C) 1999,2017 by xyz",
+  "chore(license): add year 2017"
+);
+
+test(
+  lmt,
   "Copyright (c) 1999 by {{license.owner}}",
   "Copyright (C) {{license.years}} by {{license.owner}}",
   2018,

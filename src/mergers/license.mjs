@@ -76,7 +76,7 @@ export class License extends Merger {
     ]);
 
     const m = original.match(
-      /opyright\s*\(c\)\s*((\d+)([,\-\d]+)*)(\s*(,|by)\s*(.*))?/i
+      /opyright\s*\(c\)\s*((\d+)([,\-\d]+)*)(\s*(,|by)?\s*(.*))?/i
     );
 
     if (m) {
