@@ -39,6 +39,7 @@ function moduleNames(object, modules) {
 const sortedKeys = [
   "name",
   "version",
+  "workspaces",
   "private",
   "publishConfig",
   "files",
@@ -99,6 +100,13 @@ const MODULE_HINT = { type: "fix", scope: "module" };
 const REMOVE_HINT = { compare, removeEmpty: true };
 const DEPENDENCY_HINT = { merge: mergeVersionsLargest, scope: "deps" };
 const DEPENDENCY_HINT_FIX = { type: "fix", ...DEPENDENCY_HINT };
+const ENGINES_HINT = {
+  compare,
+  merge: mergeVersionsLargest,
+  removeEmpty: true,
+  type: "fix:breaking",
+  scope: "engines"
+};
 const MERGE_HINTS = {
   "*": { scope: "package", type: "chore" },
   "": { orderBy: sortedKeys },
@@ -169,13 +177,8 @@ const MERGE_HINTS = {
   "bundeledDependencies.*": DEPENDENCY_HINT,
   overrides: REMOVE_HINT,
   "overrides.*": DEPENDENCY_HINT,
-  "engines.*": {
-    compare,
-    merge: mergeVersionsLargest,
-    removeEmpty: true,
-    type: "fix:breaking",
-    scope: "engines"
-  },
+  "engines.*": ENGINES_HINT,
+  "devEngines.*": ENGINES_HINT,
   postcss: REMOVE_HINT,
   browserslist: REMOVE_HINT,
   release: REMOVE_HINT,

@@ -510,6 +510,7 @@ export function mergeTemplate(a, b) {
   const mvl = { keepHints: true, merge: mergeVersionsLargest };
   return merge(a, b, "", undefined, {
     "engines.*": mvl,
+    "devEngines.*": mvl,
     "scripts.*": { keepHints: true, merge: mergeExpressions },
     "dependencies.*": mvl,
     "devDependencies.*": mvl,
