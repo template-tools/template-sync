@@ -96,7 +96,7 @@ const sortedKeys = [
 
 const propertyKeys = ["description", "version", "name", "main", "browser"];
 
-const MODULE_HINT = { type: "fix", scope: "module" };
+const MODULE_HINT = { type: "fix", scope: "module",  orderBy: [ "node-addons", "node", "import", "require", "module-sync", "svelte", "types", "default"] };
 const REMOVE_HINT = { compare, removeEmpty: true };
 const DEPENDENCY_HINT = { merge: mergeVersionsLargest, scope: "deps" };
 const DEPENDENCY_HINT_FIX = { type: "fix", ...DEPENDENCY_HINT };
