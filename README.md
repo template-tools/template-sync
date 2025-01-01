@@ -51,37 +51,140 @@ Merges contents from template branch into destination branch handling some speci
 
 ### Table of Contents
 
-*   [Delete](#delete)
-*   [Merger](#merger)
-    *   [properties](#properties)
-        *   [Parameters](#parameters)
+*   [Context](#context)
+    *   [Parameters](#parameters)
+    *   [Properties](#properties)
+    *   [targetBranch](#targetbranch)
+    *   [initialize](#initialize)
+    *   [execute](#execute)
     *   [commits](#commits)
-        *   [Parameters](#parameters-1)
-*   [INI](#ini)
-*   [normalizeTemplateSources](#normalizetemplatesources)
-    *   [Parameters](#parameters-2)
-*   [jspath](#jspath)
-    *   [Parameters](#parameters-3)
-*   [actions2message](#actions2message)
-    *   [Parameters](#parameters-4)
-*   [actions2messages](#actions2messages)
-    *   [Parameters](#parameters-5)
-*   [MergeLineSet](#mergelineset)
+    *   [executeBranch](#executebranch)
+*   [pullRequestBranch](#pullrequestbranch)
 *   [sortedKeys](#sortedkeys)
 *   [exportsConditionOrder](#exportsconditionorder)
 *   [Package](#package)
     *   [properties](#properties-1)
-        *   [Parameters](#parameters-6)
+        *   [Parameters](#parameters-1)
+*   [Merger](#merger)
+    *   [properties](#properties-2)
+        *   [Parameters](#parameters-2)
+    *   [commits](#commits-1)
+        *   [Parameters](#parameters-3)
+*   [Merger](#merger-1)
+    *   [Properties](#properties-3)
+    *   [properties](#properties-4)
+        *   [Parameters](#parameters-4)
+    *   [commits](#commits-2)
+        *   [Parameters](#parameters-5)
 *   [Readme](#readme)
+*   [MergeLineSet](#mergelineset)
 *   [ReplaceIfEmpty](#replaceifempty)
 *   [Replace](#replace)
+*   [INI](#ini)
 *   [Skip](#skip)
+*   [Delete](#delete)
+*   [EntryMerger](#entrymerger)
+    *   [Properties](#properties-5)
+*   [Template](#template)
+    *   [Parameters](#parameters-6)
+    *   [Properties](#properties-6)
+    *   [shortKey](#shortkey)
+    *   [entryMerger](#entrymerger-1)
+        *   [Parameters](#parameters-7)
+    *   [mergerFor](#mergerfor)
+        *   [Parameters](#parameters-8)
+    *   [\_templateFrom](#_templatefrom)
+        *   [Parameters](#parameters-9)
+    *   [updateUsedBy](#updateusedby)
+        *   [Parameters](#parameters-10)
+    *   [templateFor](#templatefor)
+        *   [Parameters](#parameters-11)
+*   [normalizeTemplateSources](#normalizetemplatesources)
+    *   [Parameters](#parameters-12)
+*   [jspath](#jspath)
+    *   [Parameters](#parameters-13)
+*   [actions2message](#actions2message)
+    *   [Parameters](#parameters-14)
+*   [actions2messages](#actions2messages)
+    *   [Parameters](#parameters-15)
 
-## Delete
+## Context
+
+**Extends LogLevelMixin(class \_Context {})**
+
+Context prepared to execute one branch.
+
+### Parameters
+
+*   `provider` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
+*   `targetBranch` **(Branch | [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String))**&#x20;
+*   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
+
+### Properties
+
+*   `ctx` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
+*   `files` **[Map](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>**&#x20;
+
+### targetBranch
+
+Type: (Branch | [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String))
+
+### initialize
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<([Context](#context) | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined))>**&#x20;
+
+### execute
+
+Generate Pull Requests.
+
+Returns **AsyncIterable\<PullRequest>**&#x20;
+
+### commits
+
+Generate all commits from the template entry merges.
+
+Returns **AsyncIterable\<Commit>**&#x20;
+
+### executeBranch
+
+Generate Pull Requests.
+
+Returns **AsyncIterable\<PullRequest>** the actual PRs
+
+## pullRequestBranch
+
+Type: [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## sortedKeys
+
+order in which json keys are written
+
+## exportsConditionOrder
+
+*   **See**: {<https://nodejs.org/dist/latest/docs/api/packages.html#exports}>
+
+Order in which exports are searched
+
+## Package
 
 **Extends Merger**
 
-Delete entry.
+Merger for package.json
+
+### properties
+
+Deliver some key properties.
+
+*   name
+*   version
+*   description
+*   main
+
+#### Parameters
+
+*   `entry` **ContentEntry**&#x20;
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>**&#x20;
 
 ## Merger
 
@@ -95,7 +198,7 @@ Deliver some key properties.
 
 *   `entry` **ContentEntry**&#x20;
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** extracted properties
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** extracted properties
 
 ### commits
 
@@ -108,11 +211,169 @@ Generate commits as result of merging two entries.
 *   `sourceEntry` &#x20;
 *   `options` &#x20;
 
+Returns **AsyncIterable\<Commit>**&#x20;
+
+## Merger
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+*   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
+*   `pattern` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
+*   `factory` **Class**&#x20;
+*   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
+
+### properties
+
+Deliver some key properties.
+
+#### Parameters
+
+*   `entry` **ContentEntry**&#x20;
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** extracted properties
+
+### commits
+
+Generate commits as result of merging two entries.
+
+#### Parameters
+
+*   `context` &#x20;
+*   `destinationEntry` &#x20;
+*   `sourceEntry` &#x20;
+*   `options` &#x20;
+
+Returns **AsyncIterable\<Commit>**&#x20;
+
+## Readme
+
+**Extends Merger**
+
+Injects badges into README.md.
+
+## MergeLineSet
+
+**Extends Merger**
+
+## ReplaceIfEmpty
+
+**Extends Merger**
+
+Overwrites none existing entries from template.
+
+## Replace
+
+**Extends Merger**
+
+Always overwrite entry from template
+
 ## INI
 
 **Extends Merger**
 
 Merge ini entries
+
+## Skip
+
+**Extends Merger**
+
+Does not generate destination entry
+
+## Delete
+
+**Extends Merger**
+
+Delete entry.
+
+## EntryMerger
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
+*   `factory` **Class**&#x20;
+*   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
+
+## Template
+
+**Extends LogLevelMixin(class {})**
+
+### Parameters
+
+*   `context` **Conext**&#x20;
+*   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**&#x20;
+*   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
+
+### Properties
+
+*   `context` **Conext**&#x20;
+*   `sources` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**&#x20;
+*   `toBeRemovedSources` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**&#x20;
+*   `mergers` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[Merger](#merger)>**&#x20;
+*   `branches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)\<Branch>** all used branches direct and inherited
+*   `keyBranches` **[Set](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set)\<Branch>** branches used to define the template
+
+### shortKey
+
+Used to identify generated branch.
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** short template key
+
+### entryMerger
+
+Find a suitable merger for each entry
+
+#### Parameters
+
+*   `entries` **Iterator\<ContentEntry>**&#x20;
+
+Returns **Iterator<\[ContentEntry, [Merger](#merger)]>**&#x20;
+
+### mergerFor
+
+Find a suitable merger
+
+#### Parameters
+
+*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** of the entry
+
+Returns **[Merger](#merger)**&#x20;
+
+### \_templateFrom
+
+Load all templates and collects the entries.
+
+#### Parameters
+
+*   `sources` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** branch names
+*   `inheritencePath` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)\<Branch>** who was requesting us (optional, default `[]`)
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** package as merged from sources
+
+### updateUsedBy
+
+Updates usedBy section of the template branch.
+
+#### Parameters
+
+*   `targetBranch` **Branch** template to be updated
+*   `templateSources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** original branch identifiers (even with deletion hints)
+*   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** as passed to commitIntoPullRequest
+
+Returns **AsyncIterator\<PullRequest>**&#x20;
+
+### templateFor
+
+Load a template.
+
+#### Parameters
+
+*   `context` **[Context](#context)**&#x20;
+*   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**&#x20;
+*   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
 
 ## normalizeTemplateSources
 
@@ -151,65 +412,6 @@ Returns **any** actions as one string lines ordered by scope
 *   `actions` &#x20;
 *   `prefix` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
 *   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
-
-## MergeLineSet
-
-**Extends Merger**
-
-## sortedKeys
-
-order in which json keys are written
-
-## exportsConditionOrder
-
-*   **See**: {<https://nodejs.org/dist/latest/docs/api/packages.html#exports}>
-
-Order in which exports are searched
-
-## Package
-
-**Extends Merger**
-
-Merger for package.json
-
-### properties
-
-Deliver some key properties.
-
-*   name
-*   version
-*   description
-*   main
-
-#### Parameters
-
-*   `entry` **ContentEntry**&#x20;
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>**&#x20;
-
-## Readme
-
-**Extends Merger**
-
-Injects badges into README.md.
-
-## ReplaceIfEmpty
-
-**Extends Merger**
-
-Overwrites none existing entries from template.
-
-## Replace
-
-**Extends Merger**
-
-Always overwrite entry from template
-
-## Skip
-
-**Extends Merger**
-
-Does not generate destination entry
 
 # install
 
