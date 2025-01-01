@@ -1,3 +1,5 @@
+import { Commit } from "repository-provider";
+
 /**
  * Mergable content
  */
@@ -21,7 +23,7 @@ export class Merger {
   /**
    * Deliver some key properties.
    * @param {ContentEntry} entry
-   * @return {Object} extracted properties
+   * @return {Promise<Object>} extracted properties
    */
   static async properties(entry) {
     return {};
@@ -45,7 +47,7 @@ export class Merger {
 
   /**
    * Generate commits as result of merging two entries.
+   * @return {AsyncIterable<Commit>}
    */
-  static async *commits(context, destinationEntry, sourceEntry, options) {
-  }
+  static async *commits(context, destinationEntry, sourceEntry, options) {}
 }
