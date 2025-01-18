@@ -78,6 +78,7 @@ Merges contents from template branch into destination branch handling some speci
         *   [Parameters](#parameters-5)
 *   [Readme](#readme)
 *   [MergeLineSet](#mergelineset)
+*   [ReplaceIfEmpty](#replaceifempty)
 *   [Replace](#replace)
 *   [INI](#ini)
 *   [Skip](#skip)
@@ -98,7 +99,6 @@ Merges contents from template branch into destination branch handling some speci
         *   [Parameters](#parameters-10)
     *   [templateFor](#templatefor)
         *   [Parameters](#parameters-11)
-*   [ReplaceIfEmpty](#replaceifempty)
 *   [normalizeTemplateSources](#normalizetemplatesources)
     *   [Parameters](#parameters-12)
 *   [jspath](#jspath)
@@ -257,6 +257,12 @@ Injects badges into README.md.
 
 **Extends Merger**
 
+## ReplaceIfEmpty
+
+**Extends Merger**
+
+Overwrites none existing entries from template.
+
 ## Replace
 
 **Extends Merger**
@@ -368,12 +374,6 @@ Load a template.
 *   `context` **[Context](#context)**&#x20;
 *   `sources` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>**&#x20;
 *   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
-
-## ReplaceIfEmpty
-
-**Extends Merger**
-
-Overwrites none existing entries from template.
 
 ## normalizeTemplateSources
 
