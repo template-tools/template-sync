@@ -32,6 +32,8 @@ export class Context extends LogLevelMixin(class _Context {}) {
   constructor(provider, targetBranch, options = {}) {
     super();
 
+    this.logLevel = options.logLevel;
+
     provider.messageDestination = this;
     this.options = options;
     this.provider = provider;
@@ -57,10 +59,6 @@ export class Context extends LogLevelMixin(class _Context {}) {
     });
 
     this.log = options.log || ((level, ...args) => console.log(...args));
-  }
-
-  get logLevel() {
-    return this.options.logLevel;
   }
 
   expand(arg, flag = true) {
