@@ -230,33 +230,6 @@ Order in which exports are searched
 
 **Extends Merger**
 
-Merger for package.json
-
-### properties
-
-Deliver some key properties.
-
-*   name
-*   version
-*   description
-*   main
-
-#### Parameters
-
-*   `entry` **ContentEntry**&#x20;
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>**&#x20;
-
-## Readme
-
-**Extends Merger**
-
-Injects badges into README.md.
-
-## MergeLineSet
-
-**Extends Merger**
-
 ## Replace
 
 **Extends Merger**
