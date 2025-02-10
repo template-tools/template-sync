@@ -84,6 +84,7 @@ export class Template extends LogLevelMixin(class {}) {
   constructor(context, sources, options = {}) {
     super();
 
+    this.logLevel = options.logLevel;
     this.context = context;
     this.sources = new Set(sources.filter(t => !t.startsWith("-")));
     this.toBeRemovedSources = new Set(
@@ -122,10 +123,6 @@ export class Template extends LogLevelMixin(class {}) {
 
   toString() {
     return this.name;
-  }
-
-  get logLevel() {
-    return this.options.logLevel;
   }
 
   log(...args) {
