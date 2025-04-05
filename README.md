@@ -60,21 +60,21 @@ Merges contents from template branch into destination branch handling some speci
     *   [commits](#commits)
     *   [executeBranch](#executebranch)
 *   [pullRequestBranch](#pullrequestbranch)
-*   [Merger](#merger)
-    *   [properties](#properties-1)
-        *   [Parameters](#parameters-1)
-    *   [commits](#commits-1)
-        *   [Parameters](#parameters-2)
-*   [Merger](#merger-1)
-    *   [Properties](#properties-2)
-    *   [properties](#properties-3)
-        *   [Parameters](#parameters-3)
-    *   [commits](#commits-2)
-        *   [Parameters](#parameters-4)
 *   [sortedKeys](#sortedkeys)
 *   [exportsConditionOrder](#exportsconditionorder)
 *   [Package](#package)
+    *   [properties](#properties-1)
+        *   [Parameters](#parameters-1)
+*   [Merger](#merger)
+    *   [properties](#properties-2)
+        *   [Parameters](#parameters-2)
+    *   [commits](#commits-1)
+        *   [Parameters](#parameters-3)
+*   [Merger](#merger-1)
+    *   [Properties](#properties-3)
     *   [properties](#properties-4)
+        *   [Parameters](#parameters-4)
+    *   [commits](#commits-2)
         *   [Parameters](#parameters-5)
 *   [Readme](#readme)
 *   [MergeLineSet](#mergelineset)
@@ -155,6 +155,37 @@ Returns **AsyncIterable\<PullRequest>** the actual PRs
 
 Type: [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
 
+## sortedKeys
+
+order in which json keys are written
+
+## exportsConditionOrder
+
+*   **See**: {<https://nodejs.org/dist/latest/docs/api/packages.html#exports}>
+
+Order in which exports are searched
+
+## Package
+
+**Extends Merger**
+
+Merger for package.json
+
+### properties
+
+Deliver some key properties.
+
+*   name
+*   version
+*   description
+*   main
+
+#### Parameters
+
+*   `entry` **ContentEntry**&#x20;
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>**&#x20;
+
 ## Merger
 
 Mergable content
@@ -215,37 +246,6 @@ Generate commits as result of merging two entries.
 *   `options` &#x20;
 
 Returns **AsyncIterable\<Commit>**&#x20;
-
-## sortedKeys
-
-order in which json keys are written
-
-## exportsConditionOrder
-
-*   **See**: {<https://nodejs.org/dist/latest/docs/api/packages.html#exports}>
-
-Order in which exports are searched
-
-## Package
-
-**Extends Merger**
-
-Merger for package.json
-
-### properties
-
-Deliver some key properties.
-
-*   name
-*   version
-*   description
-*   main
-
-#### Parameters
-
-*   `entry` **ContentEntry**&#x20;
-
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>**&#x20;
 
 ## Readme
 
