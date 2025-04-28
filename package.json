@@ -42,7 +42,7 @@
     "content-entry": "^12.0.0",
     "expression-expander": "^7.2.5",
     "hinted-tree-merger": "^6.2.6",
-    "loglevel-mixin": "^7.2.2",
+    "loglevel-mixin": "^7.2.3",
     "markdown": "^0.5.0",
     "matching-iterator": "^2.1.3",
     "one-time-execution-method": "^3.1.1",
@@ -59,7 +59,7 @@
     "documentation": "^14.0.3",
     "execa": "^9.5.2",
     "github-repository-provider": "^9.0.21",
-    "mock-repository-provider": "^8.2.22",
+    "mock-repository-provider": "^8.2.23",
     "semantic-release": "^24.2.3"
   },
   "engines": {
