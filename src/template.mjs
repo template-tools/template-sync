@@ -186,7 +186,7 @@ export class Template extends LogLevelMixin(class {}) {
       );
     }
 
-    const pkg = new StringContentEntry("package.json", JSON.stringify(pj));
+    const pkg = new StringContentEntry("package.json", undefined, JSON.stringify(pj));
 
     pkg.merger = this.mergerFor(pkg.name);
 
@@ -445,7 +445,7 @@ export class Template extends LogLevelMixin(class {}) {
         const message = `fix: ${action} ${itemName}`;
 
         yield sourceBranch.commitIntoPullRequest(
-          { message, entries: [new StringContentEntry(name, modified)] },
+          { message, entries: [new StringContentEntry(name, undefined, modified)] },
           {
             pullRequestBranch: "npm-template-sync/used-by",
             title: message,

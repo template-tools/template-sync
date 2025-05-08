@@ -22,6 +22,7 @@ test("package used dev dependencies", async t => {
       new Set(),
       new StringContentEntry(
         "package.json",
+        undefined,
         JSON.stringify({
           release: {
             verifyRelease: "cracks"

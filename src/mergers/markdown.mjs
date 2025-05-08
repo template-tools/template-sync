@@ -49,7 +49,7 @@ export class Markdown extends Merger {
 
       yield {
         message: actions2message(actions, options.messagePrefix, name),
-        entries: [new StringContentEntry(name, merged)]
+        entries: [new StringContentEntry(name, undefined, merged)]
       };
     }
   }

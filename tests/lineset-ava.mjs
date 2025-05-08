@@ -7,8 +7,16 @@ test("MergeLineSet lines remove", async t => {
   const commit = await asyncIterator2scalar(
     MergeLineSet.commits(
       await createContext(),
-      new StringContentEntry("aFile", ["Line 1", "Line 3"].join("\n")),
-      new StringContentEntry("aFile", ["-Line 1", "Line 2"].join("\n")),
+      new StringContentEntry(
+        "aFile",
+        undefined,
+        ["Line 1", "Line 3"].join("\n")
+      ),
+      new StringContentEntry(
+        "aFile",
+        undefined,
+        ["-Line 1", "Line 2"].join("\n")
+      ),
       {
         messagePrefix: "chore(something): "
       }
@@ -23,8 +31,12 @@ test("MergeLineSet keepHints", async t => {
   const commit = await asyncIterator2scalar(
     MergeLineSet.commits(
       await createContext(),
-      new StringContentEntry("aFile", ["Line 3"].join("\n")),
-      new StringContentEntry("aFile", ["-Line 1", "Line 2"].join("\n")),
+      new StringContentEntry("aFile", undefined, ["Line 3"].join("\n")),
+      new StringContentEntry(
+        "aFile",
+        undefined,
+        ["-Line 1", "Line 2"].join("\n")
+      ),
       {
         mergeHints: { "*": { keepHints: true } }
       }
@@ -41,8 +53,16 @@ test("MergeLineSet nop", async t => {
   const commit = await asyncIterator2scalar(
     MergeLineSet.commits(
       await createContext(),
-      new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n") + "\n"),
-      new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n"))
+      new StringContentEntry(
+        "aFile",
+        undefined,
+        ["Line 1", "Line 2"].join("\n") + "\n"
+      ),
+      new StringContentEntry(
+        "aFile",
+        undefined,
+        ["Line 1", "Line 2"].join("\n")
+      )
     )
   );
 
@@ -53,8 +73,16 @@ test("MergeLineSet ignore option", async t => {
   const commit = await asyncIterator2scalar(
     MergeLineSet.commits(
       await createContext(),
-      new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n") + "\n"),
-      new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n")),
+      new StringContentEntry(
+        "aFile",
+        undefined,
+        ["Line 1", "Line 2"].join("\n") + "\n"
+      ),
+      new StringContentEntry(
+        "aFile",
+        undefined,
+        ["Line 1", "Line 2"].join("\n")
+      ),
       {
         ignore: ["Line 2"]
       }
@@ -68,7 +96,11 @@ test("MergeLineSet from empty", async t => {
   const commit = await asyncIterator2scalar(
     MergeLineSet.commits(
       await createContext(),
-      new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n") + "\n"),
+      new StringContentEntry(
+        "aFile",
+        undefined,
+        ["Line 1", "Line 2"].join("\n") + "\n"
+      ),
       new ContentEntry("aFile")
     )
   );
@@ -77,12 +109,15 @@ test("MergeLineSet from empty", async t => {
 });
 
 test("MergeLineSet into empty", async t => {
-
   const commit = await asyncIterator2scalar(
     MergeLineSet.commits(
       await createContext(),
       new ContentEntry("aFile"),
-      new StringContentEntry("aFile", ["Line 1", "Line 2"].join("\n") + "\n")
+      new StringContentEntry(
+        "aFile",
+        undefined,
+        ["Line 1", "Line 2"].join("\n") + "\n"
+      )
     )
   );
 

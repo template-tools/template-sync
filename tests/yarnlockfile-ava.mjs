@@ -21,8 +21,8 @@ test("yarn lockfile merge", async t => {
       await createContext({
         description: "the description"
       }),
-      new StringContentEntry("yarn.lock", content),
-      new StringContentEntry("yarn.lock", content)
+      new StringContentEntry("yarn.lock", undefined, content),
+      new StringContentEntry("yarn.lock", undefined, content)
     )
   );
 

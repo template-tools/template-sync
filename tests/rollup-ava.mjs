@@ -9,6 +9,7 @@ test("rollup", async t => {
       await createContext(),
       new StringContentEntry(
         "rollup.config.js",
+        undefined,
         `'use strict';
   import babel from 'rollup-plugin-babel';
   export default {
@@ -32,6 +33,7 @@ test("rollup", async t => {
       ),
       new StringContentEntry(
         "rollup.config.js",
+        undefined,
         `import babel from 'rollup-plugin-babel';
   import pkg from './package.json';
   
@@ -87,7 +89,11 @@ test("rollup empty template", async t => {
   const commit = await asyncIterator2scalar(
     Rollup.commits(
       await createContext(),
-      new StringContentEntry("rollup.config.mjs", "export default {};"),
+      new StringContentEntry(
+        "rollup.config.mjs",
+        undefined,
+        "export default {};"
+      ),
       new ContentEntry("rollup.config.mjs")
     )
   );
@@ -100,7 +106,11 @@ test("rollup empty target", async t => {
     Rollup.commits(
       await createContext(),
       new ContentEntry("rollup.config.mjs"),
-      new StringContentEntry("rollup.config.mjs", "export default {};")
+      new StringContentEntry(
+        "rollup.config.mjs",
+        undefined,
+        "export default {};"
+      )
     )
   );
 
@@ -117,6 +127,7 @@ test("rollup without imports and complex target expression", async t => {
       await createContext(),
       new StringContentEntry(
         "rollup.config.js",
+        undefined,
         `export default ['base'].map(name => {
   return {
     input: 'tests/xx-test.js',
@@ -129,6 +140,7 @@ test("rollup without imports and complex target expression", async t => {
       ),
       new StringContentEntry(
         "rollup.config.js",
+        undefined,
         `export default {
   input: "input.js",
     output: {

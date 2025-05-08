@@ -63,7 +63,7 @@ export class MergeLineSet extends Merger {
     if (merged !== original) {
       const name = destinationEntry.name;
       yield {
-        entries: [new StringContentEntry(name, merged)],
+        entries: [new StringContentEntry(name, undefined, merged)],
         message: actions2message(actions, options.messagePrefix, name)
       };
     }

@@ -140,6 +140,7 @@ test("template merge travis", async t => {
 
   const t1 = new StringContentEntry(
     ".travis.yml",
+    undefined,
     `jobs:
   include:
     - stage: test
@@ -149,6 +150,7 @@ test("template merge travis", async t => {
   );
   const t2 = new StringContentEntry(
     ".travis.yml",
+    undefined,
     `jobs:
   include:
     - stage: test

@@ -6,7 +6,7 @@ async function rudt(t, content, dependencies) {
   t.deepEqual(
     await Rollup.usedDevDependencies(
       new Set(),
-      new StringContentEntry("rolloup.config.mjs", content)
+      new StringContentEntry("rolloup.config.mjs", undefined, content)
     ),
     new Set(dependencies)
   );

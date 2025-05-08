@@ -11,12 +11,13 @@ test("markdown merge", async t => {
       undefined,
       new StringContentEntry(
         FILE_NAME,
+        undefined,
         `# Hello
 * a
 * b
 `
       ),
-      new StringContentEntry(FILE_NAME, `# Other`)
+      new StringContentEntry(FILE_NAME, undefined, `# Other`)
     )
   );
 
@@ -38,11 +39,13 @@ test("markdown merge nop", async t => {
       undefined,
       new StringContentEntry(
         FILE_NAME,
+        undefined,
         `# Hello
 `
       ),
       new StringContentEntry(
         FILE_NAME,
+        undefined,
         `# Hello
 `
       )
@@ -59,6 +62,7 @@ test("markdown merge into empty", async t => {
       new ContentEntry(FILE_NAME),
       new StringContentEntry(
         FILE_NAME,
+        undefined,
         `# Hello
 `
       )

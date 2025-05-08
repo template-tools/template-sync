@@ -13,12 +13,14 @@ test("toml merge", async t => {
       }),
       new StringContentEntry(
         "a.toml",
+        undefined,
         stringify({
           key: "{{description}}"
         })
       ),
       new StringContentEntry(
         "a.toml",
+        undefined,
         stringify({
           oldKey: "oldValue"
         })
@@ -39,12 +41,14 @@ test("toml nop", async t => {
       await createContext({}),
       new StringContentEntry(
         "a.toml",
+        undefined,
         stringify({
           key: "value"
         })
       ),
       new StringContentEntry(
         "a.toml",
+        undefined,
         stringify({
           key: "value"
         })

@@ -23,7 +23,7 @@ export class Replace extends Merger {
     if ((await destinationEntry.string) !== source) {
       yield {
         message: `${options.messagePrefix}overwrite ${destinationEntry.name} with template content`,
-        entries: [new StringContentEntry(destinationEntry.name, source)]
+        entries: [new StringContentEntry(destinationEntry.name, undefined, source)]
       };
     }
   }

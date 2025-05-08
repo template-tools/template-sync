@@ -54,7 +54,7 @@ export class Readme extends Merger {
 
     if (merged !== original) {
       yield {
-        entries: [new StringContentEntry(destinationEntry.name, merged)],
+        entries: [new StringContentEntry(destinationEntry.name, undefined, merged)],
         message: "docs(README): update from template"
       };
     }

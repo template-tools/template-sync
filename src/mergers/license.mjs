@@ -95,7 +95,7 @@ export class License extends Merger {
       const addedYears = mergedYears.difference(originalYears);
 
       yield {
-        entries: [new StringContentEntry(destinationEntry.name, merged)],
+        entries: [new StringContentEntry(destinationEntry.name, undefined, merged)],
         message: addedYears.size !== 0 && original.length !== 0
           ? `${options.messagePrefix}add year ${[...addedYears]}`
           : `${options.messagePrefix}update from template`

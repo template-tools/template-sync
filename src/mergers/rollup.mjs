@@ -60,6 +60,7 @@ export class Rollup extends Merger {
         entries: [
           new StringContentEntry(
             destinationEntry.name,
+            undefined,
             context.expand(templateContent, options.expand)
           )
         ]
@@ -202,7 +203,7 @@ export class Rollup extends Merger {
 
     if (original !== merged) {
       yield {
-        entries: [new StringContentEntry(name, merged)],
+        entries: [new StringContentEntry(name, undefined, merged)],
         message: messages.join("\n")
       };
     }

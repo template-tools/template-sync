@@ -46,10 +46,14 @@ async function pkgt(
       context,
       content === undefined
         ? new ContentEntry(FILE_NAME)
-        : new StringContentEntry(FILE_NAME, JSON.stringify(content)),
+        : new StringContentEntry(FILE_NAME, undefined, JSON.stringify(content)),
       template === undefined
         ? new ContentEntry(FILE_NAME)
-        : new StringContentEntry(FILE_NAME, JSON.stringify(template)),
+        : new StringContentEntry(
+            FILE_NAME,
+            undefined,
+            JSON.stringify(template)
+          ),
       { ...Package.options, ...options }
     )
   );

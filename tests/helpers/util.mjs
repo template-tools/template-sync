@@ -61,12 +61,14 @@ export async function yamlt(
         ? new ContentEntry(FILE_NAME)
         : new StringContentEntry(
             FILE_NAME,
+            undefined,
             typeof content === "string" ? content : dump(content)
           ),
       template === undefined
         ? new ContentEntry(FILE_NAME)
         : new StringContentEntry(
             FILE_NAME,
+            undefined,
             typeof template === "string" ? template : dump(template)
           ),
       { ...factory.options, ...options }

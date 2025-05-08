@@ -18,6 +18,7 @@ test("used dev modules", async t => {
       new Set(),
       new StringContentEntry(
         "a.json",
+        undefined,
         `{
       "plugins": [
         "node_modules/jsdoc-babel"

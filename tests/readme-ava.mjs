@@ -15,6 +15,7 @@ test("readme", async t => {
       await createContext(),
       new StringContentEntry(
         "readme.md",
+        undefined,
         `[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)
 
 [![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)
@@ -23,7 +24,7 @@ test("readme", async t => {
 body
 body`
       ),
-      new StringContentEntry("xx", ""),
+      new StringContentEntry("xx", undefined, ""),
       {
         badges: [
           {
@@ -53,12 +54,13 @@ test("readme nop", async t => {
       await createContext(),
       new StringContentEntry(
         "readme.md",
+        undefined,
         `[![Badge 1](http://domain.net/somewhere1.svg)](http://domain.net/somewhere1)
 
 body
 body`
       ),
-      new StringContentEntry("xx", ""),
+      new StringContentEntry("xx", undefined, ""),
       {
         badges: [
           {

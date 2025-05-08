@@ -11,12 +11,14 @@ test("json merge", async t => {
       await createContext(),
       new StringContentEntry(
         FILE_NAME,
+        undefined,
         JSON.stringify({
           key: "value"
         })
       ),
       new StringContentEntry(
         FILE_NAME,
+        undefined,
         JSON.stringify({
           oldKey: "oldValue"
         })
@@ -37,6 +39,7 @@ test("json empty target", async t => {
       new ContentEntry(FILE_NAME),
       new StringContentEntry(
         FILE_NAME,
+        undefined,
         JSON.stringify({
           key: "value"
         })
@@ -55,6 +58,7 @@ test("json nop", async t => {
       await createContext(),
       new StringContentEntry(
         FILE_NAME,
+        undefined,
         JSON.stringify(
           {
             key: "value"
@@ -65,6 +69,7 @@ test("json nop", async t => {
       ),
       new StringContentEntry(
         FILE_NAME,
+        undefined,
         JSON.stringify(
           {
             key: "value"

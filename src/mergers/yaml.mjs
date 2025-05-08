@@ -43,7 +43,7 @@ export class YAML extends Merger {
       const name = destinationEntry.name;
 
       yield {
-        entries: [new StringContentEntry(name, merged)],
+        entries: [new StringContentEntry(name, undefined, merged)],
         message: actions2message(actions, options.messagePrefix, name)
       };
     }

@@ -11,6 +11,7 @@ test("ini merge", async t => {
       await createContext({ description: "value" }),
       new StringContentEntry(
         fileName,
+        undefined,
         `[Unit]
 Description={{description}}
 After=network-online.target
@@ -22,6 +23,7 @@ Type=notify
       ),
       new StringContentEntry(
         fileName,
+        undefined,
         `[Unit]
 Description={{description}}
 After=network-online.target
@@ -55,6 +57,7 @@ test("ini merge nop", async t => {
       await createContext({ description: "value" }),
       new StringContentEntry(
         fileName,
+        undefined,
         `[Unit]
 After=network-online.target
 
@@ -64,6 +67,7 @@ Type=notify
       ),
       new StringContentEntry(
         fileName,
+        undefined,
         `[Unit]
 After=network-online.target
 
@@ -85,6 +89,7 @@ test("ini merge empty dest", async t => {
       new ContentEntry(fileName),
       new StringContentEntry(
         fileName,
+        undefined,
         `[Unit]
 After=network-online.target
 

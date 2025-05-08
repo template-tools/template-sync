@@ -12,7 +12,7 @@ async function propertyt(
   const properties = await factory.properties(
     content === undefined
       ? new ContentEntry(name)
-      : new StringContentEntry(name, content)
+      : new StringContentEntry(name, undefined, content)
   );
 
   t.deepEqual(properties, expected, "properties");

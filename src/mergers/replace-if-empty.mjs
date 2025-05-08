@@ -24,6 +24,7 @@ export class ReplaceIfEmpty extends Merger {
           entries: [
             new StringContentEntry(
               destinationEntry.name,
+              undefined,
               context.expand(source, options.expand)
             )
           ]

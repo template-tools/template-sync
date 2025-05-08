@@ -15,10 +15,10 @@ async function lmt(t, license, template, year, expected, message) {
       context,
       license === undefined
         ? new ContentEntry("license")
-        : new StringContentEntry("license", license),
+        : new StringContentEntry("license", undefined, license),
       template === undefined
         ? new ContentEntry("license")
-        : new StringContentEntry("license", template)
+        : new StringContentEntry("license", undefined, template)
     )
   );
 

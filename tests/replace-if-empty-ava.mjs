@@ -4,35 +4,41 @@ import { StringContentEntry, ContentEntry } from "content-entry";
 import { ReplaceIfEmpty } from "../src/mergers/replace-if-empty.mjs";
 
 test("replace-if-empty differ", async t => {
-  const commit = await asyncIterator2scalar(ReplaceIfEmpty.commits(
-    await createContext({ name: 'a name' }),
-    new ContentEntry("aFile"),
-    new StringContentEntry("bFile", "Line 1x {{name}}"),
-    { expand: false }
-  ));
+  const commit = await asyncIterator2scalar(
+    ReplaceIfEmpty.commits(
+      await createContext({ name: "a name" }),
+      new ContentEntry("aFile"),
+      new StringContentEntry("bFile", undefined, "Line 1x {{name}}"),
+      { expand: false }
+    )
+  );
 
   t.is(await commit.entries[0].string, "Line 1x {{name}}");
   t.is(await commit.entries[0].name, "aFile");
 });
 
 test("replace-if-empty differ with expand", async t => {
-  const commit = await asyncIterator2scalar(ReplaceIfEmpty.commits(
-    await createContext({ name: 'a name' }),
-    new ContentEntry("aFile"),
-    new StringContentEntry("bFile", "Line 1x {{name}}"),
-    { expand: true }
-  ));
+  const commit = await asyncIterator2scalar(
+    ReplaceIfEmpty.commits(
+      await createContext({ name: "a name" }),
+      new ContentEntry("aFile"),
+      new StringContentEntry("bFile", undefined, "Line 1x {{name}}"),
+      { expand: true }
+    )
+  );
 
   t.is(await commit.entries[0].string, "Line 1x a name");
   t.is(await commit.entries[0].name, "aFile");
 });
 
 test("replace-if-empty nop", async t => {
-  const commit = await asyncIterator2scalar(ReplaceIfEmpty.commits(
-    await createContext({ name: 'a name' }),
-    new StringContentEntry("aFile", "Line 1"),
-    new StringContentEntry("bFile", "Line 1")
-  ));
+  const commit = await asyncIterator2scalar(
+    ReplaceIfEmpty.commits(
+      await createContext({ name: "a name" }),
+      new StringContentEntry("aFile", undefined, "Line 1"),
+      new StringContentEntry("bFile", undefined, "Line 1")
+    )
+  );
 
   t.is(commit, undefined);
 });

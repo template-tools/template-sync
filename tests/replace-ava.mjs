@@ -7,8 +7,8 @@ test("replace differ", async t => {
   const commit = await asyncIterator2scalar(
     Replace.commits(
       await createContext({ name: "a name" }),
-      new StringContentEntry("aFile", "Line 1"),
-      new StringContentEntry("bFile", "Line 1x {{name}}"),
+      new StringContentEntry("aFile", undefined, "Line 1"),
+      new StringContentEntry("bFile", undefined, "Line 1x {{name}}"),
       { expand: false, messagePrefix: "prefix: " }
     )
   );
@@ -22,8 +22,8 @@ test("replace differ expand", async t => {
   const commit = await asyncIterator2scalar(
     Replace.commits(
       await createContext({ name: "a name" }),
-      new StringContentEntry("aFile", "Line 1"),
-      new StringContentEntry("bFile", "Line 1x {{name}}"),
+      new StringContentEntry("aFile", undefined, "Line 1"),
+      new StringContentEntry("bFile", undefined, "Line 1x {{name}}"),
       { expand: true }
     )
   );
@@ -36,8 +36,8 @@ test("replace equal", async t => {
   const commit = await asyncIterator2scalar(
     Replace.commits(
       await createContext(),
-      new StringContentEntry("aFile", "Line 1"),
-      new StringContentEntry("bFile", "Line 1")
+      new StringContentEntry("aFile", undefined, "Line 1"),
+      new StringContentEntry("bFile", undefined, "Line 1")
     )
   );
 
