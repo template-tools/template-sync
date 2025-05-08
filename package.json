@@ -41,7 +41,7 @@
     "babylon": "^6.18.0",
     "content-entry": "^13.0.2",
     "expression-expander": "^7.2.7",
-    "hinted-tree-merger": "^6.2.6",
+    "hinted-tree-merger": "^6.2.7",
     "loglevel-mixin": "^7.2.5",
     "markdown": "^0.5.0",
     "matching-iterator": "^2.1.3",
@@ -59,7 +59,7 @@
     "documentation": "^14.0.3",
     "execa": "^9.5.2",
     "github-repository-provider": "^9.1.6",
-    "mock-repository-provider": "^8.2.42",
+    "mock-repository-provider": "^8.2.43",
     "semantic-release": "^24.2.3"
   },
   "engines": {
