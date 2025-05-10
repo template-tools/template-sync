@@ -44,7 +44,7 @@
     "hinted-tree-merger": "^6.2.7",
     "loglevel-mixin": "^7.2.5",
     "markdown": "^0.5.0",
-    "matching-iterator": "^2.1.3",
+    "matching-iterator": "^2.1.4",
     "one-time-execution-method": "^3.1.3",
     "recast": "^0.23.11",
     "remark-parse": "^11.0.0",
