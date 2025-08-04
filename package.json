@@ -39,7 +39,7 @@
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "babylon": "^6.18.0",
-    "content-entry": "^14.2.3",
+    "content-entry": "^14.2.4",
     "expression-expander": "^7.2.7",
     "hinted-tree-merger": "^6.2.7",
     "loglevel-mixin": "^7.2.5",
