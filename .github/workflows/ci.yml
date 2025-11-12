@@ -21,7 +21,6 @@ jobs:
           - ubuntu-latest
           - windows-latest
         node-version:
-          - 22.21.0
           - 24.11.1
     steps:
       - name: checkout
