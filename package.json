@@ -73,7 +73,7 @@
   "bugs": {
     "url": "https://github.com/template-tools/template-sync/issues"
   },
-  "homepage": "https://github.com/template-tools/template-sync#readme",
+  "homepage": "",
   "template": {
     "inheritFrom": [
       "arlac77/template-arlac77-github",
