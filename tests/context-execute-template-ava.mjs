@@ -1,14 +1,11 @@
 import test from "ava";
 import { GithubProvider } from "github-repository-provider";
-
 import { Context } from "../src/context.mjs";
 
 const TEMPLATE_REPO = "arlac77/template-root";
 
 test("context prepare from template", async t => {
-  const provider = new GithubProvider(
-    GithubProvider.optionsFromEnvironment(process.env)
-  );
+  const provider = GithubProvider.initialize(undefined, process.env);
 
   const context = await Context.from(provider, TEMPLATE_REPO, {
     template: [TEMPLATE_REPO],

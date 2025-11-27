@@ -6,9 +6,7 @@ const REPOSITORY_NAME = "arlac77/sync-test-repository";
 const TEMPLATE_REPO = "arlac77/template-node-app";
 
 test("context prepare", async t => {
-  const provider = new GithubProvider(
-    GithubProvider.optionsFromEnvironment(process.env)
-  );
+  const provider = GithubProvider.initialize(undefined, process.env);
 
   const context = await Context.from(provider, REPOSITORY_NAME, {
     template: TEMPLATE_REPO,
@@ -27,9 +25,7 @@ test("context prepare", async t => {
 });
 
 test("context execute - PR", async t => {
-  const provider = new GithubProvider(
-    GithubProvider.optionsFromEnvironment(process.env)
-  );
+  const provider = GithubProvider.initialize(undefined, process.env);
 
   const context = await Context.from(provider, REPOSITORY_NAME, {
     logger: (...args) => console.log(...args),
