@@ -42,7 +42,7 @@
     "babylon": "^6.18.0",
     "content-entry": "^14.2.7",
     "expression-expander": "^7.2.8",
-    "hinted-tree-merger": "^6.2.9",
+    "hinted-tree-merger": "^6.3.0",
     "loglevel-mixin": "^7.2.6",
     "markdown": "^0.5.0",
     "matching-iterator": "^2.1.5",
