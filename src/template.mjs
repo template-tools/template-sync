@@ -1,6 +1,6 @@
 import { join, dirname } from "node:path";
 import { createWriteStream } from "node:fs";
-import { Writable } from "node:stream";
+import { Readable } from "node:stream";
 import { mkdir } from "node:fs/promises";
 import { matcher } from "matching-iterator";
 import {
@@ -161,10 +161,7 @@ export class Template extends LogLevelMixin(class {}) {
               ...m.options
             });
             m.priority = m.options.priority || m.factory.priority;
-
-            if (m.pattern === undefined) {
-              m.pattern = m.factory.pattern;
-            }
+            m.pattern ||= m.factory.pattern;
             return m;
           })
           .sort((a, b) => b.priority - a.priority)
@@ -186,7 +183,11 @@ export class Template extends LogLevelMixin(class {}) {
       );
     }
 
-    const pkg = new StringContentEntry("package.json", undefined, JSON.stringify(pj));
+    const pkg = new StringContentEntry(
+      "package.json",
+      undefined,
+      JSON.stringify(pj)
+    );
 
     pkg.merger = this.mergerFor(pkg.name);
 
@@ -403,9 +404,7 @@ export class Template extends LogLevelMixin(class {}) {
         const d = join(dest, entry.name);
         await mkdir(dirname(d), { recursive: true });
         const readStream = await entry.readStream;
-        console.log(readStream);
-        //  readStream.pipe(Writable.toWeb(createWriteStream(d)));
-        readStream.pipe(createWriteStream(d));
+        Readable.fromWeb(readStream).pipe(createWriteStream(d));
       }
     }
   }
@@ -445,7 +444,10 @@ export class Template extends LogLevelMixin(class {}) {
         const message = `fix: ${action} ${itemName}`;
 
         yield sourceBranch.commitIntoPullRequest(
-          { message, entries: [new StringContentEntry(name, undefined, modified)] },
+          {
+            message,
+            entries: [new StringContentEntry(name, undefined, modified)]
+          },
           {
             pullRequestBranch: "npm-template-sync/used-by",
             title: message,
