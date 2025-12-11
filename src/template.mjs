@@ -1,6 +1,7 @@
 import { join, dirname } from "node:path";
 import { createWriteStream } from "node:fs";
 import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
 import { mkdir } from "node:fs/promises";
 import { matcher } from "matching-iterator";
 import {
@@ -401,10 +402,12 @@ export class Template extends LogLevelMixin(class {}) {
   async dump(dest) {
     for (const entry of this.#entryCache.values()) {
       if (entry.isBlob) {
-        const d = join(dest, entry.name);
-        await mkdir(dirname(d), { recursive: true });
-        const readStream = await entry.readStream;
-        Readable.fromWeb(readStream).pipe(createWriteStream(d));
+        const destination = join(dest, entry.name);
+        await mkdir(dirname(destination), { recursive: true });
+        await pipeline(
+          Readable.fromWeb(await entry.stream),
+          createWriteStream(destination)
+        );
       }
     }
   }
