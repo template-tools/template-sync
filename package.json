@@ -43,7 +43,7 @@
     "content-entry": "^14.2.7",
     "expression-expander": "^7.2.8",
     "hinted-tree-merger": "^6.4.1",
-    "loglevel-mixin": "^7.2.7",
+    "loglevel-mixin": "^7.2.8",
     "markdown": "^0.5.0",
     "matching-iterator": "^2.1.6",
     "one-time-execution-method": "^3.1.4",
