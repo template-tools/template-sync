@@ -165,7 +165,6 @@ test(
   },
   undefined,
   undefined,
-
   {
     name: "targetRepo",
     homepage: "http://mock-provider.com/targetUser/targetRepo#readme",
@@ -485,6 +484,34 @@ test(
   (t, merged) => {
     t.deepEqual(merged.devDependencies, {
       a: "^1.0.0-rc.1"
+    });
+  }
+);
+
+test(
+  "overwrites",
+  pkgt,
+  {
+    overrides: {
+      c8: {
+        yargs: "^18.0.2"
+      }
+    }
+  },
+  {
+    overrides: {
+      c8: {
+        yargs: "^18.0.1"
+      }
+    }
+  },
+  undefined,
+  undefined,
+  (t, merged) => {
+    t.deepEqual(merged.overrides, {
+      c8: {
+        yargs: "^18.0.2"
+      }
     });
   }
 );
