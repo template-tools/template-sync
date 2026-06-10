@@ -61,7 +61,7 @@
     "execa": "^9.6.1",
     "github-repository-provider": "^10.0.35",
     "mock-repository-provider": "^9.0.31",
-    "semantic-release": "^25.0.3"
+    "semantic-release": "^25.0.5"
   },
   "overrides": {
     "c8": {
