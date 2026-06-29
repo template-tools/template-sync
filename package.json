@@ -47,7 +47,7 @@
     "markdown": "^0.5.0",
     "matching-iterator": "^2.1.7",
     "one-time-execution-method": "^3.1.4",
-    "recast": "^0.23.11",
+    "recast": "^0.23.12",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
     "unified": "^11.0.5",
