@@ -63,11 +63,6 @@
     "mock-repository-provider": "^9.0.38",
     "semantic-release": "^25.0.7"
   },
-  "overrides": {
-    "c8": {
-      "yargs": "^18.0.0"
-    }
-  },
   "engines": {
     "node": ">=26.4.0"
   },
