@@ -40,7 +40,7 @@
     "@iarna/toml": "^3.0.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "babylon": "^6.18.0",
-    "content-entry": "^15.0.0",
+    "content-entry": "^15.0.2",
     "expression-expander": "^7.2.8",
     "hinted-tree-merger": "^6.4.3",
     "loglevel-mixin": "^7.3.0",
@@ -56,11 +56,11 @@
   "devDependencies": {
     "ava": "^8.0.1",
     "c8": "^12.0.0",
-    "content-entry-filesystem": "^9.1.0",
+    "content-entry-filesystem": "^9.1.1",
     "documentation": "^14.0.3",
     "execa": "^10.0.1",
     "github-repository-provider": "^10.0.47",
-    "mock-repository-provider": "^9.0.40",
+    "mock-repository-provider": "^9.0.42",
     "semantic-release": "^25.0.9"
   },
   "engines": {
